@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C Design – Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal: #00c8b4;
+    --teal-dark: #00a898;
+    --teal-dim: rgba(0,200,180,0.1);
+    --teal-border: rgba(0,200,180,0.25);
+    --bg: #080b0e;
+    --bg2: #0d1117;
+    --bg3: #111820;
+    --text: #e8edf2;
+    --muted: #6a7585;
+    --soft: #9aa5b4;
+    --border: rgba(255,255,255,0.07);
+    --danger: #e05252;
+    --success: #2ecc71;
+  }
+
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* LOGIN */
+  #login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .login-box {
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    border-radius: 16px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    overflow: hidden;
+  }
+  .login-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--teal), transparent);
+  }
+  .login-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 0.4rem;
+  }
+  .login-logo span { color: var(--teal); }
+  .login-sub { font-size: 13px; color: var(--muted); margin-bottom: 2rem; }
+  .field-label { font-size: 12px; color: var(--soft); margin-bottom: 6px; display: block; font-weight: 500; letter-spacing: 0.3px; }
+  .field-input {
+    width: 100%;
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    color: var(--text);
+    padding: 11px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 1rem;
+  }
+  .field-input:focus { border-color: var(--teal-border); }
+  .field-hint { font-size: 11px; color: var(--muted); margin-top: -0.75rem; margin-bottom: 1rem; line-height: 1.5; }
+  .btn-teal {
+    width: 100%;
+    background: var(--teal);
+    color: #080b0e;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-teal:hover { background: var(--teal-dark); }
+  .btn-teal:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ADMIN LAYOUT */
+  #admin-screen { display: none; min-height: 100vh; }
+
+  .admin-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: rgba(8,11,14,0.9);
+    backdrop-filter: blur(16px);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .admin-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; color: #fff; }
+  .admin-logo span { color: var(--teal); }
+  .admin-nav-right { display: flex; align-items: center; gap: 12px; }
+  .status-badge {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .status-idle { background: var(--bg3); color: var(--muted); border: 0.5px solid var(--border); }
+  .status-saving { background: rgba(0,200,180,0.1); color: var(--teal); border: 0.5px solid var(--teal-border); }
+  .status-saved { background: rgba(46,204,113,0.1); color: var(--success); border: 0.5px solid rgba(46,204,113,0.25); }
+  .status-error { background: rgba(224,82,82,0.1); color: var(--danger); border: 0.5px solid rgba(224,82,82,0.25); }
+
+  .btn-publish {
+    background: var(--teal);
+    color: #080b0e;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-publish:hover { background: var(--teal-dark); }
+  .btn-publish:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-logout {
+    background: transparent;
+    color: var(--muted);
+    border: 0.5px solid var(--border);
+    padding: 9px 16px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .btn-logout:hover { color: var(--text); }
+
+  .admin-body {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: calc(100vh - 57px);
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    background: var(--bg2);
+    border-right: 0.5px solid var(--border);
+    padding: 1.5rem 0;
+    position: sticky;
+    top: 57px;
+    height: calc(100vh - 57px);
+    overflow-y: auto;
+  }
+  .sidebar-label {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 0 1.25rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 1.25rem;
+    font-size: 14px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+    border-left: 2px solid transparent;
+  }
+  .sidebar-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+  .sidebar-item.active { color: var(--teal); border-left-color: var(--teal); background: var(--teal-dim); }
+  .sidebar-icon { width: 16px; height: 16px; flex-shrink: 0; }
+
+  /* MAIN CONTENT */
+  .main-content { padding: 2rem; overflow-y: auto; }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .panel-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.5px;
+  }
+  .panel-sub { font-size: 14px; color: var(--muted); margin-bottom: 2rem; }
+
+  /* CARDS */
+  .edit-card {
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .edit-card-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--soft);
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 0.5px solid var(--border);
+    letter-spacing: 0.3px;
+  }
+  .field-row { margin-bottom: 1rem; }
+  .field-row:last-child { margin-bottom: 0; }
+  textarea.field-input { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+  /* SERVICII / PORTOFOLIU ITEMS */
+  .item-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1rem; }
+  .item-card {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    position: relative;
+  }
+  .item-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .item-num { font-size: 11px; color: var(--teal); font-weight: 600; letter-spacing: 1px; }
+  .btn-remove {
+    background: transparent;
+    border: 0.5px solid rgba(224,82,82,0.3);
+    color: var(--danger);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s;
+  }
+  .btn-remove:hover { background: rgba(224,82,82,0.1); }
+
+  .btn-add {
+    background: transparent;
+    border: 0.5px dashed var(--teal-border);
+    color: var(--teal);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    width: 100%;
+    transition: background 0.2s;
+  }
+  .btn-add:hover { background: var(--teal-dim); }
+
+  /* GRID 2 COL */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  @media (max-width: 900px) {
+    .admin-body { grid-template-columns: 1fr; }
+    .sidebar { position: static; height: auto; display: flex; flex-wrap: wrap; gap: 4px; padding: 1rem; border-right: none; border-bottom: 0.5px solid var(--border); }
+    .sidebar-label { display: none; }
+    .sidebar-item { border-left: none; border-radius: 6px; padding: 8px 12px; border-bottom: 2px solid transparent; }
+    .sidebar-item.active { border-bottom-color: var(--teal); }
+    .grid2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">C<span>.</span>Design</div>
+    <div class="login-sub">Panou de administrare</div>
+
+    <div class="field-row">
+      <label class="field-label">GitHub Personal Access Token</label>
+      <input type="password" class="field-input" id="token-input" placeholder="ghp_xxxxxxxxxxxx">
+      <div class="field-hint">Tokenul tău rămâne doar în browser, nu e trimis nicăieri altundeva.</div>
+    </div>
+
+    <div class="field-row">
+      <label class="field-label">Repository (owner/repo)</label>
+      <input type="text" class="field-input" id="repo-input" value="catalincherciu90-cdesign/cdesign">
+    </div>
+
+    <div class="field-row">
+      <label class="field-label">Fișier site</label>
+      <input type="text" class="field-input" id="file-input" value="index.html">
+    </div>
+
+    <button class="btn-teal" id="login-btn" onclick="doLogin()">Intră în admin</button>
+    <div id="login-error" style="color: var(--danger); font-size: 13px; margin-top: 1rem; display:none;"></div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin-screen">
+  <nav class="admin-nav">
+    <div class="admin-logo">C<span>.</span>Design <span style="color:var(--muted);font-size:13px;font-family:'DM Sans',sans-serif;font-weight:400;">admin</span></div>
+    <div class="admin-nav-right">
+      <span class="status-badge status-idle" id="status-badge">Nesalvat</span>
+      <button class="btn-publish" id="publish-btn" onclick="publishToGitHub()">Publică pe site</button>
+      <button class="btn-logout" onclick="doLogout()">Ieși</button>
+    </div>
+  </nav>
+
+  <div class="admin-body">
+    <div class="sidebar">
+      <div class="sidebar-label">Secțiuni</div>
+      <div class="sidebar-item active" onclick="showPanel('hero')">
+        <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+        Hero
+      </div>
+      <div class="sidebar-item" onclick="showPanel('servicii')">
+        <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        Servicii
+      </div>
+      <div class="sidebar-item" onclick="showPanel('portofoliu')">
+        <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        Portofoliu
+      </div>
+      <div class="sidebar-item" onclick="showPanel('contact')">
+        <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Contact
+      </div>
+    </div>
+
+    <div class="main-content">
+
+      <!-- HERO -->
+      <div class="panel active" id="panel-hero">
+        <div class="panel-title">Hero</div>
+        <div class="panel-sub">Primul lucru pe care îl văd vizitatorii site-ului.</div>
+        <div class="edit-card">
+          <div class="edit-card-title">Titlu principal</div>
+          <div class="field-row">
+            <label class="field-label">Text înainte de cuvântul colorat</label>
+            <input type="text" class="field-input" id="hero-title-before" value="Site-uri care aduc">
+          </div>
+          <div class="field-row">
+            <label class="field-label">Cuvântul colorat (turcoaz)</label>
+            <input type="text" class="field-input" id="hero-title-em" value="clienți">
+          </div>
+          <div class="field-row">
+            <label class="field-label">Text după cuvântul colorat</label>
+            <input type="text" class="field-input" id="hero-title-after" value="afacerii tale">
+          </div>
+        </div>
+        <div class="edit-card">
+          <div class="edit-card-title">Descriere</div>
+          <div class="field-row">
+            <textarea class="field-input" id="hero-desc">Suntem o companie creativă specializată în web design, oferind soluții personalizate pentru micile afaceri. Fără template-uri generice — fiecare site e construit special pentru tine.</textarea>
+          </div>
+        </div>
+        <div class="edit-card">
+          <div class="edit-card-title">Badge locație</div>
+          <input type="text" class="field-input" id="hero-badge" value="Chiajna · București · Ilfov">
+        </div>
+      </div>
+
+      <!-- SERVICII -->
+      <div class="panel" id="panel-servicii">
+        <div class="panel-title">Servicii</div>
+        <div class="panel-sub">Editează sau adaugă serviciile oferite.</div>
+        <div class="item-list" id="servicii-list"></div>
+        <button class="btn-add" onclick="addServiciu()">+ Adaugă serviciu</button>
+      </div>
+
+      <!-- PORTOFOLIU -->
+      <div class="panel" id="panel-portofoliu">
+        <div class="panel-title">Portofoliu</div>
+        <div class="panel-sub">Proiectele afișate pe site.</div>
+        <div class="item-list" id="portofoliu-list"></div>
+        <button class="btn-add" onclick="addProiect()">+ Adaugă proiect</button>
+      </div>
+
+      <!-- CONTACT -->
+      <div class="panel" id="panel-contact">
+        <div class="panel-title">Contact</div>
+        <div class="panel-sub">Datele de contact afișate pe site.</div>
+        <div class="edit-card">
+          <div class="edit-card-title">Date de contact</div>
+          <div class="grid2">
+            <div class="field-row">
+              <label class="field-label">Telefon</label>
+              <input type="text" class="field-input" id="contact-tel" value="0753 116 155">
+            </div>
+            <div class="field-row">
+              <label class="field-label">Email</label>
+              <input type="text" class="field-input" id="contact-email" value="office@c-design.ro">
+            </div>
+            <div class="field-row">
+              <label class="field-label">WhatsApp (număr internațional)</label>
+              <input type="text" class="field-input" id="contact-wa" value="40753116155">
+            </div>
+            <div class="field-row">
+              <label class="field-label">Website</label>
+              <input type="text" class="field-input" id="contact-web" value="c-design.ro">
+            </div>
+          </div>
+        </div>
+        <div class="edit-card">
+          <div class="edit-card-title">Secțiunea CTA (îndemn la acțiune)</div>
+          <div class="field-row">
+            <label class="field-label">Titlu</label>
+            <input type="text" class="field-input" id="cta-title" value="Gata să fii online?">
+          </div>
+          <div class="field-row">
+            <label class="field-label">Descriere</label>
+            <input type="text" class="field-input" id="cta-desc" value="Contactează-ne pentru o consultație gratuită. Răspundem în mai puțin de 24 de ore.">
+          </div>
+        </div>
+        <div class="edit-card">
+          <div class="edit-card-title">Footer</div>
+          <div class="field-row">
+            <label class="field-label">Text copyright</label>
+            <input type="text" class="field-input" id="footer-copy" value="© 2026 C Design · Chiajna, Ilfov · Toate drepturile rezervate">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+let githubToken = '';
+let githubRepo = '';
+let githubFile = '';
+let currentSHA = '';
+
+const servicii = [
+  { titlu: 'Site de prezentare', descriere: 'Design curat și mesaj clar. Site-ul tău va arăta profesional și va transforma vizitatorii în clienți potențiali.' },
+  { titlu: 'Pachet Start-Up Online', descriere: 'Pachet complet pentru micul întreprinzător: site + prezență online, gata să aducă primii clienți.' },
+  { titlu: 'Administrare Facebook', descriere: 'Ia-ți o pauză de la gestionarea paginii tale de Facebook și lasă-ne pe noi să ne ocupăm. Postări, răspunsuri, creștere.' },
+  { titlu: 'Redesign', descriere: 'Site-ul tău arată învechit? Îl modernizăm fără să pierzi ce funcționează deja, cu un design actual și performant.' },
+  { titlu: 'Design grafic', descriere: 'Logo, materiale vizuale și identitate de brand coerente pentru o prezență online memorabilă.' }
+];
+
+const portofoliu = [
+  { industrie: 'Auto', titlu: 'Tractări Auto Teleorman', descriere: 'Site de prezentare cu zonele de acoperire: Dâmbovița, Ilfov, București, Argeș, Giurgiu.' },
+  { industrie: 'Auto', titlu: 'Dealer Autorizat Lindab', descriere: 'Prezentare profesională pentru dealer autorizat, cu catalog de produse și date de contact.' },
+  { industrie: 'Florărie', titlu: 'Site florărie', descriere: 'Site modern cu produse și posibilitate de comandă online, adaptat pentru mobil.' },
+  { industrie: 'Construcții', titlu: 'Arhitectură & construcții', descriere: 'Portofoliu vizual elegant pentru firmă de arhitectură, cu proiecte și testimoniale.' },
+  { industrie: 'Start-Up', titlu: 'Micul Întreprinzător', descriere: 'Pachet complet pentru afaceri la început de drum: site + identitate vizuală + prezență online.' }
+];
+
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function renderServicii() {
+  const list = document.getElementById('servicii-list');
+  list.innerHTML = servicii.map((s, i) => `
+    <div class="item-card">
+      <div class="item-card-header">
+        <span class="item-num">0${i+1}</span>
+        <button class="btn-remove" onclick="removeServiciu(${i})">Șterge</button>
+      </div>
+      <div class="grid2">
+        <div class="field-row">
+          <label class="field-label">Titlu</label>
+          <input type="text" class="field-input" value="${s.titlu}" oninput="servicii[${i}].titlu=this.value">
+        </div>
+        <div class="field-row">
+          <label class="field-label">Descriere</label>
+          <input type="text" class="field-input" value="${s.descriere}" oninput="servicii[${i}].descriere=this.value">
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderPortofoliu() {
+  const list = document.getElementById('portofoliu-list');
+  list.innerHTML = portofoliu.map((p, i) => `
+    <div class="item-card">
+      <div class="item-card-header">
+        <span class="item-num">0${i+1}</span>
+        <button class="btn-remove" onclick="removeProiect(${i})">Șterge</button>
+      </div>
+      <div class="grid2">
+        <div class="field-row">
+          <label class="field-label">Industrie</label>
+          <input type="text" class="field-input" value="${p.industrie}" oninput="portofoliu[${i}].industrie=this.value">
+        </div>
+        <div class="field-row">
+          <label class="field-label">Titlu proiect</label>
+          <input type="text" class="field-input" value="${p.titlu}" oninput="portofoliu[${i}].titlu=this.value">
+        </div>
+      </div>
+      <div class="field-row">
+        <label class="field-label">Descriere</label>
+        <textarea class="field-input" oninput="portofoliu[${i}].descriere=this.value">${p.descriere}</textarea>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addServiciu() {
+  servicii.push({ titlu: 'Serviciu nou', descriere: 'Descriere serviciu' });
+  renderServicii();
+}
+
+function removeServiciu(i) {
+  servicii.splice(i, 1);
+  renderServicii();
+}
+
+function addProiect() {
+  portofoliu.push({ industrie: 'Industrie', titlu: 'Proiect nou', descriere: 'Descriere proiect' });
+  renderPortofoliu();
+}
+
+function removeProiect(i) {
+  portofoliu.splice(i, 1);
+  renderPortofoliu();
+}
+
+async function doLogin() {
+  const btn = document.getElementById('login-btn');
+  const err = document.getElementById('login-error');
+  btn.disabled = true;
+  btn.textContent = 'Se verifică...';
+  err.style.display = 'none';
+
+  githubToken = document.getElementById('token-input').value.trim();
+  githubRepo = document.getElementById('repo-input').value.trim();
+  githubFile = document.getElementById('file-input').value.trim();
+
+  try {
+    const res = await fetch(`https://api.github.com/repos/${githubRepo}/contents/${githubFile}`, {
+      headers: { Authorization: `token ${githubToken}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (!res.ok) throw new Error('Token invalid sau repository greșit.');
+    const data = await res.json();
+    currentSHA = data.sha;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    renderServicii();
+    renderPortofoliu();
+  } catch(e) {
+    err.textContent = e.message;
+    err.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Intră în admin';
+  }
+}
+
+function setStatus(type, text) {
+  const badge = document.getElementById('status-badge');
+  badge.className = 'status-badge status-' + type;
+  badge.textContent = text;
+}
+
+async function publishToGitHub() {
+  const btn = document.getElementById('publish-btn');
+  btn.disabled = true;
+  setStatus('saving', 'Se publică...');
+
+  try {
+    const getRes = await fetch(`https://api.github.com/repos/${githubRepo}/contents/${githubFile}`, {
+      headers: { Authorization: `token ${githubToken}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    const getData = await getRes.json();
+    const originalHTML = atob(getData.content.replace(/\n/g,''));
+    currentSHA = getData.sha;
+
+    let html = originalHTML;
+
+    // Hero
+    const heroBefore = document.getElementById('hero-title-before').value;
+    const heroEm = document.getElementById('hero-title-em').value;
+    const heroAfter = document.getElementById('hero-title-after').value;
+    html = html.replace(/<h1>.*?<\/h1>/s, `<h1>${heroBefore} <em>${heroEm}</em> ${heroAfter}</h1>`);
+
+    const heroDesc = document.getElementById('hero-desc').value;
+    html = html.replace(/(<p class="hero-desc">)(.*?)(<\/p>)/s, `$1${heroDesc}$3`);
+
+    const heroBadge = document.getElementById('hero-badge').value;
+    html = html.replace(/(<div class="hero-badge">)(.*?)(<\/div>)/s, `$1${heroBadge}$3`);
+
+    // Servicii
+    const servGrid = servicii.map((s, i) => `
+    <div class="service-card">
+      <div class="service-num">0${i+1}</div>
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </div>
+      <h3>${s.titlu}</h3>
+      <p>${s.descriere}</p>
+    </div>`).join('\n');
+    html = html.replace(/(<div class="services-grid">)(.*?)(<\/div>\s*<\/section>)/s, `$1\n${servGrid}\n  </div>\n</section>`);
+
+    // Portofoliu
+    const portGrid = portofoliu.map(p => `
+    <div class="portfolio-item">
+      <div class="portfolio-industry">${p.industrie}</div>
+      <h3>${p.titlu}</h3>
+      <p>${p.descriere}</p>
+    </div>`).join('\n');
+    html = html.replace(/(<div class="portfolio-grid">)(.*?)(<\/div>\s*\n\s*<div style="margin-top)/s, `$1\n${portGrid}\n  </div>\n\n  <div style="margin-top`);
+
+    // Contact
+    const tel = document.getElementById('contact-tel').value;
+    const email = document.getElementById('contact-email').value;
+    const wa = document.getElementById('contact-wa').value;
+    const web = document.getElementById('contact-web').value;
+    html = html.replace(/(href="tel:\+)[^"]*(")/g, `$1${wa}$2`);
+    html = html.replace(/(href="mailto:)[^"]*(")/g, `$1${email}$2`);
+    html = html.replace(/(href="https:\/\/wa\.me\/)[^"]*(")/g, `$1${wa}$2`);
+    html = html.replace(/(<div class="contact-card-value">)0[0-9 ]+(<\/div>)/, `$1${tel}$2`);
+    html = html.replace(/(<div class="contact-card-value">)[^<]*(@[^<]*)(<\/div>)/, `$1${email}$3`);
+
+    // CTA
+    const ctaTitle = document.getElementById('cta-title').value;
+    const ctaDesc = document.getElementById('cta-desc').value;
+    html = html.replace(/(<div class="cta-box">[\s\S]*?<h2>)(.*?)(<\/h2>)/, `$1${ctaTitle}$3`);
+    html = html.replace(/(<div class="cta-box">[\s\S]*?<h2>.*?<\/h2>\s*<p>)(.*?)(<\/p>)/, `$1${ctaDesc}$3`);
+
+    // Footer
+    const footerCopy = document.getElementById('footer-copy').value;
+    html = html.replace(/(<div class="footer-copy">)(.*?)(<\/div>)/, `$1${footerCopy}$3`);
+
+    const encoded = btoa(unescape(encodeURIComponent(html)));
+
+    const putRes = await fetch(`https://api.github.com/repos/${githubRepo}/contents/${githubFile}`, {
+      method: 'PUT',
+      headers: { Authorization: `token ${githubToken}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'Admin update', content: encoded, sha: currentSHA })
+    });
+
+    if (!putRes.ok) {
+      const err = await putRes.json();
+      throw new Error(err.message || 'Eroare la publicare.');
+    }
+
+    const putData = await putRes.json();
+    currentSHA = putData.content.sha;
+    setStatus('saved', 'Publicat cu succes!');
+    setTimeout(() => setStatus('idle', 'Nesalvat'), 3000);
+  } catch(e) {
+    setStatus('error', 'Eroare: ' + e.message);
+  }
+
+  btn.disabled = false;
+}
+
+function doLogout() {
+  githubToken = '';
+  document.getElementById('token-input').value = '';
+  document.getElementById('admin-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  setStatus('idle', 'Nesalvat');
+}
+
+document.getElementById('token-input').addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
+</script>
+</body>
+</html>
