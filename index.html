@@ -3,1558 +3,1109 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>C Design – Site-uri profesionale pentru afaceri românești</title>
-  <meta name="description" content="Creăm site-uri moderne, rapide și eficiente pentru afaceri mici și mijlocii din România. Rezultate măsurabile, fără jargon tehnic.">
+  <title>C Design – Web Design Profesional | Chiajna, București</title>
+  <meta name="description" content="C Design creează site-uri profesionale pentru afaceri mici din România. Web design, redesign, identitate vizuală. Chiajna · București · Ilfov.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #FAF8F5;
-      --bg-alt: #F2EFE9;
-      --accent: #2D6A4F;
-      --accent-hover: #245740;
-      --accent-light: #E8F4EF;
-      --text: #1A1A2E;
-      --text-muted: #5A5A72;
-      --border: #DDD9D0;
-      --white: #FFFFFF;
-      --radius: 12px;
-      --shadow: 0 2px 16px rgba(0,0,0,0.07);
-      --shadow-md: 0 4px 32px rgba(0,0,0,0.11);
-      --font-heading: 'Lora', Georgia, serif;
-      --font-body: 'Inter', system-ui, sans-serif;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: var(--font-body);
-      font-size: 18px;
-      line-height: 1.7;
-      color: var(--text);
-      background: var(--bg);
-    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    :root{
+      --teal:#00c8b4;
+      --teal-dk:#00a898;
+      --teal-lt:#33d4c3;
+      --teal-dim:rgba(0,200,180,.08);
+      --teal-glow:rgba(0,200,180,.18);
+      --teal-border:rgba(0,200,180,.28);
+      --bg:#080b0e;
+      --bg2:#0d1117;
+      --bg3:#111820;
+      --bg4:#161e28;
+      --text:#e8edf2;
+      --soft:#9aa5b4;
+      --muted:#6a7585;
+      --border:rgba(255,255,255,.07);
+      --border-soft:rgba(255,255,255,.11);
+      --r:10px;
+    }
+
+    html{scroll-behavior:smooth}
+
+    body{
+      font-family:'DM Sans',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.65;
+      overflow-x:hidden;
+    }
+
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+
+    #matrix-canvas{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      opacity:.18;
+      pointer-events:none;
+    }
+
+    .scroll-bar{
+      position:fixed;
+      top:0;left:0;
+      height:2px;
+      background:linear-gradient(90deg,var(--teal),var(--teal-lt));
+      width:0%;
+      z-index:9999;
+      transition:width .1s linear;
+      box-shadow:0 0 8px var(--teal);
+    }
+
+    .container{
+      max-width:1180px;
+      margin:0 auto;
+      padding:0 24px;
+      position:relative;
+      z-index:1;
+    }
+
+    nav{
+      position:sticky;
+      top:0;
+      z-index:100;
+      background:rgba(8,11,14,.92);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+    }
+
+    .nav-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      height:68px;
+    }
+
+    .logo{
+      font-family:'Syne',sans-serif;
+      font-weight:800;
+      font-size:1.35rem;
+      color:#fff;
+      letter-spacing:-.5px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+
+    .logo-c{
+      color:var(--teal);
+      font-size:1.6rem;
+      line-height:1;
+      text-shadow:0 0 12px rgba(0,200,180,.6);
+      animation:logo-pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes logo-pulse{
+      0%,100%{text-shadow:0 0 12px rgba(0,200,180,.6)}
+      50%{text-shadow:0 0 24px rgba(0,200,180,1),0 0 48px rgba(0,200,180,.4)}
+    }
+
+    .nav-links{
+      display:flex;
+      align-items:center;
+      gap:28px;
+      list-style:none;
+    }
+
+    .nav-links a{
+      font-size:.875rem;
+      color:var(--muted);
+      font-weight:400;
+      transition:color .2s;
+      position:relative;
+    }
+
+    .nav-links a::after{
+      content:'';
+      position:absolute;
+      bottom:-4px;left:0;right:0;
+      height:1px;
+      background:var(--teal);
+      transform:scaleX(0);
+      transition:transform .2s;
+    }
+
+    .nav-links a:hover{color:var(--teal)}
+    .nav-links a:hover::after{transform:scaleX(1)}
+
+    .nav-phone{
+      font-family:'Share Tech Mono',monospace;
+      font-size:.875rem;
+      color:var(--teal);
+      border:1px solid var(--teal-border);
+      padding:6px 14px;
+      border-radius:6px;
+      transition:background .2s,box-shadow .2s;
+    }
+
+    .nav-phone:hover{
+      background:var(--teal-dim);
+      box-shadow:0 0 12px var(--teal-glow);
+    }
+
+    .btn-nav{
+      background:var(--teal);
+      color:#080b0e;
+      font-weight:600;
+      font-size:.875rem;
+      font-family:'DM Sans',sans-serif;
+      padding:9px 20px;
+      border-radius:8px;
+      border:none;
+      cursor:pointer;
+      transition:background .2s,box-shadow .2s,transform .15s;
+      text-decoration:none;
+    }
+
+    .btn-nav:hover{
+      background:var(--teal-lt);
+      box-shadow:0 0 20px rgba(0,200,180,.4);
+      transform:translateY(-1px);
+    }
+
+    .hamburger{
+      display:none;
+      flex-direction:column;
+      gap:5px;
+      cursor:pointer;
+      background:none;
+      border:none;
+      padding:6px;
+    }
+
+    .hamburger span{
+      display:block;
+      width:22px;height:2px;
+      background:var(--text);
+      border-radius:2px;
+    }
+
+    .hero{
+      min-height:calc(100svh - 68px);
+      display:flex;
+      align-items:center;
+      position:relative;
+      padding:80px 0;
+      overflow:hidden;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:60px;
+      align-items:center;
+    }
+
+    .hero::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:repeating-linear-gradient(
+        0deg,transparent,transparent 2px,
+        rgba(0,200,180,.012) 2px,rgba(0,200,180,.012) 4px
+      );
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .hero-content{position:relative;z-index:1}
+
+    .hero-eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-family:'Share Tech Mono',monospace;
+      font-size:.75rem;
+      color:var(--teal);
+      background:var(--teal-dim);
+      border:1px solid var(--teal-border);
+      padding:5px 14px;
+      border-radius:4px;
+      margin-bottom:24px;
+      letter-spacing:.08em;
+    }
+
+    .hero-eyebrow::before{
+      content:'';
+      width:6px;height:6px;
+      background:var(--teal);
+      border-radius:50%;
+      animation:blink 1.2s step-end infinite;
+    }
+
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+    .hero h1{
+      font-family:'Syne',sans-serif;
+      font-size:clamp(2.2rem,4.5vw,3.6rem);
+      font-weight:800;
+      line-height:1.08;
+      letter-spacing:-.03em;
+      color:#fff;
+      margin-bottom:20px;
+    }
+
+    .hero h1 .hl{
+      background:linear-gradient(135deg,var(--teal-lt),var(--teal));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+      filter:drop-shadow(0 0 16px rgba(0,200,180,.4));
+    }
+
+    .hero-desc{
+      font-size:1.05rem;
+      color:var(--soft);
+      line-height:1.75;
+      font-weight:300;
+      max-width:480px;
+      margin-bottom:36px;
+    }
+
+    .hero-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:48px;
+    }
+
+    .btn-primary{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:var(--teal);
+      color:#080b0e;
+      font-weight:600;
+      font-size:1rem;
+      padding:14px 28px;
+      border-radius:8px;
+      border:none;
+      cursor:pointer;
+      transition:background .2s,box-shadow .2s,transform .15s;
+      text-decoration:none;
+      font-family:'DM Sans',sans-serif;
+    }
+
+    .btn-primary:hover{
+      background:var(--teal-lt);
+      box-shadow:0 0 28px rgba(0,200,180,.45);
+      transform:translateY(-2px);
+    }
+
+    .btn-ghost{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:transparent;
+      color:var(--soft);
+      font-size:1rem;
+      padding:14px 28px;
+      border-radius:8px;
+      border:1px solid var(--border-soft);
+      cursor:pointer;
+      transition:border-color .2s,color .2s;
+      text-decoration:none;
+      font-family:'DM Sans',sans-serif;
+    }
+
+    .btn-ghost:hover{border-color:var(--teal-border);color:var(--teal)}
+
+    .hero-stats{display:flex;gap:32px;flex-wrap:wrap}
+
+    .hero-stat-num{
+      font-family:'Syne',sans-serif;
+      font-size:1.75rem;
+      font-weight:800;
+      color:var(--teal);
+      line-height:1;
+      text-shadow:0 0 20px rgba(0,200,180,.4);
+    }
+
+    .hero-stat-label{
+      font-size:.78rem;
+      color:var(--muted);
+      margin-top:4px;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+
+    .hero-terminal{position:relative;z-index:1}
+
+    .terminal{
+      background:var(--bg2);
+      border:1px solid var(--border-soft);
+      border-radius:12px;
+      overflow:hidden;
+      box-shadow:0 0 60px rgba(0,200,180,.08),0 20px 60px rgba(0,0,0,.6);
+    }
+
+    .terminal-bar{
+      background:var(--bg3);
+      padding:12px 16px;
+      display:flex;align-items:center;gap:8px;
+      border-bottom:1px solid var(--border);
+    }
+
+    .t-dot{width:10px;height:10px;border-radius:50%}
+    .t-red{background:#ff5f57}
+    .t-yellow{background:#febc2e}
+    .t-green{background:#28c840}
 
-    img { max-width: 100%; display: block; }
-    a { color: inherit; text-decoration: none; }
-
-    .container {
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* ── NAVIGATION ── */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(250,248,245,0.95);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 72px;
-    }
-
-    .nav-logo {
-      font-family: var(--font-heading);
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--text);
-      letter-spacing: -0.02em;
-    }
-
-    .nav-logo span { color: var(--accent); }
-
-    .nav-phone {
-      font-weight: 600;
-      font-size: 1rem;
-      color: var(--accent);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .nav-phone::before {
-      content: "📞";
-      font-size: 0.9rem;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-size: 0.95rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover { color: var(--accent); }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 14px 28px;
-      border-radius: var(--radius);
-      font-family: var(--font-body);
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-      text-decoration: none;
-      min-height: 52px;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: var(--white);
-    }
-
-    .btn-primary:hover {
-      background: var(--accent-hover);
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(45,106,79,0.3);
-    }
-
-    .btn-secondary {
-      background: transparent;
-      color: var(--accent);
-      border: 2px solid var(--accent);
-    }
-
-    .btn-secondary:hover {
-      background: var(--accent-light);
-    }
-
-    .nav-cta { display: flex; }
-
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      padding: 8px;
-      background: none;
-      border: none;
-    }
-
-    .hamburger span {
-      display: block;
-      width: 24px;
-      height: 2px;
-      background: var(--text);
-      border-radius: 2px;
-      transition: transform 0.3s, opacity 0.3s;
-    }
-
-    /* ── HERO ── */
-    .hero {
-      background: var(--bg);
-      padding: 96px 0 80px;
-      overflow: hidden;
-    }
-
-    .hero-inner {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 64px;
-      align-items: center;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--accent-light);
-      color: var(--accent);
-      font-size: 0.85rem;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 100px;
-      margin-bottom: 24px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .hero h1 {
-      font-family: var(--font-heading);
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 700;
-      line-height: 1.2;
-      color: var(--text);
-      margin-bottom: 20px;
-    }
-
-    .hero h1 em {
-      font-style: normal;
-      color: var(--accent);
-    }
-
-    .hero p {
-      font-size: 1.1rem;
-      color: var(--text-muted);
-      margin-bottom: 36px;
-      max-width: 480px;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .hero-visual {
-      position: relative;
-    }
-
-    .hero-card {
-      background: var(--white);
-      border-radius: 16px;
-      box-shadow: var(--shadow-md);
-      overflow: hidden;
-    }
-
-    .hero-card-bar {
-      background: var(--bg-alt);
-      padding: 12px 16px;
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
-
-    .dot-red { background: #FF5F56; }
-    .dot-yellow { background: #FFBD2E; }
-    .dot-green { background: #27C93F; }
-
-    .hero-card-body {
-      padding: 28px;
-    }
-
-    .stat-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 16px;
-    }
-
-    .stat-item {
-      background: var(--bg-alt);
-      border-radius: 10px;
-      padding: 16px;
-      text-align: center;
-    }
-
-    .stat-num {
-      font-family: var(--font-heading);
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    .stat-label {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .hero-card-head-text {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 12px;
-    }
-
-    /* ── SOCIAL PROOF ── */
-    .social-proof {
-      background: var(--accent);
-      padding: 48px 0;
-    }
-
-    .social-proof-inner {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 48px;
-      flex-wrap: wrap;
-    }
-
-    .proof-stat {
-      text-align: center;
-      color: var(--white);
-    }
-
-    .proof-stat-num {
-      font-family: var(--font-heading);
-      font-size: 2.2rem;
-      font-weight: 700;
+    .t-title{
+      flex:1;text-align:center;
+      font-family:'Share Tech Mono',monospace;
+      font-size:.72rem;color:var(--muted);
     }
 
-    .proof-stat-label {
-      font-size: 0.9rem;
-      opacity: 0.85;
-      margin-top: 4px;
+    .terminal-body{
+      padding:24px;
+      font-family:'Share Tech Mono',monospace;
+      font-size:.82rem;
+      line-height:1.8;
+      min-height:280px;
     }
 
-    .proof-divider {
-      width: 1px;
-      height: 48px;
-      background: rgba(255,255,255,0.3);
+    .t-line{display:flex;gap:8px;align-items:flex-start}
+    .t-prompt{color:var(--teal);flex-shrink:0}
+    .t-cmd{color:#e8edf2}
+    .t-out{color:var(--soft);padding-left:16px}
+    .t-out.ok{color:#28c840}
+    .t-out.warn{color:#febc2e}
+    .t-out.accent{color:var(--teal)}
+    .t-cursor{
+      display:inline-block;width:8px;height:14px;
+      background:var(--teal);
+      animation:cursor-blink .8s step-end infinite;
+      vertical-align:middle;
     }
+    @keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}
 
-    /* ── SECTIONS COMMON ── */
-    section { padding: 96px 0; }
-
-    .section-label {
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-family: var(--font-heading);
-      font-size: clamp(1.6rem, 3vw, 2.4rem);
-      font-weight: 700;
-      line-height: 1.25;
-      color: var(--text);
-      max-width: 600px;
-      margin-bottom: 16px;
+    .stats-bar{
+      background:var(--bg2);
+      border-top:1px solid var(--border);
+      border-bottom:1px solid var(--border);
+      padding:36px 0;
     }
 
-    .section-subtitle {
-      font-size: 1.05rem;
-      color: var(--text-muted);
-      max-width: 520px;
-      margin-bottom: 56px;
+    .stats-inner{
+      display:flex;align-items:center;
+      justify-content:center;gap:48px;flex-wrap:wrap;
     }
-
-    /* ── SERVICES ── */
-    .services { background: var(--bg); }
 
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 56px;
-    }
+    .stat-item{text-align:center}
 
-    .service-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 32px;
-      transition: box-shadow 0.2s, transform 0.2s;
+    .stat-num{
+      font-family:'Syne',sans-serif;
+      font-size:2rem;font-weight:800;
+      color:var(--teal);line-height:1;
+      text-shadow:0 0 16px rgba(0,200,180,.35);
     }
 
-    .service-card:hover {
-      box-shadow: var(--shadow-md);
-      transform: translateY(-3px);
+    .stat-lbl{
+      font-size:.8rem;color:var(--muted);margin-top:6px;
+      font-family:'Share Tech Mono',monospace;letter-spacing:.04em;
     }
 
-    .service-icon {
-      width: 52px;
-      height: 52px;
-      background: var(--accent-light);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-    }
+    .stat-div{width:1px;height:40px;background:var(--border-soft)}
 
-    .service-card h3 {
-      font-family: var(--font-heading);
-      font-size: 1.15rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      color: var(--text);
-    }
+    section{padding:96px 0;position:relative}
 
-    .service-card p {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      line-height: 1.6;
+    .sec-label{
+      font-family:'Share Tech Mono',monospace;
+      font-size:.72rem;color:var(--teal);
+      letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;
     }
-
-    /* ── PROCESS ── */
-    .process { background: var(--bg-alt); }
 
-    .process-steps {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 32px;
-      margin-top: 56px;
+    .sec-title{
+      font-family:'Syne',sans-serif;
+      font-size:clamp(1.7rem,3vw,2.4rem);
+      font-weight:700;color:#fff;
+      letter-spacing:-.025em;line-height:1.2;margin-bottom:12px;
     }
 
-    .process-step {
-      text-align: center;
+    .sec-sub{
+      font-size:1rem;color:var(--soft);font-weight:300;
+      max-width:520px;line-height:1.7;margin-bottom:56px;
     }
 
-    .step-number {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: var(--accent);
-      color: var(--white);
-      font-family: var(--font-heading);
-      font-size: 1.3rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 20px;
-    }
+    .services-bg{background:var(--bg)}
 
-    .process-step h3 {
-      font-family: var(--font-heading);
-      font-size: 1.05rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      color: var(--text);
+    .services-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:20px;
     }
 
-    .process-step p {
-      font-size: 0.92rem;
-      color: var(--text-muted);
-      line-height: 1.6;
+    .svc-card{
+      background:var(--bg2);
+      border:1px solid var(--border);
+      border-radius:12px;padding:28px;
+      position:relative;overflow:hidden;
+      transition:border-color .25s,box-shadow .25s,transform .25s;
     }
-
-    /* ── PORTFOLIO ── */
-    .portfolio { background: var(--bg); }
 
-    .portfolio-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 56px;
+    .svc-card::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:1px;
+      background:linear-gradient(90deg,transparent,var(--teal-border),transparent);
+      opacity:0;transition:opacity .3s;
     }
 
-    .portfolio-card {
-      border-radius: var(--radius);
-      overflow: hidden;
-      background: var(--white);
-      border: 1px solid var(--border);
-      transition: box-shadow 0.2s, transform 0.2s;
+    .svc-card:hover{
+      border-color:var(--teal-border);
+      box-shadow:0 0 40px rgba(0,200,180,.1),0 8px 32px rgba(0,0,0,.4);
+      transform:translateY(-4px);
     }
 
-    .portfolio-card:hover {
-      box-shadow: var(--shadow-md);
-      transform: translateY(-3px);
-    }
+    .svc-card:hover::before{opacity:1}
 
-    .portfolio-thumb {
-      height: 200px;
-      background: var(--bg-alt);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3rem;
-      position: relative;
-      overflow: hidden;
+    .svc-num{
+      font-family:'Share Tech Mono',monospace;font-size:.7rem;
+      color:var(--teal);letter-spacing:.1em;margin-bottom:16px;opacity:.7;
     }
 
-    .portfolio-thumb-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, var(--accent-light), var(--bg-alt));
+    .svc-icon{
+      width:44px;height:44px;
+      background:var(--teal-dim);border:1px solid var(--teal-border);
+      border-radius:10px;display:flex;align-items:center;justify-content:center;
+      font-size:1.3rem;margin-bottom:18px;
     }
 
-    .portfolio-thumb-emoji {
-      position: relative;
-      z-index: 1;
+    .svc-card h3{
+      font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;
+      color:#fff;margin-bottom:8px;letter-spacing:-.01em;
     }
 
-    .portfolio-info {
-      padding: 20px 24px;
-    }
+    .svc-card p{font-size:.875rem;color:var(--muted);line-height:1.65}
 
-    .portfolio-tag {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--accent);
-      margin-bottom: 8px;
+    .process-bg{
+      background:var(--bg2);
+      border-top:1px solid var(--border);
+      border-bottom:1px solid var(--border);
     }
 
-    .portfolio-info h3 {
-      font-family: var(--font-heading);
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 6px;
+    .process-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:24px;position:relative;
     }
 
-    .portfolio-info p {
-      font-size: 0.88rem;
-      color: var(--text-muted);
+    .process-grid::before{
+      content:'';position:absolute;top:27px;
+      left:calc(12.5% + 14px);right:calc(12.5% + 14px);
+      height:1px;
+      background:linear-gradient(90deg,var(--teal),rgba(0,200,180,.2),var(--teal));
+      animation:line-scan 3s linear infinite;
     }
 
-    /* ── TESTIMONIALS ── */
-    .testimonials { background: var(--bg-alt); }
+    @keyframes line-scan{0%{opacity:.4}50%{opacity:1}100%{opacity:.4}}
 
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 56px;
-    }
+    .process-step{text-align:center;padding:8px}
 
-    .testimonial-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 32px;
+    .p-num{
+      width:54px;height:54px;border-radius:50%;
+      border:1px solid var(--teal-border);background:var(--bg);
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 20px;
+      font-family:'Share Tech Mono',monospace;font-size:1rem;font-weight:700;color:var(--teal);
+      position:relative;z-index:1;transition:background .3s,box-shadow .3s;
     }
 
-    .stars {
-      font-size: 1rem;
-      color: #F4A61A;
-      margin-bottom: 16px;
-      letter-spacing: 2px;
-    }
+    .process-step:hover .p-num{background:var(--teal-dim);box-shadow:0 0 20px rgba(0,200,180,.3)}
 
-    .testimonial-text {
-      font-size: 0.98rem;
-      color: var(--text);
-      line-height: 1.7;
-      margin-bottom: 24px;
-      font-style: italic;
-    }
+    .process-step h4{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:#fff;margin-bottom:8px}
+    .process-step p{font-size:.82rem;color:var(--muted);line-height:1.6}
 
-    .testimonial-author {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
+    .portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 
-    .author-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: var(--accent-light);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--accent);
-      font-family: var(--font-heading);
-      flex-shrink: 0;
+    .port-card{
+      background:var(--bg2);border:1px solid var(--border);
+      border-radius:12px;overflow:hidden;
+      transition:border-color .25s,box-shadow .25s,transform .25s;
     }
 
-    .author-name {
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: var(--text);
+    .port-card:hover{
+      border-color:var(--teal-border);
+      box-shadow:0 0 32px rgba(0,200,180,.08);
+      transform:translateY(-3px);
     }
 
-    .author-role {
-      font-size: 0.82rem;
-      color: var(--text-muted);
+    .port-thumb{
+      height:160px;background:var(--bg3);
+      display:flex;align-items:center;justify-content:center;
+      font-size:2.8rem;position:relative;overflow:hidden;
     }
 
-    /* ── PRICING ── */
-    .pricing { background: var(--bg); }
-
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 56px;
-      align-items: start;
+    .port-grid-overlay{
+      position:absolute;inset:0;
+      background-image:
+        linear-gradient(rgba(0,200,180,.06) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,200,180,.06) 1px,transparent 1px);
+      background-size:32px 32px;
     }
 
-    .pricing-card {
-      background: var(--white);
-      border: 2px solid var(--border);
-      border-radius: var(--radius);
-      padding: 36px 32px;
-      transition: box-shadow 0.2s;
-    }
+    .port-emoji{position:relative;z-index:1}
 
-    .pricing-card.featured {
-      border-color: var(--accent);
-      position: relative;
-      box-shadow: var(--shadow-md);
-    }
+    .port-info{padding:18px 20px}
 
-    .pricing-badge {
-      position: absolute;
-      top: -14px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--accent);
-      color: var(--white);
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 5px 16px;
-      border-radius: 100px;
-      white-space: nowrap;
+    .port-tag{
+      font-family:'Share Tech Mono',monospace;font-size:.68rem;
+      color:var(--teal);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;
     }
 
-    .pricing-name {
-      font-family: var(--font-heading);
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
+    .port-info h3{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:#fff;margin-bottom:5px}
+    .port-info p{font-size:.82rem;color:var(--muted);line-height:1.55}
 
-    .pricing-price {
-      font-family: var(--font-heading);
-      font-size: 2.4rem;
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 4px;
+    .testi-bg{
+      background:var(--bg2);
+      border-top:1px solid var(--border);border-bottom:1px solid var(--border);
     }
 
-    .pricing-price sub {
-      font-size: 1rem;
-      font-weight: 400;
-      color: var(--text-muted);
-    }
+    .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 
-    .pricing-desc {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-bottom: 28px;
+    .testi-card{
+      background:var(--bg3);border:1px solid var(--border);
+      border-radius:12px;padding:28px;position:relative;
     }
 
-    .pricing-features {
-      list-style: none;
-      margin-bottom: 32px;
+    .testi-card::after{
+      content:'"';position:absolute;top:16px;right:20px;
+      font-family:'Syne',sans-serif;font-size:3.5rem;font-weight:800;
+      color:var(--teal);opacity:.1;line-height:1;
     }
 
-    .pricing-features li {
-      font-size: 0.92rem;
-      color: var(--text);
-      padding: 8px 0;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-    }
+    .testi-stars{display:flex;gap:3px;margin-bottom:14px}
+    .testi-stars span{color:var(--teal);font-size:.85rem}
+    .testi-text{font-size:.9rem;color:var(--soft);line-height:1.75;margin-bottom:20px;font-style:italic;font-weight:300}
+    .testi-author{display:flex;align-items:center;gap:12px}
 
-    .pricing-features li::before {
-      content: "✓";
-      color: var(--accent);
-      font-weight: 700;
-      flex-shrink: 0;
-      margin-top: 2px;
+    .t-avatar{
+      width:38px;height:38px;border-radius:50%;
+      background:var(--teal-dim);border:1px solid var(--teal-border);
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;color:var(--teal);flex-shrink:0;
     }
 
-    .pricing-features li.no::before {
-      content: "–";
-      color: var(--border);
-    }
+    .t-name{font-size:.875rem;font-weight:500;color:var(--text);display:block}
+    .t-role{font-size:.78rem;color:var(--muted);display:block}
 
-    .pricing-features li.no {
-      color: var(--text-muted);
+    .cta-section{
+      background:linear-gradient(135deg,var(--bg3),var(--bg4));
+      border-top:1px solid var(--teal-border);border-bottom:1px solid var(--teal-border);
+      padding:80px 0;text-align:center;position:relative;overflow:hidden;
     }
 
-    /* ── CTA BANNER ── */
-    .cta-banner {
-      background: var(--accent);
-      padding: 80px 0;
+    .cta-section::before{
+      content:'';position:absolute;top:50%;left:50%;
+      transform:translate(-50%,-50%);
+      width:600px;height:600px;
+      background:radial-gradient(circle,rgba(0,200,180,.07) 0%,transparent 65%);
+      pointer-events:none;
+      animation:glow-pulse 5s ease-in-out infinite;
     }
 
-    .cta-banner-inner {
-      text-align: center;
+    @keyframes glow-pulse{
+      0%,100%{transform:translate(-50%,-50%) scale(1);opacity:1}
+      50%{transform:translate(-50%,-50%) scale(1.15);opacity:.6}
     }
 
-    .cta-banner h2 {
-      font-family: var(--font-heading);
-      font-size: clamp(1.6rem, 3vw, 2.4rem);
-      font-weight: 700;
-      color: var(--white);
-      margin-bottom: 16px;
+    .cta-section h2{
+      font-family:'Syne',sans-serif;font-size:clamp(1.8rem,3.5vw,2.8rem);
+      font-weight:800;color:#fff;letter-spacing:-.03em;margin-bottom:12px;position:relative;
     }
 
-    .cta-banner p {
-      font-size: 1.05rem;
-      color: rgba(255,255,255,0.85);
-      margin-bottom: 36px;
-      max-width: 480px;
-      margin-left: auto;
-      margin-right: auto;
+    .cta-section p{
+      font-size:1.05rem;color:var(--soft);font-weight:300;margin-bottom:36px;
+      max-width:460px;margin-left:auto;margin-right:auto;position:relative;
     }
 
-    .btn-white {
-      background: var(--white);
-      color: var(--accent);
-    }
+    .cta-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative}
 
-    .btn-white:hover {
-      background: var(--bg);
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    }
+    .contact-bg{background:var(--bg)}
 
-    /* ── CONTACT ── */
-    .contact { background: var(--bg-alt); }
+    .contact-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:72px;align-items:start}
 
-    .contact-inner {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 80px;
-      align-items: start;
+    .contact-info-title{
+      font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:700;
+      color:#fff;letter-spacing:-.025em;margin-bottom:10px;
     }
 
-    .contact-info h2 {
-      font-family: var(--font-heading);
-      font-size: clamp(1.6rem, 3vw, 2.2rem);
-      font-weight: 700;
-      margin-bottom: 16px;
-      color: var(--text);
-    }
+    .contact-info-sub{font-size:.95rem;color:var(--soft);font-weight:300;line-height:1.7;margin-bottom:36px}
 
-    .contact-info p {
-      font-size: 1rem;
-      color: var(--text-muted);
-      margin-bottom: 36px;
-    }
+    .contact-items{display:flex;flex-direction:column;gap:14px}
 
-    .contact-details {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+    .c-item{display:flex;align-items:center;gap:14px;font-size:.95rem;color:var(--soft)}
 
-    .contact-details li {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      font-size: 1rem;
-      color: var(--text);
+    .c-icon{
+      width:40px;height:40px;background:var(--teal-dim);border:1px solid var(--teal-border);
+      border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;
     }
 
-    .contact-icon {
-      width: 44px;
-      height: 44px;
-      background: var(--accent-light);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      flex-shrink: 0;
-    }
+    .c-item a{color:var(--teal);transition:opacity .2s}
+    .c-item a:hover{opacity:.8}
 
-    .contact-form {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 40px;
-      box-shadow: var(--shadow);
-    }
+    .contact-form{background:var(--bg2);border:1px solid var(--border-soft);border-radius:14px;padding:36px}
 
-    .form-group {
-      margin-bottom: 20px;
-    }
+    .f-group{margin-bottom:18px}
 
-    .form-group label {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 8px;
+    .f-label{
+      display:block;font-size:.8rem;font-weight:500;color:var(--soft);
+      margin-bottom:7px;font-family:'Share Tech Mono',monospace;letter-spacing:.04em;
     }
 
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      padding: 14px 16px;
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      font-family: var(--font-body);
-      font-size: 1rem;
-      color: var(--text);
-      background: var(--bg);
-      transition: border-color 0.2s, box-shadow 0.2s;
-      min-height: 52px;
+    .f-input{
+      width:100%;padding:12px 16px;background:var(--bg3);
+      border:1px solid var(--border-soft);border-radius:8px;
+      color:var(--text);font-family:'DM Sans',sans-serif;font-size:.95rem;
+      outline:none;transition:border-color .2s,box-shadow .2s;min-height:48px;
     }
 
-    .form-group textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
+    .f-input::placeholder{color:var(--muted)}
+    .f-input:focus{border-color:var(--teal-border);box-shadow:0 0 0 3px rgba(0,200,180,.1)}
+    textarea.f-input{min-height:120px;resize:vertical;line-height:1.6}
 
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(45,106,79,0.12);
-    }
+    .f-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
+    .f-select{
+      width:100%;padding:12px 16px;background:var(--bg3);
+      border:1px solid var(--border-soft);border-radius:8px;
+      color:var(--text);font-family:'DM Sans',sans-serif;font-size:.95rem;
+      outline:none;cursor:pointer;min-height:48px;transition:border-color .2s;
     }
 
-    .form-submit { width: 100%; }
+    .f-select:focus{border-color:var(--teal-border)}
 
-    /* ── FOOTER ── */
-    footer {
-      background: var(--text);
-      color: rgba(255,255,255,0.7);
-      padding: 56px 0 32px;
+    .btn-submit{
+      width:100%;background:var(--teal);color:#080b0e;
+      font-weight:700;font-size:1rem;padding:15px;border-radius:8px;
+      border:none;cursor:pointer;transition:background .2s,box-shadow .2s;
+      font-family:'DM Sans',sans-serif;letter-spacing:.01em;
     }
 
-    .footer-inner {
-      display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr 1fr;
-      gap: 48px;
-      margin-bottom: 48px;
-    }
+    .btn-submit:hover{background:var(--teal-lt);box-shadow:0 0 24px rgba(0,200,180,.4)}
 
-    .footer-brand .nav-logo {
-      color: var(--white);
-      font-size: 1.3rem;
-      margin-bottom: 14px;
-      display: block;
-    }
+    footer{background:var(--bg2);border-top:1px solid var(--border);padding:52px 0 28px}
 
-    .footer-brand p {
-      font-size: 0.9rem;
-      line-height: 1.6;
-    }
+    .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
 
-    .footer-col h4 {
-      font-weight: 600;
-      color: var(--white);
-      font-size: 0.9rem;
-      margin-bottom: 16px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+    .footer-logo{
+      font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;color:#fff;
+      display:flex;align-items:center;gap:5px;margin-bottom:12px;
     }
 
-    .footer-col ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+    .footer-logo .fc{color:var(--teal);text-shadow:0 0 10px rgba(0,200,180,.5)}
+    .footer-about{font-size:.875rem;color:var(--muted);line-height:1.7;margin-bottom:20px}
 
-    .footer-col a {
-      font-size: 0.9rem;
-      transition: color 0.2s;
+    .footer-col h4{
+      font-family:'Syne',sans-serif;font-size:.825rem;font-weight:700;
+      color:var(--text);margin-bottom:14px;letter-spacing:.04em;text-transform:uppercase;
     }
 
-    .footer-col a:hover { color: var(--white); }
+    .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+    .footer-col a{font-size:.875rem;color:var(--muted);transition:color .2s}
+    .footer-col a:hover{color:var(--teal)}
 
-    .footer-bottom {
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding-top: 28px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.85rem;
-      flex-wrap: wrap;
-      gap: 12px;
+    .footer-bottom{
+      border-top:1px solid var(--border);padding-top:24px;
+      display:flex;justify-content:space-between;align-items:center;
+      font-size:.8rem;color:var(--muted);flex-wrap:wrap;gap:10px;
     }
 
-    /* ── REVEAL ANIMATIONS ── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
+    .footer-bottom .teal{color:var(--teal)}
 
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
+    .mobile-menu{
+      display:none;position:fixed;inset:68px 0 0 0;
+      background:rgba(8,11,14,.97);z-index:99;
+      padding:32px 24px;flex-direction:column;gap:8px;
+      border-top:1px solid var(--border);backdrop-filter:blur(20px);
     }
-
-    /* ── MOBILE ── */
-    @media (max-width: 768px) {
-      body { font-size: 17px; }
-
-      .nav-links, .nav-cta { display: none; }
 
-      .nav-phone {
-        font-size: 0.9rem;
-      }
+    .mobile-menu.open{display:flex}
+    .mobile-menu a{font-size:1rem;font-weight:500;color:var(--soft);padding:13px 0;border-bottom:1px solid var(--border);transition:color .2s}
+    .mobile-menu a:hover{color:var(--teal)}
+    .mobile-menu .btn-nav{margin-top:12px;text-align:center;width:100%}
 
-      .hamburger { display: flex; }
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    .reveal-delay-1{transition-delay:80ms}
+    .reveal-delay-2{transition-delay:160ms}
+    .reveal-delay-3{transition-delay:240ms}
 
-      .mobile-menu {
-        display: none;
-        position: fixed;
-        inset: 72px 0 0 0;
-        background: var(--bg);
-        z-index: 99;
-        padding: 32px 24px;
-        flex-direction: column;
-        gap: 24px;
-        border-top: 1px solid var(--border);
-      }
+    .glitch{position:relative;display:inline-block}
+    .glitch::before,.glitch::after{content:attr(data-text);position:absolute;inset:0;background:transparent}
+    .glitch::before{color:var(--teal-lt);animation:glitch-1 4s infinite;clip-path:polygon(0 20%,100% 20%,100% 40%,0 40%)}
+    .glitch::after{color:#ff3366;animation:glitch-2 4s infinite;clip-path:polygon(0 60%,100% 60%,100% 80%,0 80%)}
+    @keyframes glitch-1{0%,94%{transform:none;opacity:0}95%{transform:translate(-2px,1px);opacity:.8}96%{transform:translate(2px,-1px);opacity:.8}97%,100%{transform:none;opacity:0}}
+    @keyframes glitch-2{0%,96%{transform:none;opacity:0}97%{transform:translate(2px,1px);opacity:.6}98%{transform:translate(-2px,-1px);opacity:.6}99%,100%{transform:none;opacity:0}}
 
-      .mobile-menu.open {
-        display: flex;
-      }
-
-      .mobile-menu a {
-        font-size: 1.1rem;
-        font-weight: 500;
-        color: var(--text);
-        padding: 12px 0;
-        border-bottom: 1px solid var(--border);
-      }
-
-      .mobile-menu .btn {
-        margin-top: 8px;
-        width: 100%;
-      }
-
-      .hero { padding: 60px 0 56px; }
-
-      .hero-inner {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-
-      .hero-actions { flex-direction: column; }
-      .hero-actions .btn { width: 100%; }
-
-      section { padding: 64px 0; }
-
-      .services-grid,
-      .portfolio-grid,
-      .testimonials-grid,
-      .pricing-grid,
-      .process-steps {
-        grid-template-columns: 1fr;
-      }
-
-      .contact-inner {
-        grid-template-columns: 1fr;
-        gap: 40px;
-      }
-
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-
-      .footer-inner {
-        grid-template-columns: 1fr 1fr;
-        gap: 32px;
-      }
-
-      .social-proof-inner {
-        gap: 28px;
-      }
-
-      .proof-divider { display: none; }
-
-      .footer-bottom {
-        flex-direction: column;
-        text-align: center;
-      }
+    @media(max-width:1024px){
+      .hero-grid{grid-template-columns:1fr;gap:48px}
+      .hero-terminal{max-width:520px}
+      .services-grid,.portfolio-grid,.testi-grid{grid-template-columns:1fr 1fr}
+      .process-grid{grid-template-columns:1fr 1fr}
+      .process-grid::before{display:none}
+      .footer-grid{grid-template-columns:1fr 1fr}
+      .contact-grid{grid-template-columns:1fr;gap:40px}
     }
-
-    @media (max-width: 1024px) and (min-width: 769px) {
-      .services-grid,
-      .portfolio-grid,
-      .testimonials-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .process-steps {
-        grid-template-columns: 1fr 1fr;
-        gap: 32px;
-      }
-
-      .pricing-grid {
-        grid-template-columns: 1fr;
-        max-width: 480px;
-      }
 
-      .footer-inner {
-        grid-template-columns: 1fr 1fr;
-      }
+    @media(max-width:768px){
+      nav .nav-links,.nav-phone,.btn-nav{display:none}
+      .hamburger{display:flex}
+      .hero{min-height:auto;padding:60px 0}
+      section{padding:64px 0}
+      .services-grid,.portfolio-grid,.testi-grid,.process-grid{grid-template-columns:1fr}
+      .f-row{grid-template-columns:1fr}
+      .footer-grid{grid-template-columns:1fr 1fr;gap:24px}
+      .stats-inner{gap:24px}
+      .stat-div{display:none}
+      .hero-actions{flex-direction:column}
+      .hero-actions .btn-primary,.hero-actions .btn-ghost{text-align:center;justify-content:center}
     }
   </style>
 </head>
 <body>
 
-  <!-- NAVIGATION -->
-  <nav>
-    <div class="container">
-      <div class="nav-inner">
-        <a href="#" class="nav-logo">C <span>Design</span></a>
-        <ul class="nav-links">
-          <li><a href="#servicii">Servicii</a></li>
-          <li><a href="#portofoliu">Portofoliu</a></li>
-          <li><a href="#proces">Cum lucrăm</a></li>
-          <li><a href="#preturi">Prețuri</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-        <a href="tel:+40700000000" class="nav-phone">0700 000 000</a>
-        <div class="nav-cta">
-          <a href="#contact" class="btn btn-primary">Vreau o ofertă gratuită</a>
-        </div>
-        <button class="hamburger" id="hamburger" aria-label="Meniu">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </div>
-  </nav>
+<canvas id="matrix-canvas"></canvas>
+<div class="scroll-bar" id="scrollBar"></div>
 
-  <!-- MOBILE MENU -->
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="#servicii">Servicii</a>
-    <a href="#portofoliu">Portofoliu</a>
-    <a href="#proces">Cum lucrăm</a>
-    <a href="#preturi">Prețuri</a>
-    <a href="#contact">Contact</a>
-    <a href="#contact" class="btn btn-primary">Vreau o ofertă gratuită</a>
+<nav>
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="logo"><span class="logo-c">C</span>DESIGN</a>
+      <ul class="nav-links">
+        <li><a href="#servicii">Servicii</a></li>
+        <li><a href="#portofoliu">Portofoliu</a></li>
+        <li><a href="#proces">Cum lucrăm</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a href="tel:+40753116155" class="nav-phone">0753 116 155</a>
+      <a href="#contact" class="btn-nav">Ofertă gratuită →</a>
+      <button class="hamburger" id="hamburger" aria-label="Meniu"><span></span><span></span><span></span></button>
+    </div>
   </div>
+</nav>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="container">
-      <div class="hero-inner">
-        <div class="hero-content">
-          <div class="hero-badge">✦ Creat pentru afaceri românești</div>
-          <h1>Site-uri care aduc <em>clienți noi</em> în fiecare lună</h1>
-          <p>Creăm prezențe online clare, rapide și eficiente — fără jargon tehnic, fără surprize de preț, cu rezultate măsurabile.</p>
-          <div class="hero-actions">
-            <a href="#contact" class="btn btn-primary">Vreau o ofertă gratuită</a>
-            <a href="#portofoliu" class="btn btn-secondary">Vezi lucrările noastre</a>
-          </div>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#servicii">Servicii</a>
+  <a href="#portofoliu">Portofoliu</a>
+  <a href="#proces">Cum lucrăm</a>
+  <a href="#contact">Contact</a>
+  <a href="tel:+40753116155">0753 116 155</a>
+  <a href="#contact" class="btn-nav">Ofertă gratuită →</a>
+</div>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <div class="hero-eyebrow">DISPONIBIL PENTRU PROIECTE NOI</div>
+        <h1>
+          <span class="glitch" data-text="Web Design">Web Design</span><br>
+          care aduce<br>
+          <span class="hl">clienți reali</span>
+        </h1>
+        <p class="hero-desc">Construim prezențe online profesionale pentru afaceri mici din Chiajna, București și Ilfov. Fără template-uri generice — fiecare site creat special pentru tine.</p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn-primary">Vreau o ofertă gratuită</a>
+          <a href="#portofoliu" class="btn-ghost">Vezi lucrările →</a>
         </div>
-        <div class="hero-visual">
-          <div class="hero-card">
-            <div class="hero-card-bar">
-              <div class="dot dot-red"></div>
-              <div class="dot dot-yellow"></div>
-              <div class="dot dot-green"></div>
-            </div>
-            <div class="hero-card-body">
-              <div class="hero-card-head-text">Rezultate reale ale clienților noștri</div>
-              <div class="stat-grid">
-                <div class="stat-item">
-                  <div class="stat-num">+180%</div>
-                  <div class="stat-label">Vizitatori noi / lună</div>
-                </div>
-                <div class="stat-item">
-                  <div class="stat-num">+65%</div>
-                  <div class="stat-label">Cereri de ofertă</div>
-                </div>
-                <div class="stat-item">
-                  <div class="stat-num">21 zile</div>
-                  <div class="stat-label">Timp mediu de livrare</div>
-                </div>
-                <div class="stat-item">
-                  <div class="stat-num">4.9 ★</div>
-                  <div class="stat-label">Notă medie clienți</div>
-                </div>
-              </div>
-            </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-num" data-count="15">0</div>
+            <div class="hero-stat-label">site-uri livrate</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num" data-count="100">0</div>
+            <div class="hero-stat-label">% clienți mulțumiți</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num" data-count="24">0</div>
+            <div class="hero-stat-label">h timp de răspuns</div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- SOCIAL PROOF BAR -->
-  <div class="social-proof">
-    <div class="container">
-      <div class="social-proof-inner">
-        <div class="proof-stat">
-          <div class="proof-stat-num">120+</div>
-          <div class="proof-stat-label">site-uri livrate</div>
-        </div>
-        <div class="proof-divider"></div>
-        <div class="proof-stat">
-          <div class="proof-stat-num">8 ani</div>
-          <div class="proof-stat-label">experiență în web design</div>
-        </div>
-        <div class="proof-divider"></div>
-        <div class="proof-stat">
-          <div class="proof-stat-num">97%</div>
-          <div class="proof-stat-label">clienți mulțumiți</div>
-        </div>
-        <div class="proof-divider"></div>
-        <div class="proof-stat">
-          <div class="proof-stat-num">24h</div>
-          <div class="proof-stat-label">suport tehnic</div>
+      <div class="hero-terminal">
+        <div class="terminal">
+          <div class="terminal-bar">
+            <div class="t-dot t-red"></div>
+            <div class="t-dot t-yellow"></div>
+            <div class="t-dot t-green"></div>
+            <div class="t-title">c-design.ro — terminal</div>
+          </div>
+          <div class="terminal-body" id="terminal-body"></div>
         </div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- SERVICES -->
-  <section class="services" id="servicii">
-    <div class="container">
-      <div class="section-label reveal">Ce facem</div>
-      <h2 class="section-title reveal">Tot ce ai nevoie pentru o prezență online puternică</h2>
-      <p class="section-subtitle reveal">De la un site simplu de prezentare până la un magazin online complet — ne ocupăm de tot.</p>
-      <div class="services-grid">
-        <div class="service-card reveal">
-          <div class="service-icon">🎨</div>
-          <h3>Design Web Profesional</h3>
-          <p>Site-uri cu aspect modern, adaptate identității tale vizuale și publicului tău țintă. Fiecare pixel contează.</p>
-        </div>
-        <div class="service-card reveal">
-          <div class="service-icon">📱</div>
-          <h3>Optimizat pentru Mobile</h3>
-          <p>Peste 70% din clienții tăi te caută de pe telefon. Site-ul tău va arăta perfect pe orice dispozitiv.</p>
-        </div>
-        <div class="service-card reveal">
-          <div class="service-icon">🛒</div>
-          <h3>Magazine Online</h3>
-          <p>Vinde produsele tale online cu un magazin simplu de administrat, securizat și optimizat pentru conversii.</p>
-        </div>
-        <div class="service-card reveal">
-          <div class="service-icon">⚡</div>
-          <h3>Viteză și Performanță</h3>
-          <p>Un site lent pierde clienți. Al tău va fi rapid, sigur și optimizat pentru motoarele de căutare (SEO).</p>
-        </div>
-        <div class="service-card reveal">
-          <div class="service-icon">✍️</div>
-          <h3>Conținut și Texte</h3>
-          <p>Te ajutăm să scrii textele potrivite care conving vizitatorii să te contacteze sau să cumpere.</p>
-        </div>
-        <div class="service-card reveal">
-          <div class="service-icon">🔧</div>
-          <h3>Întreținere și Suport</h3>
-          <p>Actualizări, backup-uri și suport tehnic lunar — te ocupi de afacere, noi avem grijă de site.</p>
+<div class="stats-bar">
+  <div class="container">
+    <div class="stats-inner">
+      <div class="stat-item"><div class="stat-num">120+</div><div class="stat-lbl">// proiecte_livrate</div></div>
+      <div class="stat-div"></div>
+      <div class="stat-item"><div class="stat-num">8 ani</div><div class="stat-lbl">// experienta_web</div></div>
+      <div class="stat-div"></div>
+      <div class="stat-item"><div class="stat-num">97%</div><div class="stat-lbl">// clienti_multumiti</div></div>
+      <div class="stat-div"></div>
+      <div class="stat-item"><div class="stat-num">&lt;21 zile</div><div class="stat-lbl">// timp_livrare</div></div>
+    </div>
+  </div>
+</div>
+
+<section class="services-bg" id="servicii">
+  <div class="container">
+    <div class="sec-label reveal">// servicii.js</div>
+    <h2 class="sec-title reveal">Tot ce ai nevoie pentru o prezență online serioasă</h2>
+    <p class="sec-sub reveal">Soluții complete de web design pentru afacerea ta, de la zero până la lansare.</p>
+    <div class="services-grid">
+      <div class="svc-card reveal"><div class="svc-num">01</div><div class="svc-icon">🌐</div><h3>Site de prezentare</h3><p>Design curat, mesaj clar. Site-ul tău va arăta profesional și va transforma vizitatorii în clienți.</p></div>
+      <div class="svc-card reveal reveal-delay-1"><div class="svc-num">02</div><div class="svc-icon">🚀</div><h3>Pachet Start-Up Online</h3><p>Pachet complet pentru micul întreprinzător: site + prezență online, gata să aducă primii clienți.</p></div>
+      <div class="svc-card reveal reveal-delay-2"><div class="svc-num">03</div><div class="svc-icon">📱</div><h3>Administrare Facebook</h3><p>Postări, răspunsuri, creștere organică. Lasă-ne pe noi să gestionăm pagina ta de Facebook.</p></div>
+      <div class="svc-card reveal"><div class="svc-num">04</div><div class="svc-icon">🔄</div><h3>Redesign site</h3><p>Site-ul tău arată învechit? Îl modernizăm fără să pierzi ce funcționează deja.</p></div>
+      <div class="svc-card reveal reveal-delay-1"><div class="svc-num">05</div><div class="svc-icon">🎨</div><h3>Design grafic &amp; Logo</h3><p>Identitate vizuală coerentă: logo, paletă culori, materiale de brand memorabile.</p></div>
+      <div class="svc-card reveal reveal-delay-2"><div class="svc-num">06</div><div class="svc-icon">🛡️</div><h3>Mentenanță &amp; Suport</h3><p>Actualizări, securitate și suport tehnic continuu. Noi avem grijă, tu te ocupi de afacere.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="process-bg" id="proces">
+  <div class="container">
+    <div class="sec-label reveal">// process.init()</div>
+    <h2 class="sec-title reveal">4 pași simpli până la site-ul live</h2>
+    <p class="sec-sub reveal">Proces transparent, fără surprize. Știi mereu ce urmează.</p>
+    <div class="process-grid">
+      <div class="process-step reveal"><div class="p-num">01</div><h4>Discuție inițială</h4><p>30 de minute, gratuit. Înțelegem afacerea ta, obiectivele și bugetul.</p></div>
+      <div class="process-step reveal reveal-delay-1"><div class="p-num">02</div><h4>Ofertă fixă</h4><p>Primești o ofertă clară cu preț fix și termen de livrare. Fără costuri ascunse.</p></div>
+      <div class="process-step reveal reveal-delay-2"><div class="p-num">03</div><h4>Design &amp; Dezvoltare</h4><p>Lucrăm la site și îți arătăm progresul. Feedback-ul tău contează la fiecare pas.</p></div>
+      <div class="process-step reveal reveal-delay-3"><div class="p-num">04</div><h4>Lansare &amp; Suport</h4><p>Site-ul merge live. Training, documentație și suport tehnic continuu incluse.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="portofoliu">
+  <div class="container">
+    <div class="sec-label reveal">// portfolio.load()</div>
+    <h2 class="sec-title reveal">Lucrări recente</h2>
+    <p class="sec-sub reveal">Proiecte reale pentru afaceri reale din România.</p>
+    <div class="portfolio-grid">
+      <div class="port-card reveal"><div class="port-thumb"><div class="port-grid-overlay"></div><span class="port-emoji">🚗</span></div><div class="port-info"><div class="port-tag">Auto</div><h3>Tractări Auto Teleorman</h3><p>Site de prezentare cu zone de acoperire: Dâmbovița, Ilfov, București, Argeș, Giurgiu.</p></div></div>
+      <div class="port-card reveal reveal-delay-1"><div class="port-thumb"><div class="port-grid-overlay"></div><span class="port-emoji">🏭</span></div><div class="port-info"><div class="port-tag">Dealer Autorizat</div><h3>Dealer Autorizat Lindab</h3><p>Prezentare profesională cu catalog de produse și date de contact integrate.</p></div></div>
+      <div class="port-card reveal reveal-delay-2"><div class="port-thumb"><div class="port-grid-overlay"></div><span class="port-emoji">🌸</span></div><div class="port-info"><div class="port-tag">Florărie</div><h3>Site Florărie</h3><p>Site modern cu produse și posibilitate de comandă online, optimizat pentru mobil.</p></div></div>
+      <div class="port-card reveal"><div class="port-thumb"><div class="port-grid-overlay"></div><span class="port-emoji">🏗️</span></div><div class="port-info"><div class="port-tag">Construcții</div><h3>Arhitectură &amp; Construcții</h3><p>Portofoliu vizual elegant cu proiecte realizate și testimoniale clienți.</p></div></div>
+      <div class="port-card reveal reveal-delay-1"><div class="port-thumb"><div class="port-grid-overlay"></div><span class="port-emoji">💼</span></div><div class="port-info"><div class="port-tag">Start-Up</div><h3>Micul Întreprinzător</h3><p>Pachet complet la start: site + identitate vizuală + prezență online activă.</p></div></div>
+      <div class="port-card reveal reveal-delay-2"><div class="port-thumb"><div class="port-grid-overlay"></div><span class="port-emoji">🔧</span></div><div class="port-info"><div class="port-tag">Servicii</div><h3>Firmă Servicii Tehnice</h3><p>Site de prezentare cu formular de solicitare ofertă și galerie de lucrări.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="testi-bg" id="testimoniale">
+  <div class="container">
+    <div class="sec-label reveal">// reviews.verified()</div>
+    <h2 class="sec-title reveal">Ce spun clienții noștri</h2>
+    <div class="testi-grid">
+      <div class="testi-card reveal"><div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="testi-text">"A fost simplu de la început până la final. Mi-au explicat fiecare pas, n-am simțit că nu înțeleg ce se întâmplă. Exact ce aveam nevoie."</p><div class="testi-author"><div class="t-avatar">MB</div><div><span class="t-name">Mihai B.</span><span class="t-role">Servicii auto — Buzău</span></div></div></div>
+      <div class="testi-card reveal reveal-delay-1"><div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="testi-text">"De când am noul site, am primit cereri de ofertă direct de pe pagina de contact. Primul client a acoperit toată investiția în prima lună."</p><div class="testi-author"><div class="t-avatar">IA</div><div><span class="t-name">Ioana A.</span><span class="t-role">Consultant financiar — București</span></div></div></div>
+      <div class="testi-card reveal reveal-delay-2"><div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="testi-text">"Au respectat termenul și bugetul. Exact ce mi-au promis, exact când mi-au promis. Rară calitate în piața asta."</p><div class="testi-author"><div class="t-avatar">CR</div><div><span class="t-name">Cristian R.</span><span class="t-role">Firmă construcții — Cluj</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-section">
+  <div class="container">
+    <div class="sec-label" style="margin-bottom:14px">// start_project.exe</div>
+    <h2>Gata să îți crești afacerea online?</h2>
+    <p>Consultația inițială este gratuită și fără obligații. Îți răspundem în mai puțin de 24 ore.</p>
+    <div class="cta-actions">
+      <a href="#contact" class="btn-primary">Vreau o ofertă gratuită</a>
+      <a href="tel:+40753116155" class="btn-ghost">📞 0753 116 155</a>
+    </div>
+  </div>
+</div>
+
+<section class="contact-bg" id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <div>
+        <div class="sec-label reveal">// contact.send()</div>
+        <h2 class="contact-info-title reveal">Hai să construim<br>ceva împreună</h2>
+        <p class="contact-info-sub reveal">Completează formularul sau sună-ne direct. Răspundem rapid, fără birocrație.</p>
+        <div class="contact-items">
+          <div class="c-item reveal"><div class="c-icon">📞</div><div><div style="font-size:.78rem;color:var(--muted);font-family:'Share Tech Mono',monospace;margin-bottom:3px">telefon</div><a href="tel:+40753116155">0753 116 155</a></div></div>
+          <div class="c-item reveal"><div class="c-icon">✉️</div><div><div style="font-size:.78rem;color:var(--muted);font-family:'Share Tech Mono',monospace;margin-bottom:3px">email</div><a href="mailto:office@c-design.ro">office@c-design.ro</a></div></div>
+          <div class="c-item reveal"><div class="c-icon">💬</div><div><div style="font-size:.78rem;color:var(--muted);font-family:'Share Tech Mono',monospace;margin-bottom:3px">whatsapp</div><a href="https://wa.me/40753116155">Scrie-ne pe WhatsApp</a></div></div>
+          <div class="c-item reveal"><div class="c-icon">📍</div><div><div style="font-size:.78rem;color:var(--muted);font-family:'Share Tech Mono',monospace;margin-bottom:3px">locație</div><span>Chiajna · București · Ilfov</span></div></div>
+          <div class="c-item reveal"><div class="c-icon">⏰</div><div><div style="font-size:.78rem;color:var(--muted);font-family:'Share Tech Mono',monospace;margin-bottom:3px">program</div><span>Luni–Vineri, 09:00–18:00</span></div></div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- PROCESS -->
-  <section class="process" id="proces">
-    <div class="container">
-      <div class="section-label reveal">Cum lucrăm</div>
-      <h2 class="section-title reveal">4 pași simpli până la site-ul tău nou</h2>
-      <p class="section-subtitle reveal">Fără întârzieri, fără surprize. Știi exact ce se întâmplă în fiecare etapă.</p>
-      <div class="process-steps">
-        <div class="process-step reveal">
-          <div class="step-number">1</div>
-          <h3>Discuție inițială</h3>
-          <p>Vorbim 30 de minute despre afacerea ta, obiective și ce ai nevoie de la site. Gratuit, fără obligații.</p>
-        </div>
-        <div class="process-step reveal">
-          <div class="step-number">2</div>
-          <h3>Propunere și ofertă</h3>
-          <p>Primești o ofertă clară, cu preț fix și termen de livrare. Fără costuri ascunse, fără surprize.</p>
-        </div>
-        <div class="process-step reveal">
-          <div class="step-number">3</div>
-          <h3>Design și dezvoltare</h3>
-          <p>Lucrăm la site-ul tău și îți arătăm progresul săptămânal. Feedback-ul tău este esențial la fiecare pas.</p>
-        </div>
-        <div class="process-step reveal">
-          <div class="step-number">4</div>
-          <h3>Lansare și suport</h3>
-          <p>Site-ul este lansat, te instruim cum să îl folosești și rămânem alături cu suport tehnic continuu.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PORTFOLIO -->
-  <section class="portfolio" id="portofoliu">
-    <div class="container">
-      <div class="section-label reveal">Portofoliu</div>
-      <h2 class="section-title reveal">Lucrări recente</h2>
-      <p class="section-subtitle reveal">Fiecare proiect este unic și construit cu atenție la nevoile clientului.</p>
-      <div class="portfolio-grid">
-        <div class="portfolio-card reveal">
-          <div class="portfolio-thumb">
-            <div class="portfolio-thumb-overlay"></div>
-            <span class="portfolio-thumb-emoji">🏠</span>
+      <div class="contact-form reveal">
+        <form id="contactForm" novalidate>
+          <div class="f-row">
+            <div class="f-group"><label class="f-label" for="fname">// nume</label><input class="f-input" type="text" id="fname" name="name" placeholder="Ion Popescu" required></div>
+            <div class="f-group"><label class="f-label" for="fphone">// telefon</label><input class="f-input" type="tel" id="fphone" name="phone" placeholder="07XX XXX XXX" required></div>
           </div>
-          <div class="portfolio-info">
-            <div class="portfolio-tag">Imobiliare</div>
-            <h3>Agenție Imobiliară Cluj</h3>
-            <p>Site de prezentare cu listare proprietăți și formular de contact integrat.</p>
+          <div class="f-group"><label class="f-label" for="femail">// email</label><input class="f-input" type="email" id="femail" name="email" placeholder="ion@firma-ta.ro" required></div>
+          <div class="f-group">
+            <label class="f-label" for="fservice">// serviciu_dorit</label>
+            <select class="f-select" id="fservice" name="service">
+              <option value="">Alege serviciul...</option>
+              <option>Site de prezentare</option>
+              <option>Pachet Start-Up Online</option>
+              <option>Redesign site existent</option>
+              <option>Administrare Facebook</option>
+              <option>Design grafic / Logo</option>
+              <option>Mentenanță &amp; Suport</option>
+              <option>Altceva</option>
+            </select>
           </div>
-        </div>
-        <div class="portfolio-card reveal">
-          <div class="portfolio-thumb">
-            <div class="portfolio-thumb-overlay"></div>
-            <span class="portfolio-thumb-emoji">🍕</span>
-          </div>
-          <div class="portfolio-info">
-            <div class="portfolio-tag">Restaurante</div>
-            <h3>Restaurant Tradițional Brașov</h3>
-            <p>Meniu online, rezervări și integrare Google Maps. Trafic crescut cu 200%.</p>
-          </div>
-        </div>
-        <div class="portfolio-card reveal">
-          <div class="portfolio-thumb">
-            <div class="portfolio-thumb-overlay"></div>
-            <span class="portfolio-thumb-emoji">💆</span>
-          </div>
-          <div class="portfolio-info">
-            <div class="portfolio-tag">Servicii &amp; Beauty</div>
-            <h3>Salon de înfrumusețare București</h3>
-            <p>Site cu sistem de programări online și galerie de lucrări.</p>
-          </div>
-        </div>
-        <div class="portfolio-card reveal">
-          <div class="portfolio-thumb">
-            <div class="portfolio-thumb-overlay"></div>
-            <span class="portfolio-thumb-emoji">⚖️</span>
-          </div>
-          <div class="portfolio-info">
-            <div class="portfolio-tag">Servicii Profesionale</div>
-            <h3>Firmă de Avocatură Timișoara</h3>
-            <p>Prezentare profesională a serviciilor juridice și blog de specialitate.</p>
-          </div>
-        </div>
-        <div class="portfolio-card reveal">
-          <div class="portfolio-thumb">
-            <div class="portfolio-thumb-overlay"></div>
-            <span class="portfolio-thumb-emoji">🛋️</span>
-          </div>
-          <div class="portfolio-info">
-            <div class="portfolio-tag">Mobilă &amp; Design Interior</div>
-            <h3>Producător Mobilă Personalizată</h3>
-            <p>Magazin online cu configurator de produse și galerie de proiecte.</p>
-          </div>
-        </div>
-        <div class="portfolio-card reveal">
-          <div class="portfolio-thumb">
-            <div class="portfolio-thumb-overlay"></div>
-            <span class="portfolio-thumb-emoji">🎓</span>
-          </div>
-          <div class="portfolio-info">
-            <div class="portfolio-tag">Educație</div>
-            <h3>Centru de Meditații Iași</h3>
-            <p>Platforma de inscrieri online cu gestionare program și profesori.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TESTIMONIALS -->
-  <section class="testimonials" id="testimoniale">
-    <div class="container">
-      <div class="section-label reveal">Ce spun clienții</div>
-      <h2 class="section-title reveal">Oameni reali, rezultate reale</h2>
-      <div class="testimonials-grid">
-        <div class="testimonial-card reveal">
-          <div class="stars">★★★★★</div>
-          <p class="testimonial-text">„De când am noul site, primesc cereri de ofertă în fiecare săptămână. Înainte, clienții nu știau că exist online. Acum mă găsesc ei pe mine."</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">MI</div>
-            <div>
-              <div class="author-name">Mihai Ionescu</div>
-              <div class="author-role">Constructor, Cluj-Napoca</div>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card reveal">
-          <div class="stars">★★★★★</div>
-          <p class="testimonial-text">„Profesioniști adevărați. Mi-au explicat tot pe înțelesul meu, fără termeni tehnici. Site-ul a fost livrat la timp, exact cum am cerut."</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">AP</div>
-            <div>
-              <div class="author-name">Ana-Maria Popescu</div>
-              <div class="author-role">Cosmeticiană, București</div>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card reveal">
-          <div class="stars">★★★★★</div>
-          <p class="testimonial-text">„Am avut un site vechi, urât și lent. Acum am un site modern care îmi reprezintă cu adevărat restaurantul. Rezervările online au crescut de 3 ori."</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">GD</div>
-            <div>
-              <div class="author-name">Gheorghe Dumitrescu</div>
-              <div class="author-role">Patron restaurant, Brașov</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PRICING -->
-  <section class="pricing" id="preturi">
-    <div class="container">
-      <div class="section-label reveal">Prețuri</div>
-      <h2 class="section-title reveal">Prețuri clare, fără surprize</h2>
-      <p class="section-subtitle reveal">Alege pachetul potrivit afacerii tale. Toate includ design personalizat și mobile-friendly.</p>
-      <div class="pricing-grid">
-        <div class="pricing-card reveal">
-          <div class="pricing-name">Start</div>
-          <div class="pricing-price">799 <sub>€</sub></div>
-          <div class="pricing-desc">Ideal pentru freelanceri și afaceri mici care vor o prezență online simplă și eficientă.</div>
-          <ul class="pricing-features">
-            <li>Site de prezentare (până la 5 pagini)</li>
-            <li>Design personalizat</li>
-            <li>Adaptare mobilă completă</li>
-            <li>Formular de contact</li>
-            <li>Integrare Google Maps</li>
-            <li>SEO de bază</li>
-            <li class="no">Magazin online</li>
-            <li class="no">Blog integrat</li>
-          </ul>
-          <a href="#contact" class="btn btn-secondary" style="width:100%">Vreau o ofertă</a>
-        </div>
-        <div class="pricing-card featured reveal">
-          <div class="pricing-badge">Cel mai popular</div>
-          <div class="pricing-name">Business</div>
-          <div class="pricing-price">1.499 <sub>€</sub></div>
-          <div class="pricing-desc">Pentru afaceri care vor să crească online și să atragă mai mulți clienți.</div>
-          <ul class="pricing-features">
-            <li>Site complet (până la 12 pagini)</li>
-            <li>Design premium personalizat</li>
-            <li>Adaptare mobilă completă</li>
-            <li>Blog integrat</li>
-            <li>SEO avansat + Google Analytics</li>
-            <li>Sistem de programări online</li>
-            <li>Texte scrise de specialiști</li>
-            <li class="no">Magazin online</li>
-          </ul>
-          <a href="#contact" class="btn btn-primary" style="width:100%">Vreau o ofertă</a>
-        </div>
-        <div class="pricing-card reveal">
-          <div class="pricing-name">E-commerce</div>
-          <div class="pricing-price">2.499 <sub>€</sub></div>
-          <div class="pricing-desc">Magazin online complet pentru a vinde produsele tale pe internet.</div>
-          <ul class="pricing-features">
-            <li>Magazin online complet</li>
-            <li>Design premium personalizat</li>
-            <li>Până la 100 produse</li>
-            <li>Plăți online (card, PayPal)</li>
-            <li>Administrare simplă a produselor</li>
-            <li>SEO avansat pentru produse</li>
-            <li>Integrare curierat</li>
-            <li>Texte și fotografii produse</li>
-          </ul>
-          <a href="#contact" class="btn btn-secondary" style="width:100%">Vreau o ofertă</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA BANNER -->
-  <div class="cta-banner">
-    <div class="container">
-      <div class="cta-banner-inner">
-        <h2>Gata să ai un site care lucrează pentru tine?</h2>
-        <p>Discutăm 30 de minute, gratuit. Îți spunem exact ce ai nevoie și cât costă.</p>
-        <a href="#contact" class="btn btn-white">Vreau o ofertă gratuită →</a>
+          <div class="f-group"><label class="f-label" for="fmsg">// mesaj</label><textarea class="f-input" id="fmsg" name="message" placeholder="Spune-ne despre afacerea ta și ce vrei să realizezi..." required></textarea></div>
+          <button type="submit" class="btn-submit">Trimite mesajul →</button>
+        </form>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- CONTACT -->
-  <section class="contact" id="contact">
-    <div class="container">
-      <div class="contact-inner">
-        <div class="contact-info">
-          <div class="section-label reveal">Contactează-ne</div>
-          <h2 class="reveal">Hai să vorbim despre proiectul tău</h2>
-          <p class="reveal">Completează formularul sau sună-ne direct. Îți răspundem în maximum 24 de ore.</p>
-          <ul class="contact-details">
-            <li class="reveal">
-              <div class="contact-icon">📞</div>
-              <div>
-                <strong>Telefon</strong><br>
-                <a href="tel:+40700000000">0700 000 000</a>
-              </div>
-            </li>
-            <li class="reveal">
-              <div class="contact-icon">✉️</div>
-              <div>
-                <strong>Email</strong><br>
-                <a href="mailto:contact@c-design.ro">contact@c-design.ro</a>
-              </div>
-            </li>
-            <li class="reveal">
-              <div class="contact-icon">📍</div>
-              <div>
-                <strong>Locație</strong><br>
-                România — lucrăm cu clienți din toată țara
-              </div>
-            </li>
-            <li class="reveal">
-              <div class="contact-icon">⏰</div>
-              <div>
-                <strong>Program</strong><br>
-                Luni – Vineri, 09:00 – 18:00
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div class="contact-form reveal">
-          <form id="contactForm" novalidate>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="name">Nume și prenume *</label>
-                <input type="text" id="name" name="name" placeholder="Ion Popescu" required>
-              </div>
-              <div class="form-group">
-                <label for="phone">Telefon *</label>
-                <input type="tel" id="phone" name="phone" placeholder="07XX XXX XXX" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="email">Email *</label>
-              <input type="email" id="email" name="email" placeholder="ion@firma-ta.ro" required>
-            </div>
-            <div class="form-group">
-              <label for="business">Tipul afacerii</label>
-              <select id="business" name="business">
-                <option value="">Selectează domeniul...</option>
-                <option>Restaurant / Cafenea / Bar</option>
-                <option>Salon / Servicii beauty</option>
-                <option>Construcții / Renovări</option>
-                <option>Imobiliare</option>
-                <option>Servicii profesionale</option>
-                <option>Producție / Manufactura</option>
-                <option>Comerț / Retail</option>
-                <option>Educație / Training</option>
-                <option>Alt domeniu</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="message">Ce îți dorești de la noul site? *</label>
-              <textarea id="message" name="message" placeholder="Descrie pe scurt ce tip de site vrei și ce obiective ai..." required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary form-submit">Trimite mesajul →</button>
-          </form>
-        </div>
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo"><span class="fc">C</span>DESIGN</div>
+        <p class="footer-about">Web design profesional pentru afaceri mici din România. Construim site-uri care aduc clienți reali.</p>
       </div>
+      <div class="footer-col"><h4>Servicii</h4><ul><li><a href="#servicii">Site de prezentare</a></li><li><a href="#servicii">Pachet Start-Up</a></li><li><a href="#servicii">Redesign</a></li><li><a href="#servicii">Design grafic</a></li></ul></div>
+      <div class="footer-col"><h4>Companie</h4><ul><li><a href="#portofoliu">Portofoliu</a></li><li><a href="#testimoniale">Testimoniale</a></li><li><a href="#proces">Cum lucrăm</a></li><li><a href="#contact">Contact</a></li></ul></div>
+      <div class="footer-col"><h4>Contact</h4><ul><li><a href="tel:+40753116155">0753 116 155</a></li><li><a href="mailto:office@c-design.ro">office@c-design.ro</a></li><li><a href="https://wa.me/40753116155">WhatsApp</a></li><li><a href="#">c-design.ro</a></li></ul></div>
     </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="container">
-      <div class="footer-inner">
-        <div class="footer-brand">
-          <span class="nav-logo">C <span style="color:#2D6A4F">Design</span></span>
-          <p>Creăm site-uri profesionale pentru afaceri românești. Claritate, calitate și rezultate măsurabile.</p>
-        </div>
-        <div class="footer-col">
-          <h4>Servicii</h4>
-          <ul>
-            <li><a href="#servicii">Site de prezentare</a></li>
-            <li><a href="#servicii">Magazine online</a></li>
-            <li><a href="#servicii">Redesign site</a></li>
-            <li><a href="#servicii">Optimizare SEO</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Companie</h4>
-          <ul>
-            <li><a href="#portofoliu">Portofoliu</a></li>
-            <li><a href="#testimoniale">Testimoniale</a></li>
-            <li><a href="#preturi">Prețuri</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Contact</h4>
-          <ul>
-            <li><a href="tel:+40700000000">0700 000 000</a></li>
-            <li><a href="mailto:contact@c-design.ro">contact@c-design.ro</a></li>
-            <li><a href="#">Facebook</a></li>
-            <li><a href="#">Instagram</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <span>© 2025 C Design. Toate drepturile rezervate.</span>
-        <span>Politica de confidențialitate · Termeni și condiții</span>
-      </div>
+    <div class="footer-bottom">
+      <span>© 2025 C Design · Chiajna, Ilfov · Toate drepturile rezervate</span>
+      <span>Made with <span class="teal">♥</span> in România</span>
     </div>
-  </footer>
+  </div>
+</footer>
 
-  <script>
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobileMenu');
-    hamburger.addEventListener('click', () => {
-      mobileMenu.classList.toggle('open');
-    });
-    mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => mobileMenu.classList.remove('open'));
-    });
+<script>
+(function(){
+  const canvas=document.getElementById('matrix-canvas');
+  const ctx=canvas.getContext('2d');
+  let W,H,cols,drops;
+  function resize(){
+    W=canvas.width=window.innerWidth;
+    H=canvas.height=window.innerHeight;
+    cols=Math.floor(W/18);
+    drops=Array(cols).fill(1).map(()=>Math.random()*-100);
+  }
+  window.addEventListener('resize',resize);
+  resize();
+  function draw(){
+    ctx.fillStyle='rgba(8,11,14,0.08)';
+    ctx.fillRect(0,0,W,H);
+    ctx.font='13px "Share Tech Mono",monospace';
+    for(let i=0;i<cols;i++){
+      const c=Math.random()>.5?'1':'0';
+      const x=i*18,y=drops[i]*18;
+      ctx.fillStyle='rgba(180,255,248,0.9)';
+      ctx.fillText(c,x,y);
+      ctx.fillStyle='rgba(0,200,180,0.55)';
+      ctx.fillText(Math.random()>.5?'1':'0',x,y-18);
+      ctx.fillStyle='rgba(0,200,180,0.3)';
+      ctx.fillText(Math.random()>.5?'1':'0',x,y-36);
+      if(y>H+100)drops[i]=0;
+      drops[i]+=0.4+Math.random()*0.3;
+    }
+  }
+  setInterval(draw,40);
+})();
 
-    const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-    reveals.forEach(el => observer.observe(el));
+const scrollBar=document.getElementById('scrollBar');
+window.addEventListener('scroll',()=>{
+  const pct=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100;
+  scrollBar.style.width=pct+'%';
+},{passive:true});
 
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const btn = this.querySelector('button[type=submit]');
-      const name = this.querySelector('#name').value.trim();
-      const phone = this.querySelector('#phone').value.trim();
-      const email = this.querySelector('#email').value.trim();
-      const message = this.querySelector('#message').value.trim();
-      if (!name || !phone || !email || !message) {
-        btn.textContent = 'Completează toate câmpurile obligatorii';
-        btn.style.background = '#c0392b';
-        setTimeout(() => {
-          btn.textContent = 'Trimite mesajul →';
-          btn.style.background = '';
-        }, 3000);
-        return;
-      }
-      btn.textContent = 'Se trimite...';
-      btn.disabled = true;
-      setTimeout(() => {
-        btn.textContent = '✓ Mesaj trimis! Te contactăm în 24h.';
-        btn.style.background = '#27ae60';
-        btn.disabled = false;
-        this.reset();
-        setTimeout(() => {
-          btn.textContent = 'Trimite mesajul →';
-          btn.style.background = '';
-        }, 5000);
-      }, 1200);
-    });
-  </script>
+const reveals=document.querySelectorAll('.reveal');
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revObs.unobserve(e.target);}});
+},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+reveals.forEach(el=>revObs.observe(el));
+
+function countUp(el,target,dur){
+  let s=0;const step=target/(dur/16);
+  const t=setInterval(()=>{s+=step;if(s>=target){clearInterval(t);el.textContent=target;return;}el.textContent=Math.floor(s);},16);
+}
+const cObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){document.querySelectorAll('[data-count]').forEach(el=>countUp(el,+el.dataset.count,1200));cObs.disconnect();}});
+},{threshold:0.5});
+const hs=document.querySelector('.hero-stats');
+if(hs)cObs.observe(hs);
+
+const lines=[
+  {type:'cmd',text:'npm run build-website'},
+  {type:'out ok',text:'✓ Analizăm afacerea ta...'},
+  {type:'out',text:'  → Domeniu: afaceri mici România'},
+  {type:'out',text:'  → Target: clienți locali Ilfov'},
+  {type:'cmd',text:'./design.sh --custom --mobile-first'},
+  {type:'out ok',text:'✓ Design personalizat generat'},
+  {type:'out accent',text:'  → Culori: #00c8b4 (brand teal)'},
+  {type:'out',text:'  → Mobile-first: activat'},
+  {type:'out',text:'  → SEO: optimizat Google'},
+  {type:'cmd',text:'git push origin main && deploy'},
+  {type:'out ok',text:'✓ Site live în < 21 zile'},
+  {type:'out warn',text:'  → Livrare garantată contractual'},
+  {type:'out ok',text:'✓ office@c-design.ro · 0753 116 155'},
+];
+const tbody=document.getElementById('terminal-body');
+let li=0;
+function addLine(){
+  if(li>=lines.length)return;
+  const l=lines[li++];
+  const d=document.createElement('div');
+  d.className='t-line';
+  if(l.type==='cmd'){d.innerHTML=`<span class="t-prompt">~/c-design $</span><span class="t-cmd"> ${l.text}</span>`;}
+  else{d.innerHTML=`<span class="t-out ${l.type.replace('out','').trim()}">${l.text}</span>`;}
+  tbody.appendChild(d);
+  tbody.scrollTop=tbody.scrollHeight;
+  const delay=l.type==='cmd'?600:200;
+  if(li<lines.length)setTimeout(addLine,delay);
+  else setTimeout(()=>{
+    const c=document.createElement('div');c.className='t-line';
+    c.innerHTML=`<span class="t-prompt">~/c-design $</span><span class="t-cursor"></span>`;
+    tbody.appendChild(c);
+  },400);
+}
+setTimeout(addLine,800);
+
+const ham=document.getElementById('hamburger');
+const mob=document.getElementById('mobileMenu');
+ham.addEventListener('click',()=>mob.classList.toggle('open'));
+mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mob.classList.remove('open')));
+
+document.getElementById('contactForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  const btn=this.querySelector('.btn-submit');
+  const n=this.querySelector('#fname').value.trim();
+  const p=this.querySelector('#fphone').value.trim();
+  const em=this.querySelector('#femail').value.trim();
+  const m=this.querySelector('#fmsg').value.trim();
+  if(!n||!p||!em||!m){
+    btn.textContent='Completează toate câmpurile *';btn.style.background='#e05252';
+    setTimeout(()=>{btn.textContent='Trimite mesajul →';btn.style.background='';},3000);
+    return;
+  }
+  btn.textContent='Se trimite...';btn.disabled=true;
+  setTimeout(()=>{
+    btn.textContent='✓ Mesaj trimis! Te contactăm în 24h.';btn.style.background='#28c840';btn.disabled=false;
+    this.reset();
+    setTimeout(()=>{btn.textContent='Trimite mesajul →';btn.style.background='';},5000);
+  },1200);
+});
+</script>
 </body>
 </html>
