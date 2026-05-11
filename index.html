@@ -1,1517 +1,1560 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>C Design — Site-uri care lucrează pentru tine</title>
-<meta name="description" content="C Design construiește site-uri profesionale pentru afaceri mici care vor să fie luate în serios. Web design, landing pages, redesign și SEO în România.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --teal:               #00c8b4;
-  --teal-dark:          #00a898;
-  --teal-light:         #33d4c3;
-  --teal-dim:           rgba(0,200,180,0.10);
-  --teal-dim-hover:     rgba(0,200,180,0.18);
-  --teal-border:        rgba(0,200,180,0.25);
-  --teal-border-strong: rgba(0,200,180,0.45);
-  --teal-glow:          rgba(0,200,180,0.15);
-  --bg:                 #080b0e;
-  --bg2:                #0d1117;
-  --bg3:                #111820;
-  --bg4:                #161e28;
-  --text:               #e8edf2;
-  --text-soft:          #9aa5b4;
-  --text-muted:         #6a7585;
-  --border:             rgba(255,255,255,0.07);
-  --border-soft:        rgba(255,255,255,0.11);
-  --border-strong:      rgba(255,255,255,0.18);
-  --shadow-md:          0 4px 16px rgba(0,0,0,0.5);
-  --shadow-lg:          0 8px 32px rgba(0,0,0,0.6);
-  --shadow-teal:        0 0 32px rgba(0,200,180,0.12);
-  --radius-sm:          6px;
-  --radius-md:          10px;
-  --radius-lg:          16px;
-  --radius-xl:          24px;
-  --radius-full:        9999px;
-}
-
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text-soft);
-  line-height: 1.65;
-  overflow-x: hidden;
-}
-
-/* NOISE */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.35;
-}
-
-/* SCROLL PROGRESS */
-.scroll-bar {
-  position: fixed;
-  top: 0; left: 0;
-  height: 2px;
-  background: var(--teal);
-  width: 0%;
-  z-index: 9999;
-  transition: width 0.1s linear;
-}
-
-/* NAV */
-nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.1rem 2.5rem;
-  background: rgba(8,11,14,0.88);
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid var(--border);
-}
-
-.logo {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 1.25rem;
-  color: #fff;
-  letter-spacing: -0.5px;
-  text-decoration: none;
-}
-.logo span { color: var(--teal); }
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  list-style: none;
-}
-.nav-links a {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  text-decoration: none;
-  transition: color 0.2s;
-  font-weight: 400;
-}
-.nav-links a:hover { color: var(--text); }
-
-.nav-cta {
-  background: var(--teal);
-  color: #080b0e;
-  border: none;
-  padding: 9px 20px;
-  border-radius: var(--radius-md);
-  font-size: 0.875rem;
-  font-weight: 500;
-  font-family: 'DM Sans', sans-serif;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-  text-decoration: none;
-}
-.nav-cta:hover {
-  background: var(--teal-light);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(0,200,180,0.3);
-}
-
-.hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-  padding: 4px;
-  background: none;
-  border: none;
-}
-.hamburger span {
-  display: block;
-  width: 22px;
-  height: 2px;
-  background: var(--text);
-  border-radius: 2px;
-  transition: all 0.3s;
-}
-
-/* HERO */
-.hero {
-  position: relative;
-  padding: 6rem 2.5rem 7rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 55% 45%;
-  gap: 4rem;
-  align-items: center;
-  min-height: calc(100svh - 62px);
-}
-
-.hero-glow {
-  position: absolute;
-  top: -120px;
-  left: -180px;
-  width: 700px;
-  height: 700px;
-  background: radial-gradient(circle, rgba(0,200,180,0.07) 0%, transparent 65%);
-  pointer-events: none;
-  animation: glow-pulse 7s ease-in-out infinite;
-}
-
-@keyframes glow-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.6; transform: scale(1.12); }
-}
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--teal-dim);
-  border: 1px solid var(--teal-border);
-  color: var(--teal);
-  padding: 4px 14px;
-  border-radius: var(--radius-full);
-  font-size: 0.75rem;
-  font-weight: 500;
-  margin-bottom: 1.5rem;
-  letter-spacing: 0.3px;
-}
-.badge::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  background: var(--teal);
-  border-radius: 50%;
-  animation: pulse-dot 2s ease-in-out infinite;
-}
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.35; }
-}
-
-.hero h1 {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(2.5rem, 4.5vw, 3.75rem);
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -0.03em;
-  color: #fff;
-  margin-bottom: 1.25rem;
-}
-.hero h1 em {
-  font-style: normal;
-  background: linear-gradient(135deg, var(--teal-light), var(--teal));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-lead {
-  font-size: 1.0625rem;
-  color: var(--text-soft);
-  line-height: 1.75;
-  margin-bottom: 2.25rem;
-  font-weight: 300;
-  max-width: 480px;
-}
-
-.hero-actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 3rem;
-}
-
-.btn-primary {
-  background: var(--teal);
-  color: #080b0e;
-  border: 1px solid var(--teal);
-  padding: 13px 28px;
-  border-radius: var(--radius-md);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  font-family: 'DM Sans', sans-serif;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-  text-decoration: none;
-  display: inline-block;
-}
-.btn-primary:hover {
-  background: var(--teal-light);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 24px rgba(0,200,180,0.35);
-}
-
-.btn-ghost {
-  background: transparent;
-  color: var(--text-soft);
-  border: 1px solid var(--border-soft);
-  padding: 13px 28px;
-  border-radius: var(--radius-md);
-  font-size: 0.9375rem;
-  font-weight: 400;
-  font-family: 'DM Sans', sans-serif;
-  cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
-  text-decoration: none;
-  display: inline-block;
-}
-.btn-ghost:hover {
-  border-color: var(--border-strong);
-  color: var(--text);
-}
-
-.hero-social-proof {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  flex-wrap: wrap;
-}
-.hero-avatars {
-  display: flex;
-}
-.hero-avatars span {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 2px solid var(--bg);
-  background: var(--bg3);
-  margin-left: -8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  color: var(--teal);
-  font-weight: 600;
-  overflow: hidden;
-}
-.hero-avatars span:first-child { margin-left: 0; }
-.hero-proof-text {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-}
-.hero-proof-text strong {
-  color: var(--text-soft);
-  font-weight: 500;
-}
-
-/* HERO VISUAL */
-.hero-visual {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.device-mockup {
-  width: 100%;
-  max-width: 440px;
-  background: var(--bg3);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  box-shadow: var(--shadow-lg), var(--shadow-teal);
-  position: relative;
-}
-
-.device-bar {
-  padding: 12px 16px;
-  background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.device-dots span {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--border-soft);
-}
-.device-dots span:first-child { background: #ff5f57; }
-.device-dots span:nth-child(2) { background: #febc2e; }
-.device-dots span:nth-child(3) { background: #28c840; }
-.device-url {
-  flex: 1;
-  background: var(--bg3);
-  border-radius: var(--radius-sm);
-  padding: 4px 10px;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin: 0 8px;
-}
-
-.device-content {
-  padding: 1.5rem;
-}
-
-.dc-header {
-  height: 8px;
-  background: var(--teal);
-  border-radius: var(--radius-sm);
-  margin-bottom: 12px;
-  width: 60%;
-  opacity: 0.8;
-}
-.dc-line {
-  height: 6px;
-  background: var(--border-soft);
-  border-radius: var(--radius-sm);
-  margin-bottom: 8px;
-}
-.dc-line:last-child { width: 70%; }
-
-.dc-cards {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 1.25rem;
-}
-.dc-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 12px;
-}
-.dc-card-icon {
-  width: 28px;
-  height: 28px;
-  background: var(--teal-dim);
-  border-radius: var(--radius-sm);
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--teal);
-  font-size: 0.875rem;
-}
-.dc-card-line {
-  height: 5px;
-  background: var(--border-soft);
-  border-radius: 3px;
-  margin-bottom: 5px;
-}
-.dc-card-line:last-child { width: 60%; }
-
-.dc-btn {
-  margin-top: 1rem;
-  background: var(--teal);
-  color: #080b0e;
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-  font-weight: 600;
-  display: inline-block;
-  font-family: 'DM Sans', sans-serif;
-}
-
-.visual-glow {
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  background: var(--teal);
-  filter: blur(80px);
-  opacity: 0.06;
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: -1;
-  animation: glow-pulse 5s ease-in-out infinite;
-}
-
-/* CONTAINER */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2.5rem;
-}
-
-/* SECTION */
-section {
-  padding: 6rem 0;
-  position: relative;
-}
-
-.section-label {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--teal);
-  margin-bottom: 0.75rem;
-}
-
-.section-header {
-  text-align: center;
-  max-width: 640px;
-  margin: 0 auto 4rem;
-}
-.section-header h2 {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(1.875rem, 3vw, 2.5rem);
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: -0.025em;
-  margin-bottom: 1rem;
-  line-height: 1.15;
-}
-.section-header p {
-  font-size: 1rem;
-  color: var(--text-soft);
-  line-height: 1.7;
-  font-weight: 300;
-}
-
-/* DIVIDER */
-.divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border-soft), transparent);
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* TRUST BAR */
-.trust-bar {
-  padding: 3rem 0;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-.trust-inner {
-  display: flex;
-  align-items: center;
-  gap: 3rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.trust-label {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  white-space: nowrap;
-  font-weight: 400;
-}
-.trust-tools {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.trust-tool {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  font-weight: 500;
-  opacity: 0.6;
-  transition: opacity 0.2s;
-  letter-spacing: 0.02em;
-}
-.trust-tool:hover { opacity: 1; }
-
-/* SERVICES */
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-}
-
-.service-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 2rem;
-  transition: border-color 0.25s, background 0.25s, box-shadow 0.25s, transform 0.25s;
-  position: relative;
-  overflow: hidden;
-}
-.service-card:hover {
-  background: var(--bg3);
-  border-color: var(--border-soft);
-  box-shadow: var(--shadow-lg), var(--shadow-teal);
-  transform: translateY(-3px);
-}
-.service-card--featured {
-  border-color: var(--teal-border);
-  background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
-}
-.service-card--featured::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--teal), transparent);
-}
-
-.service-icon {
-  width: 44px;
-  height: 44px;
-  background: var(--teal-dim);
-  border: 1px solid var(--teal-border);
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.25rem;
-  font-size: 1.25rem;
-}
-
-.service-card h3 {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 0.6rem;
-  letter-spacing: -0.015em;
-}
-.service-card p {
-  font-size: 0.9rem;
-  line-height: 1.65;
-  color: var(--text-muted);
-}
-
-/* BENEFITS */
-.benefits-bg {
-  background: var(--bg2);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-.benefits-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-}
-
-.benefit {
-  padding: 1.5rem 0;
-}
-.benefit-num {
-  font-family: 'Syne', sans-serif;
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: var(--teal);
-  opacity: 0.25;
-  letter-spacing: -0.04em;
-  margin-bottom: 0.5rem;
-  line-height: 1;
-}
-.benefit h3 {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 0.6rem;
-  letter-spacing: -0.015em;
-}
-.benefit p {
-  font-size: 0.9rem;
-  line-height: 1.7;
-  color: var(--text-muted);
-}
-
-/* PROCESS */
-.process-steps {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
-  position: relative;
-}
-.process-steps::before {
-  content: '';
-  position: absolute;
-  top: 28px;
-  left: calc(12.5% + 14px);
-  right: calc(12.5% + 14px);
-  height: 1px;
-  background: linear-gradient(90deg, var(--teal-border), var(--border), var(--teal-border));
-}
-
-.process-step {
-  text-align: center;
-  padding: 1rem;
-}
-.step-num {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--teal-dim);
-  border: 1px solid var(--teal-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.25rem;
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 1.125rem;
-  color: var(--teal);
-  position: relative;
-  z-index: 1;
-  background: var(--bg);
-}
-.process-step h4 {
-  font-family: 'Syne', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 0.5rem;
-  letter-spacing: -0.01em;
-}
-.process-step p {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  line-height: 1.6;
-}
-
-/* TESTIMONIALS */
-.testimonials-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-}
-
-.testimonial {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 2rem;
-  position: relative;
-}
-.testimonial::before {
-  content: '\201C';
-  position: absolute;
-  top: 1rem;
-  right: 1.5rem;
-  font-family: 'Syne', sans-serif;
-  font-size: 4rem;
-  font-weight: 800;
-  color: var(--teal);
-  opacity: 0.15;
-  line-height: 1;
-}
-
-.stars {
-  display: flex;
-  gap: 3px;
-  margin-bottom: 1rem;
-}
-.stars span {
-  color: var(--teal);
-  font-size: 0.875rem;
-}
-
-.testimonial-text {
-  font-size: 0.9375rem;
-  color: var(--text-soft);
-  line-height: 1.75;
-  margin-bottom: 1.5rem;
-  font-weight: 300;
-}
-
-.testimonial-author {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-.author-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--teal-dim), var(--bg4));
-  border: 1px solid var(--teal-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  font-size: 0.875rem;
-  color: var(--teal);
-  flex-shrink: 0;
-}
-.author-info .name {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--text);
-  display: block;
-}
-.author-info .role {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  display: block;
-}
-
-/* CTA BANNER */
-.cta-banner {
-  background: linear-gradient(135deg, var(--bg3) 0%, var(--bg4) 100%);
-  border-top: 1px solid var(--teal-border);
-  border-bottom: 1px solid var(--teal-border);
-  padding: 6rem 0;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-.cta-glow {
-  position: absolute;
-  width: 500px;
-  height: 500px;
-  background: var(--teal);
-  filter: blur(90px);
-  opacity: 0.05;
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  animation: glow-pulse 6s ease-in-out infinite;
-}
-.cta-banner h2 {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -0.03em;
-  margin-bottom: 1rem;
-  line-height: 1.1;
-  position: relative;
-}
-.cta-banner p {
-  font-size: 1.0625rem;
-  color: var(--text-soft);
-  font-weight: 300;
-  margin-bottom: 2.5rem;
-  max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
-  position: relative;
-}
-.cta-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  position: relative;
-}
-
-/* CONTACT */
-.contact-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: start;
-}
-
-.contact-info h2 {
-  font-family: 'Syne', sans-serif;
-  font-size: 2rem;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: -0.025em;
-  margin-bottom: 1rem;
-  line-height: 1.2;
-}
-.contact-info p {
-  font-size: 1rem;
-  color: var(--text-soft);
-  line-height: 1.7;
-  font-weight: 300;
-  margin-bottom: 2rem;
-}
-
-.contact-details {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-.contact-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 0.9375rem;
-  color: var(--text-soft);
-}
-.contact-item-icon {
-  width: 36px;
-  height: 36px;
-  background: var(--teal-dim);
-  border: 1px solid var(--teal-border);
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  flex-shrink: 0;
-}
-.contact-item a {
-  color: var(--teal);
-  text-decoration: none;
-}
-.contact-item a:hover { text-decoration: underline; }
-
-.availability-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(34,197,94,0.10);
-  border: 1px solid rgba(34,197,94,0.25);
-  color: #22c55e;
-  padding: 5px 14px;
-  border-radius: var(--radius-full);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  margin-bottom: 1.5rem;
-}
-.availability-badge::before {
-  content: '';
-  width: 6px; height: 6px;
-  background: #22c55e;
-  border-radius: 50%;
-  animation: pulse-dot 2s infinite;
-}
-
-/* FORM */
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-.input-label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-soft);
-}
-.input {
-  width: 100%;
-  padding: 12px 16px;
-  background: var(--bg2);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-md);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.9375rem;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-}
-.input::placeholder { color: var(--text-muted); }
-.input:hover { border-color: var(--border-strong); }
-.input:focus {
-  border-color: var(--teal-border-strong);
-  background: var(--bg3);
-  box-shadow: 0 0 0 3px var(--teal-dim);
-}
-textarea.input { resize: vertical; min-height: 130px; line-height: 1.6; }
-
-.form-submit {
-  margin-top: 0.5rem;
-}
-
-/* FOOTER */
-footer {
-  background: var(--bg2);
-  border-top: 1px solid var(--border);
-  padding: 4rem 0 2rem;
-}
-
-.footer-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 3rem;
-  margin-bottom: 3rem;
-}
-
-.footer-brand .logo {
-  display: inline-block;
-  margin-bottom: 1rem;
-}
-.footer-brand p {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  line-height: 1.7;
-  max-width: 240px;
-  margin-bottom: 1.5rem;
-}
-.footer-social {
-  display: flex;
-  gap: 0.75rem;
-}
-.social-btn {
-  width: 36px;
-  height: 36px;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.875rem;
-  transition: border-color 0.2s, color 0.2s, background 0.2s;
-}
-.social-btn:hover {
-  border-color: var(--teal-border);
-  color: var(--teal);
-  background: var(--teal-dim);
-}
-
-.footer-col h4 {
-  font-family: 'Syne', sans-serif;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 1.25rem;
-  letter-spacing: -0.01em;
-}
-.footer-col ul {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-.footer-col ul a {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-.footer-col ul a:hover { color: var(--teal); }
-
-.footer-bottom {
-  padding-top: 2rem;
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-.footer-bottom p {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-}
-.footer-bottom span { color: var(--teal); }
-
-/* REVEAL ANIMATION */
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-.reveal-delay-1 { transition-delay: 80ms; }
-.reveal-delay-2 { transition-delay: 160ms; }
-.reveal-delay-3 { transition-delay: 240ms; }
-.reveal-delay-4 { transition-delay: 320ms; }
-
-/* MOBILE */
-@media (max-width: 1023px) {
-  .hero { grid-template-columns: 1fr; min-height: auto; padding: 4rem 1.5rem 5rem; }
-  .hero-visual { display: none; }
-  .hero-glow { opacity: 0.5; }
-  .services-grid { grid-template-columns: repeat(2, 1fr); }
-  .benefits-grid { grid-template-columns: repeat(2, 1fr); }
-  .testimonials-grid { grid-template-columns: 1fr; }
-  .process-steps { grid-template-columns: repeat(2, 1fr); }
-  .process-steps::before { display: none; }
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-  .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
-}
-
-@media (max-width: 767px) {
-  nav { padding: 1rem 1.25rem; }
-  .nav-links { display: none; }
-  .hamburger { display: flex; }
-  .container { padding: 0 1.25rem; }
-  section { padding: 4rem 0; }
-  .hero { padding: 3rem 1.25rem 4rem; }
-  .services-grid { grid-template-columns: 1fr; }
-  .benefits-grid { grid-template-columns: 1fr; }
-  .process-steps { grid-template-columns: 1fr; }
-  .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
-  .form-row { grid-template-columns: 1fr; }
-  .footer-bottom { flex-direction: column; text-align: center; }
-  .cta-actions { flex-direction: column; align-items: center; }
-  .hero-actions { flex-direction: column; }
-  .btn-primary, .btn-ghost { text-align: center; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-  .reveal { opacity: 1; transform: none; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C Design – Site-uri profesionale pentru afaceri românești</title>
+  <meta name="description" content="Creăm site-uri moderne, rapide și eficiente pentru afaceri mici și mijlocii din România. Rezultate măsurabile, fără jargon tehnic.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FAF8F5;
+      --bg-alt: #F2EFE9;
+      --accent: #2D6A4F;
+      --accent-hover: #245740;
+      --accent-light: #E8F4EF;
+      --text: #1A1A2E;
+      --text-muted: #5A5A72;
+      --border: #DDD9D0;
+      --white: #FFFFFF;
+      --radius: 12px;
+      --shadow: 0 2px 16px rgba(0,0,0,0.07);
+      --shadow-md: 0 4px 32px rgba(0,0,0,0.11);
+      --font-heading: 'Lora', Georgia, serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── NAVIGATION ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(250,248,245,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .nav-logo {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-phone {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-phone::before {
+      content: "📞";
+      font-size: 0.9rem;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      text-decoration: none;
+      min-height: 52px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(45,106,79,0.3);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent-light);
+    }
+
+    .nav-cta { display: flex; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px;
+      background: none;
+      border: none;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--bg);
+      padding: 96px 0 80px;
+      overflow: hidden;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 36px;
+      max-width: 480px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-visual {
+      position: relative;
+    }
+
+    .hero-card {
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    .hero-card-bar {
+      background: var(--bg-alt);
+      padding: 12px 16px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background: #FF5F56; }
+    .dot-yellow { background: #FFBD2E; }
+    .dot-green { background: #27C93F; }
+
+    .hero-card-body {
+      padding: 28px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .stat-item {
+      background: var(--bg-alt);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .hero-card-head-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    /* ── SOCIAL PROOF ── */
+    .social-proof {
+      background: var(--accent);
+      padding: 48px 0;
+    }
+
+    .social-proof-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .proof-stat {
+      text-align: center;
+      color: var(--white);
+    }
+
+    .proof-stat-num {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      font-weight: 700;
+    }
+
+    .proof-stat-label {
+      font-size: 0.9rem;
+      opacity: 0.85;
+      margin-top: 4px;
+    }
+
+    .proof-divider {
+      width: 1px;
+      height: 48px;
+      background: rgba(255,255,255,0.3);
+    }
+
+    /* ── SECTIONS COMMON ── */
+    section { padding: 96px 0; }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--text);
+      max-width: 600px;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin-bottom: 56px;
+    }
+
+    /* ── SERVICES ── */
+    .services { background: var(--bg); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+    }
+
+    .service-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .service-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+
+    .service-icon {
+      width: 52px;
+      height: 52px;
+      background: var(--accent-light);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    .service-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .service-card p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── PROCESS ── */
+    .process { background: var(--bg-alt); }
+
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      margin-top: 56px;
+    }
+
+    .process-step {
+      text-align: center;
+    }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--white);
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .process-step h3 {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .process-step p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── PORTFOLIO ── */
+    .portfolio { background: var(--bg); }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+    }
+
+    .portfolio-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--white);
+      border: 1px solid var(--border);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .portfolio-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+
+    .portfolio-thumb {
+      height: 200px;
+      background: var(--bg-alt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .portfolio-thumb-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--accent-light), var(--bg-alt));
+    }
+
+    .portfolio-thumb-emoji {
+      position: relative;
+      z-index: 1;
+    }
+
+    .portfolio-info {
+      padding: 20px 24px;
+    }
+
+    .portfolio-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .portfolio-info h3 {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .portfolio-info p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials { background: var(--bg-alt); }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+    }
+
+    .testimonial-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+    }
+
+    .stars {
+      font-size: 1rem;
+      color: #F4A61A;
+      margin-bottom: 16px;
+      letter-spacing: 2px;
+    }
+
+    .testimonial-text {
+      font-size: 0.98rem;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .author-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: var(--font-heading);
+      flex-shrink: 0;
+    }
+
+    .author-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .author-role {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* ── PRICING ── */
+    .pricing { background: var(--bg); }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+      align-items: start;
+    }
+
+    .pricing-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      transition: box-shadow 0.2s;
+    }
+
+    .pricing-card.featured {
+      border-color: var(--accent);
+      position: relative;
+      box-shadow: var(--shadow-md);
+    }
+
+    .pricing-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: var(--white);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 5px 16px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    .pricing-name {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .pricing-price {
+      font-family: var(--font-heading);
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .pricing-price sub {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .pricing-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+
+    .pricing-features {
+      list-style: none;
+      margin-bottom: 32px;
+    }
+
+    .pricing-features li {
+      font-size: 0.92rem;
+      color: var(--text);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .pricing-features li::before {
+      content: "✓";
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .pricing-features li.no::before {
+      content: "–";
+      color: var(--border);
+    }
+
+    .pricing-features li.no {
+      color: var(--text-muted);
+    }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      background: var(--accent);
+      padding: 80px 0;
+    }
+
+    .cta-banner-inner {
+      text-align: center;
+    }
+
+    .cta-banner h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+
+    .cta-banner p {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 36px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn-white {
+      background: var(--white);
+      color: var(--accent);
+    }
+
+    .btn-white:hover {
+      background: var(--bg);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    /* ── CONTACT ── */
+    .contact { background: var(--bg-alt); }
+
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .contact-info h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .contact-info p {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 36px;
+    }
+
+    .contact-details {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .contact-details li {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .contact-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--accent-light);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .contact-form {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: var(--shadow);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--text);
+      background: var(--bg);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      min-height: 52px;
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(45,106,79,0.12);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-submit { width: 100%; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text);
+      color: rgba(255,255,255,0.7);
+      padding: 56px 0 32px;
+    }
+
+    .footer-inner {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-brand .nav-logo {
+      color: var(--white);
+      font-size: 1.3rem;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .footer-brand p {
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .footer-col h4 {
+      font-weight: 600;
+      color: var(--white);
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-col a {
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover { color: var(--white); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* ── REVEAL ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      body { font-size: 17px; }
+
+      .nav-links, .nav-cta { display: none; }
+
+      .nav-phone {
+        font-size: 0.9rem;
+      }
+
+      .hamburger { display: flex; }
+
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        inset: 72px 0 0 0;
+        background: var(--bg);
+        z-index: 99;
+        padding: 32px 24px;
+        flex-direction: column;
+        gap: 24px;
+        border-top: 1px solid var(--border);
+      }
+
+      .mobile-menu.open {
+        display: flex;
+      }
+
+      .mobile-menu a {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: var(--text);
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .mobile-menu .btn {
+        margin-top: 8px;
+        width: 100%;
+      }
+
+      .hero { padding: 60px 0 56px; }
+
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .hero-actions { flex-direction: column; }
+      .hero-actions .btn { width: 100%; }
+
+      section { padding: 64px 0; }
+
+      .services-grid,
+      .portfolio-grid,
+      .testimonials-grid,
+      .pricing-grid,
+      .process-steps {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-inner {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+
+      .social-proof-inner {
+        gap: 28px;
+      }
+
+      .proof-divider { display: none; }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 1024px) and (min-width: 769px) {
+      .services-grid,
+      .portfolio-grid,
+      .testimonials-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .process-steps {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+      }
+
+      .footer-inner {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div class="scroll-bar" id="scrollBar"></div>
-
-<!-- NAV -->
-<nav>
-  <a href="#" class="logo">C<span>.</span>Design</a>
-  <ul class="nav-links">
-    <li><a href="#servicii">Servicii</a></li>
-    <li><a href="#proces">Cum lucrăm</a></li>
-    <li><a href="#testimoniale">Clienți</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <a href="#contact" class="nav-cta">Începe proiectul →</a>
-  <button class="hamburger" id="hamburger" aria-label="Meniu">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-
-<!-- HERO -->
-<section style="padding:0">
-  <div class="hero">
-    <div class="hero-glow" aria-hidden="true"></div>
-
-    <div class="hero-text">
-      <div class="badge">Disponibil pentru proiecte noi</div>
-      <h1>Prezența online care îți <em>crește</em> afacerea.</h1>
-      <p class="hero-lead">
-        Construim site-uri profesionale pentru afaceri mici care vor să fie luate în serios.
-        Fără template-uri generice — doar o prezență digitală care atrage clienți
-        și construiește încredere de la primul click.
-      </p>
-      <div class="hero-actions">
-        <a href="#contact" class="btn-primary">Începe proiectul tău →</a>
-        <a href="#servicii" class="btn-ghost">Vezi serviciile</a>
-      </div>
-      <div class="hero-social-proof">
-        <div class="hero-avatars">
-          <span>MB</span>
-          <span>IA</span>
-          <span>CR</span>
-          <span style="font-size:0.625rem;color:var(--teal)">+12</span>
-        </div>
-        <p class="hero-proof-text"><strong>15+ afaceri</strong> și-au crescut prezența online cu noi</p>
-      </div>
-    </div>
-
-    <div class="hero-visual" aria-hidden="true">
-      <div class="visual-glow"></div>
-      <div class="device-mockup">
-        <div class="device-bar">
-          <div class="device-dots">
-            <span></span><span></span><span></span>
-          </div>
-          <div class="device-url">www.afacerea-ta.ro</div>
-        </div>
-        <div class="device-content">
-          <div class="dc-header"></div>
-          <div class="dc-line"></div>
-          <div class="dc-line"></div>
-          <div class="dc-line" style="width:80%"></div>
-          <div class="dc-cards">
-            <div class="dc-card">
-              <div class="dc-card-icon">✦</div>
-              <div class="dc-card-line"></div>
-              <div class="dc-card-line"></div>
-            </div>
-            <div class="dc-card">
-              <div class="dc-card-icon">◈</div>
-              <div class="dc-card-line"></div>
-              <div class="dc-card-line"></div>
-            </div>
-          </div>
-          <div class="dc-btn">Contactează-ne →</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- TRUST BAR -->
-<div class="trust-bar">
-  <div class="container">
-    <div class="trust-inner">
-      <span class="trust-label">Lucrăm cu</span>
-      <div class="trust-tools">
-        <span class="trust-tool">Cloudflare</span>
-        <span class="trust-tool">GitHub</span>
-        <span class="trust-tool">Figma</span>
-        <span class="trust-tool">Next.js</span>
-        <span class="trust-tool">Astro</span>
-        <span class="trust-tool">Google Analytics</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- SERVICES -->
-<section id="servicii">
-  <div class="container">
-    <div class="section-header reveal">
-      <div class="section-label">Servicii</div>
-      <h2>Tot ce ai nevoie pentru o prezență online serioasă</h2>
-      <p>Soluții complete de web design adaptate la nevoile și bugetul afacerii tale.</p>
-    </div>
-
-    <div class="services-grid">
-      <div class="service-card service-card--featured reveal">
-        <div class="service-icon">🌐</div>
-        <h3>Web Design & Dezvoltare</h3>
-        <p>Site-uri custom, responsive, optimizate pentru conversie — construite de la zero în jurul afacerii tale. Fără template-uri, fără compromisuri.</p>
-      </div>
-      <div class="service-card reveal reveal-delay-1">
-        <div class="service-icon">⚡</div>
-        <h3>Landing Pages</h3>
-        <p>Pagini single-focus pentru campanii, produse sau servicii. Trafic plătit? Ai nevoie de o pagină care transformă vizitatorii în clienți.</p>
-      </div>
-      <div class="service-card reveal reveal-delay-2">
-        <div class="service-icon">🔄</div>
-        <h3>Redesign & Modernizare</h3>
-        <p>Transformăm site-urile vechi, lente sau neatractive în prezențe digitale de care ești mândru și care convertesc mai bine.</p>
-      </div>
-      <div class="service-card reveal">
-        <div class="service-icon">🔍</div>
-        <h3>SEO & Performanță</h3>
-        <p>Fiecare site livrat este optimizat tehnic — viteză, structură, meta tags — pentru a fi găsit pe Google și pentru a se încărca rapid.</p>
-      </div>
-      <div class="service-card reveal reveal-delay-1">
-        <div class="service-icon">🎨</div>
-        <h3>Identitate Vizuală</h3>
-        <p>Logo, paletă de culori, tipografie — elementele esențiale pentru un brand coerent și memorabil pe orice canal.</p>
-      </div>
-      <div class="service-card reveal reveal-delay-2">
-        <div class="service-icon">🛡️</div>
-        <h3>Mentenanță & Suport</h3>
-        <p>Site-ul tău funcționează non-stop. Noi ne asigurăm că rămâne rapid, securizat și actualizat permanent.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- BENEFITS -->
-<section class="benefits-bg">
-  <div class="container">
-    <div class="section-header reveal">
-      <div class="section-label">De ce C Design?</div>
-      <h2>Design care lucrează pentru afacerea ta, nu pentru portofoliul nostru</h2>
-    </div>
-    <div class="benefits-grid">
-      <div class="benefit reveal">
-        <div class="benefit-num">01</div>
-        <h3>Înțelegem afacerile mici</h3>
-        <p>Nu ești un număr de ticket. Știm că fiecare leu investit contează și livrăm soluții proporționale cu obiectivele tale reale — nu cu bugetul unui brand mare.</p>
-      </div>
-      <div class="benefit reveal reveal-delay-1">
-        <div class="benefit-num">02</div>
-        <h3>Design care convertește</h3>
-        <p>Frumosul fără funcțional e artă, nu business. Fiecare decizie de design are un scop: să țină vizitatorul pe site și să-l transforme în client.</p>
-      </div>
-      <div class="benefit reveal reveal-delay-2">
-        <div class="benefit-num">03</div>
-        <h3>Proces clar, fără surprize</h3>
-        <p>Știi exact ce primești, când primești și cât costă. Fără costuri ascunse, fără termene amânate, fără comunicare prin intermediari.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- PROCESS -->
-<section id="proces">
-  <div class="container">
-    <div class="section-header reveal">
-      <div class="section-label">Procesul nostru</div>
-      <h2>De la idee la site live în 4 pași simpli</h2>
-      <p>Un proces transparent, structurat, fără blocaje. Știi mereu unde suntem și ce urmează.</p>
-    </div>
-    <div class="process-steps">
-      <div class="process-step reveal">
-        <div class="step-num">01</div>
-        <h4>Discuție inițială</h4>
-        <p>Înțelegem afacerea ta, obiectivele, publicul țintă și bugetul disponibil. Fără jargon, fără presiune.</p>
-      </div>
-      <div class="process-step reveal reveal-delay-1">
-        <div class="step-num">02</div>
-        <h4>Design & Aprobare</h4>
-        <p>Creăm designul site-ului și așteptăm feedback-ul tău. Iterăm până ești 100% mulțumit.</p>
-      </div>
-      <div class="process-step reveal reveal-delay-2">
-        <div class="step-num">03</div>
-        <h4>Dezvoltare</h4>
-        <p>Transformăm designul în cod curat, rapid și optimizat. Testăm pe toate device-urile și browserele.</p>
-      </div>
-      <div class="process-step reveal reveal-delay-3">
-        <div class="step-num">04</div>
-        <h4>Lansare & Suport</h4>
-        <p>Site-ul merge live. Îți oferim training, documentație și suport continuu după lansare.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- TESTIMONIALS -->
-<section id="testimoniale">
-  <div class="container">
-    <div class="section-header reveal">
-      <div class="section-label">Ce spun clienții</div>
-      <h2>Rezultate reale pentru afaceri reale</h2>
-      <p>Nu promitem ce nu putem livra. Lasă clienții noștri să vorbească.</p>
-    </div>
-    <div class="testimonials-grid">
-      <div class="testimonial reveal">
-        <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-        <p class="testimonial-text">"A fost simplu de la început până la final. Mi-au explicat fiecare pas, n-am simțit că nu înțeleg ce se întâmplă. Exact ce aveam nevoie."</p>
-        <div class="testimonial-author">
-          <div class="author-avatar">MB</div>
-          <div class="author-info">
-            <span class="name">Mihai B.</span>
-            <span class="role">Antreprenor, servicii auto — Buzău</span>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial reveal reveal-delay-1">
-        <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-        <p class="testimonial-text">"De când am noul site, am primit cereri de ofertă direct de pe pagina de contact. Primul client a acoperit toată investiția în prima lună."</p>
-        <div class="testimonial-author">
-          <div class="author-avatar">IA</div>
-          <div class="author-info">
-            <span class="name">Ioana A.</span>
-            <span class="role">Consultant financiar — București</span>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial reveal reveal-delay-2">
-        <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-        <p class="testimonial-text">"Au respectat termenul și bugetul. Exact ce mi-au promis, exact când mi-au promis. Rară calitate în piața asta."</p>
-        <div class="testimonial-author">
-          <div class="author-avatar">CR</div>
-          <div class="author-info">
-            <span class="name">Cristian R.</span>
-            <span class="role">Fondator firmă construcții — Cluj</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA BANNER -->
-<div class="cta-banner">
-  <div class="cta-glow" aria-hidden="true"></div>
-  <div class="container">
-    <div class="section-label" style="margin-bottom:1rem">Hai să lucrăm împreună</div>
-    <h2>Gata să-ți crești afacerea online?</h2>
-    <p>Ia legătura azi. Consultația inițială este gratuită și fără obligații.</p>
-    <div class="cta-actions">
-      <a href="#contact" class="btn-primary">Începe proiectul tău →</a>
-      <a href="mailto:hello@c-design.ro" class="btn-ghost">hello@c-design.ro</a>
-    </div>
-  </div>
-</div>
-
-<!-- CONTACT -->
-<section id="contact">
-  <div class="container">
-    <div class="contact-grid">
-      <div class="contact-info reveal">
-        <div class="availability-badge">Disponibil pentru proiecte noi</div>
-        <h2>Hai să discutăm despre proiectul tău</h2>
-        <p>
-          Completează formularul și îți răspundem în mai puțin de 24 de ore.
-          Sau dacă preferi, ne poți contacta direct.
-        </p>
-        <div class="contact-details">
-          <div class="contact-item">
-            <div class="contact-item-icon">✉</div>
-            <a href="mailto:hello@c-design.ro">hello@c-design.ro</a>
-          </div>
-          <div class="contact-item">
-            <div class="contact-item-icon">📞</div>
-            <a href="tel:+40700000000">+40 700 000 000</a>
-          </div>
-          <div class="contact-item">
-            <div class="contact-item-icon">🌐</div>
-            <span>www.c-design.ro</span>
-          </div>
-          <div class="contact-item">
-            <div class="contact-item-icon">⏱</div>
-            <span>Răspuns în mai puțin de 24h</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="reveal reveal-delay-1">
-        <form class="form" id="contactForm" novalidate>
-          <div class="form-row">
-            <div class="input-group">
-              <label class="input-label" for="name">Nume</label>
-              <input class="input" type="text" id="name" name="name" placeholder="Numele tău" required>
-            </div>
-            <div class="input-group">
-              <label class="input-label" for="email">Email</label>
-              <input class="input" type="email" id="email" name="email" placeholder="email@exemplu.ro" required>
-            </div>
-          </div>
-          <div class="input-group">
-            <label class="input-label" for="service">Serviciu dorit</label>
-            <select class="input" id="service" name="service">
-              <option value="">Alege serviciul...</option>
-              <option>Web Design & Dezvoltare</option>
-              <option>Landing Page</option>
-              <option>Redesign site existent</option>
-              <option>SEO & Performanță</option>
-              <option>Identitate Vizuală</option>
-              <option>Mentenanță & Suport</option>
-              <option>Altceva</option>
-            </select>
-          </div>
-          <div class="input-group">
-            <label class="input-label" for="message">Mesaj</label>
-            <textarea class="input" id="message" name="message" placeholder="Spune-ne despre afacerea ta și ce vrei să realizezi..." required></textarea>
-          </div>
-          <div class="form-submit">
-            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:14px">
-              Trimite mesajul →
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a href="#" class="logo">C<span>.</span>Design</a>
-        <p>Site-uri care lucrează pentru tine. Web design profesional pentru afaceri mici din România.</p>
-        <div class="footer-social">
-          <a href="#" class="social-btn" aria-label="Facebook">f</a>
-          <a href="#" class="social-btn" aria-label="Instagram">in</a>
-          <a href="#" class="social-btn" aria-label="LinkedIn">Li</a>
-        </div>
-      </div>
-      <div class="footer-col">
-        <h4>Servicii</h4>
-        <ul>
-          <li><a href="#servicii">Web Design</a></li>
-          <li><a href="#servicii">Landing Pages</a></li>
-          <li><a href="#servicii">Redesign</a></li>
-          <li><a href="#servicii">SEO</a></li>
-          <li><a href="#servicii">Mentenanță</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Companie</h4>
-        <ul>
-          <li><a href="#">Despre noi</a></li>
-          <li><a href="#">Portofoliu</a></li>
-          <li><a href="#testimoniale">Clienți</a></li>
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="container">
+      <div class="nav-inner">
+        <a href="#" class="nav-logo">C <span>Design</span></a>
+        <ul class="nav-links">
+          <li><a href="#servicii">Servicii</a></li>
+          <li><a href="#portofoliu">Portofoliu</a></li>
           <li><a href="#proces">Cum lucrăm</a></li>
+          <li><a href="#preturi">Prețuri</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Contact</h4>
-        <ul>
-          <li><a href="mailto:hello@c-design.ro">hello@c-design.ro</a></li>
-          <li><a href="tel:+40700000000">+40 700 000 000</a></li>
-          <li><a href="#">c-design.ro</a></li>
-        </ul>
+        <a href="tel:+40700000000" class="nav-phone">0700 000 000</a>
+        <div class="nav-cta">
+          <a href="#contact" class="btn btn-primary">Vreau o ofertă gratuită</a>
+        </div>
+        <button class="hamburger" id="hamburger" aria-label="Meniu">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
-    <div class="footer-bottom">
-      <p>© 2025 C Design. Toate drepturile rezervate.</p>
-      <p>Făcut cu <span>♥</span> în România</p>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#servicii">Servicii</a>
+    <a href="#portofoliu">Portofoliu</a>
+    <a href="#proces">Cum lucrăm</a>
+    <a href="#preturi">Prețuri</a>
+    <a href="#contact">Contact</a>
+    <a href="#contact" class="btn btn-primary">Vreau o ofertă gratuită</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-content">
+          <div class="hero-badge">✦ Creat pentru afaceri românești</div>
+          <h1>Site-uri care aduc <em>clienți noi</em> în fiecare lună</h1>
+          <p>Creăm prezențe online clare, rapide și eficiente — fără jargon tehnic, fără surprize de preț, cu rezultate măsurabile.</p>
+          <div class="hero-actions">
+            <a href="#contact" class="btn btn-primary">Vreau o ofertă gratuită</a>
+            <a href="#portofoliu" class="btn btn-secondary">Vezi lucrările noastre</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-card">
+            <div class="hero-card-bar">
+              <div class="dot dot-red"></div>
+              <div class="dot dot-yellow"></div>
+              <div class="dot dot-green"></div>
+            </div>
+            <div class="hero-card-body">
+              <div class="hero-card-head-text">Rezultate reale ale clienților noștri</div>
+              <div class="stat-grid">
+                <div class="stat-item">
+                  <div class="stat-num">+180%</div>
+                  <div class="stat-label">Vizitatori noi / lună</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-num">+65%</div>
+                  <div class="stat-label">Cereri de ofertă</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-num">21 zile</div>
+                  <div class="stat-label">Timp mediu de livrare</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-num">4.9 ★</div>
+                  <div class="stat-label">Notă medie clienți</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL PROOF BAR -->
+  <div class="social-proof">
+    <div class="container">
+      <div class="social-proof-inner">
+        <div class="proof-stat">
+          <div class="proof-stat-num">120+</div>
+          <div class="proof-stat-label">site-uri livrate</div>
+        </div>
+        <div class="proof-divider"></div>
+        <div class="proof-stat">
+          <div class="proof-stat-num">8 ani</div>
+          <div class="proof-stat-label">experiență în web design</div>
+        </div>
+        <div class="proof-divider"></div>
+        <div class="proof-stat">
+          <div class="proof-stat-num">97%</div>
+          <div class="proof-stat-label">clienți mulțumiți</div>
+        </div>
+        <div class="proof-divider"></div>
+        <div class="proof-stat">
+          <div class="proof-stat-num">24h</div>
+          <div class="proof-stat-label">suport tehnic</div>
+        </div>
+      </div>
     </div>
   </div>
-</footer>
 
-<script>
-// Scroll progress bar
-const scrollBar = document.getElementById('scrollBar');
-window.addEventListener('scroll', () => {
-  const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-  scrollBar.style.width = scrolled + '%';
-}, { passive: true });
+  <!-- SERVICES -->
+  <section class="services" id="servicii">
+    <div class="container">
+      <div class="section-label reveal">Ce facem</div>
+      <h2 class="section-title reveal">Tot ce ai nevoie pentru o prezență online puternică</h2>
+      <p class="section-subtitle reveal">De la un site simplu de prezentare până la un magazin online complet — ne ocupăm de tot.</p>
+      <div class="services-grid">
+        <div class="service-card reveal">
+          <div class="service-icon">🎨</div>
+          <h3>Design Web Profesional</h3>
+          <p>Site-uri cu aspect modern, adaptate identității tale vizuale și publicului tău țintă. Fiecare pixel contează.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon">📱</div>
+          <h3>Optimizat pentru Mobile</h3>
+          <p>Peste 70% din clienții tăi te caută de pe telefon. Site-ul tău va arăta perfect pe orice dispozitiv.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon">🛒</div>
+          <h3>Magazine Online</h3>
+          <p>Vinde produsele tale online cu un magazin simplu de administrat, securizat și optimizat pentru conversii.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon">⚡</div>
+          <h3>Viteză și Performanță</h3>
+          <p>Un site lent pierde clienți. Al tău va fi rapid, sigur și optimizat pentru motoarele de căutare (SEO).</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon">✍️</div>
+          <h3>Conținut și Texte</h3>
+          <p>Te ajutăm să scrii textele potrivite care conving vizitatorii să te contacteze sau să cumpere.</p>
+        </div>
+        <div class="service-card reveal">
+          <div class="service-icon">🔧</div>
+          <h3>Întreținere și Suport</h3>
+          <p>Actualizări, backup-uri și suport tehnic lunar — te ocupi de afacere, noi avem grijă de site.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-// Reveal on scroll
-const reveals = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('is-visible');
-      observer.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.12 });
-reveals.forEach(el => observer.observe(el));
+  <!-- PROCESS -->
+  <section class="process" id="proces">
+    <div class="container">
+      <div class="section-label reveal">Cum lucrăm</div>
+      <h2 class="section-title reveal">4 pași simpli până la site-ul tău nou</h2>
+      <p class="section-subtitle reveal">Fără întârzieri, fără surprize. Știi exact ce se întâmplă în fiecare etapă.</p>
+      <div class="process-steps">
+        <div class="process-step reveal">
+          <div class="step-number">1</div>
+          <h3>Discuție inițială</h3>
+          <p>Vorbim 30 de minute despre afacerea ta, obiective și ce ai nevoie de la site. Gratuit, fără obligații.</p>
+        </div>
+        <div class="process-step reveal">
+          <div class="step-number">2</div>
+          <h3>Propunere și ofertă</h3>
+          <p>Primești o ofertă clară, cu preț fix și termen de livrare. Fără costuri ascunse, fără surprize.</p>
+        </div>
+        <div class="process-step reveal">
+          <div class="step-number">3</div>
+          <h3>Design și dezvoltare</h3>
+          <p>Lucrăm la site-ul tău și îți arătăm progresul săptămânal. Feedback-ul tău este esențial la fiecare pas.</p>
+        </div>
+        <div class="process-step reveal">
+          <div class="step-number">4</div>
+          <h3>Lansare și suport</h3>
+          <p>Site-ul este lansat, te instruim cum să îl folosești și rămânem alături cu suport tehnic continuu.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-// Hamburger menu
-const hamburger = document.getElementById('hamburger');
-const navLinks = document.querySelector('.nav-links');
-if (hamburger && navLinks) {
-  hamburger.addEventListener('click', () => {
-    const isOpen = navLinks.style.display === 'flex';
-    navLinks.style.display = isOpen ? 'none' : 'flex';
-    navLinks.style.flexDirection = 'column';
-    navLinks.style.position = 'absolute';
-    navLinks.style.top = '62px';
-    navLinks.style.left = '0';
-    navLinks.style.right = '0';
-    navLinks.style.background = 'rgba(8,11,14,0.97)';
-    navLinks.style.padding = '1.5rem 1.25rem';
-    navLinks.style.borderBottom = '1px solid rgba(255,255,255,0.07)';
-    navLinks.style.backdropFilter = 'blur(18px)';
-  });
-}
+  <!-- PORTFOLIO -->
+  <section class="portfolio" id="portofoliu">
+    <div class="container">
+      <div class="section-label reveal">Portofoliu</div>
+      <h2 class="section-title reveal">Lucrări recente</h2>
+      <p class="section-subtitle reveal">Fiecare proiect este unic și construit cu atenție la nevoile clientului.</p>
+      <div class="portfolio-grid">
+        <div class="portfolio-card reveal">
+          <div class="portfolio-thumb">
+            <div class="portfolio-thumb-overlay"></div>
+            <span class="portfolio-thumb-emoji">🏠</span>
+          </div>
+          <div class="portfolio-info">
+            <div class="portfolio-tag">Imobiliare</div>
+            <h3>Agenție Imobiliară Cluj</h3>
+            <p>Site de prezentare cu listare proprietăți și formular de contact integrat.</p>
+          </div>
+        </div>
+        <div class="portfolio-card reveal">
+          <div class="portfolio-thumb">
+            <div class="portfolio-thumb-overlay"></div>
+            <span class="portfolio-thumb-emoji">🍕</span>
+          </div>
+          <div class="portfolio-info">
+            <div class="portfolio-tag">Restaurante</div>
+            <h3>Restaurant Tradițional Brașov</h3>
+            <p>Meniu online, rezervări și integrare Google Maps. Trafic crescut cu 200%.</p>
+          </div>
+        </div>
+        <div class="portfolio-card reveal">
+          <div class="portfolio-thumb">
+            <div class="portfolio-thumb-overlay"></div>
+            <span class="portfolio-thumb-emoji">💆</span>
+          </div>
+          <div class="portfolio-info">
+            <div class="portfolio-tag">Servicii &amp; Beauty</div>
+            <h3>Salon de înfrumusețare București</h3>
+            <p>Site cu sistem de programări online și galerie de lucrări.</p>
+          </div>
+        </div>
+        <div class="portfolio-card reveal">
+          <div class="portfolio-thumb">
+            <div class="portfolio-thumb-overlay"></div>
+            <span class="portfolio-thumb-emoji">⚖️</span>
+          </div>
+          <div class="portfolio-info">
+            <div class="portfolio-tag">Servicii Profesionale</div>
+            <h3>Firmă de Avocatură Timișoara</h3>
+            <p>Prezentare profesională a serviciilor juridice și blog de specialitate.</p>
+          </div>
+        </div>
+        <div class="portfolio-card reveal">
+          <div class="portfolio-thumb">
+            <div class="portfolio-thumb-overlay"></div>
+            <span class="portfolio-thumb-emoji">🛋️</span>
+          </div>
+          <div class="portfolio-info">
+            <div class="portfolio-tag">Mobilă &amp; Design Interior</div>
+            <h3>Producător Mobilă Personalizată</h3>
+            <p>Magazin online cu configurator de produse și galerie de proiecte.</p>
+          </div>
+        </div>
+        <div class="portfolio-card reveal">
+          <div class="portfolio-thumb">
+            <div class="portfolio-thumb-overlay"></div>
+            <span class="portfolio-thumb-emoji">🎓</span>
+          </div>
+          <div class="portfolio-info">
+            <div class="portfolio-tag">Educație</div>
+            <h3>Centru de Meditații Iași</h3>
+            <p>Platforma de inscrieri online cu gestionare program și profesori.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-// Form submit
-const form = document.getElementById('contactForm');
-if (form) {
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const btn = form.querySelector('[type=submit]');
-    btn.textContent = 'Mesaj trimis! ✓';
-    btn.style.background = '#22c55e';
-    btn.disabled = true;
-    setTimeout(() => {
-      btn.textContent = 'Trimite mesajul →';
-      btn.style.background = '';
-      btn.disabled = false;
-      form.reset();
-    }, 3000);
-  });
-}
-</script>
+  <!-- TESTIMONIALS -->
+  <section class="testimonials" id="testimoniale">
+    <div class="container">
+      <div class="section-label reveal">Ce spun clienții</div>
+      <h2 class="section-title reveal">Oameni reali, rezultate reale</h2>
+      <div class="testimonials-grid">
+        <div class="testimonial-card reveal">
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-text">„De când am noul site, primesc cereri de ofertă în fiecare săptămână. Înainte, clienții nu știau că exist online. Acum mă găsesc ei pe mine."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">MI</div>
+            <div>
+              <div class="author-name">Mihai Ionescu</div>
+              <div class="author-role">Constructor, Cluj-Napoca</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal">
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-text">„Profesioniști adevărați. Mi-au explicat tot pe înțelesul meu, fără termeni tehnici. Site-ul a fost livrat la timp, exact cum am cerut."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">AP</div>
+            <div>
+              <div class="author-name">Ana-Maria Popescu</div>
+              <div class="author-role">Cosmeticiană, București</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal">
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-text">„Am avut un site vechi, urât și lent. Acum am un site modern care îmi reprezintă cu adevărat restaurantul. Rezervările online au crescut de 3 ori."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">GD</div>
+            <div>
+              <div class="author-name">Gheorghe Dumitrescu</div>
+              <div class="author-role">Patron restaurant, Brașov</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="preturi">
+    <div class="container">
+      <div class="section-label reveal">Prețuri</div>
+      <h2 class="section-title reveal">Prețuri clare, fără surprize</h2>
+      <p class="section-subtitle reveal">Alege pachetul potrivit afacerii tale. Toate includ design personalizat și mobile-friendly.</p>
+      <div class="pricing-grid">
+        <div class="pricing-card reveal">
+          <div class="pricing-name">Start</div>
+          <div class="pricing-price">799 <sub>€</sub></div>
+          <div class="pricing-desc">Ideal pentru freelanceri și afaceri mici care vor o prezență online simplă și eficientă.</div>
+          <ul class="pricing-features">
+            <li>Site de prezentare (până la 5 pagini)</li>
+            <li>Design personalizat</li>
+            <li>Adaptare mobilă completă</li>
+            <li>Formular de contact</li>
+            <li>Integrare Google Maps</li>
+            <li>SEO de bază</li>
+            <li class="no">Magazin online</li>
+            <li class="no">Blog integrat</li>
+          </ul>
+          <a href="#contact" class="btn btn-secondary" style="width:100%">Vreau o ofertă</a>
+        </div>
+        <div class="pricing-card featured reveal">
+          <div class="pricing-badge">Cel mai popular</div>
+          <div class="pricing-name">Business</div>
+          <div class="pricing-price">1.499 <sub>€</sub></div>
+          <div class="pricing-desc">Pentru afaceri care vor să crească online și să atragă mai mulți clienți.</div>
+          <ul class="pricing-features">
+            <li>Site complet (până la 12 pagini)</li>
+            <li>Design premium personalizat</li>
+            <li>Adaptare mobilă completă</li>
+            <li>Blog integrat</li>
+            <li>SEO avansat + Google Analytics</li>
+            <li>Sistem de programări online</li>
+            <li>Texte scrise de specialiști</li>
+            <li class="no">Magazin online</li>
+          </ul>
+          <a href="#contact" class="btn btn-primary" style="width:100%">Vreau o ofertă</a>
+        </div>
+        <div class="pricing-card reveal">
+          <div class="pricing-name">E-commerce</div>
+          <div class="pricing-price">2.499 <sub>€</sub></div>
+          <div class="pricing-desc">Magazin online complet pentru a vinde produsele tale pe internet.</div>
+          <ul class="pricing-features">
+            <li>Magazin online complet</li>
+            <li>Design premium personalizat</li>
+            <li>Până la 100 produse</li>
+            <li>Plăți online (card, PayPal)</li>
+            <li>Administrare simplă a produselor</li>
+            <li>SEO avansat pentru produse</li>
+            <li>Integrare curierat</li>
+            <li>Texte și fotografii produse</li>
+          </ul>
+          <a href="#contact" class="btn btn-secondary" style="width:100%">Vreau o ofertă</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <div class="cta-banner">
+    <div class="container">
+      <div class="cta-banner-inner">
+        <h2>Gata să ai un site care lucrează pentru tine?</h2>
+        <p>Discutăm 30 de minute, gratuit. Îți spunem exact ce ai nevoie și cât costă.</p>
+        <a href="#contact" class="btn btn-white">Vreau o ofertă gratuită →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="contact-inner">
+        <div class="contact-info">
+          <div class="section-label reveal">Contactează-ne</div>
+          <h2 class="reveal">Hai să vorbim despre proiectul tău</h2>
+          <p class="reveal">Completează formularul sau sună-ne direct. Îți răspundem în maximum 24 de ore.</p>
+          <ul class="contact-details">
+            <li class="reveal">
+              <div class="contact-icon">📞</div>
+              <div>
+                <strong>Telefon</strong><br>
+                <a href="tel:+40700000000">0700 000 000</a>
+              </div>
+            </li>
+            <li class="reveal">
+              <div class="contact-icon">✉️</div>
+              <div>
+                <strong>Email</strong><br>
+                <a href="mailto:contact@c-design.ro">contact@c-design.ro</a>
+              </div>
+            </li>
+            <li class="reveal">
+              <div class="contact-icon">📍</div>
+              <div>
+                <strong>Locație</strong><br>
+                România — lucrăm cu clienți din toată țara
+              </div>
+            </li>
+            <li class="reveal">
+              <div class="contact-icon">⏰</div>
+              <div>
+                <strong>Program</strong><br>
+                Luni – Vineri, 09:00 – 18:00
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="contact-form reveal">
+          <form id="contactForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Nume și prenume *</label>
+                <input type="text" id="name" name="name" placeholder="Ion Popescu" required>
+              </div>
+              <div class="form-group">
+                <label for="phone">Telefon *</label>
+                <input type="tel" id="phone" name="phone" placeholder="07XX XXX XXX" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input type="email" id="email" name="email" placeholder="ion@firma-ta.ro" required>
+            </div>
+            <div class="form-group">
+              <label for="business">Tipul afacerii</label>
+              <select id="business" name="business">
+                <option value="">Selectează domeniul...</option>
+                <option>Restaurant / Cafenea / Bar</option>
+                <option>Salon / Servicii beauty</option>
+                <option>Construcții / Renovări</option>
+                <option>Imobiliare</option>
+                <option>Servicii profesionale</option>
+                <option>Producție / Manufactura</option>
+                <option>Comerț / Retail</option>
+                <option>Educație / Training</option>
+                <option>Alt domeniu</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message">Ce îți dorești de la noul site? *</label>
+              <textarea id="message" name="message" placeholder="Descrie pe scurt ce tip de site vrei și ce obiective ai..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary form-submit">Trimite mesajul →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="nav-logo">C <span style="color:#2D6A4F">Design</span></span>
+          <p>Creăm site-uri profesionale pentru afaceri românești. Claritate, calitate și rezultate măsurabile.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Servicii</h4>
+          <ul>
+            <li><a href="#servicii">Site de prezentare</a></li>
+            <li><a href="#servicii">Magazine online</a></li>
+            <li><a href="#servicii">Redesign site</a></li>
+            <li><a href="#servicii">Optimizare SEO</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Companie</h4>
+          <ul>
+            <li><a href="#portofoliu">Portofoliu</a></li>
+            <li><a href="#testimoniale">Testimoniale</a></li>
+            <li><a href="#preturi">Prețuri</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="tel:+40700000000">0700 000 000</a></li>
+            <li><a href="mailto:contact@c-design.ro">contact@c-design.ro</a></li>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Instagram</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 C Design. Toate drepturile rezervate.</span>
+        <span>Politica de confidențialitate · Termeni și condiții</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.toggle('open');
+    });
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    });
+
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(el => observer.observe(el));
+
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const btn = this.querySelector('button[type=submit]');
+      const name = this.querySelector('#name').value.trim();
+      const phone = this.querySelector('#phone').value.trim();
+      const email = this.querySelector('#email').value.trim();
+      const message = this.querySelector('#message').value.trim();
+      if (!name || !phone || !email || !message) {
+        btn.textContent = 'Completează toate câmpurile obligatorii';
+        btn.style.background = '#c0392b';
+        setTimeout(() => {
+          btn.textContent = 'Trimite mesajul →';
+          btn.style.background = '';
+        }, 3000);
+        return;
+      }
+      btn.textContent = 'Se trimite...';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = '✓ Mesaj trimis! Te contactăm în 24h.';
+        btn.style.background = '#27ae60';
+        btn.disabled = false;
+        this.reset();
+        setTimeout(() => {
+          btn.textContent = 'Trimite mesajul →';
+          btn.style.background = '';
+        }, 5000);
+      }, 1200);
+    });
+  </script>
 </body>
 </html>
