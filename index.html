@@ -426,16 +426,9 @@
 <section id="portofoliu" aria-labelledby="portofoliu-heading">
   <div class="container">
     <div class="sec-label reveal">// portfolio.load()</div>
-    <h2 class="sec-title reveal" id="portofoliu-heading">Lucrări recente</h2>
+    <h2 class="sec-title reveal" id="portofoliu-heading">Proiectele noastre</h2>
     <p class="sec-sub reveal">Proiecte reale pentru afaceri reale din România.</p>
-    <div class="portfolio-grid">
-      <div class="port-card reveal"><div class="port-thumb" aria-hidden="true"><div class="port-grid-overlay"></div><span class="port-emoji">🚗</span></div><div class="port-info"><div class="port-tag">Auto</div><h3>Tractări Auto Teleorman</h3><p>Site de prezentare cu zone de acoperire: Dâmbovița, Ilfov, București, Argeș, Giurgiu.</p></div></div>
-      <div class="port-card reveal reveal-delay-1"><div class="port-thumb" aria-hidden="true"><div class="port-grid-overlay"></div><span class="port-emoji">🏭</span></div><div class="port-info"><div class="port-tag">Dealer Autorizat</div><h3>Dealer Autorizat Lindab</h3><p>Prezentare profesională cu catalog de produse și date de contact integrate.</p></div></div>
-      <div class="port-card reveal reveal-delay-2"><div class="port-thumb" aria-hidden="true"><div class="port-grid-overlay"></div><span class="port-emoji">🌸</span></div><div class="port-info"><div class="port-tag">Florărie</div><h3>Site Florărie</h3><p>Site modern cu produse și posibilitate de comandă online, optimizat pentru mobil.</p></div></div>
-      <div class="port-card reveal"><div class="port-thumb" aria-hidden="true"><div class="port-grid-overlay"></div><span class="port-emoji">🏗️</span></div><div class="port-info"><div class="port-tag">Construcții</div><h3>Arhitectură &amp; Construcții</h3><p>Portofoliu vizual elegant cu proiecte realizate și testimoniale clienți.</p></div></div>
-      <div class="port-card reveal reveal-delay-1"><div class="port-thumb" aria-hidden="true"><div class="port-grid-overlay"></div><span class="port-emoji">💼</span></div><div class="port-info"><div class="port-tag">Start-Up</div><h3>Micul Întreprinzător</h3><p>Pachet complet la start: site + identitate vizuală + prezență online activă.</p></div></div>
-      <div class="port-card reveal reveal-delay-2"><div class="port-thumb" aria-hidden="true"><div class="port-grid-overlay"></div><span class="port-emoji">🔧</span></div><div class="port-info"><div class="port-tag">Servicii</div><h3>Firmă Servicii Tehnice</h3><p>Site de prezentare cu formular de solicitare ofertă și galerie de lucrări.</p></div></div>
-    </div>
+    <div class="portfolio-grid" id="portfolioGrid"></div>
   </div>
 </section>
 
@@ -600,6 +593,32 @@ function addLine(){
   else setTimeout(()=>{const c=document.createElement('div');c.className='t-line';c.innerHTML=`<span class="t-prompt">~/c-design $</span><span class="t-cursor"></span>`;tbody.appendChild(c);},400);
 }
 setTimeout(addLine,800);
+
+// Încarcă proiectele din API
+(async function loadProjects() {
+  const grid = document.getElementById('portfolioGrid');
+  const delays = ['', 'reveal-delay-1', 'reveal-delay-2'];
+  const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  try {
+    const res = await fetch('/api/projects');
+    const projects = await res.json();
+    grid.innerHTML = projects.map((p, i) => `
+      <div class="port-card reveal ${delays[i % 3]}">
+        <div class="port-thumb" aria-hidden="true">
+          <div class="port-grid-overlay"></div>
+          <span class="port-emoji">${esc(p.emoji)}</span>
+        </div>
+        <div class="port-info">
+          <div class="port-tag">${esc(p.tag)}</div>
+          <h3>${esc(p.title)}</h3>
+          <p>${esc(p.description)}</p>
+        </div>
+      </div>`).join('');
+    grid.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+  } catch {
+    grid.innerHTML = '<p style="color:var(--muted);font-size:.9rem;padding:24px 0">Nu s-au putut încărca proiectele.</p>';
+  }
+})();
 
 // Set min date to today
 document.getElementById('fdate').min = new Date().toISOString().split('T')[0];

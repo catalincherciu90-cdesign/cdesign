@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Programări | C Design Admin</title>
+  <title>Admin | C Design</title>
   <meta name="robots" content="noindex, nofollow">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
@@ -36,12 +36,19 @@
     .top-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
     .top-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:#fff;display:flex;align-items:center;gap:6px;}
     .top-logo span{color:var(--teal);}
-    .top-label{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--muted);}
     .top-right{display:flex;align-items:center;gap:12px;}
-    .refresh-btn{background:var(--teal-dim);border:1px solid var(--teal-border);color:var(--teal);font-family:'Share Tech Mono',monospace;font-size:.78rem;padding:6px 14px;border-radius:6px;cursor:pointer;transition:background .2s;}
-    .refresh-btn:hover{background:rgba(0,200,180,.15);}
-    .logout-btn{background:none;border:1px solid var(--border-soft);color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:.78rem;padding:6px 14px;border-radius:6px;cursor:pointer;transition:color .2s;}
-    .logout-btn:hover{color:var(--red)}
+    .top-btn{font-family:'Share Tech Mono',monospace;font-size:.78rem;padding:6px 14px;border-radius:6px;cursor:pointer;transition:all .2s;border:1px solid;}
+    .top-btn-refresh{background:var(--teal-dim);border-color:var(--teal-border);color:var(--teal);}
+    .top-btn-refresh:hover{background:rgba(0,200,180,.15);}
+    .top-btn-logout{background:none;border-color:var(--border-soft);color:var(--muted);}
+    .top-btn-logout:hover{color:var(--red);border-color:rgba(255,95,87,.4);}
+
+    /* TABS */
+    .tabs{display:flex;gap:4px;padding:0 24px;background:var(--bg2);border-bottom:1px solid var(--border);}
+    .tab{font-family:'Share Tech Mono',monospace;font-size:.8rem;padding:12px 20px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s;background:none;border-left:none;border-right:none;border-top:none;}
+    .tab:hover{color:var(--soft);}
+    .tab.active{color:var(--teal);border-bottom-color:var(--teal);}
+    .tab-panel{display:none;}.tab-panel.active{display:block;}
 
     .main{max-width:1200px;margin:0 auto;padding:32px 24px;}
 
@@ -58,9 +65,9 @@
 
     /* TABLE */
     .table-wrap{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;overflow:hidden;}
-    .table-head{display:grid;grid-template-columns:1.4fr 1fr 1.2fr .9fr .8fr .9fr 1fr;gap:0;background:var(--bg3);border-bottom:1px solid var(--border);}
+    .table-head{display:grid;grid-template-columns:1.4fr 1fr 1.2fr .9fr .8fr .9fr 1fr;background:var(--bg3);border-bottom:1px solid var(--border);}
     .th{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--muted);padding:12px 16px;letter-spacing:.06em;text-transform:uppercase;}
-    .booking-row{display:grid;grid-template-columns:1.4fr 1fr 1.2fr .9fr .8fr .9fr 1fr;gap:0;border-bottom:1px solid var(--border);transition:background .15s;}
+    .booking-row{display:grid;grid-template-columns:1.4fr 1fr 1.2fr .9fr .8fr .9fr 1fr;border-bottom:1px solid var(--border);transition:background .15s;}
     .booking-row:last-child{border-bottom:none}
     .booking-row:hover{background:rgba(255,255,255,.02)}
     .td{padding:14px 16px;font-size:.875rem;display:flex;align-items:center;}
@@ -70,27 +77,63 @@
     .td-date{font-family:'Share Tech Mono',monospace;font-size:.82rem;color:var(--soft);}
     .td-time{font-family:'Share Tech Mono',monospace;font-size:.82rem;color:var(--teal);font-weight:600;}
     .td-service{color:var(--soft);font-size:.8rem;}
-    .td-status{}
     .status-badge{font-family:'Share Tech Mono',monospace;font-size:.7rem;padding:4px 10px;border-radius:4px;font-weight:600;cursor:pointer;border:none;transition:opacity .2s;}
     .status-badge:hover{opacity:.8}
     .s-nou{background:rgba(254,188,46,.12);color:var(--yellow);border:1px solid rgba(254,188,46,.25);}
     .s-confirmat{background:rgba(40,200,64,.1);color:var(--green);border:1px solid rgba(40,200,64,.22);}
     .s-anulat{background:rgba(255,95,87,.1);color:var(--red);border:1px solid rgba(255,95,87,.22);}
 
+    /* PROJECTS */
+    .proj-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+    .proj-toolbar h3{font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--soft);}
+    .btn-add{background:var(--teal);color:#080b0e;font-weight:700;font-size:.85rem;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s;}
+    .btn-add:hover{background:#33d4c3}
+    .projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+    .proj-card{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;overflow:hidden;transition:border-color .2s;}
+    .proj-card:hover{border-color:var(--teal-border);}
+    .proj-card-thumb{height:100px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:2.4rem;position:relative;}
+    .proj-card-body{padding:14px 16px;}
+    .proj-card-tag{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--teal);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;}
+    .proj-card-title{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:#fff;margin-bottom:4px;}
+    .proj-card-desc{font-size:.78rem;color:var(--muted);line-height:1.5;margin-bottom:12px;}
+    .proj-card-actions{display:flex;gap:8px;}
+    .btn-edit{background:var(--teal-dim);border:1px solid var(--teal-border);color:var(--teal);font-family:'Share Tech Mono',monospace;font-size:.72rem;padding:5px 12px;border-radius:5px;cursor:pointer;transition:background .2s;}
+    .btn-edit:hover{background:rgba(0,200,180,.15);}
+    .btn-del{background:rgba(255,95,87,.08);border:1px solid rgba(255,95,87,.2);color:var(--red);font-family:'Share Tech Mono',monospace;font-size:.72rem;padding:5px 12px;border-radius:5px;cursor:pointer;transition:background .2s;}
+    .btn-del:hover{background:rgba(255,95,87,.15);}
+
+    /* MODAL */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center;padding:24px;}
+    .modal-overlay.open{display:flex;}
+    .modal{background:var(--bg2);border:1px solid var(--border-soft);border-radius:16px;padding:32px;width:100%;max-width:480px;}
+    .modal h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:24px;}
+    .f-group{margin-bottom:16px;}
+    .f-label{display:block;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--soft);margin-bottom:6px;}
+    .f-input{width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--border-soft);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s;}
+    .f-input:focus{border-color:var(--teal-border);}
+    textarea.f-input{min-height:80px;resize:vertical;line-height:1.5;}
+    .modal-actions{display:flex;gap:10px;margin-top:24px;justify-content:flex-end;}
+    .btn-cancel{background:none;border:1px solid var(--border-soft);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.9rem;padding:9px 20px;border-radius:8px;cursor:pointer;}
+    .btn-save{background:var(--teal);color:#080b0e;font-weight:700;font-family:'DM Sans',sans-serif;font-size:.9rem;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:background .2s;}
+    .btn-save:hover{background:#33d4c3}
+
     .empty-state{text-align:center;padding:64px 24px;}
     .empty-state p{font-family:'Share Tech Mono',monospace;color:var(--muted);font-size:.85rem;}
-
-    .loading{text-align:center;padding:48px;font-family:'Share Tech Mono',monospace;color:var(--muted);font-size:.85rem;animation:blink 1s step-end infinite;}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+    .loading{text-align:center;padding:48px;font-family:'Share Tech Mono',monospace;color:var(--muted);font-size:.85rem;animation:pulse 1s step-end infinite;}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
     @media(max-width:900px){
       .stats-row{grid-template-columns:1fr 1fr}
       .table-head{display:none}
-      .booking-row{grid-template-columns:1fr;gap:4px;padding:16px;display:block;}
+      .booking-row{grid-template-columns:1fr;padding:16px;display:block;}
       .td{padding:2px 0;font-size:.85rem;}
       .td::before{content:attr(data-label)' ';font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);margin-right:6px;}
+      .projects-grid{grid-template-columns:1fr 1fr;}
     }
-    @media(max-width:520px){.stats-row{grid-template-columns:1fr 1fr}}
+    @media(max-width:520px){
+      .stats-row{grid-template-columns:1fr 1fr}
+      .projects-grid{grid-template-columns:1fr;}
+    }
   </style>
 </head>
 <body>
@@ -99,7 +142,7 @@
 <div class="login-wrap" id="loginWrap">
   <div class="login-box">
     <div class="login-logo"><span>C</span>DESIGN</div>
-    <div class="login-sub">// admin.programari</div>
+    <div class="login-sub">// admin.dashboard</div>
     <label class="login-label" for="tokenInput">// token_acces</label>
     <input class="login-input" type="password" id="tokenInput" placeholder="••••••••••••" autocomplete="current-password">
     <button class="login-btn" onclick="login()">Autentificare →</button>
@@ -112,35 +155,81 @@
   <div class="top-bar">
     <div>
       <div class="top-logo"><span>C</span>DESIGN</div>
-      <div class="top-label">// programari.dashboard</div>
     </div>
     <div class="top-right">
-      <button class="refresh-btn" onclick="fetchBookings()">↻ Reîncarcă</button>
-      <button class="logout-btn" onclick="logout()">Ieșire</button>
+      <button class="top-btn top-btn-refresh" onclick="refreshCurrent()">↻ Reîncarcă</button>
+      <button class="top-btn top-btn-logout" onclick="logout()">Ieșire</button>
     </div>
   </div>
 
-  <div class="main">
-    <div class="stats-row">
-      <div class="stat-box"><div class="stat-box-num" id="statTotal">–</div><div class="stat-box-lbl">// total_programari</div></div>
-      <div class="stat-box"><div class="stat-box-num" id="statNou" style="color:var(--yellow)">–</div><div class="stat-box-lbl">// programari_noi</div></div>
-      <div class="stat-box"><div class="stat-box-num" id="statConfirmat" style="color:var(--green)">–</div><div class="stat-box-lbl">// confirmate</div></div>
-      <div class="stat-box"><div class="stat-box-num" id="statAzi">–</div><div class="stat-box-lbl">// astazi</div></div>
-    </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('bookings',this)">📅 Programări</button>
+    <button class="tab" onclick="switchTab('projects',this)">🖼 Proiecte</button>
+  </div>
 
-    <div class="filters">
-      <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">Toate</button>
-      <button class="filter-btn" data-filter="nou" onclick="setFilter('nou',this)">Noi</button>
-      <button class="filter-btn" data-filter="confirmat" onclick="setFilter('confirmat',this)">Confirmate</button>
-      <button class="filter-btn" data-filter="anulat" onclick="setFilter('anulat',this)">Anulate</button>
-    </div>
-
-    <div class="table-wrap">
-      <div class="table-head">
-        <div class="th">Nume</div><div class="th">Telefon</div><div class="th">Email</div>
-        <div class="th">Data</div><div class="th">Ora</div><div class="th">Serviciu</div><div class="th">Status</div>
+  <!-- TAB: PROGRAMĂRI -->
+  <div class="tab-panel active" id="panel-bookings">
+    <div class="main">
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-box-num" id="statTotal">–</div><div class="stat-box-lbl">// total</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="statNou" style="color:var(--yellow)">–</div><div class="stat-box-lbl">// noi</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="statConfirmat" style="color:var(--green)">–</div><div class="stat-box-lbl">// confirmate</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="statAzi">–</div><div class="stat-box-lbl">// azi</div></div>
       </div>
-      <div id="tableBody"><div class="loading">Se încarcă programările...</div></div>
+      <div class="filters">
+        <button class="filter-btn active" onclick="setFilter('all',this)">Toate</button>
+        <button class="filter-btn" onclick="setFilter('nou',this)">Noi</button>
+        <button class="filter-btn" onclick="setFilter('confirmat',this)">Confirmate</button>
+        <button class="filter-btn" onclick="setFilter('anulat',this)">Anulate</button>
+      </div>
+      <div class="table-wrap">
+        <div class="table-head">
+          <div class="th">Nume</div><div class="th">Telefon</div><div class="th">Email</div>
+          <div class="th">Data</div><div class="th">Ora</div><div class="th">Serviciu</div><div class="th">Status</div>
+        </div>
+        <div id="tableBody"><div class="loading">Se încarcă...</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: PROIECTE -->
+  <div class="tab-panel" id="panel-projects">
+    <div class="main">
+      <div class="proj-toolbar">
+        <h3>// proiectele_noastre — vizibile pe site</h3>
+        <button class="btn-add" onclick="openModal()">+ Proiect nou</button>
+      </div>
+      <div class="projects-grid" id="projectsGrid">
+        <div class="loading">Se încarcă proiectele...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITARE PROIECT -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3 id="modalTitle">Proiect nou</h3>
+    <input type="hidden" id="editId">
+    <div class="f-group">
+      <label class="f-label" for="editEmoji">// emoji</label>
+      <input class="f-input" type="text" id="editEmoji" placeholder="🌐" maxlength="4">
+    </div>
+    <div class="f-group">
+      <label class="f-label" for="editTag">// categorie</label>
+      <input class="f-input" type="text" id="editTag" placeholder="ex: Auto, Florărie, Start-Up">
+    </div>
+    <div class="f-group">
+      <label class="f-label" for="editTitle">// titlu *</label>
+      <input class="f-input" type="text" id="editTitle" placeholder="Numele proiectului">
+    </div>
+    <div class="f-group">
+      <label class="f-label" for="editDesc">// descriere</label>
+      <textarea class="f-input" id="editDesc" placeholder="Scurtă descriere a proiectului..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Anulează</button>
+      <button class="btn-save" onclick="saveProject()">Salvează →</button>
     </div>
   </div>
 </div>
@@ -148,7 +237,9 @@
 <script>
   let adminToken = '';
   let allBookings = [];
+  let allProjects = [];
   let currentFilter = 'all';
+  let currentTab = 'bookings';
 
   document.getElementById('tokenInput').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
 
@@ -160,7 +251,23 @@
     err.textContent = 'Se verifică...';
     const ok = await fetchBookings(true);
     if (!ok) { err.textContent = '✗ Token incorect'; adminToken = ''; }
+    else fetchProjects();
   }
+
+  function switchTab(tab, btn) {
+    currentTab = tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + tab).classList.add('active');
+  }
+
+  function refreshCurrent() {
+    if (currentTab === 'bookings') fetchBookings();
+    else fetchProjects();
+  }
+
+  // ── PROGRAMĂRI ────────────────────────────────
 
   async function fetchBookings(isLogin = false) {
     try {
@@ -195,10 +302,7 @@
   function renderTable() {
     const tbody = document.getElementById('tableBody');
     const list = currentFilter === 'all' ? allBookings : allBookings.filter(b => b.status === currentFilter);
-    if (!list.length) {
-      tbody.innerHTML = '<div class="empty-state"><p>// Nu există programări pentru filtrul selectat.</p></div>';
-      return;
-    }
+    if (!list.length) { tbody.innerHTML = '<div class="empty-state"><p>// Nu există programări.</p></div>'; return; }
     tbody.innerHTML = list.map(b => `
       <div class="booking-row">
         <div class="td td-name" data-label="Nume">${esc(b.name)}</div>
@@ -207,41 +311,117 @@
         <div class="td td-date" data-label="Data">${formatDate(b.date)}</div>
         <div class="td td-time" data-label="Ora">${esc(b.time)}</div>
         <div class="td td-service" data-label="Serviciu">${esc(b.service || '–')}</div>
-        <div class="td td-status" data-label="Status">
-          <select class="status-badge s-${b.status}" onchange="updateStatus('${b.id}', this)">
+        <div class="td" data-label="Status">
+          <select class="status-badge s-${b.status}" onchange="updateStatus('${b.id}',this)">
             <option value="nou" ${b.status==='nou'?'selected':''}>Nou</option>
             <option value="confirmat" ${b.status==='confirmat'?'selected':''}>Confirmat</option>
             <option value="anulat" ${b.status==='anulat'?'selected':''}>Anulat</option>
           </select>
         </div>
-      </div>
-    `).join('');
+      </div>`).join('');
   }
 
   async function updateStatus(id, select) {
     const status = select.value;
     select.className = `status-badge s-${status}`;
     await fetch(`/api/booking/${id}?token=` + encodeURIComponent(adminToken), {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status }),
+      method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({status}),
     });
     const b = allBookings.find(x => x.id === id);
     if (b) b.status = status;
     renderStats();
   }
 
-  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  // ── PROIECTE ──────────────────────────────────
 
-  function formatDate(d) {
-    if (!d) return '–';
-    const [y,m,z] = d.split('-');
-    return `${z}.${m}.${y}`;
+  async function fetchProjects() {
+    try {
+      const res = await fetch('/api/projects');
+      allProjects = await res.json();
+      renderProjects();
+    } catch { document.getElementById('projectsGrid').innerHTML = '<div class="empty-state"><p>// Eroare la încărcare.</p></div>'; }
   }
+
+  function renderProjects() {
+    const grid = document.getElementById('projectsGrid');
+    if (!allProjects.length) { grid.innerHTML = '<div class="empty-state"><p>// Nu există proiecte. Adaugă primul.</p></div>'; return; }
+    grid.innerHTML = allProjects.map(p => `
+      <div class="proj-card">
+        <div class="proj-card-thumb">${esc(p.emoji)}</div>
+        <div class="proj-card-body">
+          <div class="proj-card-tag">${esc(p.tag)}</div>
+          <div class="proj-card-title">${esc(p.title)}</div>
+          <div class="proj-card-desc">${esc(p.description)}</div>
+          <div class="proj-card-actions">
+            <button class="btn-edit" onclick="openModal('${esc(p.id)}')">✎ Editează</button>
+            <button class="btn-del" onclick="deleteProject('${esc(p.id)}','${esc(p.title)}')">✕ Șterge</button>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  function openModal(id) {
+    const p = id ? allProjects.find(x => x.id === id) : null;
+    document.getElementById('modalTitle').textContent = p ? 'Editează proiect' : 'Proiect nou';
+    document.getElementById('editId').value = p ? p.id : '';
+    document.getElementById('editEmoji').value = p ? p.emoji : '🌐';
+    document.getElementById('editTag').value = p ? p.tag : '';
+    document.getElementById('editTitle').value = p ? p.title : '';
+    document.getElementById('editDesc').value = p ? p.description : '';
+    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('editTitle').focus();
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+
+  async function saveProject() {
+    const id = document.getElementById('editId').value;
+    const data = {
+      emoji: document.getElementById('editEmoji').value.trim() || '🌐',
+      tag: document.getElementById('editTag').value.trim() || 'Web',
+      title: document.getElementById('editTitle').value.trim(),
+      description: document.getElementById('editDesc').value.trim(),
+    };
+    if (!data.title) { alert('Titlul este obligatoriu.'); return; }
+    const btn = document.querySelector('.btn-save');
+    btn.textContent = 'Se salvează...'; btn.disabled = true;
+    try {
+      if (id) {
+        await fetch(`/api/project/${id}?token=` + encodeURIComponent(adminToken), {
+          method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data),
+        });
+      } else {
+        await fetch(`/api/project?token=` + encodeURIComponent(adminToken), {
+          method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data),
+        });
+      }
+      closeModal();
+      await fetchProjects();
+    } catch { alert('Eroare la salvare.'); }
+    btn.textContent = 'Salvează →'; btn.disabled = false;
+  }
+
+  async function deleteProject(id, title) {
+    if (!confirm(`Ștergi proiectul "${title}"?`)) return;
+    await fetch(`/api/project/${id}?token=` + encodeURIComponent(adminToken), { method: 'DELETE' });
+    await fetchProjects();
+  }
+
+  // Modal — închide la click pe overlay
+  document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // ── UTILS ─────────────────────────────────────
+
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function formatDate(d) { if (!d) return '–'; const [y,m,z] = d.split('-'); return `${z}.${m}.${y}`; }
 
   function logout() {
     adminToken = '';
     allBookings = [];
+    allProjects = [];
     document.getElementById('dashboard').style.display = 'none';
     document.getElementById('loginWrap').style.display = 'flex';
     document.getElementById('tokenInput').value = '';
