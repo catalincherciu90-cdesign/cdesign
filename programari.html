@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Programări | C Design Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --teal:#00c8b4;--teal-dim:rgba(0,200,180,.08);--teal-border:rgba(0,200,180,.28);
+      --bg:#080b0e;--bg2:#0d1117;--bg3:#111820;
+      --text:#e8edf2;--soft:#9aa5b4;--muted:#6a7585;
+      --border:rgba(255,255,255,.07);--border-soft:rgba(255,255,255,.11);
+      --green:#28c840;--yellow:#febc2e;--red:#ff5f57;
+    }
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+    a{color:inherit;text-decoration:none}
+
+    /* LOGIN */
+    .login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;}
+    .login-box{background:var(--bg2);border:1px solid var(--border-soft);border-radius:16px;padding:48px 40px;width:100%;max-width:400px;text-align:center;}
+    .login-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;color:#fff;margin-bottom:8px;}
+    .login-logo span{color:var(--teal);text-shadow:0 0 12px rgba(0,200,180,.6);}
+    .login-sub{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);margin-bottom:32px;letter-spacing:.08em;}
+    .login-label{display:block;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--soft);margin-bottom:8px;text-align:left;}
+    .login-input{width:100%;padding:12px 16px;background:var(--bg3);border:1px solid var(--border-soft);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:1rem;outline:none;transition:border-color .2s;margin-bottom:16px;}
+    .login-input:focus{border-color:var(--teal-border);}
+    .login-btn{width:100%;background:var(--teal);color:#080b0e;font-weight:700;font-size:1rem;padding:13px;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s;}
+    .login-btn:hover{background:#33d4c3}
+    .login-err{color:var(--red);font-size:.85rem;margin-top:10px;min-height:20px;font-family:'Share Tech Mono',monospace;}
+
+    /* DASHBOARD */
+    #dashboard{display:none;}
+    .top-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+    .top-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:#fff;display:flex;align-items:center;gap:6px;}
+    .top-logo span{color:var(--teal);}
+    .top-label{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--muted);}
+    .top-right{display:flex;align-items:center;gap:12px;}
+    .refresh-btn{background:var(--teal-dim);border:1px solid var(--teal-border);color:var(--teal);font-family:'Share Tech Mono',monospace;font-size:.78rem;padding:6px 14px;border-radius:6px;cursor:pointer;transition:background .2s;}
+    .refresh-btn:hover{background:rgba(0,200,180,.15);}
+    .logout-btn{background:none;border:1px solid var(--border-soft);color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:.78rem;padding:6px 14px;border-radius:6px;cursor:pointer;transition:color .2s;}
+    .logout-btn:hover{color:var(--red)}
+
+    .main{max-width:1200px;margin:0 auto;padding:32px 24px;}
+
+    /* STATS */
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;}
+    .stat-box{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:20px 24px;}
+    .stat-box-num{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--teal);line-height:1;}
+    .stat-box-lbl{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--muted);margin-top:6px;letter-spacing:.06em;}
+
+    /* FILTERS */
+    .filters{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+    .filter-btn{background:var(--bg2);border:1px solid var(--border-soft);color:var(--soft);font-family:'Share Tech Mono',monospace;font-size:.75rem;padding:7px 16px;border-radius:6px;cursor:pointer;transition:all .2s;}
+    .filter-btn.active,.filter-btn:hover{border-color:var(--teal-border);color:var(--teal);background:var(--teal-dim);}
+
+    /* TABLE */
+    .table-wrap{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;overflow:hidden;}
+    .table-head{display:grid;grid-template-columns:1.4fr 1fr 1.2fr .9fr .8fr .9fr 1fr;gap:0;background:var(--bg3);border-bottom:1px solid var(--border);}
+    .th{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--muted);padding:12px 16px;letter-spacing:.06em;text-transform:uppercase;}
+    .booking-row{display:grid;grid-template-columns:1.4fr 1fr 1.2fr .9fr .8fr .9fr 1fr;gap:0;border-bottom:1px solid var(--border);transition:background .15s;}
+    .booking-row:last-child{border-bottom:none}
+    .booking-row:hover{background:rgba(255,255,255,.02)}
+    .td{padding:14px 16px;font-size:.875rem;display:flex;align-items:center;}
+    .td-name{font-weight:500;color:var(--text);}
+    .td-phone a{color:var(--teal);font-family:'Share Tech Mono',monospace;font-size:.82rem;}
+    .td-email{color:var(--soft);font-size:.82rem;word-break:break-all;}
+    .td-date{font-family:'Share Tech Mono',monospace;font-size:.82rem;color:var(--soft);}
+    .td-time{font-family:'Share Tech Mono',monospace;font-size:.82rem;color:var(--teal);font-weight:600;}
+    .td-service{color:var(--soft);font-size:.8rem;}
+    .td-status{}
+    .status-badge{font-family:'Share Tech Mono',monospace;font-size:.7rem;padding:4px 10px;border-radius:4px;font-weight:600;cursor:pointer;border:none;transition:opacity .2s;}
+    .status-badge:hover{opacity:.8}
+    .s-nou{background:rgba(254,188,46,.12);color:var(--yellow);border:1px solid rgba(254,188,46,.25);}
+    .s-confirmat{background:rgba(40,200,64,.1);color:var(--green);border:1px solid rgba(40,200,64,.22);}
+    .s-anulat{background:rgba(255,95,87,.1);color:var(--red);border:1px solid rgba(255,95,87,.22);}
+
+    .empty-state{text-align:center;padding:64px 24px;}
+    .empty-state p{font-family:'Share Tech Mono',monospace;color:var(--muted);font-size:.85rem;}
+
+    .loading{text-align:center;padding:48px;font-family:'Share Tech Mono',monospace;color:var(--muted);font-size:.85rem;animation:blink 1s step-end infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+    @media(max-width:900px){
+      .stats-row{grid-template-columns:1fr 1fr}
+      .table-head{display:none}
+      .booking-row{grid-template-columns:1fr;gap:4px;padding:16px;display:block;}
+      .td{padding:2px 0;font-size:.85rem;}
+      .td::before{content:attr(data-label)' ';font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);margin-right:6px;}
+    }
+    @media(max-width:520px){.stats-row{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo"><span>C</span>DESIGN</div>
+    <div class="login-sub">// admin.programari</div>
+    <label class="login-label" for="tokenInput">// token_acces</label>
+    <input class="login-input" type="password" id="tokenInput" placeholder="••••••••••••" autocomplete="current-password">
+    <button class="login-btn" onclick="login()">Autentificare →</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="top-bar">
+    <div>
+      <div class="top-logo"><span>C</span>DESIGN</div>
+      <div class="top-label">// programari.dashboard</div>
+    </div>
+    <div class="top-right">
+      <button class="refresh-btn" onclick="fetchBookings()">↻ Reîncarcă</button>
+      <button class="logout-btn" onclick="logout()">Ieșire</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-box-num" id="statTotal">–</div><div class="stat-box-lbl">// total_programari</div></div>
+      <div class="stat-box"><div class="stat-box-num" id="statNou" style="color:var(--yellow)">–</div><div class="stat-box-lbl">// programari_noi</div></div>
+      <div class="stat-box"><div class="stat-box-num" id="statConfirmat" style="color:var(--green)">–</div><div class="stat-box-lbl">// confirmate</div></div>
+      <div class="stat-box"><div class="stat-box-num" id="statAzi">–</div><div class="stat-box-lbl">// astazi</div></div>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">Toate</button>
+      <button class="filter-btn" data-filter="nou" onclick="setFilter('nou',this)">Noi</button>
+      <button class="filter-btn" data-filter="confirmat" onclick="setFilter('confirmat',this)">Confirmate</button>
+      <button class="filter-btn" data-filter="anulat" onclick="setFilter('anulat',this)">Anulate</button>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-head">
+        <div class="th">Nume</div><div class="th">Telefon</div><div class="th">Email</div>
+        <div class="th">Data</div><div class="th">Ora</div><div class="th">Serviciu</div><div class="th">Status</div>
+      </div>
+      <div id="tableBody"><div class="loading">Se încarcă programările...</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let adminToken = '';
+  let allBookings = [];
+  let currentFilter = 'all';
+
+  document.getElementById('tokenInput').addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+
+  async function login() {
+    const token = document.getElementById('tokenInput').value.trim();
+    if (!token) return;
+    adminToken = token;
+    const err = document.getElementById('loginErr');
+    err.textContent = 'Se verifică...';
+    const ok = await fetchBookings(true);
+    if (!ok) { err.textContent = '✗ Token incorect'; adminToken = ''; }
+  }
+
+  async function fetchBookings(isLogin = false) {
+    try {
+      const res = await fetch('/api/bookings?token=' + encodeURIComponent(adminToken));
+      if (res.status === 401) return false;
+      allBookings = await res.json();
+      if (isLogin) {
+        document.getElementById('loginWrap').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+      }
+      renderStats();
+      renderTable();
+      return true;
+    } catch { return false; }
+  }
+
+  function renderStats() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('statTotal').textContent = allBookings.length;
+    document.getElementById('statNou').textContent = allBookings.filter(b => b.status === 'nou').length;
+    document.getElementById('statConfirmat').textContent = allBookings.filter(b => b.status === 'confirmat').length;
+    document.getElementById('statAzi').textContent = allBookings.filter(b => b.date === today).length;
+  }
+
+  function setFilter(f, btn) {
+    currentFilter = f;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderTable();
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('tableBody');
+    const list = currentFilter === 'all' ? allBookings : allBookings.filter(b => b.status === currentFilter);
+    if (!list.length) {
+      tbody.innerHTML = '<div class="empty-state"><p>// Nu există programări pentru filtrul selectat.</p></div>';
+      return;
+    }
+    tbody.innerHTML = list.map(b => `
+      <div class="booking-row">
+        <div class="td td-name" data-label="Nume">${esc(b.name)}</div>
+        <div class="td td-phone" data-label="Telefon"><a href="tel:${esc(b.phone)}">${esc(b.phone)}</a></div>
+        <div class="td td-email" data-label="Email">${esc(b.email)}</div>
+        <div class="td td-date" data-label="Data">${formatDate(b.date)}</div>
+        <div class="td td-time" data-label="Ora">${esc(b.time)}</div>
+        <div class="td td-service" data-label="Serviciu">${esc(b.service || '–')}</div>
+        <div class="td td-status" data-label="Status">
+          <select class="status-badge s-${b.status}" onchange="updateStatus('${b.id}', this)">
+            <option value="nou" ${b.status==='nou'?'selected':''}>Nou</option>
+            <option value="confirmat" ${b.status==='confirmat'?'selected':''}>Confirmat</option>
+            <option value="anulat" ${b.status==='anulat'?'selected':''}>Anulat</option>
+          </select>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function updateStatus(id, select) {
+    const status = select.value;
+    select.className = `status-badge s-${status}`;
+    await fetch(`/api/booking/${id}?token=` + encodeURIComponent(adminToken), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    });
+    const b = allBookings.find(x => x.id === id);
+    if (b) b.status = status;
+    renderStats();
+  }
+
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  function formatDate(d) {
+    if (!d) return '–';
+    const [y,m,z] = d.split('-');
+    return `${z}.${m}.${y}`;
+  }
+
+  function logout() {
+    adminToken = '';
+    allBookings = [];
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('loginWrap').style.display = 'flex';
+    document.getElementById('tokenInput').value = '';
+    document.getElementById('loginErr').textContent = '';
+  }
+</script>
+</body>
+</html>
