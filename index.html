@@ -141,6 +141,44 @@
     .stat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--teal);line-height:1;text-shadow:0 0 16px rgba(0,200,180,.35);}
     .stat-lbl{font-size:.8rem;color:var(--muted);margin-top:6px;font-family:'Share Tech Mono',monospace;letter-spacing:.04em;}
     .stat-div{width:1px;height:40px;background:var(--border-soft)}
+
+    /* CAROUSEL */
+    .banner-carousel{position:relative;overflow:hidden;background:var(--bg);border-bottom:1px solid var(--border);}
+    .banner-track{display:flex;transition:transform .55s cubic-bezier(.4,0,.2,1);will-change:transform;}
+    .banner-slide{min-width:100%;height:320px;display:flex;align-items:center;position:relative;overflow:hidden;flex-shrink:0;}
+    .bs-inner{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:2;display:flex;align-items:center;gap:60px;width:100%;}
+    .bs-text{flex:1;min-width:0;}
+    .bs-tag{font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;display:inline-flex;align-items:center;gap:7px;padding:4px 12px;border-radius:4px;}
+    .bs-tag::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;animation:blink 1.2s step-end infinite;}
+    .bs-h{font-family:'Syne',sans-serif;font-size:clamp(1.55rem,3.2vw,2.5rem);font-weight:800;line-height:1.1;letter-spacing:-.03em;color:#fff;margin-bottom:10px;}
+    .bs-sub{font-size:.95rem;font-weight:300;line-height:1.65;margin-bottom:24px;max-width:480px;}
+    .bs-cta{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:.95rem;padding:12px 24px;border-radius:8px;border:none;cursor:pointer;text-decoration:none;font-family:'DM Sans',sans-serif;transition:transform .15s,box-shadow .2s;}
+    .bs-cta:hover{transform:translateY(-2px);}
+    .bs-visual{flex-shrink:0;width:280px;height:220px;position:relative;display:flex;align-items:center;justify-content:center;}
+    @media(max-width:768px){.bs-visual{display:none;}.banner-slide{height:260px;}}
+    .bs-1{background:linear-gradient(135deg,#050c10 0%,#071a1e 50%,#0a2020 100%);}
+    .bs-1 .bs-tag{color:var(--teal);background:var(--teal-dim);border:1px solid var(--teal-border);}
+    .bs-1 .bs-sub{color:var(--soft);}
+    .bs-1 .bs-cta{background:var(--teal);color:#080b0e;box-shadow:0 0 20px rgba(0,200,180,.35);}
+    .bs-1 .bs-cta:hover{background:var(--teal-lt);box-shadow:0 0 32px rgba(0,200,180,.55);}
+    .bs-1-deco{position:absolute;inset:0;z-index:1;pointer-events:none;}
+    .bs-2{background:linear-gradient(135deg,#0a0812 0%,#120d20 50%,#18102a 100%);}
+    .bs-2 .bs-h .hl2{background:linear-gradient(135deg,#c084fc,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .bs-2 .bs-sub{color:var(--soft);}
+    .bs-3{background:linear-gradient(135deg,#0e0a04 0%,#1a1202 50%,#201800 100%);}
+    .bs-3 .bs-h .hl3{background:linear-gradient(135deg,#fbbf24,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .bs-3 .bs-sub{color:var(--soft);}
+    .bs-4{background:linear-gradient(135deg,#0e0608 0%,#1a0c0f 50%,#200c10 100%);}
+    .bs-4 .bs-h .hl4{background:linear-gradient(135deg,#fb7185,#f43f5e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .bs-4 .bs-sub{color:var(--soft);}
+    .banner-btn{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#fff;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;backdrop-filter:blur(8px);}
+    .banner-btn:hover{background:rgba(255,255,255,.13);}
+    .banner-prev{left:20px;}.banner-next{right:20px;}
+    .banner-dots{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:10;}
+    .banner-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:background .2s,transform .2s;}
+    .banner-dot.active{background:var(--teal);transform:scale(1.3);}
+    @media(max-width:480px){.banner-btn{display:none;}}
+
     section{padding:96px 0;position:relative}
     .sec-label{font-family:'Share Tech Mono',monospace;font-size:.95rem;color:var(--teal);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;}
     .sec-title{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:700;color:#fff;letter-spacing:-.025em;line-height:1.2;margin-bottom:12px;}
@@ -339,6 +377,174 @@
   </div>
 </div>
 
+<!-- BANNER CAROUSEL -->
+<div class="banner-carousel" id="bannerCarousel" aria-label="Bannere promoționale">
+  <div class="banner-track" id="bannerTrack">
+
+    <!-- Slide 1: 21 zile -->
+    <div class="banner-slide bs-1" role="group" aria-label="Banner 1 din 4">
+      <svg class="bs-1-deco" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+        <defs><radialGradient id="g1" cx="80%" cy="50%" r="50%"><stop offset="0%" stop-color="#00c8b4" stop-opacity=".12"/><stop offset="100%" stop-color="#00c8b4" stop-opacity="0"/></radialGradient></defs>
+        <rect width="1440" height="320" fill="url(#g1)"/>
+        <line x1="900" y1="0" x2="1440" y2="320" stroke="rgba(0,200,180,.06)" stroke-width="1"/>
+        <line x1="960" y1="0" x2="1440" y2="240" stroke="rgba(0,200,180,.05)" stroke-width="1"/>
+        <circle cx="1100" cy="160" r="140" fill="none" stroke="rgba(0,200,180,.07)" stroke-width="1"/>
+        <circle cx="1100" cy="160" r="90" fill="none" stroke="rgba(0,200,180,.05)" stroke-width="1"/>
+      </svg>
+      <div class="bs-inner">
+        <div class="bs-text">
+          <div class="bs-tag">// oferta_standard</div>
+          <h2 class="bs-h">Site profesional<br>livrat în <span style="color:var(--teal)">21 de zile</span></h2>
+          <p class="bs-sub">Garantat contractual. Domeniu .ro + găzduire incluse. Arată perfect pe orice dispozitiv.</p>
+          <a href="#contact" class="bs-cta">Programează acum →</a>
+        </div>
+        <div class="bs-visual" aria-hidden="true">
+          <svg viewBox="0 0 220 180" width="220" height="180">
+            <rect x="10" y="10" width="200" height="160" rx="10" fill="#0d1117" stroke="rgba(0,200,180,.25)" stroke-width="1"/>
+            <rect x="10" y="10" width="200" height="32" rx="10" fill="#111820"/>
+            <rect x="10" y="30" width="200" height="12" fill="#111820"/>
+            <circle cx="30" cy="26" r="5" fill="#ff5f57"/><circle cx="48" cy="26" r="5" fill="#febc2e"/><circle cx="66" cy="26" r="5" fill="#28c840"/>
+            <text x="110" y="30" font-family="monospace" font-size="8" fill="#6a7585" text-anchor="middle">livrez-site.sh</text>
+            <text x="22" y="62" font-family="monospace" font-size="8" fill="#00c8b4">$</text>
+            <text x="32" y="62" font-family="monospace" font-size="8" fill="#e8edf2">./start --client</text>
+            <text x="22" y="80" font-family="monospace" font-size="8" fill="#28c840">✓</text>
+            <text x="32" y="80" font-family="monospace" font-size="8" fill="#9aa5b4">Design aprobat</text>
+            <text x="22" y="96" font-family="monospace" font-size="8" fill="#28c840">✓</text>
+            <text x="32" y="96" font-family="monospace" font-size="8" fill="#9aa5b4">Cod livrat</text>
+            <text x="22" y="112" font-family="monospace" font-size="8" fill="#28c840">✓</text>
+            <text x="32" y="112" font-family="monospace" font-size="8" fill="#00c8b4">LIVE în 21 zile</text>
+            <text x="22" y="132" font-family="monospace" font-size="8" fill="#00c8b4">$</text>
+            <rect x="32" y="122" width="7" height="13" rx="1" fill="#00c8b4" opacity=".9"><animate attributeName="opacity" values="1;0;1" dur=".8s" repeatCount="indefinite"/></rect>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2: Consultanță -->
+    <div class="banner-slide bs-2" role="group" aria-label="Banner 2 din 4">
+      <svg style="position:absolute;inset:0;z-index:1;pointer-events:none;" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+        <defs><radialGradient id="g2" cx="75%" cy="50%" r="55%"><stop offset="0%" stop-color="#c084fc" stop-opacity=".1"/><stop offset="100%" stop-color="#c084fc" stop-opacity="0"/></radialGradient></defs>
+        <rect width="1440" height="320" fill="url(#g2)"/>
+        <circle cx="1080" cy="160" r="180" fill="none" stroke="rgba(192,132,252,.06)" stroke-width="1"/>
+        <circle cx="1080" cy="160" r="120" fill="none" stroke="rgba(129,140,248,.06)" stroke-width="1"/>
+        <circle cx="1080" cy="160" r="60" fill="rgba(192,132,252,.04)"/>
+      </svg>
+      <div class="bs-inner">
+        <div class="bs-text">
+          <div class="bs-tag" style="color:#c084fc;background:rgba(192,132,252,.08);border:1px solid rgba(192,132,252,.25);">// consultanta_gratuita</div>
+          <h2 class="bs-h">Prima ședință<br>e <span class="hl2">gratuită</span></h2>
+          <p class="bs-sub">30 de minute cu un specialist dedicat afacerii tale. Fără obligații, fără costuri ascunse.</p>
+          <a href="#contact" class="bs-cta" style="background:linear-gradient(135deg,#c084fc,#818cf8);color:#fff;box-shadow:0 0 20px rgba(192,132,252,.3);">Rezervă locul →</a>
+        </div>
+        <div class="bs-visual" aria-hidden="true">
+          <svg viewBox="0 0 220 180" width="220" height="180">
+            <rect x="20" y="15" width="180" height="150" rx="12" fill="#120d20" stroke="rgba(192,132,252,.2)" stroke-width="1"/>
+            <rect x="20" y="15" width="180" height="44" rx="12" fill="#18102a"/>
+            <rect x="20" y="46" width="180" height="13" fill="#18102a"/>
+            <text x="110" y="42" font-family="monospace" font-size="9" fill="#c084fc" text-anchor="middle" font-weight="bold">📅 CONSULTANȚĂ</text>
+            <text x="40" y="80" font-family="monospace" font-size="8" fill="#9aa5b4">Data:</text>
+            <text x="80" y="80" font-family="monospace" font-size="8" fill="#e8edf2">Astăzi</text>
+            <text x="40" y="97" font-family="monospace" font-size="8" fill="#9aa5b4">Ora:</text>
+            <text x="80" y="97" font-family="monospace" font-size="8" fill="#c084fc" font-weight="bold">10:00</text>
+            <text x="40" y="114" font-family="monospace" font-size="8" fill="#9aa5b4">Durată:</text>
+            <text x="90" y="114" font-family="monospace" font-size="8" fill="#e8edf2">30 min</text>
+            <text x="40" y="131" font-family="monospace" font-size="8" fill="#9aa5b4">Cost:</text>
+            <text x="80" y="131" font-family="monospace" font-size="8" fill="#28c840" font-weight="bold">GRATUIT</text>
+            <rect x="55" y="143" width="110" height="14" rx="4" fill="rgba(192,132,252,.2)" stroke="rgba(192,132,252,.4)" stroke-width="1"/>
+            <text x="110" y="153" font-family="monospace" font-size="7" fill="#c084fc" text-anchor="middle">CONFIRMĂ →</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: Pachet Start-Up -->
+    <div class="banner-slide bs-3" role="group" aria-label="Banner 3 din 4">
+      <svg style="position:absolute;inset:0;z-index:1;pointer-events:none;" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+        <defs><radialGradient id="g3" cx="78%" cy="50%" r="50%"><stop offset="0%" stop-color="#fbbf24" stop-opacity=".1"/><stop offset="100%" stop-color="#fbbf24" stop-opacity="0"/></radialGradient></defs>
+        <rect width="1440" height="320" fill="url(#g3)"/>
+        <polygon points="900,0 1440,0 1440,320 1050,320" fill="rgba(251,191,36,.03)"/>
+        <line x1="900" y1="0" x2="1050" y2="320" stroke="rgba(251,191,36,.07)" stroke-width="1"/>
+        <circle cx="1150" cy="100" r="8" fill="rgba(251,191,36,.15)"/>
+        <circle cx="1300" cy="220" r="5" fill="rgba(249,115,22,.15)"/>
+      </svg>
+      <div class="bs-inner">
+        <div class="bs-text">
+          <div class="bs-tag" style="color:#fbbf24;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.22);">// pachet_startup</div>
+          <h2 class="bs-h">Pornești o afacere?<br><span class="hl3">Tot online-ul</span> dintr-o dată</h2>
+          <p class="bs-sub">Site + Logo + Pagină Facebook — tot ce-ți trebuie pentru a atrage primii clienți, într-un singur pachet.</p>
+          <a href="#contact" class="bs-cta" style="background:linear-gradient(135deg,#fbbf24,#f97316);color:#080b0e;box-shadow:0 0 20px rgba(251,191,36,.3);">Vreau pachetul →</a>
+        </div>
+        <div class="bs-visual" aria-hidden="true">
+          <svg viewBox="0 0 220 180" width="220" height="180">
+            <rect x="10" y="20" width="130" height="90" rx="8" fill="#1a1202" stroke="rgba(251,191,36,.2)" stroke-width="1"/>
+            <text x="75" y="50" font-size="22" text-anchor="middle">🌐</text>
+            <text x="75" y="72" font-family="monospace" font-size="7" fill="#fbbf24" text-anchor="middle">SITE</text>
+            <text x="75" y="84" font-family="monospace" font-size="6" fill="#9aa5b4" text-anchor="middle">profesional</text>
+            <rect x="80" y="20" width="130" height="90" rx="8" fill="#1a1202" stroke="rgba(249,115,22,.2)" stroke-width="1"/>
+            <text x="145" y="50" font-size="22" text-anchor="middle">✏️</text>
+            <text x="145" y="72" font-family="monospace" font-size="7" fill="#f97316" text-anchor="middle">LOGO</text>
+            <text x="145" y="84" font-family="monospace" font-size="6" fill="#9aa5b4" text-anchor="middle">unic</text>
+            <rect x="45" y="85" width="130" height="75" rx="8" fill="#1a1202" stroke="rgba(251,191,36,.15)" stroke-width="1"/>
+            <text x="110" y="115" font-size="20" text-anchor="middle">📘</text>
+            <text x="110" y="137" font-family="monospace" font-size="7" fill="#fbbf24" text-anchor="middle">FACEBOOK</text>
+            <text x="110" y="149" font-family="monospace" font-size="6" fill="#9aa5b4" text-anchor="middle">pagină activă</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: Redesign -->
+    <div class="banner-slide bs-4" role="group" aria-label="Banner 4 din 4">
+      <svg style="position:absolute;inset:0;z-index:1;pointer-events:none;" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+        <defs><radialGradient id="g4" cx="75%" cy="50%" r="50%"><stop offset="0%" stop-color="#fb7185" stop-opacity=".1"/><stop offset="100%" stop-color="#fb7185" stop-opacity="0"/></radialGradient></defs>
+        <rect width="1440" height="320" fill="url(#g4)"/>
+        <circle cx="1100" cy="160" r="160" fill="none" stroke="rgba(251,113,133,.05)" stroke-width="1"/>
+        <circle cx="1100" cy="160" r="100" fill="none" stroke="rgba(244,63,94,.06)" stroke-width="1"/>
+        <text x="1090" y="170" font-size="90" fill="rgba(251,113,133,.04)" font-weight="bold" font-family="sans-serif">↺</text>
+      </svg>
+      <div class="bs-inner">
+        <div class="bs-text">
+          <div class="bs-tag" style="color:#fb7185;background:rgba(251,113,133,.08);border:1px solid rgba(251,113,133,.22);">// redesign_site</div>
+          <h2 class="bs-h">Site vechi = <span class="hl4">clienți pierduți</span></h2>
+          <p class="bs-sub">Îl transformăm complet: mai rapid, mai modern, mai convingător. Poziția pe Google rămâne. Tu câștigi mai mult.</p>
+          <a href="#contact" class="bs-cta" style="background:linear-gradient(135deg,#fb7185,#f43f5e);color:#fff;box-shadow:0 0 20px rgba(244,63,94,.3);">Modernizează acum →</a>
+        </div>
+        <div class="bs-visual" aria-hidden="true">
+          <svg viewBox="0 0 220 180" width="220" height="180">
+            <rect x="10" y="30" width="88" height="120" rx="6" fill="#1a0c0f" stroke="rgba(251,113,133,.15)" stroke-width="1"/>
+            <text x="54" y="55" font-family="monospace" font-size="6" fill="#6a7585" text-anchor="middle">ÎNAINTE</text>
+            <rect x="20" y="62" width="68" height="5" rx="2" fill="#2a1218"/>
+            <rect x="20" y="72" width="50" height="5" rx="2" fill="#2a1218"/>
+            <rect x="20" y="85" width="68" height="40" rx="4" fill="#220d10"/>
+            <rect x="20" y="130" width="30" height="9" rx="3" fill="#2a1218"/>
+            <text x="110" y="95" font-size="22" text-anchor="middle" fill="#fb7185">→</text>
+            <rect x="122" y="10" width="88" height="152" rx="8" fill="#200c10" stroke="rgba(244,63,94,.35)" stroke-width="1.5"/>
+            <text x="166" y="32" font-family="monospace" font-size="6" fill="#fb7185" text-anchor="middle" font-weight="bold">DUPĂ ✓</text>
+            <rect x="132" y="40" width="68" height="6" rx="3" fill="#3a1020"/>
+            <rect x="132" y="52" width="50" height="6" rx="3" fill="#2a0c18"/>
+            <rect x="132" y="66" width="68" height="50" rx="6" fill="#f43f5e" opacity=".15"/>
+            <text x="166" y="96" font-size="18" text-anchor="middle">🚀</text>
+            <rect x="132" y="125" width="40" height="12" rx="5" fill="rgba(244,63,94,.8)"/>
+            <text x="152" y="134" font-family="monospace" font-size="6" fill="#fff" text-anchor="middle">LIVE</text>
+            <rect x="178" y="125" width="22" height="12" rx="3" fill="rgba(40,200,64,.15)" stroke="rgba(40,200,64,.3)" stroke-width="1"/>
+            <text x="189" y="134" font-family="monospace" font-size="5" fill="#28c840" text-anchor="middle">SEO</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="banner-btn banner-prev" aria-label="Banner anterior" onclick="bannerMove(-1)">‹</button>
+  <button class="banner-btn banner-next" aria-label="Banner următor" onclick="bannerMove(1)">›</button>
+  <div class="banner-dots" role="tablist" aria-label="Navigare bannere">
+    <span class="banner-dot active" role="tab" aria-label="Banner 1" onclick="bannerGo(0)"></span>
+    <span class="banner-dot" role="tab" aria-label="Banner 2" onclick="bannerGo(1)"></span>
+    <span class="banner-dot" role="tab" aria-label="Banner 3" onclick="bannerGo(2)"></span>
+    <span class="banner-dot" role="tab" aria-label="Banner 4" onclick="bannerGo(3)"></span>
+  </div>
+</div>
+
 <section class="services-bg" id="servicii" aria-labelledby="servicii-heading">
   <div class="container">
     <div class="sec-label reveal">// servicii.js</div>
@@ -496,7 +702,7 @@
             </div>
           </div>
           <div class="f-group">
-            <label class="f-label" for="fservice">// serviciu_dorit</label>
+            <label class="f-label" content="fservice">// serviciu_dorit</label>
             <select class="f-select" id="fservice" name="service">
               <option value="">Alege serviciul...</option>
               <option>Site de prezentare</option>
@@ -594,7 +800,6 @@ function addLine(){
 }
 setTimeout(addLine,800);
 
-// Încarcă proiectele din API
 (async function loadProjects() {
   const grid = document.getElementById('portfolioGrid');
   const delays = ['', 'reveal-delay-1', 'reveal-delay-2'];
@@ -620,7 +825,31 @@ setTimeout(addLine,800);
   }
 })();
 
-// Set min date to today
+(function(){
+  const track = document.getElementById('bannerTrack');
+  const dots = document.querySelectorAll('.banner-dot');
+  const total = 4;
+  let cur = 0, timer;
+  function goTo(n) {
+    cur = (n + total) % total;
+    track.style.transform = `translateX(-${cur * 100}%)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === cur));
+  }
+  window.bannerMove = (dir) => { clearInterval(timer); goTo(cur + dir); startTimer(); };
+  window.bannerGo   = (n)   => { clearInterval(timer); goTo(n); startTimer(); };
+  function startTimer() { timer = setInterval(() => goTo(cur + 1), 5000); }
+  let tx = 0;
+  const el = document.getElementById('bannerCarousel');
+  el.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+  el.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 50) { clearInterval(timer); goTo(cur + (dx < 0 ? 1 : -1)); startTimer(); }
+  }, {passive:true});
+  el.addEventListener('mouseenter', () => clearInterval(timer));
+  el.addEventListener('mouseleave', startTimer);
+  startTimer();
+})();
+
 document.getElementById('fdate').min = new Date().toISOString().split('T')[0];
 
 const ham=document.getElementById('hamburger');
