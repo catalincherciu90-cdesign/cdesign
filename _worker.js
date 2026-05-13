@@ -11,6 +11,8 @@ function json(data, status = 200) {
   });
 }
 
+const ADMIN_TOKEN = 'Anaare3mere#';
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -51,7 +53,7 @@ export default {
     // GET /api/bookings?token= — listează toate programările
     if (path === '/api/bookings' && request.method === 'GET') {
       const token = url.searchParams.get('token');
-      if (token !== (env.ADMIN_TOKEN || 'cdesign2025admin'))
+      if (token !== (env.ADMIN_TOKEN || ADMIN_TOKEN))
         return json({ error: 'Acces neautorizat' }, 401);
 
       try {
@@ -72,7 +74,7 @@ export default {
     // PATCH /api/booking/:id?token= — actualizează statusul
     if (path.startsWith('/api/booking/') && request.method === 'PATCH') {
       const token = url.searchParams.get('token');
-      if (token !== (env.ADMIN_TOKEN || 'cdesign2025admin'))
+      if (token !== (env.ADMIN_TOKEN || ADMIN_TOKEN))
         return json({ error: 'Acces neautorizat' }, 401);
 
       const id = path.replace('/api/booking/', '');
