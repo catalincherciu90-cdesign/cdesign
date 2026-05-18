@@ -338,7 +338,7 @@
       <textarea class="f-input" id="editDesc" placeholder="Scurt&#259; descriere a proiectului..."></textarea>
     </div>
     <div class="f-group">
-      <label class="f-label">// screenshot (op&#x21B;ional)</label>
+      <label class="f-label">// logo afacere (op&#x21B;ional)</label>
       <div id="editImageWrap" style="border:1px dashed var(--border-soft);border-radius:8px;overflow:hidden;cursor:pointer;background:var(--bg3);transition:border-color .2s;" onclick="document.getElementById('editImage').click()">
         <img id="editImagePreview" style="width:100%;height:140px;object-fit:cover;display:none;">
         <div id="editImagePlaceholder" style="padding:20px;text-align:center;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:.75rem;">Click pentru a selecta imaginea</div>
@@ -483,7 +483,7 @@
           <div class="proj-card-desc">${esc(p.description)}</div>
           <div class="proj-card-actions">
             <button class="btn-edit" onclick="openModal('${esc(p.id)}')">✎ Editează</button>
-            <button class="btn-del" onclick="deleteProject('${esc(p.id)}','${esc(p.title)}')">&#x2715; Şterge</button>
+            <button class="btn-del" onclick="deleteProject('${esc(p.id)}','${esc(p.title)}')">&#x2715; Şerge</button>
           </div>
         </div>
       </div>`).join('');
