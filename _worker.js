@@ -129,6 +129,57 @@ export default {
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
 
+    // ── CRM ───────────────────────────────────────────────────
+
+    if (path === '/api/crm' && request.method === 'GET') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const raw = await env.PROGRAMARI.get('__crm__');
+        const entries = raw ? JSON.parse(raw) : [];
+        return json(entries.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path === '/api/crm' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const { client, proiect, valoare, termen, status, note } = await request.json();
+        if (!client) return json({ error: 'Clientul este obligatoriu' }, 400);
+        const raw = await env.PROGRAMARI.get('__crm__');
+        const entries = raw ? JSON.parse(raw) : [];
+        const id = `crm_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+        entries.unshift({ id, client, proiect: proiect || '', valoare: valoare || '', termen: termen || '', status: status || 'oferta', note: note || '', createdAt: new Date().toISOString() });
+        await env.PROGRAMARI.put('__crm__', JSON.stringify(entries));
+        return json({ success: true, id });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path.startsWith('/api/crm/') && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/crm/', '');
+        const body = await request.json();
+        const raw = await env.PROGRAMARI.get('__crm__');
+        const entries = raw ? JSON.parse(raw) : [];
+        const idx = entries.findIndex(e => e.id === id);
+        if (idx === -1) return json({ error: 'Negăsit' }, 404);
+        entries[idx] = { ...entries[idx], ...body };
+        await env.PROGRAMARI.put('__crm__', JSON.stringify(entries));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path.startsWith('/api/crm/') && request.method === 'DELETE') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/crm/', '');
+        const raw = await env.PROGRAMARI.get('__crm__');
+        const entries = raw ? JSON.parse(raw) : [];
+        await env.PROGRAMARI.put('__crm__', JSON.stringify(entries.filter(e => e.id !== id)));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
     // Fallthrough — servește fișierele statice
     return env.ASSETS.fetch(request);
   },

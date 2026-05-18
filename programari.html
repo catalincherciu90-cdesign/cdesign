@@ -122,6 +122,27 @@
     .loading{text-align:center;padding:48px;font-family:'Share Tech Mono',monospace;color:var(--muted);font-size:.85rem;animation:pulse 1s step-end infinite;}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
+    /* CRM */
+    .crm-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:24px;}
+    .crm-head{display:grid;grid-template-columns:1.5fr 2fr 1fr 1fr 1.3fr 1fr;background:var(--bg3);border-bottom:1px solid var(--border);}
+    .crm-row{display:grid;grid-template-columns:1.5fr 2fr 1fr 1fr 1.3fr 1fr;border-bottom:1px solid var(--border);transition:background .15s;}
+    .crm-row:last-child{border-bottom:none}
+    .crm-row:hover{background:rgba(255,255,255,.02)}
+    .crm-note{font-size:.75rem;color:var(--muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:240px;}
+    .crm-val{font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--teal);font-weight:600;}
+    .crm-term{font-family:'Share Tech Mono',monospace;font-size:.82rem;}
+    .crm-term.overdue{color:var(--red);}
+    .crm-term.urgent{color:var(--yellow);}
+    .crm-term.ok{color:var(--soft);}
+    .s-oferta{background:rgba(254,188,46,.12);color:var(--yellow);border:1px solid rgba(254,188,46,.25);}
+    .s-in_lucru{background:rgba(0,200,180,.1);color:var(--teal);border:1px solid rgba(0,200,180,.22);}
+    .s-finalizat{background:rgba(40,200,64,.1);color:var(--green);border:1px solid rgba(40,200,64,.22);}
+    .s-anulat{background:rgba(255,95,87,.1);color:var(--red);border:1px solid rgba(255,95,87,.22);}
+    .crm-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+    .crm-toolbar h3{font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--soft);}
+    .stat-box-sub{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);margin-top:3px;letter-spacing:.04em;}
+
+    @media(max-width:1100px){.crm-stats{grid-template-columns:repeat(3,1fr);}}
     @media(max-width:900px){
       .stats-row{grid-template-columns:1fr 1fr}
       .table-head{display:none}
@@ -129,10 +150,17 @@
       .td{padding:2px 0;font-size:.85rem;}
       .td::before{content:attr(data-label)' ';font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);margin-right:6px;}
       .projects-grid{grid-template-columns:1fr 1fr;}
+      .crm-stats{grid-template-columns:1fr 1fr;}
+      .crm-head{display:none;}
+      .crm-row{display:block;padding:14px 16px;border-bottom:1px solid var(--border);}
+      .crm-row .td{padding:3px 0;font-size:.85rem;}
+      .crm-row .td::before{content:attr(data-label)' ';font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);margin-right:6px;}
+      .crm-note{max-width:100%;white-space:normal;}
     }
     @media(max-width:520px){
       .stats-row{grid-template-columns:1fr 1fr}
       .projects-grid{grid-template-columns:1fr;}
+      .crm-stats{grid-template-columns:1fr 1fr;}
     }
   </style>
 </head>
@@ -164,7 +192,8 @@
 
   <div class="tabs">
     <button class="tab active" onclick="switchTab('bookings',this)">📅 Programări</button>
-    <button class="tab" onclick="switchTab('projects',this)">🖼 Proiecte</button>
+    <button class="tab" onclick="switchTab('projects',this)">🖼 Portofoliu</button>
+    <button class="tab" onclick="switchTab('crm',this)">📋 CRM & Oferte</button>
   </div>
 
   <!-- TAB: PROGRAMĂRI -->
@@ -192,6 +221,40 @@
     </div>
   </div>
 
+  <!-- TAB: CRM & OFERTE -->
+  <div class="tab-panel" id="panel-crm">
+    <div class="main">
+      <div class="crm-stats" id="crmStats">
+        <div class="stat-box"><div class="stat-box-num" id="crmTotal">–</div><div class="stat-box-lbl">// total</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="crmOferta" style="color:var(--yellow)">–</div><div class="stat-box-lbl">// oferte</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="crmInLucru" style="color:var(--teal)">–</div><div class="stat-box-lbl">// în lucru</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="crmFinalizat" style="color:var(--green)">–</div><div class="stat-box-lbl">// finalizate</div></div>
+        <div class="stat-box"><div class="stat-box-num" id="crmValoare" style="color:var(--teal)">–</div><div class="stat-box-lbl">// RON în lucru</div></div>
+      </div>
+      <div class="crm-toolbar">
+        <div class="filters" style="margin-bottom:0">
+          <button class="filter-btn active" onclick="setCrmFilter('all',this)">Toate</button>
+          <button class="filter-btn" onclick="setCrmFilter('oferta',this)">Ofertă</button>
+          <button class="filter-btn" onclick="setCrmFilter('in_lucru',this)">În lucru</button>
+          <button class="filter-btn" onclick="setCrmFilter('finalizat',this)">Finalizat</button>
+          <button class="filter-btn" onclick="setCrmFilter('anulat',this)">Anulat</button>
+        </div>
+        <button class="btn-add" onclick="openCrmModal()">+ Proiect / Ofertă</button>
+      </div>
+      <div class="table-wrap">
+        <div class="crm-head">
+          <div class="th">Client</div>
+          <div class="th">Proiect & Note</div>
+          <div class="th">Valoare</div>
+          <div class="th">Termen</div>
+          <div class="th">Status</div>
+          <div class="th">Acțiuni</div>
+        </div>
+        <div id="crmBody"><div class="loading">Se încarcă...</div></div>
+      </div>
+    </div>
+  </div>
+
   <!-- TAB: PROIECTE -->
   <div class="tab-panel" id="panel-projects">
     <div class="main">
@@ -202,6 +265,51 @@
       <div class="projects-grid" id="projectsGrid">
         <div class="loading">Se încarcă proiectele...</div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CRM -->
+<div class="modal-overlay" id="crmModalOverlay">
+  <div class="modal" style="max-width:520px;">
+    <h3 id="crmModalTitle">Proiect / Ofertă nouă</h3>
+    <input type="hidden" id="crmEditId">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="f-group" style="margin-bottom:0;">
+        <label class="f-label" for="crmClient">// client *</label>
+        <input class="f-input" type="text" id="crmClient" placeholder="Nume client / firmă">
+      </div>
+      <div class="f-group" style="margin-bottom:0;">
+        <label class="f-label" for="crmStatus">// status</label>
+        <select class="f-input" id="crmStatus">
+          <option value="oferta">Ofertă</option>
+          <option value="in_lucru">În lucru</option>
+          <option value="finalizat">Finalizat</option>
+          <option value="anulat">Anulat</option>
+        </select>
+      </div>
+    </div>
+    <div class="f-group" style="margin-top:12px;">
+      <label class="f-label" for="crmProiect">// descriere proiect</label>
+      <input class="f-input" type="text" id="crmProiect" placeholder="ex: Site prezentare + logo + Facebook">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="f-group" style="margin-bottom:0;">
+        <label class="f-label" for="crmValoare">// valoare cerută (RON)</label>
+        <input class="f-input" type="number" id="crmValoare" placeholder="ex: 2500" min="0">
+      </div>
+      <div class="f-group" style="margin-bottom:0;">
+        <label class="f-label" for="crmTermen">// termen finalizare</label>
+        <input class="f-input" type="date" id="crmTermen" style="color-scheme:dark;">
+      </div>
+    </div>
+    <div class="f-group" style="margin-top:12px;">
+      <label class="f-label" for="crmNote">// note / memo</label>
+      <textarea class="f-input" id="crmNote" placeholder="Note, cerințe speciale, urmărire client..." style="min-height:90px;"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeCrmModal()">Anulează</button>
+      <button class="btn-save" id="crmSaveBtn" onclick="saveCrm()">Salvează →</button>
     </div>
   </div>
 </div>
@@ -251,7 +359,7 @@
     err.textContent = 'Se verifică...';
     const ok = await fetchBookings(true);
     if (!ok) { err.textContent = '✗ Token incorect'; adminToken = ''; }
-    else fetchProjects();
+    else { fetchProjects(); fetchCrm(); }
   }
 
   function switchTab(tab, btn) {
@@ -264,6 +372,7 @@
 
   function refreshCurrent() {
     if (currentTab === 'bookings') fetchBookings();
+    else if (currentTab === 'crm') fetchCrm();
     else fetchProjects();
   }
 
@@ -409,9 +518,152 @@
     await fetchProjects();
   }
 
-  // Modal — închide la click pe overlay
+  // Modal proiecte portofoliu — închide la click pe overlay
   document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  document.getElementById('crmModalOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeCrmModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeCrmModal(); } });
+
+  // ── CRM ───────────────────────────────────────
+
+  let allCrm = [];
+  let crmFilter = 'all';
+
+  async function fetchCrm() {
+    try {
+      const res = await fetch('/api/crm?token=' + encodeURIComponent(adminToken));
+      if (!res.ok) return;
+      allCrm = await res.json();
+      renderCrmStats();
+      renderCrm();
+    } catch { document.getElementById('crmBody').innerHTML = '<div class="empty-state"><p>// Eroare la încărcare.</p></div>'; }
+  }
+
+  function renderCrmStats() {
+    const inLucru = allCrm.filter(e => e.status === 'in_lucru');
+    const valTotal = inLucru.reduce((s, e) => s + (parseFloat(e.valoare) || 0), 0);
+    document.getElementById('crmTotal').textContent = allCrm.length;
+    document.getElementById('crmOferta').textContent = allCrm.filter(e => e.status === 'oferta').length;
+    document.getElementById('crmInLucru').textContent = inLucru.length;
+    document.getElementById('crmFinalizat').textContent = allCrm.filter(e => e.status === 'finalizat').length;
+    document.getElementById('crmValoare').textContent = valTotal > 0 ? valTotal.toLocaleString('ro-RO') : '–';
+  }
+
+  function setCrmFilter(f, btn) {
+    crmFilter = f;
+    document.querySelectorAll('#panel-crm .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderCrm();
+  }
+
+  function termClass(termen) {
+    if (!termen) return '';
+    const diff = (new Date(termen) - new Date()) / 864e5;
+    if (diff < 0) return 'overdue';
+    if (diff < 7) return 'urgent';
+    return 'ok';
+  }
+
+  function statusLabel(s) {
+    return {oferta:'Ofertă', in_lucru:'În lucru', finalizat:'Finalizat', anulat:'Anulat'}[s] || s;
+  }
+
+  function renderCrm() {
+    const body = document.getElementById('crmBody');
+    const list = crmFilter === 'all' ? allCrm : allCrm.filter(e => e.status === crmFilter);
+    if (!list.length) { body.innerHTML = '<div class="empty-state"><p>// Nicio înregistrare. Adaugă primul proiect.</p></div>'; return; }
+    body.innerHTML = list.map(e => `
+      <div class="crm-row">
+        <div class="td td-name" data-label="Client">${esc(e.client)}</div>
+        <div class="td" data-label="Proiect">
+          <div>
+            <div>${esc(e.proiect || '–')}</div>
+            ${e.note ? `<div class="crm-note" title="${esc(e.note)}">${esc(e.note)}</div>` : ''}
+          </div>
+        </div>
+        <div class="td crm-val" data-label="Valoare">${e.valoare ? esc(e.valoare) + ' RON' : '–'}</div>
+        <div class="td" data-label="Termen">
+          <span class="crm-term ${termClass(e.termen)}">${e.termen ? formatDate(e.termen) : '–'}</span>
+        </div>
+        <div class="td" data-label="Status">
+          <select class="status-badge s-${esc(e.status)}" onchange="updateCrmStatus('${esc(e.id)}',this)">
+            <option value="oferta" ${e.status==='oferta'?'selected':''}>Ofertă</option>
+            <option value="in_lucru" ${e.status==='in_lucru'?'selected':''}>În lucru</option>
+            <option value="finalizat" ${e.status==='finalizat'?'selected':''}>Finalizat</option>
+            <option value="anulat" ${e.status==='anulat'?'selected':''}>Anulat</option>
+          </select>
+        </div>
+        <div class="td" data-label="Acțiuni">
+          <div style="display:flex;gap:6px;">
+            <button class="btn-edit" onclick="openCrmModal('${esc(e.id)}')">✎</button>
+            <button class="btn-del" onclick="deleteCrm('${esc(e.id)}','${esc(e.client)}')">✕</button>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  async function updateCrmStatus(id, select) {
+    const status = select.value;
+    select.className = `status-badge s-${status}`;
+    await fetch(`/api/crm/${id}?token=` + encodeURIComponent(adminToken), {
+      method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ status }),
+    });
+    const e = allCrm.find(x => x.id === id);
+    if (e) e.status = status;
+    renderCrmStats();
+  }
+
+  function openCrmModal(id) {
+    const e = id ? allCrm.find(x => x.id === id) : null;
+    document.getElementById('crmModalTitle').textContent = e ? 'Editează intrare' : 'Proiect / Ofertă nouă';
+    document.getElementById('crmEditId').value = e ? e.id : '';
+    document.getElementById('crmClient').value = e ? e.client : '';
+    document.getElementById('crmProiect').value = e ? e.proiect : '';
+    document.getElementById('crmValoare').value = e ? e.valoare : '';
+    document.getElementById('crmTermen').value = e ? e.termen : '';
+    document.getElementById('crmStatus').value = e ? e.status : 'oferta';
+    document.getElementById('crmNote').value = e ? e.note : '';
+    document.getElementById('crmModalOverlay').classList.add('open');
+    document.getElementById('crmClient').focus();
+  }
+
+  function closeCrmModal() {
+    document.getElementById('crmModalOverlay').classList.remove('open');
+  }
+
+  async function saveCrm() {
+    const id = document.getElementById('crmEditId').value;
+    const data = {
+      client: document.getElementById('crmClient').value.trim(),
+      proiect: document.getElementById('crmProiect').value.trim(),
+      valoare: document.getElementById('crmValoare').value.trim(),
+      termen: document.getElementById('crmTermen').value,
+      status: document.getElementById('crmStatus').value,
+      note: document.getElementById('crmNote').value.trim(),
+    };
+    if (!data.client) { alert('Clientul este obligatoriu.'); return; }
+    const btn = document.getElementById('crmSaveBtn');
+    btn.textContent = 'Se salvează...'; btn.disabled = true;
+    try {
+      if (id) {
+        await fetch(`/api/crm/${id}?token=` + encodeURIComponent(adminToken), {
+          method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data),
+        });
+      } else {
+        await fetch(`/api/crm?token=` + encodeURIComponent(adminToken), {
+          method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data),
+        });
+      }
+      closeCrmModal();
+      await fetchCrm();
+    } catch { alert('Eroare la salvare.'); }
+    btn.textContent = 'Salvează →'; btn.disabled = false;
+  }
+
+  async function deleteCrm(id, client) {
+    if (!confirm(`Ștergi intrarea pentru "${client}"?`)) return;
+    await fetch(`/api/crm/${id}?token=` + encodeURIComponent(adminToken), { method: 'DELETE' });
+    await fetchCrm();
+  }
 
   // ── UTILS ─────────────────────────────────────
 
@@ -422,6 +674,7 @@
     adminToken = '';
     allBookings = [];
     allProjects = [];
+    allCrm = [];
     document.getElementById('dashboard').style.display = 'none';
     document.getElementById('loginWrap').style.display = 'flex';
     document.getElementById('tokenInput').value = '';
