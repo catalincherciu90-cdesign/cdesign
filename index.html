@@ -145,7 +145,7 @@
     /* CAROUSEL */
     .banner-carousel{position:relative;overflow:hidden;background:var(--bg);border-bottom:1px solid var(--border);}
     .banner-track{display:flex;transition:transform .55s cubic-bezier(.4,0,.2,1);will-change:transform;}
-    .banner-slide{min-width:100%;height:320px;display:flex;align-items:center;position:relative;overflow:hidden;flex-shrink:0;}
+    .banner-slide{height:320px;display:flex;align-items:center;position:relative;overflow:hidden;flex-shrink:0;}
     .bs-inner{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:2;display:flex;align-items:center;gap:60px;width:100%;}
     .bs-text{flex:1;min-width:0;}
     .bs-tag{font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;display:inline-flex;align-items:center;gap:7px;padding:4px 12px;border-radius:4px;}
@@ -177,7 +177,6 @@
     .banner-dots{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:10;}
     .banner-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:background .2s,transform .2s;}
     .banner-dot.active{background:var(--teal);transform:scale(1.3);}
-    @media(max-width:480px){.banner-btn{display:none;}}
 
     section{padding:96px 0;position:relative}
     .sec-label{font-family:'Share Tech Mono',monospace;font-size:.95rem;color:var(--teal);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;}
@@ -290,9 +289,27 @@
       .hero{min-height:auto;padding:60px 0}section{padding:64px 0}
       .services-grid,.portfolio-grid,.testi-grid,.process-grid{grid-template-columns:1fr}
       .f-row{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr;gap:24px}
-      .stats-inner{gap:24px}.stat-div{display:none}
+      .stats-inner{gap:20px}.stat-div{display:none}
+      .stat-num{font-size:1.6rem}
       .hero-actions{flex-direction:column}
-      .hero-actions .btn-primary,.hero-actions .btn-ghost{text-align:center;justify-content:center}
+      .hero-actions .btn-primary,.hero-actions .btn-ghost{text-align:center;justify-content:center;width:100%}
+      .bs-inner{gap:32px}
+      .contact-grid{gap:32px}
+    }
+    @media(max-width:480px){
+      .banner-btn{display:none;}
+      .stat-num{font-size:1.3rem;}
+      .stat-lbl{font-size:.7rem;}
+      .stats-inner{gap:14px 18px;}
+      section{padding:48px 0;}
+      .banner-slide{height:220px;}
+      .hero-terminal{display:none;}
+      .footer-grid{grid-template-columns:1fr;}
+      .bs-h{font-size:1.35rem;}
+      .bs-sub{font-size:.88rem;}
+      .hero h1{font-size:2rem;}
+      .hero-desc{font-size:.95rem;}
+      .container{padding:0 16px;}
     }
   </style>
 </head>
@@ -828,18 +845,23 @@ setTimeout(addLine,800);
 (function(){
   const track = document.getElementById('bannerTrack');
   const dots = document.querySelectorAll('.banner-dot');
+  const el = document.getElementById('bannerCarousel');
+  const slides = el.querySelectorAll('.banner-slide');
   const total = 4;
   let cur = 0, timer;
+  function setSize() {
+    const w = el.offsetWidth;
+    slides.forEach(s => { s.style.width = w + 'px'; });
+  }
   function goTo(n) {
     cur = (n + total) % total;
-    track.style.transform = `translateX(-${cur * 100}%)`;
+    track.style.transform = `translateX(${-cur * el.offsetWidth}px)`;
     dots.forEach((d, i) => d.classList.toggle('active', i === cur));
   }
   window.bannerMove = (dir) => { clearInterval(timer); goTo(cur + dir); startTimer(); };
   window.bannerGo   = (n)   => { clearInterval(timer); goTo(n); startTimer(); };
   function startTimer() { timer = setInterval(() => goTo(cur + 1), 5000); }
   let tx = 0;
-  const el = document.getElementById('bannerCarousel');
   el.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
   el.addEventListener('touchend', e => {
     const dx = e.changedTouches[0].clientX - tx;
@@ -847,6 +869,13 @@ setTimeout(addLine,800);
   }, {passive:true});
   el.addEventListener('mouseenter', () => clearInterval(timer));
   el.addEventListener('mouseleave', startTimer);
+  window.addEventListener('resize', () => {
+    setSize();
+    track.style.transition = 'none';
+    goTo(cur);
+    requestAnimationFrame(() => { track.style.transition = ''; });
+  }, {passive:true});
+  setSize();
   startTimer();
 })();
 
