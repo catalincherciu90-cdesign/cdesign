@@ -12,6 +12,7 @@ function json(data, status = 200) {
 }
 
 const ADMIN_TOKEN = 'Anaare3mere#';
+const ADMIN_USER  = 'cdesign';
 
 const DEFAULT_PROJECTS = [
   { id: 'p1', emoji: '🚗', tag: 'Auto', title: 'Tractări Auto Teleorman', description: 'Site de prezentare cu zone de acoperire: Dâmbovița, Ilfov, București, Argeș, Giurgiu.', order: 0 },
@@ -32,6 +33,19 @@ export default {
     const path = url.pathname;
 
     if (request.method === 'OPTIONS') return new Response(null, { headers: CORS });
+
+    // ── AUTH ──────────────────────────────────────────────────
+
+    if (path === '/api/login' && request.method === 'POST') {
+      try {
+        const { username, password } = await request.json();
+        const validUser  = env.ADMIN_USER  || ADMIN_USER;
+        const validToken = env.ADMIN_TOKEN || ADMIN_TOKEN;
+        if (username === validUser && password === validToken)
+          return json({ success: true });
+        return json({ error: 'Credențiale incorecte' }, 401);
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
 
     // ── BOOKINGS ──────────────────────────────────────────────
 
