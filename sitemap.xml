@@ -2,49 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
-  <!-- Pagina principală -->
   <url>
     <loc>https://www.c-design.ro/</loc>
-    <lastmod>2025-05-11</lastmod>
+    <lastmod>2026-05-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="ro" href="https://www.c-design.ro/"/>
-  </url>
-
-  <!-- Secțiuni (anchor links) -->
-  <url>
-    <loc>https://www.c-design.ro/#servicii</loc>
-    <lastmod>2025-05-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://www.c-design.ro/#portofoliu</loc>
-    <lastmod>2025-05-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.c-design.ro/#proces</loc>
-    <lastmod>2025-05-11</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://www.c-design.ro/#testimoniale</loc>
-    <lastmod>2025-05-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://www.c-design.ro/#contact</loc>
-    <lastmod>2025-05-11</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.8</priority>
   </url>
 
 </urlset>
