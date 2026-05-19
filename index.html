@@ -52,15 +52,35 @@
     "priceRange": "$$",
     "address": {
       "@type": "PostalAddress",
-      "addressLocality": "Chiajna",
-      "addressRegion": "Ilfov",
-      "postalCode": "077040",
       "addressCountry": "RO"
     },
-    "geo": {"@type": "GeoCoordinates", "latitude": "44.4414", "longitude": "25.9987"},
-    "openingHoursSpecification": [{"@type": "OpeningHoursSpecification","dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens": "09:00","closes": "18:00"}],
     "areaServed": [{"@type": "Country","name": "România"}],
-    "aggregateRating": {"@type": "AggregateRating","ratingValue": "5","reviewCount": "12","bestRating": "5"}
+    "openingHoursSpecification": [{"@type": "OpeningHoursSpecification","dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens": "09:00","closes": "18:00"}],
+    "aggregateRating": {"@type": "AggregateRating","ratingValue": "5","reviewCount": "12","bestRating": "5"},
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Servicii Web Design",
+      "itemListElement": [
+        {"@type": "Offer","itemOffered": {"@type": "Service","name": "Site de Prezentare","description": "Site profesional de prezentare pentru afacerea ta, livrat în maxim 21 de zile."}},
+        {"@type": "Offer","itemOffered": {"@type": "Service","name": "Redesign Site","description": "Modernizăm site-ul existent cu design actual și performanță îmbunătățită."}},
+        {"@type": "Offer","itemOffered": {"@type": "Service","name": "Design Grafic & Logo","description": "Identitate vizuală profesională: logo, carte de vizită, materiale print."}},
+        {"@type": "Offer","itemOffered": {"@type": "Service","name": "Mentenanță Site","description": "Actualizări periodice, securitate și suport tehnic pentru site-ul tău."}},
+        {"@type": "Offer","itemOffered": {"@type": "Service","name": "Pachet Startup","description": "Pachet complet pentru start: site + identitate vizuală + prezență online activă. De la 300€."}}
+      ]
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://www.c-design.ro/#website",
+    "url": "https://www.c-design.ro",
+    "name": "C Design",
+    "description": "Web Design profesional pentru afaceri mici din România",
+    "publisher": {"@id": "https://www.c-design.ro/#business"},
+    "inLanguage": "ro-RO"
   }
   </script>
 
@@ -73,7 +93,9 @@
       {"@type": "Question","name": "Cât durează realizarea unui site?","acceptedAnswer": {"@type": "Answer","text": "Livrăm site-uri complete în maximum 21 de zile de la confirmarea comenzii, garantat contractual."}},
       {"@type": "Question","name": "Cum programez o consultanță?","acceptedAnswer": {"@type": "Answer","text": "Completează formularul de pe pagina noastră, alege data și ora preferată, și te contactăm în maxim 2 ore pentru confirmare."}},
       {"@type": "Question","name": "Includeți și domeniu și găzduire?","acceptedAnswer": {"@type": "Answer","text": "Da, domeniu .ro și găzduire sunt incluse în pachetul de site de prezentare."}},
-      {"@type": "Question","name": "Site-ul va funcționa pe telefon?","acceptedAnswer": {"@type": "Answer","text": "Toate site-urile noastre sunt mobile-first — arată perfect pe telefon, tabletă și calculator."}}
+      {"@type": "Question","name": "Site-ul va funcționa pe telefon?","acceptedAnswer": {"@type": "Answer","text": "Toate site-urile noastre sunt mobile-first — arată perfect pe telefon, tabletă și calculator."}},
+      {"@type": "Question","name": "Ce include Pachetul Startup?","acceptedAnswer": {"@type": "Answer","text": "Pachetul Startup include site de prezentare, logo profesional, domeniu .ro, găzduire și suport pentru configurarea prezenței online. De la 300€."}},
+      {"@type": "Question","name": "Lucrați cu clienți din toată România?","acceptedAnswer": {"@type": "Answer","text": "Da, lucrăm online cu clienți din toată România — București, Cluj, Timișoara, Iași, Brașov și oriunde altundeva."}}
     ]
   }
   </script>
