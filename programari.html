@@ -44,8 +44,9 @@
     .top-btn-logout:hover{color:var(--red);border-color:rgba(255,95,87,.4);}
 
     /* TABS */
-    .tabs{display:flex;gap:4px;padding:0 24px;background:var(--bg2);border-bottom:1px solid var(--border);}
-    .tab{font-family:'Share Tech Mono',monospace;font-size:.8rem;padding:12px 20px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s;background:none;border-left:none;border-right:none;border-top:none;}
+    .tabs{display:flex;gap:0;padding:0 8px;background:var(--bg2);border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+    .tabs::-webkit-scrollbar{display:none;}
+    .tab{font-family:'Share Tech Mono',monospace;font-size:.8rem;padding:12px 16px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s;background:none;border-left:none;border-right:none;border-top:none;white-space:nowrap;flex-shrink:0;}
     .tab:hover{color:var(--soft);}
     .tab.active{color:var(--teal);border-bottom-color:var(--teal);}
     .tab-panel{display:none;}.tab-panel.active{display:block;}
@@ -157,10 +158,27 @@
       .crm-row .td::before{content:attr(data-label)' ';font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);margin-right:6px;}
       .crm-note{max-width:100%;white-space:normal;}
     }
-    @media(max-width:520px){
-      .stats-row{grid-template-columns:1fr 1fr}
+    @media(max-width:600px){
+      .top-bar{padding:0 14px;height:52px;}
+      .top-logo{font-size:.95rem;}
+      .top-btn{font-size:.72rem;padding:5px 10px;}
+      .main{padding:16px 12px;}
+      .stats-row{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+      .stat-box{padding:14px 16px;}
+      .stat-box-num{font-size:1.4rem;}
+      .filters{gap:6px;}
+      .filter-btn{font-size:.7rem;padding:6px 10px;}
       .projects-grid{grid-template-columns:1fr;}
-      .crm-stats{grid-template-columns:1fr 1fr;}
+      .crm-stats{grid-template-columns:1fr 1fr;gap:10px;}
+      .modal{padding:20px 16px;}
+      .modal-actions{flex-direction:column-reverse;gap:8px;}
+      .modal-actions button{width:100%;padding:11px;}
+      .proj-toolbar{flex-direction:column;align-items:flex-start;gap:8px;}
+      .crm-toolbar{flex-direction:column;align-items:flex-start;gap:8px;}
+      .btn-add{width:100%;text-align:center;}
+    }
+    @media(max-width:400px){
+      .tab{font-size:.72rem;padding:10px 12px;}
     }
   </style>
 </head>
