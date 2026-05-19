@@ -296,6 +296,9 @@
     .footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;color:#fff;display:flex;align-items:center;gap:5px;margin-bottom:12px;}
     .footer-logo .fc{color:var(--teal);text-shadow:0 0 10px rgba(0,200,180,.5);}
     .footer-about{font-size:.875rem;color:var(--muted);line-height:1.7;margin-bottom:20px;}
+    .footer-social{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+    .footer-social a{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;border:1px solid var(--border-soft);color:var(--muted);font-size:1rem;transition:border-color .2s,color .2s,background .2s;}
+    .footer-social a:hover{border-color:var(--teal-border);color:var(--teal);background:var(--teal-dim);}
     .footer-col h4{font-family:'Syne',sans-serif;font-size:.825rem;font-weight:700;color:var(--text);margin-bottom:14px;letter-spacing:.04em;text-transform:uppercase;}
     .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:8px;}
     .footer-col a{font-size:.875rem;color:var(--muted);transition:color .2s}.footer-col a:hover{color:var(--teal)}
@@ -800,6 +803,7 @@
       <div>
         <div class="footer-logo"><img src="/logo-c-design.png" alt="C Design" style="height:36px;width:auto;filter:brightness(0) invert(1);opacity:.85;"></div>
         <p class="footer-about">Web design profesional pentru afaceri mici din toată România. Construim site-uri care aduc clienți reali.</p>
+        <div class="footer-social" id="footerSocial"></div>
       </div>
       <div class="footer-col"><h4>Servicii</h4><ul><li><a href="#servicii">Site de prezentare</a></li><li><a href="/pachet-startup">Pachet Start-Up</a></li><li><a href="#servicii">Redesign site</a></li><li><a href="#servicii">Design grafic</a></li></ul></div>
       <div class="footer-col"><h4>Companie</h4><ul><li><a href="#portofoliu">Portofoliu</a></li><li><a href="#testimoniale">Testimoniale</a></li><li><a href="#proces">Cum lucrăm</a></li><li><a href="#contact">Contact</a></li><li><a href="/blog">Blog</a></li></ul></div>
@@ -981,6 +985,27 @@ document.getElementById('bookingForm').addEventListener('submit', async function
     setTimeout(() => { btn.textContent = 'Confirmă programarea →'; btn.style.background = ''; }, 4000);
   }
 });
+
+// Social media footer
+(async () => {
+  const ICONS = {
+    'Facebook': '📘',
+    'Instagram': '📸',
+    'LinkedIn': '💼',
+    'TikTok': '🎵',
+    'Google Business': '📍',
+    'WhatsApp': '💬',
+  };
+  try {
+    const data = await fetch('/api/social').then(r => r.json());
+    const container = document.getElementById('footerSocial');
+    if (!container) return;
+    const links = data.filter(s => s.enabled && s.url);
+    container.innerHTML = links.map(s =>
+      `<a href="${s.url}" target="_blank" rel="noopener noreferrer" aria-label="${s.platform}" title="${s.platform}">${ICONS[s.platform] || '🌐'}</a>`
+    ).join('');
+  } catch {}
+})();
 </script>
 </body>
 </html>
