@@ -761,7 +761,7 @@
           <div class="c-item reveal"><div class="c-icon" aria-hidden="true">✉️</div><div><div style="font-size:.78rem;color:var(--muted);font-family:'Share Tech Mono',monospace;margin-bottom:3px">email</div><a href="mailto:office@c-design.ro">office@c-design.ro</a></div></div>
           <div class="c-item reveal"><div class="c-icon" aria-hidden="true">💬</div><div><div style="font-size:.78rem;color:var(--muted);font-family:'Share Tech Mono',monospace;margin-bottom:3px">whatsapp</div><a href="https://wa.me/40753116155" rel="noopener noreferrer">Scrie-ne pe WhatsApp</a></div></div>
 
-          <div class="c-item reveal"><div class="c-icon" aria-hidden="true">⏰</div><div><div style="font-size:.78rem;color:var(--muted);font-family:'Share Tech Mono',monospace;margin-bottom:3px">program</div><span>Luni–Vineri, 09:00–18:00</span></div></div>
+          <div class="c-item reveal"><div class="c-icon" aria-hidden="true">⏰</div><div><div style="font-size:.78rem;color:var(--muted);font-family:'Share Tech Mono',monospace;margin-bottom:3px">program</div><span id="workingHoursLabel">Luni–Vineri, 09:00–18:00</span></div></div>
         </address>
       </div>
       <div class="contact-form reveal">
@@ -777,14 +777,6 @@
               <label class="f-label" for="ftime">// ora_preferata *</label>
               <select class="f-select" id="ftime" name="time" required>
                 <option value="">Alege ora...</option>
-                <option value="09:00">09:00</option>
-                <option value="10:00">10:00</option>
-                <option value="11:00">11:00</option>
-                <option value="12:00">12:00</option>
-                <option value="14:00">14:00</option>
-                <option value="15:00">15:00</option>
-                <option value="16:00">16:00</option>
-                <option value="17:00">17:00</option>
               </select>
             </div>
           </div>
@@ -960,7 +952,64 @@ setTimeout(addLine,800);
   startTimer();
 })();
 
-document.getElementById('fdate').min = new Date().toISOString().split('T')[0];
+// Load booking settings
+(async () => {
+  const DAY_RO = ['Dum','Lun','Mar','Mie','Joi','Vin','Sâm'];
+  const DAY_FULL = ['Duminică','Luni','Marți','Miercuri','Joi','Vineri','Sâmbătă'];
+  const defaults = { workingDays:[1,2,3,4,5], startTime:'09:00', endTime:'18:00', slotInterval:60, blockedDates:[] };
+  let cfg = defaults;
+  try { const r = await fetch('/api/settings'); cfg = await r.json(); } catch {}
+
+  // Working hours label
+  const label = document.getElementById('workingHoursLabel');
+  if (label) {
+    const days = cfg.workingDays || defaults.workingDays;
+    const sorted = [...days].sort((a,b)=>a-b);
+    let daysStr;
+    if (sorted.length >= 2 && sorted[sorted.length-1] - sorted[0] === sorted.length - 1) {
+      daysStr = DAY_FULL[sorted[0]] + '–' + DAY_FULL[sorted[sorted.length-1]];
+    } else {
+      daysStr = sorted.map(d => DAY_RO[d]).join(', ');
+    }
+    label.textContent = daysStr + ', ' + cfg.startTime + '–' + cfg.endTime;
+  }
+
+  // Populate time slots
+  const sel = document.getElementById('ftime');
+  if (sel) {
+    const [sh] = (cfg.startTime||'09:00').split(':').map(Number);
+    const [eh, em] = (cfg.endTime||'18:00').split(':').map(Number);
+    const interval = cfg.slotInterval || 60;
+    let cur = sh * 60;
+    const end = eh * 60 + em;
+    sel.innerHTML = '<option value="">Alege ora...</option>';
+    while (cur < end) {
+      const h = String(Math.floor(cur/60)).padStart(2,'0');
+      const m = String(cur%60).padStart(2,'0');
+      const val = h+':'+m;
+      sel.innerHTML += `<option value="${val}">${val}</option>`;
+      cur += interval;
+    }
+  }
+
+  // Date picker — disable days outside working schedule
+  const dateInput = document.getElementById('fdate');
+  if (dateInput) {
+    dateInput.min = new Date().toISOString().split('T')[0];
+    const blocked = cfg.blockedDates || [];
+    dateInput.addEventListener('input', function() {
+      const d = new Date(this.value + 'T12:00:00');
+      const dow = d.getDay();
+      if (!(cfg.workingDays||defaults.workingDays).includes(dow) || blocked.includes(this.value)) {
+        this.setCustomValidity('Această zi nu este disponibilă. Alege o zi lucrătoare.');
+        this.reportValidity();
+        this.value = '';
+      } else {
+        this.setCustomValidity('');
+      }
+    });
+  }
+})();
 
 const ham=document.getElementById('hamburger');
 const mob=document.getElementById('mobileMenu');

@@ -415,6 +415,26 @@ export default {
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
 
+    // ── SETTINGS ─────────────────────────────────────────────
+
+    const DEFAULT_SETTINGS = { workingDays:[1,2,3,4,5], startTime:'09:00', endTime:'18:00', slotInterval:60, blockedDates:[] };
+
+    if (path === '/api/settings' && request.method === 'GET') {
+      try {
+        const raw = await env.PROGRAMARI.get('__settings__');
+        return json(raw ? JSON.parse(raw) : DEFAULT_SETTINGS);
+      } catch { return json(DEFAULT_SETTINGS); }
+    }
+
+    if (path === '/api/settings' && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const body = await request.json();
+        await env.PROGRAMARI.put('__settings__', JSON.stringify(body));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
     // ── SOCIAL MEDIA ──────────────────────────────────────────
 
     const DEFAULT_SOCIAL = [

@@ -216,6 +216,7 @@
     <button class="tab" onclick="switchTab('crm',this)">&#x1F4CB; CRM &amp; Oferte</button>
     <button class="tab" onclick="switchTab('blog',this)">&#x270D; Blog</button>
     <button class="tab" onclick="switchTab('social',this)">&#x1F4F1; Social Media</button>
+    <button class="tab" onclick="switchTab('settings',this)">&#x2699; Set&#x103;ri</button>
   </div>
 
   <!-- TAB: PROGRAMARI -->
@@ -308,6 +309,61 @@
         <button class="btn-add" onclick="saveSocial()">&#x2713; Salveaz&#259;</button>
       </div>
       <div class="table-wrap" style="padding:8px 0;" id="socialList"><div class="loading">Se &icirc;ncarc&#259;...</div></div>
+    </div>
+  </div>
+
+  <!-- TAB: SETARI -->
+  <div class="tab-panel" id="panel-settings">
+    <div class="main">
+      <div class="proj-toolbar">
+        <h3>// set&#x103;ri — program &amp; disponibilitate</h3>
+        <button class="btn-add" onclick="saveSettings()">&#x2713; Salveaz&#259;</button>
+      </div>
+      <div class="table-wrap" style="padding:24px;">
+
+        <div style="margin-bottom:28px;">
+          <div class="f-label" style="margin-bottom:12px;">// zile_disponibile</div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;" id="settingsDays">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="day-cb" value="1"> Luni</label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="day-cb" value="2"> Mar&#x21b;i</label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="day-cb" value="3"> Miercuri</label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="day-cb" value="4"> Joi</label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="day-cb" value="5"> Vineri</label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="day-cb" value="6"> S&acirc;mb&#x103;t&#x103;</label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="day-cb" value="0"> Duminic&#x103;</label>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:28px;">
+          <div>
+            <div class="f-label" style="margin-bottom:6px;">// or&#x103;_start</div>
+            <input class="f-input" type="time" id="settingsStart" value="09:00">
+          </div>
+          <div>
+            <div class="f-label" style="margin-bottom:6px;">// or&#x103;_final</div>
+            <input class="f-input" type="time" id="settingsEnd" value="18:00">
+          </div>
+          <div>
+            <div class="f-label" style="margin-bottom:6px;">// interval_slot (minute)</div>
+            <select class="f-input" id="settingsInterval">
+              <option value="30">30 minute</option>
+              <option value="60" selected>60 minute</option>
+              <option value="90">90 minute</option>
+              <option value="120">2 ore</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <div class="f-label" style="margin-bottom:10px;">// zile_blocate (concediu, s&#x103;rb&#x103;tori)</div>
+          <div style="display:flex;gap:8px;margin-bottom:12px;">
+            <input class="f-input" type="date" id="newBlockedDate" style="max-width:200px;">
+            <button class="btn-add" onclick="addBlockedDate()" style="padding:8px 16px;">+ Adaug&#x103;</button>
+          </div>
+          <div id="blockedDatesList" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+        </div>
+
+      </div>
     </div>
   </div>
 
@@ -469,6 +525,7 @@
     else if (currentTab === 'crm') fetchCrm();
     else if (currentTab === 'blog') fetchBlog();
     else if (currentTab === 'social') fetchSocial();
+    else if (currentTab === 'settings') fetchSettings();
     else fetchProjects();
   }
 
@@ -944,6 +1001,71 @@
       btn.textContent = data.success ? '&#x2713; Salvat!' : '&#x2715; Eroare';
       setTimeout(() => { btn.textContent = '&#x2713; Salveaz&#259;'; btn.disabled = false; }, 2000);
     } catch { btn.textContent = '&#x2715; Eroare'; btn.disabled = false; }
+  }
+
+  // -- SETTINGS --
+
+  let settingsData = { workingDays:[1,2,3,4,5], startTime:'09:00', endTime:'18:00', slotInterval:60, blockedDates:[] };
+
+  async function fetchSettings() {
+    try {
+      const res = await fetch(`/api/settings?token=${encodeURIComponent(adminToken)}`);
+      settingsData = await res.json();
+      renderSettings();
+    } catch {}
+  }
+
+  function renderSettings() {
+    document.querySelectorAll('.day-cb').forEach(cb => {
+      cb.checked = (settingsData.workingDays || [1,2,3,4,5]).includes(Number(cb.value));
+    });
+    document.getElementById('settingsStart').value = settingsData.startTime || '09:00';
+    document.getElementById('settingsEnd').value = settingsData.endTime || '18:00';
+    document.getElementById('settingsInterval').value = String(settingsData.slotInterval || 60);
+    renderBlockedDates();
+  }
+
+  function renderBlockedDates() {
+    const list = document.getElementById('blockedDatesList');
+    const dates = settingsData.blockedDates || [];
+    if (!dates.length) { list.innerHTML = '<span style="color:var(--muted);font-size:.85rem;">Nicio zi blocată.</span>'; return; }
+    list.innerHTML = dates.sort().map(d => `
+      <span style="display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:.85rem;">
+        ${d} <button onclick="removeBlockedDate('${d}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:.9rem;padding:0;line-height:1;" title="Șterge">✕</button>
+      </span>`).join('');
+  }
+
+  function addBlockedDate() {
+    const input = document.getElementById('newBlockedDate');
+    const val = input.value;
+    if (!val) return;
+    if (!(settingsData.blockedDates || []).includes(val)) {
+      settingsData.blockedDates = [...(settingsData.blockedDates || []), val];
+      renderBlockedDates();
+    }
+    input.value = '';
+  }
+
+  function removeBlockedDate(d) {
+    settingsData.blockedDates = (settingsData.blockedDates || []).filter(x => x !== d);
+    renderBlockedDates();
+  }
+
+  async function saveSettings() {
+    const btn = event.currentTarget;
+    settingsData.workingDays = [...document.querySelectorAll('.day-cb:checked')].map(cb => Number(cb.value));
+    settingsData.startTime = document.getElementById('settingsStart').value;
+    settingsData.endTime = document.getElementById('settingsEnd').value;
+    settingsData.slotInterval = Number(document.getElementById('settingsInterval').value);
+    btn.textContent = 'Se salvează...'; btn.disabled = true;
+    try {
+      const res = await fetch(`/api/settings?token=${encodeURIComponent(adminToken)}`, {
+        method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(settingsData)
+      });
+      const data = await res.json();
+      btn.textContent = data.success ? '✓ Salvat!' : '✕ Eroare';
+      setTimeout(() => { btn.textContent = '✓ Salvează'; btn.disabled = false; }, 2000);
+    } catch { btn.textContent = '✕ Eroare'; btn.disabled = false; }
   }
 
   // -- UTILS --
