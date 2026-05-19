@@ -34,6 +34,14 @@ export default {
 
     if (request.method === 'OPTIONS') return new Response(null, { headers: CORS });
 
+    // ── PACHET STARTUP ────────────────────────────────────────
+
+    if (path === '/pachet-startup') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/pachet-startup.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
     // ── AUTH ──────────────────────────────────────────────────
 
     if (path === '/api/login' && request.method === 'POST') {
@@ -89,7 +97,6 @@ export default {
 
     // ── PROJECTS ──────────────────────────────────────────────
 
-    // GET /api/projects — public
     if (path === '/api/projects' && request.method === 'GET') {
       try {
         const raw = await env.PROGRAMARI.get('__projects__');
@@ -98,7 +105,6 @@ export default {
       } catch { return json(DEFAULT_PROJECTS); }
     }
 
-    // POST /api/project — adaugă proiect nou
     if (path === '/api/project' && request.method === 'POST') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
@@ -114,7 +120,6 @@ export default {
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
 
-    // PUT /api/project/:id — editează proiect
     if (path.startsWith('/api/project/') && request.method === 'PUT') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
@@ -130,7 +135,6 @@ export default {
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
 
-    // DELETE /api/project/:id — șterge proiect
     if (path.startsWith('/api/project/') && request.method === 'DELETE') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
