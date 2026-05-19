@@ -196,6 +196,8 @@
     <button class="tab active" onclick="switchTab('bookings',this)">&#x1F4C5; Program&#259;ri</button>
     <button class="tab" onclick="switchTab('projects',this)">&#x1F5BC; Portofoliu</button>
     <button class="tab" onclick="switchTab('crm',this)">&#x1F4CB; CRM &amp; Oferte</button>
+    <button class="tab" onclick="switchTab('blog',this)">&#x270D; Blog</button>
+    <button class="tab" onclick="switchTab('social',this)">&#x1F4F1; Social Media</button>
   </div>
 
   <!-- TAB: PROGRAMARI -->
@@ -269,9 +271,29 @@
       </div>
     </div>
   </div>
-</div>
+  <!-- TAB: BLOG -->
+  <div class="tab-panel" id="panel-blog">
+    <div class="main">
+      <div class="proj-toolbar">
+        <h3>// articole_blog</h3>
+        <button class="btn-add" onclick="openBlogModal(null)">+ Articol nou</button>
+      </div>
+      <div id="blogList"><div class="loading">Se &icirc;ncarc&#259;...</div></div>
+    </div>
+  </div>
 
-<!-- MODAL CRM -->
+  <!-- TAB: SOCIAL MEDIA -->
+  <div class="tab-panel" id="panel-social">
+    <div class="main">
+      <div class="proj-toolbar">
+        <h3>// social_media — conturi active</h3>
+        <button class="btn-add" onclick="saveSocial()">&#x2713; Salveaz&#259;</button>
+      </div>
+      <div class="table-wrap" style="padding:8px 0;" id="socialList"><div class="loading">Se &icirc;ncarc&#259;...</div></div>
+    </div>
+  </div>
+
+</div>
 <div class="modal-overlay" id="crmModalOverlay">
   <div class="modal" style="max-width:520px;">
     <h3 id="crmModalTitle">Proiect / Ofert&#259; nou&#259;</h3>
@@ -312,6 +334,40 @@
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeCrmModal()">Anuleaz&#259;</button>
       <button class="btn-save" id="crmSaveBtn" onclick="saveCrm()">Salveaz&#259; &#x2192;</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL BLOG -->
+<div class="modal-overlay" id="blogModalOverlay">
+  <div class="modal" style="max-width:600px;">
+    <h3 id="blogModalTitle">Articol nou</h3>
+    <input type="hidden" id="blogEditId">
+    <div class="f-group">
+      <label class="f-label">// titlu *</label>
+      <input class="f-input" type="text" id="blogTitle" placeholder="Titlul articolului" oninput="genSlug()">
+    </div>
+    <div class="f-group">
+      <label class="f-label">// slug (URL)</label>
+      <input class="f-input" type="text" id="blogSlug" placeholder="titlul-articolului">
+    </div>
+    <div class="f-group">
+      <label class="f-label">// rezumat scurt</label>
+      <textarea class="f-input" id="blogExcerpt" placeholder="2-3 propozi&#x21B;ii afișate &icirc;n list&#259;..." style="min-height:60px;"></textarea>
+    </div>
+    <div class="f-group">
+      <label class="f-label">// con&#x21B;inut (HTML)</label>
+      <textarea class="f-input" id="blogContent" placeholder="&lt;p&gt;Con&#x21B;inut articol...&lt;/p&gt;" style="min-height:220px;font-family:monospace;font-size:13px;line-height:1.6;"></textarea>
+    </div>
+    <div class="f-group" style="margin-bottom:0;">
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:var(--soft);">
+        <input type="checkbox" id="blogPublished" style="width:16px;height:16px;accent-color:var(--teal);">
+        Publicat (vizibil pe site)
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeBlogModal()">Anuleaz&#259;</button>
+      <button class="btn-save" id="blogSaveBtn" onclick="saveBlog()">Salveaz&#259; &#x2192;</button>
     </div>
   </div>
 </div>
@@ -378,7 +434,7 @@
       adminToken = password;
       const ok = await fetchBookings(true);
       if (!ok) { err.textContent = '✗ Eroare de autentificare'; adminToken = ''; }
-      else { fetchProjects(); fetchCrm(); }
+      else { fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); }
     } catch { err.textContent = '✗ Eroare de rețea'; }
   }
 
@@ -393,6 +449,8 @@
   function refreshCurrent() {
     if (currentTab === 'bookings') fetchBookings();
     else if (currentTab === 'crm') fetchCrm();
+    else if (currentTab === 'blog') fetchBlog();
+    else if (currentTab === 'social') fetchSocial();
     else fetchProjects();
   }
 
@@ -745,6 +803,129 @@
     if (!confirm(`Ştergi intrarea pentru "${client}"?`)) return;
     await fetch(`/api/crm/${id}?token=` + encodeURIComponent(adminToken), { method: 'DELETE' });
     await fetchCrm();
+  }
+
+  // -- BLOG --
+
+  let allBlog = [];
+
+  async function fetchBlog() {
+    try {
+      const res = await fetch('/api/blog?token=' + encodeURIComponent(adminToken) + '&all=1');
+      allBlog = await res.json();
+      renderBlog();
+    } catch { document.getElementById('blogList').innerHTML = '<div class="empty-state"><p>// Eroare la &icirc;nc&#259;rcare.</p></div>'; }
+  }
+
+  function renderBlog() {
+    const wrap = document.getElementById('blogList');
+    if (!allBlog.length) { wrap.innerHTML = '<div class="empty-state"><p>// Niciun articol &icirc;nc&#259;. Apas&#259; "+ Articol nou".</p></div>'; return; }
+    wrap.innerHTML = '<div class="table-wrap">' + allBlog.map(p => `
+      <div class="crm-row" style="grid-template-columns:2fr 1fr 1fr 1fr;display:grid;">
+        <div class="td td-name" data-label="Titlu">${esc(p.title)}</div>
+        <div class="td" data-label="Slug" style="font-family:monospace;font-size:.78rem;color:var(--muted);">/${esc(p.slug)}</div>
+        <div class="td" data-label="Status">
+          <span class="status-badge ${p.published ? 's-confirmat' : 's-nou'}">${p.published ? 'Publicat' : 'Draft'}</span>
+        </div>
+        <div class="td" data-label="Ac&#x21B;iuni">
+          <div style="display:flex;gap:6px;">
+            <button class="btn-edit" onclick="openBlogModal('${esc(p.id)}')">&#x270E; Editeaz&#259;</button>
+            <button class="btn-del" onclick="deleteBlog('${esc(p.id)}','${esc(p.title)}')">&#x2715;</button>
+          </div>
+        </div>
+      </div>`).join('') + '</div>';
+  }
+
+  function openBlogModal(id) {
+    const p = id ? allBlog.find(x => x.id === id) : null;
+    document.getElementById('blogModalTitle').textContent = p ? 'Editeaz&#259; articol' : 'Articol nou';
+    document.getElementById('blogEditId').value = p ? p.id : '';
+    document.getElementById('blogTitle').value = p ? p.title : '';
+    document.getElementById('blogSlug').value = p ? p.slug : '';
+    document.getElementById('blogExcerpt').value = p ? p.excerpt : '';
+    document.getElementById('blogContent').value = p ? p.content : '';
+    document.getElementById('blogPublished').checked = p ? p.published : false;
+    document.getElementById('blogModalOverlay').classList.add('open');
+    document.getElementById('blogTitle').focus();
+  }
+
+  function closeBlogModal() { document.getElementById('blogModalOverlay').classList.remove('open'); }
+
+  function genSlug() {
+    document.getElementById('blogSlug').value = document.getElementById('blogTitle').value
+      .toLowerCase().replace(/ă/g,'a').replace(/â/g,'a').replace(/î/g,'i').replace(/ș/g,'s').replace(/ț/g,'t')
+      .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  }
+
+  async function saveBlog() {
+    const id = document.getElementById('blogEditId').value;
+    const title = document.getElementById('blogTitle').value.trim();
+    if (!title) { alert('Titlul este obligatoriu.'); return; }
+    const body = {
+      title,
+      slug: document.getElementById('blogSlug').value.trim(),
+      excerpt: document.getElementById('blogExcerpt').value.trim(),
+      content: document.getElementById('blogContent').value.trim(),
+      published: document.getElementById('blogPublished').checked,
+    };
+    const btn = document.getElementById('blogSaveBtn');
+    btn.textContent = 'Se salveaz&#259;...'; btn.disabled = true;
+    try {
+      const url = id ? `/api/blog/${id}?token=${encodeURIComponent(adminToken)}` : `/api/blog?token=${encodeURIComponent(adminToken)}`;
+      await fetch(url, { method: id ? 'PUT' : 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      closeBlogModal();
+      await fetchBlog();
+    } catch { alert('Eroare la salvare.'); }
+    btn.textContent = 'Salveaz&#259; →'; btn.disabled = false;
+  }
+
+  async function deleteBlog(id, title) {
+    if (!confirm(`Ştergi articolul "${title}"?`)) return;
+    await fetch(`/api/blog/${id}?token=` + encodeURIComponent(adminToken), { method: 'DELETE' });
+    await fetchBlog();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('blogModalOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeBlogModal(); });
+  });
+
+  // -- SOCIAL MEDIA --
+
+  let socialAccounts = [];
+  const SOCIAL_ICONS = { Facebook:'📘', Instagram:'📸', LinkedIn:'💼', TikTok:'🎵', 'Google Business':'🔍', WhatsApp:'💬' };
+
+  async function fetchSocial() {
+    try {
+      const res = await fetch('/api/social');
+      socialAccounts = await res.json();
+      renderSocial();
+    } catch {}
+  }
+
+  function renderSocial() {
+    document.getElementById('socialList').innerHTML = socialAccounts.map((s, i) => `
+      <div style="display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--border);">
+        <span style="font-size:1.4rem;width:28px;text-align:center;">${SOCIAL_ICONS[s.platform] || '🌐'}</span>
+        <span style="font-size:14px;color:var(--text);width:140px;flex-shrink:0;">${esc(s.platform)}</span>
+        <input type="url" class="f-input" style="flex:1;margin:0;padding:9px 14px;" placeholder="https://..." value="${esc(s.url || '')}" oninput="socialAccounts[${i}].url=this.value">
+        <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;color:var(--soft);white-space:nowrap;flex-shrink:0;">
+          <input type="checkbox" ${s.enabled ? 'checked' : ''} style="accent-color:var(--teal);width:15px;height:15px;" onchange="socialAccounts[${i}].enabled=this.checked">
+          Activ
+        </label>
+      </div>`).join('');
+  }
+
+  async function saveSocial() {
+    const btn = event.currentTarget;
+    btn.textContent = 'Se salveaz&#259;...'; btn.disabled = true;
+    try {
+      const res = await fetch(`/api/social?token=${encodeURIComponent(adminToken)}`, {
+        method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(socialAccounts)
+      });
+      const data = await res.json();
+      btn.textContent = data.success ? '&#x2713; Salvat!' : '&#x2715; Eroare';
+      setTimeout(() => { btn.textContent = '&#x2713; Salveaz&#259;'; btn.disabled = false; }, 2000);
+    } catch { btn.textContent = '&#x2715; Eroare'; btn.disabled = false; }
   }
 
   // -- UTILS --
