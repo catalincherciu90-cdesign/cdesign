@@ -198,6 +198,85 @@ export default {
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
 
+    // ── BLOG ──────────────────────────────────────────────────
+
+    if (path === '/api/blog' && request.method === 'GET') {
+      try {
+        const raw = await env.PROGRAMARI.get('__blog__');
+        const posts = raw ? JSON.parse(raw) : [];
+        const all = url.searchParams.get('all') === '1' && isAdmin(url, env);
+        return json(posts.filter(p => all || p.published).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path === '/api/blog' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const { title, slug, content, excerpt, published } = await request.json();
+        if (!title) return json({ error: 'Titlul este obligatoriu' }, 400);
+        const raw = await env.PROGRAMARI.get('__blog__');
+        const posts = raw ? JSON.parse(raw) : [];
+        const id = `blog_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+        const autoSlug = (slug || title).toLowerCase().replace(/ă/g,'a').replace(/â/g,'a').replace(/î/g,'i').replace(/ș/g,'s').replace(/ț/g,'t').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+        posts.unshift({ id, title, slug: autoSlug, content: content || '', excerpt: excerpt || '', published: !!published, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
+        await env.PROGRAMARI.put('__blog__', JSON.stringify(posts));
+        return json({ success: true, id });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path.startsWith('/api/blog/') && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/blog/', '');
+        const body = await request.json();
+        const raw = await env.PROGRAMARI.get('__blog__');
+        const posts = raw ? JSON.parse(raw) : [];
+        const idx = posts.findIndex(p => p.id === id);
+        if (idx === -1) return json({ error: 'Negăsit' }, 404);
+        posts[idx] = { ...posts[idx], ...body, updatedAt: new Date().toISOString() };
+        await env.PROGRAMARI.put('__blog__', JSON.stringify(posts));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path.startsWith('/api/blog/') && request.method === 'DELETE') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/blog/', '');
+        const raw = await env.PROGRAMARI.get('__blog__');
+        const posts = raw ? JSON.parse(raw) : [];
+        await env.PROGRAMARI.put('__blog__', JSON.stringify(posts.filter(p => p.id !== id)));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    // ── SOCIAL MEDIA ──────────────────────────────────────────
+
+    const DEFAULT_SOCIAL = [
+      { platform: 'Facebook', url: '', enabled: false },
+      { platform: 'Instagram', url: '', enabled: false },
+      { platform: 'LinkedIn', url: '', enabled: false },
+      { platform: 'TikTok', url: '', enabled: false },
+      { platform: 'Google Business', url: '', enabled: false },
+      { platform: 'WhatsApp', url: '', enabled: false },
+    ];
+
+    if (path === '/api/social' && request.method === 'GET') {
+      try {
+        const raw = await env.PROGRAMARI.get('__social__');
+        return json(raw ? JSON.parse(raw) : DEFAULT_SOCIAL);
+      } catch { return json(DEFAULT_SOCIAL); }
+    }
+
+    if (path === '/api/social' && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const body = await request.json();
+        await env.PROGRAMARI.put('__social__', JSON.stringify(body));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
     // Fallthrough — servește fișierele statice
     return env.ASSETS.fetch(request);
   },
