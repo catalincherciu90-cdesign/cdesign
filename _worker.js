@@ -157,6 +157,86 @@ function json(data, status = 200) {
 
 const ADMIN_TOKEN = 'Anaare3mere#';
 const ADMIN_USER  = 'cdesign';
+const RESEND_API_KEY = 're_TRkWJxHP_EfZSi8vzbUT3Pu9J3zSsaeAv';
+const NOTIFY_EMAIL  = 'office@c-design.ro';
+
+async function sendBookingNotification(booking) {
+  const html = `
+<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:32px 0;">
+  <tr><td align="center">
+    <table width="560" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08);">
+      <tr><td style="background:#080b0e;padding:28px 32px;text-align:center;">
+        <div style="font-family:'Segoe UI',Arial,sans-serif;font-size:1.4rem;font-weight:800;color:#fff;">
+          <span style="color:#00c8b4;">C</span> Design
+        </div>
+        <div style="color:#9aa5b4;font-size:.85rem;margin-top:4px;">Programare nouă</div>
+      </td></tr>
+      <tr><td style="padding:32px;">
+        <div style="background:#f0fffe;border-left:4px solid #00c8b4;border-radius:0 8px 8px 0;padding:16px 20px;margin-bottom:28px;">
+          <div style="font-size:.8rem;color:#6a7585;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Programare nouă primită</div>
+          <div style="font-size:1.1rem;font-weight:700;color:#080b0e;">${booking.name}</div>
+        </div>
+        <table width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="50%" style="padding:0 8px 16px 0;vertical-align:top;">
+              <div style="font-size:.75rem;color:#6a7585;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Telefon</div>
+              <div style="font-size:.95rem;color:#080b0e;font-weight:600;">${booking.phone}</div>
+            </td>
+            <td width="50%" style="padding:0 0 16px 8px;vertical-align:top;">
+              <div style="font-size:.75rem;color:#6a7585;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Email</div>
+              <div style="font-size:.95rem;color:#080b0e;font-weight:600;">${booking.email}</div>
+            </td>
+          </tr>
+          <tr>
+            <td width="50%" style="padding:0 8px 16px 0;vertical-align:top;">
+              <div style="font-size:.75rem;color:#6a7585;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Data</div>
+              <div style="font-size:.95rem;color:#080b0e;font-weight:600;">${booking.date}</div>
+            </td>
+            <td width="50%" style="padding:0 0 16px 8px;vertical-align:top;">
+              <div style="font-size:.75rem;color:#6a7585;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Ora</div>
+              <div style="font-size:.95rem;color:#080b0e;font-weight:600;">${booking.time}</div>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" style="padding:0 0 16px 0;">
+              <div style="font-size:.75rem;color:#6a7585;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Serviciu</div>
+              <div style="font-size:.95rem;color:#080b0e;font-weight:600;">${booking.service}</div>
+            </td>
+          </tr>
+          ${booking.message ? `<tr><td colspan="2" style="padding:0 0 16px 0;">
+            <div style="font-size:.75rem;color:#6a7585;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Mesaj</div>
+            <div style="font-size:.95rem;color:#080b0e;line-height:1.5;">${booking.message}</div>
+          </td></tr>` : ''}
+        </table>
+        <div style="text-align:center;margin-top:24px;">
+          <a href="https://www.c-design.ro/programari.html" style="display:inline-block;background:#00c8b4;color:#080b0e;font-weight:700;font-size:.9rem;padding:12px 28px;border-radius:8px;text-decoration:none;">
+            Vezi în admin panel →
+          </a>
+        </div>
+      </td></tr>
+      <tr><td style="background:#f9f9f9;padding:16px 32px;text-align:center;border-top:1px solid #eee;">
+        <div style="font-size:.78rem;color:#9aa5b4;">c-design.ro · 0753 116 155 · office@c-design.ro</div>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body></html>`;
+
+  try {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: 'C Design <notificari@c-design.ro>',
+        to: [NOTIFY_EMAIL],
+        subject: `📅 Programare nouă — ${booking.name} · ${booking.date} ${booking.time}`,
+        html,
+      }),
+    });
+  } catch {}
+}
 
 const DEFAULT_PROJECTS = [
   { id: 'p1', emoji: '🚗', tag: 'Auto', title: 'Tractări Auto Teleorman', description: 'Site de prezentare cu zone de acoperire: Dâmbovița, Ilfov, București, Argeș, Giurgiu.', order: 0 },
@@ -234,6 +314,7 @@ export default {
         const index = raw ? JSON.parse(raw) : [];
         index.unshift({ id, date, time, name });
         await env.PROGRAMARI.put('__index__', JSON.stringify(index));
+        await sendBookingNotification(booking);
         return json({ success: true, id });
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
