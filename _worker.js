@@ -142,6 +142,87 @@ ham.addEventListener('click',()=>{const o=mob.classList.toggle('open');ham.setAt
 </html>`;
 }
 
+async function sendDeadlineNotification(entry) {
+  const termen = entry.termen || 'N/A';
+  const html = `
+<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:32px 0;">
+  <tr><td align="center">
+    <table width="560" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08);">
+      <tr><td style="background:#080b0e;padding:28px 32px;text-align:center;">
+        <div style="font-family:'Segoe UI',Arial,sans-serif;font-size:1.4rem;font-weight:800;color:#fff;">
+          <span style="color:#00c8b4;">C</span> Design
+        </div>
+        <div style="color:#9aa5b4;font-size:.85rem;margin-top:4px;">Reminder deadline CRM</div>
+      </td></tr>
+      <tr><td style="padding:32px;">
+        <div style="background:#fff8e1;border-left:4px solid #f59e0b;border-radius:0 8px 8px 0;padding:16px 20px;margin-bottom:28px;">
+          <div style="font-size:.8rem;color:#6a7585;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">⏰ Deadline în 3 zile</div>
+          <div style="font-size:1.1rem;font-weight:700;color:#080b0e;">${escHtml(entry.client || 'N/A')}</div>
+        </div>
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+          <tr>
+            <td style="padding:8px 0;color:#6a7585;font-size:.85rem;width:120px;">Proiect</td>
+            <td style="padding:8px 0;font-weight:600;color:#080b0e;">${escHtml(entry.proiect || 'N/A')}</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;color:#6a7585;font-size:.85rem;">Deadline</td>
+            <td style="padding:8px 0;font-weight:600;color:#f59e0b;">${escHtml(termen)}</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;color:#6a7585;font-size:.85rem;">Valoare</td>
+            <td style="padding:8px 0;font-weight:600;color:#080b0e;">${escHtml(String(entry.valoare || 'N/A'))}</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;color:#6a7585;font-size:.85rem;">Status</td>
+            <td style="padding:8px 0;font-weight:600;color:#080b0e;">${escHtml(entry.status || 'N/A')}</td>
+          </tr>
+          ${entry.note ? `<tr><td style="padding:8px 0;color:#6a7585;font-size:.85rem;vertical-align:top;">Note</td><td style="padding:8px 0;color:#080b0e;">${escHtml(entry.note)}</td></tr>` : ''}
+        </table>
+        <div style="text-align:center;">
+          <a href="https://www.c-design.ro/programari.html" style="display:inline-block;background:#00c8b4;color:#000;padding:14px 32px;border-radius:8px;font-weight:700;font-size:.95rem;text-decoration:none;">
+            Deschide CRM →
+          </a>
+        </div>
+      </td></tr>
+      <tr><td style="background:#f9fafb;padding:20px 32px;text-align:center;border-top:1px solid #e5e7eb;">
+        <p style="color:#9aa5b4;font-size:.8rem;margin:0;">C Design · <a href="https://www.c-design.ro" style="color:#00c8b4;text-decoration:none;">www.c-design.ro</a></p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body></html>`;
+
+  await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: 'C Design <office@c-design.ro>',
+      to: [NOTIFY_EMAIL],
+      subject: `⏰ Deadline în 3 zile: ${entry.client || 'Client'} – ${entry.proiect || 'Proiect'}`,
+      html,
+    }),
+  });
+}
+
+async function checkCrmDeadlines(env) {
+  const raw = await env.PROGRAMARI.get('__crm__');
+  const entries = raw ? JSON.parse(raw) : [];
+  const today = new Date();
+  const target = new Date(today);
+  target.setDate(today.getDate() + 3);
+  const targetDate = target.toISOString().split('T')[0];
+  const due = entries.filter(e =>
+    e.termen === targetDate &&
+    e.status !== 'finalizat' &&
+    e.status !== 'anulat'
+  );
+  for (const e of due) {
+    await sendDeadlineNotification(e);
+  }
+}
+
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
@@ -617,5 +698,9 @@ export default {
 
     // Fallthrough — servește fișierele statice
     return env.ASSETS.fetch(request);
+  },
+
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(checkCrmDeadlines(env));
   },
 };
