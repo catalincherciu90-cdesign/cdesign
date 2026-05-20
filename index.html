@@ -294,7 +294,7 @@
     .btn-submit:hover{background:var(--teal-lt);box-shadow:0 0 24px rgba(0,168,168,.4);}
     .btn-submit:disabled{opacity:.7;cursor:not-allowed}
     footer{background:var(--bg2);border-top:1px solid var(--border);padding:52px 0 28px;}
-    .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr 1fr;gap:24px;margin-bottom:40px;}
+    .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;gap:24px;margin-bottom:40px;}
     .footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;color:#fff;display:flex;align-items:center;gap:5px;margin-bottom:12px;}
     .footer-logo .fc{color:var(--teal);text-shadow:0 0 10px rgba(0,168,168,.5);}
     .footer-about{font-size:.875rem;color:var(--muted);line-height:1.7;margin-bottom:20px;}
@@ -450,20 +450,22 @@
       .stat-num{font-size:1.8rem;}
     }
 
-    /* ── AREAS SECTION ─────────────────────────────────────── */
-    .areas-bg{background:var(--bg);border-top:1px solid var(--border);}
-    .areas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;}
-    .areas-col-label{font-size:.68rem;font-weight:700;color:var(--teal);letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border-soft);}
-    .area-card{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;color:var(--text);text-decoration:none;transition:border-color .2s,background .2s,transform .15s;}
-    .area-card:last-child{margin-bottom:0;}
-    .area-card:hover{border-color:var(--teal-border);background:var(--bg3);transform:translateX(5px);}
-    .area-card-icon{font-size:1.3rem;flex-shrink:0;width:36px;text-align:center;}
-    .area-card-title{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:700;color:#f0f4f8;display:block;letter-spacing:-.01em;}
-    .area-card-sub{font-size:.75rem;color:var(--muted);display:block;margin-top:2px;}
-    .area-card-arrow{color:var(--teal);font-size:.9rem;flex-shrink:0;margin-left:auto;opacity:.5;transition:opacity .2s,transform .2s;}
-    .area-card:hover .area-card-arrow{opacity:1;transform:translateX(3px);}
-    @media(max-width:1024px){.areas-grid{grid-template-columns:1fr 1fr;}}
-    @media(max-width:640px){.areas-grid{grid-template-columns:1fr;}}
+    /* ── INDUSTRIES SECTION ─────────────────────────────────── */
+    .ind-bg{background:var(--bg);border-top:1px solid var(--border);}
+    .ind-layout{display:grid;grid-template-columns:1fr 1.8fr;gap:72px;align-items:start;}
+    .ind-pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:32px;}
+    .ind-pill{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;background:var(--bg2);border:1px solid var(--border-soft);border-radius:8px;font-size:.88rem;color:var(--soft);transition:border-color .2s,color .2s,background .2s;}
+    .ind-pill:hover,.ind-pill.featured{border-color:var(--teal-border);color:var(--text);background:var(--bg3);}
+    .ind-pill span{font-size:1.1rem;}
+    .ind-links{display:flex;flex-direction:column;gap:10px;}
+    .ind-link{display:flex;align-items:center;gap:14px;padding:16px 20px;background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;text-decoration:none;color:var(--text);transition:border-color .2s,background .2s,transform .15s;}
+    .ind-link:hover{border-color:var(--teal-border);background:var(--bg3);transform:translateX(5px);}
+    .ind-link-icon{font-size:1.5rem;flex-shrink:0;}
+    .ind-link-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:#f0f4f8;display:block;letter-spacing:-.01em;}
+    .ind-link-sub{font-size:.78rem;color:var(--muted);display:block;margin-top:2px;}
+    .ind-link-arrow{color:var(--teal);font-size:1rem;margin-left:auto;opacity:.5;flex-shrink:0;transition:opacity .2s,transform .2s;}
+    .ind-link:hover .ind-link-arrow{opacity:1;transform:translateX(3px);}
+    @media(max-width:1024px){.ind-layout{grid-template-columns:1fr;gap:40px;}}
 
     /* ── DEVICE SHOWCASE ────────────────────────────────────── */
     .dss{padding:80px 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
@@ -887,71 +889,61 @@
   </div>
 </div>
 
-<!-- AREAS & LANDING PAGES -->
-<section class="areas-bg" aria-labelledby="areas-heading">
+<!-- INDUSTRIES SECTION -->
+<section class="ind-bg" aria-labelledby="ind-heading">
   <div class="container">
-    <div class="sec-label reveal">ÎN TOATĂ ROMÂNIA</div>
-    <h2 class="sec-title reveal" id="areas-heading">Aproape de tine, indiferent unde ești</h2>
-    <p class="sec-sub reveal">Lucrăm 100% online — consultanță, design, lansare, totul se rezolvă simplu de la distanță. Iată câteva resurse special create pentru tine.</p>
-    <div class="areas-grid">
-
-      <div class="areas-col reveal">
-        <div class="areas-col-label">Pe orașe</div>
-        <a href="/web-design-bucuresti" class="area-card">
-          <span class="area-card-icon">🏙️</span>
-          <span><span class="area-card-title">Web Design București</span><span class="area-card-sub">Site-uri pentru afaceri din Capitală</span></span>
-          <span class="area-card-arrow">→</span>
-        </a>
-        <a href="/web-design-cluj" class="area-card">
-          <span class="area-card-icon">🌆</span>
-          <span><span class="area-card-title">Web Design Cluj</span><span class="area-card-sub">Prezență online pentru firme clujene</span></span>
-          <span class="area-card-arrow">→</span>
-        </a>
-        <a href="/web-design-timisoara" class="area-card">
-          <span class="area-card-icon">🌇</span>
-          <span><span class="area-card-title">Web Design Timișoara</span><span class="area-card-sub">Site-uri pentru business-uri timișorene</span></span>
-          <span class="area-card-arrow">→</span>
-        </a>
+    <div class="ind-layout">
+      <div>
+        <div class="sec-label reveal">ORICE INDUSTRIE</div>
+        <h2 class="sec-title reveal" id="ind-heading">Site-uri și aplicații pentru orice domeniu de activitate</h2>
+        <p class="sec-sub reveal" style="margin-bottom:28px;">Nu contează dacă ești service auto, restaurant, cabinet medical sau firmă de construcții — știm să construim prezența online potrivită pentru ce faci tu.</p>
+        <div class="ind-pills reveal">
+          <div class="ind-pill"><span>🚗</span> Auto &amp; Service</div>
+          <div class="ind-pill"><span>🍽️</span> Restaurante &amp; HoReCa</div>
+          <div class="ind-pill"><span>🏗️</span> Construcții</div>
+          <div class="ind-pill"><span>💈</span> Beauty &amp; Salon</div>
+          <div class="ind-pill"><span>🏥</span> Medical &amp; Clinici</div>
+          <div class="ind-pill"><span>⚖️</span> Avocatură &amp; Notariat</div>
+          <div class="ind-pill"><span>🏠</span> Imobiliare</div>
+          <div class="ind-pill"><span>💪</span> Fitness &amp; Sport</div>
+          <div class="ind-pill"><span>🎓</span> Educație &amp; Cursuri</div>
+          <div class="ind-pill"><span>🛒</span> eCommerce</div>
+          <div class="ind-pill"><span>🌿</span> Agricultură</div>
+          <div class="ind-pill"><span>🎨</span> Creativ &amp; Freelance</div>
+          <div class="ind-pill"><span>🏪</span> Afaceri mici &amp; Locale</div>
+          <div class="ind-pill"><span>🔧</span> Servicii &amp; Meseriași</div>
+        </div>
+        <a href="#contact" class="btn-primary reveal" style="display:inline-flex;">Nu găsești domeniul tău? Vorbim →</a>
       </div>
-
-      <div class="areas-col reveal reveal-delay-1">
-        <div class="areas-col-label">Pe industrii</div>
-        <a href="/web-design-auto" class="area-card">
-          <span class="area-card-icon">🚗</span>
-          <span><span class="area-card-title">Web Design Auto</span><span class="area-card-sub">Service-uri, dealeri, piese auto</span></span>
-          <span class="area-card-arrow">→</span>
-        </a>
-        <a href="/web-design-restaurante" class="area-card">
-          <span class="area-card-icon">🍽️</span>
-          <span><span class="area-card-title">Web Design Restaurante</span><span class="area-card-sub">Meniuri online, rezervări, livrări</span></span>
-          <span class="area-card-arrow">→</span>
-        </a>
-        <a href="/web-design-afaceri-mici" class="area-card">
-          <span class="area-card-icon">🏪</span>
-          <span><span class="area-card-title">Web Design Afaceri Mici</span><span class="area-card-sub">Prima prezență online, de la zero</span></span>
-          <span class="area-card-arrow">→</span>
-        </a>
+      <div class="reveal reveal-delay-1">
+        <div class="ind-links">
+          <a href="/web-design-auto" class="ind-link">
+            <span class="ind-link-icon">🚗</span>
+            <span><span class="ind-link-title">Web Design Auto</span><span class="ind-link-sub">Service-uri, dealeri, piese auto — site-uri care aduc programări</span></span>
+            <span class="ind-link-arrow">→</span>
+          </a>
+          <a href="/web-design-restaurante" class="ind-link">
+            <span class="ind-link-icon">🍽️</span>
+            <span><span class="ind-link-title">Web Design Restaurante</span><span class="ind-link-sub">Meniu online, rezervări, comenzi — totul pe site-ul tău</span></span>
+            <span class="ind-link-arrow">→</span>
+          </a>
+          <a href="/web-design-afaceri-mici" class="ind-link">
+            <span class="ind-link-icon">🏪</span>
+            <span><span class="ind-link-title">Web Design Afaceri Mici</span><span class="ind-link-sub">Prima prezență online, de la zero, simplu și accesibil</span></span>
+            <span class="ind-link-arrow">→</span>
+          </a>
+          <a href="/calculator-pret" class="ind-link">
+            <span class="ind-link-icon">🧮</span>
+            <span><span class="ind-link-title">Calculator Preț</span><span class="ind-link-sub">Află în 2 minute cât costă site-ul potrivit pentru tine</span></span>
+            <span class="ind-link-arrow">→</span>
+          </a>
+          <a href="/abonament-lunar" class="ind-link">
+            <span class="ind-link-icon">📦</span>
+            <span><span class="ind-link-title">Abonament Lunar</span><span class="ind-link-sub">Suport, actualizări și creștere continuă — fără griji</span></span>
+            <span class="ind-link-arrow">→</span>
+          </a>
+        </div>
       </div>
-
-      <div class="areas-col reveal reveal-delay-2">
-        <div class="areas-col-label">Instrumente utile</div>
-        <a href="/calculator-pret" class="area-card">
-          <span class="area-card-icon">🧮</span>
-          <span><span class="area-card-title">Calculator Preț</span><span class="area-card-sub">Află instant cât costă site-ul tău</span></span>
-          <span class="area-card-arrow">→</span>
-        </a>
-        <a href="/abonament-lunar" class="area-card">
-          <span class="area-card-icon">📦</span>
-          <span><span class="area-card-title">Abonament Lunar</span><span class="area-card-sub">Suport, mentenanță și creștere continuă</span></span>
-          <span class="area-card-arrow">→</span>
-        </a>
-        <a href="/pachet-startup" class="area-card">
-          <span class="area-card-icon">🚀</span>
-          <span><span class="area-card-title">Pachet Start-Up</span><span class="area-card-sub">Site + logo + social media la cheie</span></span>
-          <span class="area-card-arrow">→</span>
-        </a>
-      </div>
-
     </div>
   </div>
 </section>
@@ -1077,9 +1069,8 @@
         <div class="footer-social" id="footerSocial"></div>
       </div>
       <div class="footer-col"><h4>Servicii</h4><ul><li><a href="#servicii">Site de prezentare</a></li><li><a href="/pachet-startup">Pachet Start-Up</a></li><li><a href="#servicii">Redesign site</a></li><li><a href="#servicii">Design grafic</a></li><li><a href="/abonament-lunar">Abonament lunar</a></li></ul></div>
-      <div class="footer-col"><h4>Companie</h4><ul><li><a href="#portofoliu">Portofoliu</a></li><li><a href="#testimoniale">Recenzii</a></li><li><a href="#proces">Cum lucrăm</a></li><li><a href="/calculator-pret">Calculator preț</a></li><li><a href="/blog">Blog</a></li></ul></div>
-      <div class="footer-col"><h4>Orașe</h4><ul><li><a href="/web-design-bucuresti">Web Design București</a></li><li><a href="/web-design-cluj">Web Design Cluj</a></li><li><a href="/web-design-timisoara">Web Design Timișoara</a></li></ul></div>
-      <div class="footer-col"><h4>Industrii</h4><ul><li><a href="/web-design-auto">Web Design Auto</a></li><li><a href="/web-design-restaurante">Web Design Restaurante</a></li><li><a href="/web-design-afaceri-mici">Web Design Afaceri Mici</a></li></ul></div>
+      <div class="footer-col"><h4>Industrii</h4><ul><li><a href="/web-design-auto">Web Design Auto</a></li><li><a href="/web-design-restaurante">Web Design Restaurante</a></li><li><a href="/web-design-afaceri-mici">Web Design Afaceri Mici</a></li><li><a href="/calculator-pret">Calculator preț</a></li></ul></div>
+      <div class="footer-col"><h4>Companie</h4><ul><li><a href="#portofoliu">Portofoliu</a></li><li><a href="#testimoniale">Recenzii</a></li><li><a href="#proces">Cum lucrăm</a></li><li><a href="/blog">Blog</a></li></ul></div>
       <div class="footer-col"><h4>Contact</h4><ul><li><a href="tel:+40753116155">0753 116 155</a></li><li><a href="mailto:office@c-design.ro">office@c-design.ro</a></li><li><a href="https://wa.me/40753116155" rel="noopener noreferrer">WhatsApp</a></li><li><a href="#contact">Programează gratuit</a></li></ul></div>
     </div>
     <div class="footer-bottom">
