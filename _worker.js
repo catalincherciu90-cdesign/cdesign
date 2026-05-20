@@ -1114,6 +1114,50 @@ export default {
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
 
+    // ── CALCULATOR ───────────────────────────────────────────
+
+    const CALC_DEFAULT = {
+      type: [
+        {value:'prezentare', name:'Site de prezentare', sub:'Pentru firme, servicii, portofoliu', price:300, priceLabel:'de la 300€', active:true, locked:false},
+        {value:'magazin', name:'Magazin online', sub:'eCommerce complet cu plăți integrate', price:800, priceLabel:'de la 800€', active:true, locked:false},
+        {value:'redesign', name:'Redesign site existent', sub:'Modernizare site vechi', price:250, priceLabel:'de la 250€', active:true, locked:false}
+      ],
+      pages: [
+        {value:'small', name:'1 - 5 pagini', sub:'Home, Despre, Servicii, Contact', price:0, priceLabel:'inclus', active:true, locked:false},
+        {value:'medium', name:'6 - 10 pagini', sub:'Site mediu cu mai mult conținut', price:150, priceLabel:'+150€', active:true, locked:false},
+        {value:'large', name:'10+ pagini', sub:'Site complex, multe secțiuni', price:350, priceLabel:'+350€', active:true, locked:false}
+      ],
+      features: [
+        {value:'contact', name:'Formular de contact', sub:'Inclus în toate pachetele', price:0, priceLabel:'inclus', active:true, locked:true},
+        {value:'maps', name:'Integrare Google Maps', sub:'Inclus în toate pachetele', price:0, priceLabel:'inclus', active:true, locked:true},
+        {value:'blog', name:'Blog / articole', sub:'Pentru SEO și conținut nou', price:100, priceLabel:'+100€', active:true, locked:false},
+        {value:'gallery', name:'Galerie foto / portofoliu', sub:'Showcase lucrări sau produse', price:80, priceLabel:'+80€', active:true, locked:false},
+        {value:'booking', name:'Rezervări / programări online', sub:'Calendar și formular booking', price:150, priceLabel:'+150€', active:true, locked:false},
+        {value:'ministore', name:'Magazin mic (până la 20 produse)', sub:'Vânzare simplă, fără ERP', price:300, priceLabel:'+300€', active:true, locked:false},
+        {value:'multilang', name:'Multilingv (RO + EN)', sub:'Site bilingv complet', price:200, priceLabel:'+200€', active:true, locked:false}
+      ],
+      delivery: [
+        {value:'standard', name:'Standard — 21 zile', sub:'Timp normal de livrare', price:0, priceLabel:'+0%', active:true, locked:false, defaultSelected:true},
+        {value:'urgent', name:'Urgent — 10 zile', sub:'Prioritate maximă, livrare rapidă', price:30, priceLabel:'+30%', active:true, locked:false}
+      ]
+    };
+
+    if (path === '/api/calculator' && request.method === 'GET') {
+      try {
+        const raw = await env.PROGRAMARI.get('__calculator__');
+        return json(raw ? JSON.parse(raw) : CALC_DEFAULT);
+      } catch { return json(CALC_DEFAULT); }
+    }
+
+    if (path === '/api/calculator' && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const body = await request.json();
+        await env.PROGRAMARI.put('__calculator__', JSON.stringify(body));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
     // Fallthrough — servește fișierele statice
     return env.ASSETS.fetch(request);
   },

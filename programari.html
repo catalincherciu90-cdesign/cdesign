@@ -282,6 +282,29 @@
     .plan-cta-main:hover{box-shadow:0 0 36px rgba(0,168,168,.6);}
     @media(max-width:768px){body{font-size:1rem;line-height:1.75;}.sec-title{font-size:1.6rem;}.card{padding:24px;}}
 
+    /* ── CALCULATOR ADMIN ───────────────────────────────────── */
+    .calc-admin-section{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:20px;margin-bottom:20px;}
+    .calc-section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+    .calc-section-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:#fff;}
+    .calc-section-type{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--muted);}
+    .calc-opt-row{display:grid;grid-template-columns:1fr 1fr 80px auto auto;gap:8px;align-items:center;padding:10px 12px;background:var(--bg3);border-radius:8px;margin-bottom:8px;border:1px solid var(--border);}
+    .calc-opt-row.inactive{opacity:.45;}
+    .calc-opt-input{background:var(--bg2);border:1px solid var(--border-soft);border-radius:6px;color:var(--text);font-size:.82rem;padding:6px 9px;font-family:'DM Sans',sans-serif;outline:none;width:100%;}
+    .calc-opt-input:focus{border-color:var(--teal-border);}
+    .calc-price-input{background:var(--bg2);border:1px solid var(--border-soft);border-radius:6px;color:var(--teal);font-size:.82rem;padding:6px 9px;font-family:'Share Tech Mono',monospace;outline:none;width:100%;}
+    .calc-price-input:focus{border-color:var(--teal-border);}
+    .calc-toggle{position:relative;width:36px;height:20px;flex-shrink:0;}
+    .calc-toggle input{opacity:0;width:0;height:0;}
+    .calc-toggle-slider{position:absolute;inset:0;background:var(--border-soft);border-radius:10px;cursor:pointer;transition:.2s;}
+    .calc-toggle-slider::before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:var(--muted);border-radius:50%;transition:.2s;}
+    .calc-toggle input:checked+.calc-toggle-slider{background:rgba(0,168,168,.3);}
+    .calc-toggle input:checked+.calc-toggle-slider::before{background:var(--teal);transform:translateX(16px);}
+    .calc-del-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.9rem;padding:4px;border-radius:4px;}
+    .calc-del-btn:hover{color:#ff5f57;}
+    .calc-locked-badge{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);padding:2px 6px;border:1px solid var(--border);border-radius:4px;white-space:nowrap;}
+    .calc-save-bar{position:sticky;bottom:0;background:var(--bg2);border-top:1px solid var(--border-soft);padding:16px 0;margin-top:8px;display:flex;justify-content:flex-end;gap:12px;}
+    @media(max-width:600px){.calc-opt-row{grid-template-columns:1fr;}}
+
     /* ── GIBILAN ─────────────────────────────────────────────── */
     .gibilan-layout{display:grid;grid-template-columns:260px 1fr;gap:32px;padding:24px 0;}
     .gibilan-char{display:flex;flex-direction:column;align-items:center;gap:16px;}
@@ -362,6 +385,7 @@
     <button class="tab" onclick="switchTab('crm',this)">&#x1F4CB; CRM &amp; Oferte</button>
     <button class="tab" onclick="switchTab('blog',this)">&#x270D; Blog</button>
     <button class="tab" onclick="switchTab('social',this)">&#x1F4F1; Social Media</button>
+    <button class="tab" onclick="switchTab('calculator',this)">&#x1F9EE; Calculator</button>
     <button class="tab" onclick="switchTab('settings',this)">&#x2699; Set&#x103;ri</button>
   </div>
 
@@ -742,6 +766,16 @@
     </div>
   </div>
 
+  <!-- TAB: CALCULATOR -->
+  <div class="tab-panel" id="panel-calculator">
+    <div class="main">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+        <h3 style="font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--soft);">// calculator_preturi &#x2014; editare op&#x21B;iuni &#x15F;i pre&#x21B;uri</h3>
+      </div>
+      <div id="calc-admin-wrap"><div class="loading">Se &icirc;ncarc&#x103;...</div></div>
+    </div>
+  </div>
+
   <!-- TAB: SETARI -->
   <div class="tab-panel" id="panel-settings">
     <div class="main">
@@ -965,7 +999,7 @@
       adminToken = saved;
       const ok = await fetchBookings(true);
       if (!ok) { adminToken = ''; localStorage.removeItem('cdAdmin'); }
-      else { fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); }
+      else { fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); fetchCalculatorAdmin(); }
     }
   })();
 
@@ -987,7 +1021,7 @@
       if (!ok) { err.textContent = '✗ Eroare de autentificare'; adminToken = ''; }
       else {
         localStorage.setItem('cdAdmin', password);
-        fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients();
+        fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); fetchCalculatorAdmin();
       }
     } catch { err.textContent = '✗ Eroare de rețea'; }
   }
@@ -1001,6 +1035,7 @@
     if (tab === 'gibilan') loadGibilan();
     if (tab === 'crm') { fetchCrm(); loadGibilan(); }
     if (tab === 'clients') { fetchClients(); loadGibilan(); }
+    if (tab === 'calculator') fetchCalculatorAdmin();
   }
 
   function refreshCurrent() {
@@ -1011,6 +1046,7 @@
     else if (currentTab === 'blog') fetchBlog();
     else if (currentTab === 'social') fetchSocial();
     else if (currentTab === 'settings') fetchSettings();
+    else if (currentTab === 'calculator') fetchCalculatorAdmin();
     else fetchProjects();
   }
 
@@ -2105,6 +2141,108 @@
 
   // Rotire mesaje speech bubble la fiecare 5 secunde
   setInterval(rotateGibMessage, 5000);
+
+  // -- CALCULATOR ADMIN --
+  let calcData = null;
+
+  async function fetchCalculatorAdmin() {
+    if (!adminToken) return;
+    try {
+      const res = await fetch('/api/calculator');
+      if (!res.ok) return;
+      calcData = await res.json();
+      renderCalculatorAdmin();
+    } catch {}
+  }
+
+  function renderCalculatorAdmin() {
+    if (!calcData) return;
+    const sections = [
+      {key:'type',    title:'Tip site (radio — selectare unică)',   isRadio:true},
+      {key:'pages',   title:'Număr pagini (radio — selectare unică)', isRadio:true},
+      {key:'features',title:'Funcționalități (checkbox — multiple)', isRadio:false},
+      {key:'delivery',title:'Termen livrare (radio — selectare unică)', isRadio:true},
+    ];
+    const wrap = document.getElementById('calc-admin-wrap');
+    if (!wrap) return;
+    wrap.innerHTML = sections.map(sec => `
+      <div class="calc-admin-section">
+        <div class="calc-section-header">
+          <div>
+            <div class="calc-section-title">${sec.title}</div>
+            <div class="calc-section-type">${sec.isRadio ? '// radio' : '// checkbox'}</div>
+          </div>
+          <button class="btn-add" style="padding:6px 14px;font-size:.78rem;" onclick="addCalcOption('${sec.key}')">+ Opțiune</button>
+        </div>
+        <div id="calc-opts-${sec.key}">
+          ${(calcData[sec.key]||[]).map((opt,i) => renderCalcOptRow(sec.key, opt, i)).join('')}
+        </div>
+      </div>
+    `).join('') + `<div class="calc-save-bar"><button class="btn-save" onclick="saveCalculator()">💾 Salvează tot</button></div>`;
+  }
+
+  function renderCalcOptRow(section, opt, idx) {
+    return `<div class="calc-opt-row${opt.active ? '' : ' inactive'}" id="calc-row-${section}-${idx}">
+      <input class="calc-opt-input" placeholder="Nume opțiune" value="${esc(opt.name)}" oninput="calcData['${section}'][${idx}].name=this.value;calcData['${section}'][${idx}].priceLabel=calcPriceLabel('${section}',calcData['${section}'][${idx}].price)">
+      <input class="calc-opt-input" placeholder="Sub-titlu" value="${esc(opt.sub||'')}" oninput="calcData['${section}'][${idx}].sub=this.value">
+      <input class="calc-price-input" type="number" min="0" placeholder="0" value="${opt.price}" oninput="calcData['${section}'][${idx}].price=parseInt(this.value)||0;calcData['${section}'][${idx}].priceLabel=calcPriceLabel('${section}',parseInt(this.value)||0)">
+      <label class="calc-toggle" title="${opt.active ? 'Activ' : 'Inactiv'}">
+        <input type="checkbox" ${opt.active ? 'checked' : ''} onchange="calcData['${section}'][${idx}].active=this.checked;document.getElementById('calc-row-${section}-${idx}').classList.toggle('inactive',!this.checked)">
+        <span class="calc-toggle-slider"></span>
+      </label>
+      ${opt.locked
+        ? `<span class="calc-locked-badge">inclus</span>`
+        : `<button class="calc-del-btn" onclick="deleteCalcOption('${section}',${idx})" title="\u15Cterge">🗑</button>`
+      }
+    </div>`;
+  }
+
+  function calcPriceLabel(section, price) {
+    if (price === 0) return section === 'delivery' ? '+0%' : 'inclus';
+    if (section === 'delivery') return `+${price}%`;
+    if (section === 'type') return `de la ${price}€`;
+    return `+${price}€`;
+  }
+
+  function addCalcOption(section) {
+    if (!calcData[section]) calcData[section] = [];
+    calcData[section].push({
+      value: 'opt_' + Date.now(),
+      name: 'Opțiune nouă',
+      sub: '',
+      price: 0,
+      priceLabel: 'inclus',
+      active: true,
+      locked: false
+    });
+    renderCalculatorAdmin();
+  }
+
+  function deleteCalcOption(section, idx) {
+    if (!confirm('\u15Ctergi această opțiune?')) return;
+    calcData[section].splice(idx, 1);
+    renderCalculatorAdmin();
+  }
+
+  async function saveCalculator() {
+    if (!calcData || !adminToken) return;
+    const btn = document.querySelector('[onclick="saveCalculator()"]');
+    if (btn) { btn.textContent = 'Se salvează...'; btn.disabled = true; }
+    try {
+      const res = await fetch('/api/calculator?token=' + encodeURIComponent(adminToken), {
+        method: 'PUT',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(calcData)
+      });
+      if (res.ok) {
+        if (btn) { btn.textContent = '✓ Salvat!'; setTimeout(() => { btn.textContent = '💾 Salvează tot'; btn.disabled = false; }, 2000); }
+      } else {
+        if (btn) { btn.textContent = '✗ Eroare'; btn.disabled = false; }
+      }
+    } catch {
+      if (btn) { btn.textContent = '✗ Eroare rețea'; btn.disabled = false; }
+    }
+  }
 
   // -- UTILS --
 
