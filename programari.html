@@ -42,6 +42,10 @@
     .top-btn-refresh:hover{background:rgba(0,168,168,.15);}
     .top-btn-logout{background:none;border-color:var(--border-soft);color:var(--muted);}
     .top-btn-logout:hover{color:var(--red);border-color:rgba(255,95,87,.4);}
+    .top-clock{text-align:right;line-height:1.2;}
+    .top-clock-time{font-family:'Share Tech Mono',monospace;font-size:1.05rem;color:#fff;letter-spacing:.08em;}
+    .top-clock-date{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.05em;text-transform:capitalize;}
+    @media(max-width:480px){.top-clock{display:none;}}
 
     /* TABS */
     .tabs{display:flex;gap:0;padding:0 8px;background:var(--bg2);border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
@@ -312,6 +316,10 @@
       <div class="top-logo"><span>C</span>DESIGN</div>
     </div>
     <div class="top-right">
+      <div class="top-clock">
+        <div class="top-clock-time" id="topTime">00:00:00</div>
+        <div class="top-clock-date" id="topDate"></div>
+      </div>
       <button class="top-btn top-btn-refresh" onclick="refreshCurrent()">&#x21BB; Re&icirc;ncarc&#259;</button>
       <button class="top-btn top-btn-logout" onclick="logout()">Ie&#x219;ire</button>
     </div>
@@ -909,6 +917,17 @@
   let currentTab = 'gibilan';
 
   document.addEventListener('keydown', e => { if (e.key === 'Enter' && document.getElementById('loginWrap').style.display !== 'none') login(); });
+
+  // Ceas live
+  function tickClock() {
+    const now = new Date();
+    const t = document.getElementById('topTime');
+    const d = document.getElementById('topDate');
+    if (t) t.textContent = now.toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    if (d) d.textContent = now.toLocaleDateString('ro-RO', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
 
   // Auto-login din localStorage dacă există token salvat
   (async () => {
