@@ -273,6 +273,10 @@
     .gib-input:focus{border-color:var(--teal-border);}
     .gib-save{background:var(--teal);color:#060f0f;border:none;border-radius:6px;padding:7px 14px;font-size:.82rem;font-weight:600;cursor:pointer;width:100%;}
     .gib-deadline-today{border-left:3px solid #ff5f57 !important;}
+    .gib-client-badge{font-size:.65rem;background:rgba(0,168,168,.15);color:var(--teal);border:1px solid rgba(0,168,168,.3);border-radius:4px;padding:1px 6px;white-space:nowrap;flex-shrink:0;cursor:pointer;}
+    .gib-client-badge:hover{background:rgba(0,168,168,.25);}
+    .gib-assign-wrap{position:relative;flex-shrink:0;}
+    .gib-assign-sel{font-size:.7rem;background:var(--bg3);border:1px solid var(--teal-border);border-radius:4px;color:var(--teal);padding:2px 4px;cursor:pointer;max-width:110px;}
     .gib-priority-high{border-left:3px solid #febc2e !important;}
     .clippy-wrap{position:relative;display:flex;flex-direction:column;align-items:center;}
     .clippy-body{animation:clippy-bounce 2s ease-in-out infinite;}
@@ -1728,17 +1732,39 @@
     if (sub) sub.textContent = 'Agenda ta de azi — organizat de Gibilan';
   }
 
+  function clientSelectHtml(type, id, currentClientId) {
+    const opts = clientsData.map(c =>
+      `<option value="${esc(c.id)}"${c.id === currentClientId ? ' selected' : ''}>${esc(c.name)}</option>`
+    ).join('');
+    return `<select class="gib-assign-sel" onchange="assignGibilanClient('${type}','${id}',this.value)" title="Asignează client">
+      <option value="">${currentClientId ? '✕ elimină' : '+ client'}</option>${opts}
+    </select>`;
+  }
+
+  async function assignGibilanClient(type, id, clientId) {
+    const ep = type === 'meeting' ? 'meeting' : type === 'todo' ? 'todo' : 'deadline';
+    await fetch(`/api/gibilan/${ep}/${id}?token=${encodeURIComponent(adminToken)}`, {
+      method: 'PATCH', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ clientId })
+    });
+    await loadGibilan();
+  }
+
   function renderGibilanMeetings() {
     const wrap = document.getElementById('gib-meetings-list');
     if (!wrap) return;
     const today = new Date().toISOString().split('T')[0];
-    const list = (gibData.meetings || []).sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+    const list = (gibData.meetings || []).sort((a, b) => (a.date + (a.time||'')).localeCompare(b.date + (b.time||'')));
     if (!list.length) { wrap.innerHTML = '<div class="gib-empty">Nicio &icirc;nt&#xE2;lnire &icirc;n viitor.</div>'; return; }
     wrap.innerHTML = list.map(m => {
       const isAzi = m.date === today;
+      const client = clientsData.find(c => c.id === m.clientId);
       return `<div class="gib-item">
         <span style="font-family:monospace;font-size:.82rem;color:var(--teal);flex-shrink:0;">${esc(m.time || '--:--')}</span>
-        <span class="gib-title">${esc(m.title)}${isAzi ? ' <span style="font-size:.7rem;color:#febc2e;font-weight:700;">AZI</span>' : ' <span style="font-size:.72rem;color:var(--muted);">' + formatDate(m.date) + '</span>'}</span>
+        <span class="gib-title">${esc(m.title)}${isAzi ? ' <span style="font-size:.7rem;color:#febc2e;font-weight:700;">AZI</span>' : ' <span style="font-size:.72rem;color:var(--muted);">' + formatDate(m.date) + '</span>'}
+          ${client ? `<span class="gib-client-badge" onclick="switchTab('clients',document.querySelector('[onclick*=clients]'));showClientDetail('${esc(client.id)}')">${esc(client.name)}</span>` : ''}
+        </span>
+        ${clientSelectHtml('meeting', m.id, m.clientId)}
         <button class="gib-del" onclick="deleteGibilanItem('meeting','${esc(m.id)}')" title="&#x15C;terge">&#x1F5D1;</button>
       </div>`;
     }).join('');
@@ -1749,13 +1775,18 @@
     if (!wrap) return;
     const list = gibData.todos || [];
     if (!list.length) { wrap.innerHTML = '<div class="gib-empty">Totul bifat! E&#x15F;ti un campion. &#x1F3C6;</div>'; return; }
-    wrap.innerHTML = list.map(t => `
-      <div class="gib-item${t.done ? ' done' : ''}${t.priority === 'high' ? ' gib-priority-high' : ''}">
+    wrap.innerHTML = list.map(t => {
+      const client = clientsData.find(c => c.id === t.clientId);
+      return `<div class="gib-item${t.done ? ' done' : ''}${t.priority === 'high' ? ' gib-priority-high' : ''}">
         <input type="checkbox" class="gib-todo-cb" ${t.done ? 'checked' : ''} onchange="toggleTodo('${esc(t.id)}')">
-        <span class="gib-title">${esc(t.title)}${t.priority === 'high' ? ' <span style="font-size:.68rem;color:#febc2e;font-weight:700;text-transform:uppercase;">URGENT</span>' : ''}</span>
+        <span class="gib-title">${esc(t.title)}${t.priority === 'high' ? ' <span style="font-size:.68rem;color:#febc2e;font-weight:700;text-transform:uppercase;">URGENT</span>' : ''}
+          ${client ? `<span class="gib-client-badge" onclick="switchTab('clients',document.querySelector('[onclick*=clients]'));showClientDetail('${esc(client.id)}')">${esc(client.name)}</span>` : ''}
+        </span>
         ${t.dueDate ? `<span style="font-size:.72rem;color:var(--muted);flex-shrink:0;">${formatDate(t.dueDate)}</span>` : ''}
+        ${clientSelectHtml('todo', t.id, t.clientId)}
         <button class="gib-del" onclick="deleteGibilanItem('todo','${esc(t.id)}')" title="&#x15C;terge">&#x1F5D1;</button>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   }
 
   function renderGibilanDeadlines() {
@@ -1770,9 +1801,13 @@
     if (!list.length) { wrap.innerHTML = '<div class="gib-empty">Niciun deadline &icirc;n urm&#259;toarele 3 zile.</div>'; return; }
     wrap.innerHTML = list.map(d => {
       const isAzi = d.date === today;
+      const client = clientsData.find(c => c.id === d.clientId);
       return `<div class="gib-item${isAzi ? ' gib-deadline-today' : ''}">
         <span style="font-size:.72rem;font-weight:700;color:${isAzi ? '#ff5f57' : '#febc2e'};flex-shrink:0;">${isAzi ? 'AZI' : formatDate(d.date)}</span>
-        <span class="gib-title">${esc(d.title)}${d.project ? ` <span style="font-size:.75rem;color:var(--muted);">· ${esc(d.project)}</span>` : ''}</span>
+        <span class="gib-title">${esc(d.title)}${d.project ? ` <span style="font-size:.75rem;color:var(--muted);">· ${esc(d.project)}</span>` : ''}
+          ${client ? `<span class="gib-client-badge" onclick="switchTab('clients',document.querySelector('[onclick*=clients]'));showClientDetail('${esc(client.id)}')">${esc(client.name)}</span>` : ''}
+        </span>
+        ${clientSelectHtml('deadline', d.id, d.clientId)}
         <button class="gib-del" onclick="deleteGibilanItem('deadline','${esc(d.id)}')" title="&#x15C;terge">&#x1F5D1;</button>
       </div>`;
     }).join('');

@@ -935,6 +935,21 @@ export default {
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
 
+    if (path.startsWith('/api/gibilan/meeting/') && request.method === 'PATCH') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/gibilan/meeting/', '');
+        const body = await request.json();
+        const raw = await env.PROGRAMARI.get('__gibilan__');
+        const data = raw ? JSON.parse(raw) : { meetings: [], todos: [], deadlines: [] };
+        const item = (data.meetings || []).find(m => m.id === id);
+        if (!item) return json({ error: 'Negăsit' }, 404);
+        Object.assign(item, body);
+        await env.PROGRAMARI.put('__gibilan__', JSON.stringify(data));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
     if (path.startsWith('/api/gibilan/meeting/') && request.method === 'DELETE') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
@@ -976,6 +991,21 @@ export default {
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
 
+    if (path.startsWith('/api/gibilan/todo/') && !path.endsWith('/done') && request.method === 'PATCH') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/gibilan/todo/', '');
+        const body = await request.json();
+        const raw = await env.PROGRAMARI.get('__gibilan__');
+        const data = raw ? JSON.parse(raw) : { meetings: [], todos: [], deadlines: [] };
+        const item = (data.todos || []).find(t => t.id === id);
+        if (!item) return json({ error: 'Negăsit' }, 404);
+        Object.assign(item, body);
+        await env.PROGRAMARI.put('__gibilan__', JSON.stringify(data));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
     if (path.startsWith('/api/gibilan/todo/') && !path.endsWith('/done') && request.method === 'DELETE') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
@@ -1000,6 +1030,21 @@ export default {
         data.deadlines.push({ id, title, date, project: project || '', notes: notes || '', clientId: clientId || '' });
         await env.PROGRAMARI.put('__gibilan__', JSON.stringify(data));
         return json({ success: true, id });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path.startsWith('/api/gibilan/deadline/') && request.method === 'PATCH') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/gibilan/deadline/', '');
+        const body = await request.json();
+        const raw = await env.PROGRAMARI.get('__gibilan__');
+        const data = raw ? JSON.parse(raw) : { meetings: [], todos: [], deadlines: [] };
+        const item = (data.deadlines || []).find(d => d.id === id);
+        if (!item) return json({ error: 'Negăsit' }, 404);
+        Object.assign(item, body);
+        await env.PROGRAMARI.put('__gibilan__', JSON.stringify(data));
+        return json({ success: true });
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
 
