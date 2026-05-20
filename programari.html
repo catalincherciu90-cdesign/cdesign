@@ -108,7 +108,7 @@
     .btn-del:hover{background:rgba(255,95,87,.15);}
 
     /* MODAL */
-    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center;padding:24px;}
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:flex-start;justify-content:center;padding:16px;padding-top:max(16px,env(safe-area-inset-top));overflow-y:auto;}
     .modal-overlay.open{display:flex;}
     .modal{background:var(--bg2);border:1px solid var(--border-soft);border-radius:16px;padding:32px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;}
     .modal h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:24px;}
@@ -208,28 +208,57 @@
       .crm-row .td{padding:3px 0;font-size:.85rem;}
       .crm-row .td::before{content:attr(data-label)' ';font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);margin-right:6px;}
       .crm-note{max-width:100%;white-space:normal;}
+      .client-sections{grid-template-columns:1fr;}
+    }
+    @media(max-width:768px){
+      .gibilan-layout{grid-template-columns:1fr;}
+      .gibilan-char{flex-direction:row;align-items:flex-start;gap:16px;flex-wrap:wrap;}
+      .clippy-wrap{flex-shrink:0;}
+      .gibilan-char svg{width:80px;height:80px;}
+      .speech-bubble{max-width:none;flex:1;margin-bottom:0;}
+      .speech-bubble::after{display:none;}
+      .gib-add-btns{flex-direction:row;flex-wrap:wrap;}
+      .gib-add-btn{flex:1;min-width:120px;}
+      .crm-panel-grid{grid-template-columns:1fr;}
+      .crm-sidebar{position:static;}
+      .clients-grid{grid-template-columns:1fr;}
+      .client-info-grid{grid-template-columns:1fr 1fr;}
     }
     @media(max-width:600px){
-      .top-bar{padding:0 14px;height:52px;}
-      .top-logo{font-size:.95rem;}
-      .top-btn{font-size:.72rem;padding:5px 10px;}
-      .main{padding:16px 12px;}
-      .stats-row{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
-      .stat-box{padding:14px 16px;}
+      .top-bar{padding:0 12px;height:52px;}
+      .top-logo{font-size:.9rem;}
+      .top-btn{font-size:.7rem;padding:5px 9px;}
+      .top-right{gap:6px;}
+      .main{padding:14px 10px;}
+      .stats-row{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+      .stat-box{padding:12px 14px;}
       .stat-box-num{font-size:1.4rem;}
-      .filters{gap:6px;}
-      .filter-btn{font-size:.7rem;padding:6px 10px;}
+      .filters{gap:5px;}
+      .filter-btn{font-size:.68rem;padding:5px 9px;}
       .projects-grid{grid-template-columns:1fr;}
-      .crm-stats{grid-template-columns:1fr 1fr;gap:10px;}
-      .modal{padding:20px 16px;}
+      .crm-stats{grid-template-columns:1fr 1fr;gap:8px;}
+      .modal{padding:18px 14px;border-radius:12px;}
       .modal-actions{flex-direction:column-reverse;gap:8px;}
       .modal-actions button{width:100%;padding:11px;}
       .proj-toolbar{flex-direction:column;align-items:flex-start;gap:8px;}
       .crm-toolbar{flex-direction:column;align-items:flex-start;gap:8px;}
       .btn-add{width:100%;text-align:center;}
+      .gib-assign-sel{display:none;}
+      .clients-toolbar{flex-direction:column;align-items:flex-start;gap:8px;}
+      .clients-toolbar .btn-add{width:100%;}
+      .client-card{padding:14px;}
+      .client-detail-header{gap:10px;}
+      .client-detail-name{font-size:1.1rem;}
+      .gibilan-char svg{width:64px;height:64px;}
+      .crm-sb-top{flex-wrap:wrap;gap:6px;}
+      .client-info-grid{grid-template-columns:1fr;}
+      .f-row{grid-template-columns:1fr;}
     }
     @media(max-width:400px){
-      .tab{font-size:.72rem;padding:10px 12px;}
+      .tab{font-size:.68rem;padding:10px 10px;}
+      .top-btn-refresh span,.refresh-label{display:none;}
+      .stats-row{grid-template-columns:1fr 1fr;gap:6px;}
+      .stat-box-num{font-size:1.2rem;}
     }
   
     /* ── READABILITY & GRAPHICAL IMPROVEMENTS ─────────────────── */
@@ -273,9 +302,9 @@
     .gib-add-btn:hover{border-color:var(--teal-border);color:var(--teal);}
     .gib-form{background:var(--bg3);border:1px solid var(--teal-border);border-radius:10px;padding:14px;margin-top:8px;display:none;}
     .gib-form.open{display:block;}
-    .gib-input{width:100%;padding:8px 10px;background:var(--bg2);border:1px solid var(--border-soft);border-radius:6px;color:var(--text);font-size:.82rem;margin-bottom:8px;outline:none;font-family:'DM Sans',sans-serif;}
+    .gib-input{width:100%;padding:8px 10px;background:var(--bg2);border:1px solid var(--border-soft);border-radius:6px;color:var(--text);font-size:.82rem;margin-bottom:8px;outline:none;font-family:'DM Sans',sans-serif;-webkit-appearance:none;}
     .gib-input:focus{border-color:var(--teal-border);}
-    .gib-save{background:var(--teal);color:#060f0f;border:none;border-radius:6px;padding:7px 14px;font-size:.82rem;font-weight:600;cursor:pointer;width:100%;}
+    .gib-save{background:var(--teal);color:#060f0f;border:none;border-radius:6px;padding:9px 14px;font-size:.82rem;font-weight:600;cursor:pointer;width:100%;min-height:40px;}
     .gib-deadline-today{border-left:3px solid #ff5f57 !important;}
     .gib-client-badge{font-size:.65rem;background:rgba(0,168,168,.15);color:var(--teal);border:1px solid rgba(0,168,168,.3);border-radius:4px;padding:1px 6px;white-space:nowrap;flex-shrink:0;cursor:pointer;}
     .gib-client-badge:hover{background:rgba(0,168,168,.25);}
@@ -320,7 +349,7 @@
         <div class="top-clock-time" id="topTime">00:00:00</div>
         <div class="top-clock-date" id="topDate"></div>
       </div>
-      <button class="top-btn top-btn-refresh" onclick="refreshCurrent()">&#x21BB; Re&icirc;ncarc&#259;</button>
+      <button class="top-btn top-btn-refresh" onclick="refreshCurrent()">&#x21BB; <span class="refresh-label">Re&icirc;ncarc&#259;</span></button>
       <button class="top-btn top-btn-logout" onclick="logout()">Ie&#x219;ire</button>
     </div>
   </div>
