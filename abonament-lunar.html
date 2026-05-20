@@ -17,7 +17,7 @@
 <title>Abonament Lunar Mentenanță Site | Îngrijire & Creștere | C Design</title>
 <meta name="description" content="Abonament lunar pentru mentenanța și creșterea site-ului tău. Actualizări, raport SEO, suport prioritar. De la 49€/lună. Fără contract pe termen lung.">
 <meta name="robots" content="index, follow">
-<meta name="theme-color" content="#2979ff">
+<meta name="theme-color" content="#00a8a8">
 <link rel="canonical" href="https://www.c-design.ro/abonament-lunar">
 <link rel="icon" type="image/png" href="/logo-c-design.png">
 <meta property="og:type" content="website">
@@ -51,10 +51,10 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --teal:#2979ff;--teal-dk:#1357e6;--teal-lt:#5494ff;
-  --teal-dim:rgba(41,121,255,.08);--teal-glow:rgba(41,121,255,.18);--teal-border:rgba(41,121,255,.30);
-  --bg:#020b18;--bg2:#040f22;--bg3:#071428;--bg4:#091832;
-  --text:#e8edf2;--soft:#8fa8cc;--muted:#4d6b8a;
+  --teal:#00a8a8;--teal-dk:#007878;--teal-lt:#00c8c8;
+  --teal-dim:rgba(0,168,168,.08);--teal-glow:rgba(0,168,168,.18);--teal-border:rgba(0,168,168,.30);
+  --bg:#060f0f;--bg2:#0a1818;--bg3:#0f2020;--bg4:#122424;
+  --text:#e8edf2;--soft:#8bbaba;--muted:#4d6b8a;
   --border:rgba(255,255,255,.07);--border-soft:rgba(255,255,255,.11);
 }
 html{scroll-behavior:smooth}
@@ -62,13 +62,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 a{color:inherit;text-decoration:none}
 .container{max-width:1100px;margin:0 auto;padding:0 24px;}
 
-nav{position:sticky;top:0;z-index:100;background:rgba(2,11,24,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+nav{position:sticky;top:0;z-index:100;background:rgba(6,15,15,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px;}
 .nav-phone{font-family:'Share Tech Mono',monospace;font-size:.875rem;color:var(--teal);border:1px solid var(--teal-border);padding:6px 14px;border-radius:6px;}
-.btn-nav{background:var(--teal);color:#020b18;font-weight:600;font-size:.875rem;padding:9px 20px;border-radius:8px;text-decoration:none;}
+.btn-nav{background:var(--teal);color:#060f0f;font-weight:600;font-size:.875rem;padding:9px 20px;border-radius:8px;text-decoration:none;}
 
 .hero{padding:80px 0 64px;position:relative;overflow:hidden;text-align:center;}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(41,121,255,.08) 0%,transparent 60%);pointer-events:none;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,168,168,.08) 0%,transparent 60%);pointer-events:none;}
 .hero-badge{display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--teal);background:var(--teal-dim);border:1px solid var(--teal-border);padding:5px 14px;border-radius:4px;margin-bottom:20px;letter-spacing:.08em;}
 .hero-badge::before{content:'';width:6px;height:6px;background:var(--teal);border-radius:50%;animation:blink 1.2s step-end infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
@@ -76,8 +76,8 @@ nav{position:sticky;top:0;z-index:100;background:rgba(2,11,24,.92);backdrop-filt
 .hero h1 .hl{background:linear-gradient(135deg,var(--teal-lt),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .hero-sub{font-size:1.1rem;color:var(--soft);line-height:1.75;max-width:580px;margin:0 auto 36px;}
 .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:56px;}
-.btn-primary{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#3b82f6,#2979ff);color:#fff;font-weight:700;font-size:1rem;padding:14px 28px;border-radius:8px;text-decoration:none;transition:box-shadow .2s,transform .15s;box-shadow:0 0 22px rgba(41,121,255,.4);}
-.btn-primary:hover{box-shadow:0 0 38px rgba(41,121,255,.65);transform:translateY(-2px);}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#00bfbf,#00a8a8);color:#fff;font-weight:700;font-size:1rem;padding:14px 28px;border-radius:8px;text-decoration:none;transition:box-shadow .2s,transform .15s;box-shadow:0 0 22px rgba(0,168,168,.4);}
+.btn-primary:hover{box-shadow:0 0 38px rgba(0,168,168,.65);transform:translateY(-2px);}
 .btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--soft);font-size:1rem;padding:13px 28px;border-radius:8px;border:1px solid var(--border-soft);text-decoration:none;transition:border-color .2s,color .2s;}
 .btn-ghost:hover{border-color:var(--teal-border);color:var(--teal)}
 
@@ -94,8 +94,8 @@ section{padding:72px 0;}
 .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:start;}
 .plan{background:var(--bg2);border:1px solid var(--border-soft);border-radius:16px;padding:36px 32px;position:relative;transition:border-color .2s,transform .2s;}
 .plan:hover{transform:translateY(-4px);}
-.plan.featured{border-color:var(--teal-border);background:linear-gradient(180deg,rgba(41,121,255,.06) 0%,var(--bg2) 100%);}
-.plan-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--teal);color:#020b18;font-family:'Share Tech Mono',monospace;font-size:.72rem;font-weight:700;padding:4px 14px;border-radius:20px;white-space:nowrap;letter-spacing:.06em;}
+.plan.featured{border-color:var(--teal-border);background:linear-gradient(180deg,rgba(0,168,168,.06) 0%,var(--bg2) 100%);}
+.plan-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--teal);color:#060f0f;font-family:'Share Tech Mono',monospace;font-size:.72rem;font-weight:700;padding:4px 14px;border-radius:20px;white-space:nowrap;letter-spacing:.06em;}
 .plan-name{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:8px;}
 .plan-desc{font-size:.88rem;color:var(--muted);margin-bottom:24px;line-height:1.6;}
 .plan-price{display:flex;align-items:baseline;gap:4px;margin-bottom:28px;}
@@ -108,7 +108,7 @@ section{padding:72px 0;}
 .plan-features li.dim{color:var(--muted);}
 .plan-features li.dim::before{content:'—';color:var(--muted);}
 .plan-cta{display:block;width:100%;text-align:center;padding:13px 20px;border-radius:8px;font-weight:600;font-size:.95rem;transition:background .2s,color .2s,border-color .2s;}
-.plan-cta-main{background:var(--teal);color:#020b18;}
+.plan-cta-main{background:var(--teal);color:#060f0f;}
 .plan-cta-main:hover{background:var(--teal-lt);}
 .plan-cta-ghost{background:transparent;border:1px solid var(--border-soft);color:var(--soft);}
 .plan-cta-ghost:hover{border-color:var(--teal-border);color:var(--teal);}
@@ -128,7 +128,7 @@ section{padding:72px 0;}
 .faq-a{color:var(--soft);font-size:.93rem;line-height:1.7;}
 
 /* CTA BOX */
-.cta-box{background:linear-gradient(135deg,rgba(41,121,255,.09),rgba(41,121,255,.03));border:1px solid rgba(41,121,255,.2);border-radius:16px;padding:56px 40px;text-align:center;max-width:700px;margin:0 auto;}
+.cta-box{background:linear-gradient(135deg,rgba(0,168,168,.09),rgba(0,168,168,.03));border:1px solid rgba(0,168,168,.2);border-radius:16px;padding:56px 40px;text-align:center;max-width:700px;margin:0 auto;}
 .cta-box h2{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;color:#fff;margin-bottom:12px;}
 .cta-box p{color:var(--soft);margin-bottom:28px;font-size:1rem;}
 
@@ -145,7 +145,7 @@ footer a{color:var(--muted);}footer a:hover{color:var(--teal);}
 }
 
     /* ── READABILITY & GRAPHICAL IMPROVEMENTS ─────────────────── */
-    :root{--text:#f0f4f8;--soft:#b0c8e0;--muted:#6080a0;}
+    :root{--text:#f0f4f8;--soft:#9ad4d4;--muted:#4d8888;}
     body{font-size:1.06rem;line-height:1.82;}
     .sec-title{font-size:clamp(1.9rem,3.2vw,2.6rem);line-height:1.15;margin-bottom:14px;}
     .sec-title::after{content:'';display:block;width:44px;height:3px;background:linear-gradient(90deg,var(--teal),var(--teal-lt),transparent);border-radius:2px;margin-top:14px;}
@@ -158,11 +158,11 @@ footer a{color:var(--muted);}footer a:hover{color:var(--teal);}
     .card p{font-size:.92rem;line-height:1.72;color:var(--soft);}
     .card h3{font-size:1.05rem;margin-bottom:10px;}
     .card{padding:32px;}
-    .btn-primary{background:linear-gradient(135deg,#3b82f6,#2979ff);color:#fff;box-shadow:0 0 22px rgba(41,121,255,.38);}
-    .btn-primary:hover{box-shadow:0 0 40px rgba(41,121,255,.65);transform:translateY(-2px);}
-    .btn-nav{background:linear-gradient(135deg,#3b82f6,#2979ff);color:#fff;}
-    .plan-cta-main{background:linear-gradient(135deg,#3b82f6,#2979ff);color:#fff;box-shadow:0 0 20px rgba(41,121,255,.35);}
-    .plan-cta-main:hover{box-shadow:0 0 36px rgba(41,121,255,.6);}
+    .btn-primary{background:linear-gradient(135deg,#00bfbf,#00a8a8);color:#fff;box-shadow:0 0 22px rgba(0,168,168,.38);}
+    .btn-primary:hover{box-shadow:0 0 40px rgba(0,168,168,.65);transform:translateY(-2px);}
+    .btn-nav{background:linear-gradient(135deg,#00bfbf,#00a8a8);color:#fff;}
+    .plan-cta-main{background:linear-gradient(135deg,#00bfbf,#00a8a8);color:#fff;box-shadow:0 0 20px rgba(0,168,168,.35);}
+    .plan-cta-main:hover{box-shadow:0 0 36px rgba(0,168,168,.6);}
     @media(max-width:768px){body{font-size:1rem;line-height:1.75;}.sec-title{font-size:1.6rem;}.card{padding:24px;}}
 </style>
 </head>
@@ -202,11 +202,11 @@ footer a{color:var(--muted);}footer a:hover{color:var(--teal);}
   <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80"
        alt="Dashboard analytics și statistici site" loading="lazy"
        style="width:100%;height:100%;object-fit:cover;opacity:.35;display:block;">
-  <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(2,11,24,.85) 30%,rgba(41,121,255,.1) 100%);"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(6,15,15,.85) 30%,rgba(0,168,168,.1) 100%);"></div>
   <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center;padding:0 24px;">
     <div style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--teal);letter-spacing:.12em;text-transform:uppercase;">MONITORIZARE CONTINUĂ</div>
     <h2 style="font-family:'Syne',sans-serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:800;color:#fff;line-height:1.2;">Site-ul tău, urmărit 24/7</h2>
-    <p style="color:#b0c8e0;font-size:.97rem;max-width:480px;line-height:1.7;">Backup automat, uptime monitorizat, SSL activ — fără să ridici un deget.</p>
+    <p style="color:#9ad4d4;font-size:.97rem;max-width:480px;line-height:1.7;">Backup automat, uptime monitorizat, SSL activ — fără să ridici un deget.</p>
   </div>
 </div>
 

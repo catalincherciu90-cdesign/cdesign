@@ -19,7 +19,7 @@
   <title>Pachet Startup Micul Întreprinzător | Web Design de la 300€ | C Design</title>
   <meta name="description" content="Pachetul Startup pentru Micul Întreprinzător include site profesional, logo, domeniu + găzduire 1 an și 2 conturi social media. De la 300€. C Design Chiajna.">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#2979ff">
+  <meta name="theme-color" content="#00a8a8">
   <link rel="canonical" href="https://www.c-design.ro/pachet-startup">
   <link rel="icon" type="image/png" href="/logo-c-design.png">
   <link rel="apple-touch-icon" href="/logo-c-design.png">
@@ -68,10 +68,10 @@
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --teal:#2979ff;--teal-dk:#1357e6;--teal-lt:#5494ff;
-      --teal-dim:rgba(41,121,255,.08);--teal-glow:rgba(41,121,255,.18);--teal-border:rgba(41,121,255,.30);
-      --bg:#020b18;--bg2:#040f22;--bg3:#071428;--bg4:#091832;
-      --text:#e8edf2;--soft:#8fa8cc;--muted:#4d6b8a;
+      --teal:#00a8a8;--teal-dk:#007878;--teal-lt:#00c8c8;
+      --teal-dim:rgba(0,168,168,.08);--teal-glow:rgba(0,168,168,.18);--teal-border:rgba(0,168,168,.30);
+      --bg:#060f0f;--bg2:#0a1818;--bg3:#0f2020;--bg4:#122424;
+      --text:#e8edf2;--soft:#8bbaba;--muted:#4d6b8a;
       --border:rgba(255,255,255,.07);--border-soft:rgba(255,255,255,.11);
       --green:#28c840;--yellow:#febc2e;--red:#ff5f57;
     }
@@ -82,21 +82,21 @@
     .container{max-width:1100px;margin:0 auto;padding:0 24px;}
 
     /* NAV */
-    nav{position:sticky;top:0;z-index:100;background:rgba(2,11,24,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    nav{position:sticky;top:0;z-index:100;background:rgba(6,15,15,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
     .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px;}
     .nav-links{display:flex;align-items:center;gap:28px;list-style:none;}
     .nav-links a{font-size:.875rem;color:var(--muted);font-weight:400;transition:color .2s;}
     .nav-links a:hover{color:var(--teal)}
     .nav-phone{font-family:'Share Tech Mono',monospace;font-size:.875rem;color:var(--teal);border:1px solid var(--teal-border);padding:6px 14px;border-radius:6px;transition:background .2s;}
     .nav-phone:hover{background:var(--teal-dim);}
-    .btn-nav{background:var(--teal);color:#020b18;font-weight:600;font-size:.875rem;font-family:'DM Sans',sans-serif;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:background .2s;text-decoration:none;}
+    .btn-nav{background:var(--teal);color:#060f0f;font-weight:600;font-size:.875rem;font-family:'DM Sans',sans-serif;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:background .2s;text-decoration:none;}
     .btn-nav:hover{background:var(--teal-lt);}
     .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:6px;}
     .hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;}
 
     /* HERO */
     .hero{padding:80px 0 60px;position:relative;overflow:hidden;}
-    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 0%,rgba(41,121,255,.08) 0%,transparent 60%);pointer-events:none;}
+    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 0%,rgba(0,168,168,.08) 0%,transparent 60%);pointer-events:none;}
     .hero-badge{display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--teal);background:var(--teal-dim);border:1px solid var(--teal-border);padding:5px 14px;border-radius:4px;margin-bottom:20px;letter-spacing:.08em;}
     .hero-badge::before{content:'';width:6px;height:6px;background:var(--teal);border-radius:50%;animation:blink 1.2s step-end infinite;}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
@@ -105,11 +105,11 @@
     .hero-sub{font-size:1.1rem;color:var(--soft);line-height:1.75;max-width:560px;margin-bottom:36px;}
     .price-tag{display:inline-flex;align-items:baseline;gap:6px;margin-bottom:36px;}
     .price-from{font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--muted);}
-    .price-num{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--teal);text-shadow:0 0 30px rgba(41,121,255,.4);line-height:1;}
+    .price-num{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--teal);text-shadow:0 0 30px rgba(0,168,168,.4);line-height:1;}
     .price-cur{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;color:var(--teal);}
     .hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
-    .btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#020b18;font-weight:600;font-size:1rem;padding:14px 28px;border-radius:8px;border:none;cursor:pointer;transition:background .2s,box-shadow .2s,transform .15s;text-decoration:none;font-family:'DM Sans',sans-serif;}
-    .btn-primary:hover{background:var(--teal-lt);box-shadow:0 0 28px rgba(41,121,255,.45);transform:translateY(-2px);}
+    .btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#060f0f;font-weight:600;font-size:1rem;padding:14px 28px;border-radius:8px;border:none;cursor:pointer;transition:background .2s,box-shadow .2s,transform .15s;text-decoration:none;font-family:'DM Sans',sans-serif;}
+    .btn-primary:hover{background:var(--teal-lt);box-shadow:0 0 28px rgba(0,168,168,.45);transform:translateY(-2px);}
     .btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--soft);font-size:1rem;padding:14px 28px;border-radius:8px;border:1px solid var(--border-soft);cursor:pointer;transition:border-color .2s,color .2s;text-decoration:none;font-family:'DM Sans',sans-serif;}
     .btn-ghost:hover{border-color:var(--teal-border);color:var(--teal)}
 
@@ -144,7 +144,7 @@
     .step-desc{font-size:.82rem;color:var(--muted);line-height:1.6;}
 
     /* CTA */
-    .cta{background:linear-gradient(135deg,rgba(41,121,255,.08),rgba(41,121,255,.03));border:1px solid var(--teal-border);border-radius:20px;padding:60px 48px;text-align:center;}
+    .cta{background:linear-gradient(135deg,rgba(0,168,168,.08),rgba(0,168,168,.03));border:1px solid var(--teal-border);border-radius:20px;padding:60px 48px;text-align:center;}
     .cta h2{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;color:#fff;margin-bottom:12px;letter-spacing:-.02em;}
     .cta p{color:var(--soft);font-size:1rem;margin-bottom:32px;line-height:1.75;}
     .cta-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
@@ -182,7 +182,7 @@
     }
   
     /* ── READABILITY & GRAPHICAL IMPROVEMENTS ─────────────────── */
-    :root{--text:#f0f4f8;--soft:#b0c8e0;--muted:#6080a0;}
+    :root{--text:#f0f4f8;--soft:#9ad4d4;--muted:#4d8888;}
     body{font-size:1.06rem;line-height:1.82;}
     .sec-title{font-size:clamp(1.9rem,3.2vw,2.6rem);line-height:1.15;margin-bottom:14px;}
     .sec-title::after{content:'';display:block;width:44px;height:3px;background:linear-gradient(90deg,var(--teal),var(--teal-lt),transparent);border-radius:2px;margin-top:14px;}
@@ -195,11 +195,11 @@
     .card p{font-size:.92rem;line-height:1.72;color:var(--soft);}
     .card h3{font-size:1.05rem;margin-bottom:10px;}
     .card{padding:32px;}
-    .btn-primary{background:linear-gradient(135deg,#3b82f6,#2979ff);color:#fff;box-shadow:0 0 22px rgba(41,121,255,.38);}
-    .btn-primary:hover{box-shadow:0 0 40px rgba(41,121,255,.65);transform:translateY(-2px);}
-    .btn-nav{background:linear-gradient(135deg,#3b82f6,#2979ff);color:#fff;}
-    .plan-cta-main{background:linear-gradient(135deg,#3b82f6,#2979ff);color:#fff;box-shadow:0 0 20px rgba(41,121,255,.35);}
-    .plan-cta-main:hover{box-shadow:0 0 36px rgba(41,121,255,.6);}
+    .btn-primary{background:linear-gradient(135deg,#00bfbf,#00a8a8);color:#fff;box-shadow:0 0 22px rgba(0,168,168,.38);}
+    .btn-primary:hover{box-shadow:0 0 40px rgba(0,168,168,.65);transform:translateY(-2px);}
+    .btn-nav{background:linear-gradient(135deg,#00bfbf,#00a8a8);color:#fff;}
+    .plan-cta-main{background:linear-gradient(135deg,#00bfbf,#00a8a8);color:#fff;box-shadow:0 0 20px rgba(0,168,168,.35);}
+    .plan-cta-main:hover{box-shadow:0 0 36px rgba(0,168,168,.6);}
     @media(max-width:768px){body{font-size:1rem;line-height:1.75;}.sec-title{font-size:1.6rem;}.card{padding:24px;}}
 </style>
 </head>
@@ -250,12 +250,12 @@
   <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80"
        alt="Laptop profesional pe birou — web design" loading="lazy"
        style="width:100%;height:100%;object-fit:cover;opacity:.38;display:block;">
-  <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(2,11,24,.92) 35%,rgba(2,11,24,.5) 70%,rgba(41,121,255,.08) 100%);"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(6,15,15,.92) 35%,rgba(6,15,15,.5) 70%,rgba(0,168,168,.08) 100%);"></div>
   <div style="position:absolute;inset:0;display:flex;align-items:center;padding:0 5%;">
     <div style="max-width:520px;">
-      <div style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:#2979ff;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px;">PACHET COMPLET LANSAT ÎN 21 ZILE</div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:#00a8a8;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px;">PACHET COMPLET LANSAT ÎN 21 ZILE</div>
       <h2 style="font-family:'Syne',sans-serif;font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;color:#fff;line-height:1.15;margin-bottom:12px;">Site + Logo + Social Media<br>totul gata de prima zi</h2>
-      <p style="color:#b0c8e0;font-size:.95rem;line-height:1.7;">De la 300€, fără costuri ascunse, cu domeniu .ro și găzduire incluse.</p>
+      <p style="color:#9ad4d4;font-size:.95rem;line-height:1.7;">De la 300€, fără costuri ascunse, cu domeniu .ro și găzduire incluse.</p>
     </div>
   </div>
 </div>
