@@ -236,6 +236,78 @@ async function sendBookingNotification(booking) {
       }),
     });
   } catch {}
+
+  // Confirmare catre client
+  const confirmHtml = `
+<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:32px 0;">
+  <tr><td align="center">
+    <table width="560" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08);">
+      <tr><td style="background:#080b0e;padding:28px 32px;text-align:center;">
+        <div style="font-family:'Segoe UI',Arial,sans-serif;font-size:1.4rem;font-weight:800;color:#fff;">
+          <span style="color:#00c8b4;">C</span> Design
+        </div>
+        <div style="color:#9aa5b4;font-size:.85rem;margin-top:4px;">Confirmare programare</div>
+      </td></tr>
+      <tr><td style="padding:32px;">
+        <p style="font-size:1rem;color:#080b0e;margin:0 0 20px;">Bună <strong>${booking.name}</strong>,</p>
+        <p style="font-size:.95rem;color:#444;line-height:1.6;margin:0 0 28px;">Programarea ta a fost primită cu succes. Te vom contacta în maxim <strong>2 ore</strong> pentru confirmare.</p>
+
+        <div style="background:#f0fffe;border:1px solid #d0f5f2;border-radius:10px;padding:20px 24px;margin-bottom:28px;">
+          <div style="font-size:.75rem;color:#6a7585;text-transform:uppercase;letter-spacing:.06em;margin-bottom:16px;">Detalii programare</div>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td width="50%" style="padding:0 8px 12px 0;">
+                <div style="font-size:.75rem;color:#6a7585;margin-bottom:3px;">Data</div>
+                <div style="font-size:.95rem;color:#080b0e;font-weight:700;">${booking.date}</div>
+              </td>
+              <td width="50%" style="padding:0 0 12px 8px;">
+                <div style="font-size:.75rem;color:#6a7585;margin-bottom:3px;">Ora</div>
+                <div style="font-size:.95rem;color:#080b0e;font-weight:700;">${booking.time}</div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <div style="font-size:.75rem;color:#6a7585;margin-bottom:3px;">Serviciu</div>
+                <div style="font-size:.95rem;color:#080b0e;font-weight:700;">${booking.service}</div>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <p style="font-size:.9rem;color:#666;line-height:1.6;margin:0 0 24px;">Dacă ai întrebări sau vrei să modifici programarea, ne poți contacta oricând:</p>
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+          <tr>
+            <td style="padding:0 8px 0 0;">
+              <a href="tel:+40753116155" style="display:block;text-align:center;background:#080b0e;color:#00c8b4;font-weight:600;font-size:.9rem;padding:12px;border-radius:8px;text-decoration:none;">📞 0753 116 155</a>
+            </td>
+            <td style="padding:0 0 0 8px;">
+              <a href="https://wa.me/40753116155" style="display:block;text-align:center;background:#25d366;color:#fff;font-weight:600;font-size:.9rem;padding:12px;border-radius:8px;text-decoration:none;">💬 WhatsApp</a>
+            </td>
+          </tr>
+        </table>
+      </td></tr>
+      <tr><td style="background:#f9f9f9;padding:16px 32px;text-align:center;border-top:1px solid #eee;">
+        <div style="font-size:.78rem;color:#9aa5b4;">© ${new Date().getFullYear()} C Design · <a href="https://www.c-design.ro" style="color:#00c8b4;text-decoration:none;">c-design.ro</a></div>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body></html>`;
+
+  try {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: 'C Design <notificari@c-design.ro>',
+        to: [booking.email],
+        subject: `✅ Programare confirmată — ${booking.date} ora ${booking.time}`,
+        html: confirmHtml,
+      }),
+    });
+  } catch {}
 }
 
 const DEFAULT_PROJECTS = [
