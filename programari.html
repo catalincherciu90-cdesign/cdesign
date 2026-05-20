@@ -159,6 +159,37 @@
     @media(max-width:1200px){.crm-panel-grid{grid-template-columns:1fr 260px;}}
     @media(max-width:960px){.crm-panel-grid{grid-template-columns:1fr;} .crm-sidebar{position:static;}}
 
+    /* ── CLIENȚI ──────────────────────────────────────────── */
+    .clients-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+    .clients-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+    .client-card{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:18px;cursor:pointer;transition:border-color .2s,transform .15s;}
+    .client-card:hover{border-color:var(--teal-border);transform:translateY(-2px);}
+    .client-card-name{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:4px;}
+    .client-card-contact{font-size:.82rem;color:var(--muted);margin-bottom:10px;}
+    .client-card-meta{display:flex;gap:12px;font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--teal);}
+    .client-card-actions{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+    .client-btn-sm{background:none;border:1px solid var(--border-soft);border-radius:6px;color:var(--soft);font-size:.75rem;padding:4px 10px;cursor:pointer;}
+    .client-btn-sm:hover{border-color:var(--teal-border);color:var(--teal);}
+    .client-btn-del{color:var(--red);}
+    .client-btn-del:hover{border-color:rgba(255,95,87,.4);color:#ff5f57;}
+    /* Detail view */
+    .client-detail{display:none;}
+    .client-detail.active{display:block;}
+    .client-list-view{display:block;}
+    .client-list-view.hidden{display:none;}
+    .client-detail-header{display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap;}
+    .client-detail-back{background:none;border:1px solid var(--border-soft);border-radius:8px;color:var(--soft);font-size:.82rem;padding:6px 14px;cursor:pointer;}
+    .client-detail-back:hover{border-color:var(--teal-border);color:var(--teal);}
+    .client-detail-name{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#fff;}
+    .client-info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:16px;margin-bottom:24px;}
+    .client-info-item{font-size:.83rem;} .client-info-label{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--muted);margin-bottom:3px;}
+    .client-sections{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+    .client-section{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:18px;}
+    .client-section-title{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;color:#fff;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+    .client-add-inline{background:none;border:none;color:var(--teal);font-size:.82rem;cursor:pointer;padding:0;}
+    .client-form-inline{background:var(--bg3);border:1px solid var(--teal-border);border-radius:8px;padding:12px;margin-bottom:12px;display:none;}
+    .client-form-inline.open{display:block;}
+    @media(max-width:900px){.client-sections{grid-template-columns:1fr;}}
     @media(max-width:1100px){.crm-stats{grid-template-columns:repeat(3,1fr);}}
     @media(max-width:900px){
       .stats-row{grid-template-columns:1fr 1fr}
@@ -286,6 +317,7 @@
     <button class="tab active" onclick="switchTab('gibilan',this)">&#x1F916; Gibilan</button>
     <button class="tab" onclick="switchTab('bookings',this)">&#x1F4C5; Program&#259;ri</button>
     <button class="tab" onclick="switchTab('projects',this)">&#x1F5BC; Portofoliu</button>
+    <button class="tab" onclick="switchTab('clients',this)">&#x1F465; Clien&#x21B;i</button>
     <button class="tab" onclick="switchTab('crm',this)">&#x1F4CB; CRM &amp; Oferte</button>
     <button class="tab" onclick="switchTab('blog',this)">&#x270D; Blog</button>
     <button class="tab" onclick="switchTab('social',this)">&#x1F4F1; Social Media</button>
@@ -341,6 +373,7 @@
               <input class="gib-input" type="date" id="gib-m-date" style="color-scheme:dark;">
               <input class="gib-input" type="time" id="gib-m-time">
               <input class="gib-input" type="text" id="gib-m-notes" placeholder="Note (op&#x21B;ional)">
+              <select class="gib-input" id="gib-m-client"><option value="">— f&#x103;r&#x103; client —</option></select>
               <button class="gib-save" onclick="addMeeting()">Salveaz&#259;</button>
             </div>
 
@@ -352,6 +385,7 @@
                 <option value="normal">Prioritate normal&#259;</option>
                 <option value="high">Prioritate ridicat&#259;</option>
               </select>
+              <select class="gib-input" id="gib-t-client"><option value="">— f&#x103;r&#x103; client —</option></select>
               <button class="gib-save" onclick="addTodo()">Salveaz&#259;</button>
             </div>
 
@@ -361,6 +395,7 @@
               <input class="gib-input" type="date" id="gib-d-date" style="color-scheme:dark;">
               <input class="gib-input" type="text" id="gib-d-project" placeholder="Proiect (op&#x21B;ional)">
               <input class="gib-input" type="text" id="gib-d-notes" placeholder="Note (op&#x21B;ional)">
+              <select class="gib-input" id="gib-d-client"><option value="">— f&#x103;r&#x103; client —</option></select>
               <button class="gib-save" onclick="addDeadline()">Salveaz&#259;</button>
             </div>
           </div>
@@ -420,6 +455,87 @@
     </div>
   </div>
 
+  <!-- TAB: CLIENȚI -->
+  <div class="tab-panel" id="panel-clients">
+    <div class="main">
+
+      <!-- LISTA CLIENTI -->
+      <div class="client-list-view" id="clients-list-view">
+        <div class="clients-toolbar">
+          <h3 style="font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--soft);">// clienti</h3>
+          <button class="btn-add" onclick="openClientModal()">+ Client nou</button>
+        </div>
+        <div class="clients-grid" id="clientsGrid">
+          <div class="loading">Se &icirc;ncarc&#259; clien&#x21B;ii...</div>
+        </div>
+      </div>
+
+      <!-- DETALIU CLIENT -->
+      <div class="client-detail" id="client-detail-view">
+        <div class="client-detail-header">
+          <button class="client-detail-back" onclick="backToClients()">&#x2190; Clien&#x21B;i</button>
+          <span class="client-detail-name" id="cd-name"></span>
+          <button class="client-btn-sm" onclick="openClientModal(selectedClientId)" style="margin-left:auto;">Editeaz&#259;</button>
+          <button class="client-btn-sm client-btn-del" onclick="deleteClient(selectedClientId)">&#x15C;terge</button>
+        </div>
+        <div class="client-info-grid" id="cd-info"></div>
+        <div class="client-sections">
+
+          <!-- Intalniri client -->
+          <div class="client-section">
+            <div class="client-section-title">
+              <span>&#x1F550; &Icirc;nt&#xE2;lniri</span>
+              <button class="client-add-inline" onclick="toggleClientForm('cf-meeting')">+ adaug&#259;</button>
+            </div>
+            <div class="client-form-inline" id="cf-meeting">
+              <input class="gib-input" type="text" id="cf-m-title" placeholder="Titlu *">
+              <input class="gib-input" type="date" id="cf-m-date" style="color-scheme:dark;">
+              <input class="gib-input" type="time" id="cf-m-time">
+              <input class="gib-input" type="text" id="cf-m-notes" placeholder="Note (op&#x21B;ional)">
+              <button class="gib-save" onclick="addMeetingForClient()">Salveaz&#259;</button>
+            </div>
+            <div id="cd-meetings"></div>
+          </div>
+
+          <!-- To-do client -->
+          <div class="client-section">
+            <div class="client-section-title">
+              <span>&#x2705; De f&#x103;cut</span>
+              <button class="client-add-inline" onclick="toggleClientForm('cf-todo')">+ adaug&#259;</button>
+            </div>
+            <div class="client-form-inline" id="cf-todo">
+              <input class="gib-input" type="text" id="cf-t-title" placeholder="Task *">
+              <input class="gib-input" type="date" id="cf-t-due" style="color-scheme:dark;">
+              <select class="gib-input" id="cf-t-priority">
+                <option value="normal">Prioritate normal&#259;</option>
+                <option value="high">Prioritate ridicat&#259;</option>
+              </select>
+              <button class="gib-save" onclick="addTodoForClient()">Salveaz&#259;</button>
+            </div>
+            <div id="cd-todos"></div>
+          </div>
+
+          <!-- Deadline-uri client -->
+          <div class="client-section">
+            <div class="client-section-title">
+              <span>&#x26A0; Deadline-uri</span>
+              <button class="client-add-inline" onclick="toggleClientForm('cf-deadline')">+ adaug&#259;</button>
+            </div>
+            <div class="client-form-inline" id="cf-deadline">
+              <input class="gib-input" type="text" id="cf-d-title" placeholder="Titlu *">
+              <input class="gib-input" type="date" id="cf-d-date" style="color-scheme:dark;">
+              <input class="gib-input" type="text" id="cf-d-project" placeholder="Proiect (op&#x21B;ional)">
+              <button class="gib-save" onclick="addDeadlineForClient()">Salveaz&#259;</button>
+            </div>
+            <div id="cd-deadlines"></div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- TAB: CRM & OFERTE -->
   <div class="tab-panel" id="panel-crm">
     <div class="main">
@@ -474,6 +590,7 @@
               <input class="gib-input" type="date" id="sb-m-date" style="color-scheme:dark;">
               <input class="gib-input" type="time" id="sb-m-time">
               <input class="gib-input" type="text" id="sb-m-notes" placeholder="Note (op&#x21B;ional)">
+              <select class="gib-input" id="sb-m-client"><option value="">— f&#x103;r&#x103; client —</option></select>
               <button class="gib-save" onclick="addMeetingSb()">Salveaz&#259;</button>
             </div>
             <div id="crm-meetings-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
@@ -492,6 +609,7 @@
                 <option value="normal">Prioritate normal&#259;</option>
                 <option value="high">Prioritate ridicat&#259;</option>
               </select>
+              <select class="gib-input" id="sb-t-client"><option value="">— f&#x103;r&#x103; client —</option></select>
               <button class="gib-save" onclick="addTodoSb()">Salveaz&#259;</button>
             </div>
             <div id="crm-todos-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
@@ -507,6 +625,7 @@
               <input class="gib-input" type="text" id="sb-d-title" placeholder="Titlu *">
               <input class="gib-input" type="date" id="sb-d-date" style="color-scheme:dark;">
               <input class="gib-input" type="text" id="sb-d-project" placeholder="Proiect (op&#x21B;ional)">
+              <select class="gib-input" id="sb-d-client"><option value="">— f&#x103;r&#x103; client —</option></select>
               <button class="gib-save" onclick="addDeadlineSb()">Salveaz&#259;</button>
             </div>
             <div id="crm-deadlines-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
@@ -606,6 +725,31 @@
   </div>
 
 </div>
+<div class="modal-overlay" id="clientModalOverlay">
+  <div class="modal" style="max-width:480px;">
+    <h3 id="clientModalTitle">Client nou</h3>
+    <input type="hidden" id="clientEditId">
+    <div class="f-row">
+      <div><label class="f-label" for="clientName">// nume firm&#259; / persoan&#259; *</label>
+        <input class="f-input" type="text" id="clientName" placeholder="Ex: Firma XYZ / Ion Popescu"></div>
+      <div><label class="f-label" for="clientContact">// persoana de contact</label>
+        <input class="f-input" type="text" id="clientContact" placeholder="Nume contact"></div>
+    </div>
+    <div class="f-row">
+      <div><label class="f-label" for="clientPhone">// telefon</label>
+        <input class="f-input" type="tel" id="clientPhone" placeholder="0700 000 000"></div>
+      <div><label class="f-label" for="clientEmail">// email</label>
+        <input class="f-input" type="email" id="clientEmail" placeholder="email@firma.ro"></div>
+    </div>
+    <div><label class="f-label" for="clientNotes">// note</label>
+      <textarea class="f-input" id="clientNotes" rows="2" placeholder="Detalii, observa&#x21B;ii..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeClientModal()">Anuleaz&#259;</button>
+      <button class="btn-save" onclick="saveClient()">Salveaz&#259;</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="crmModalOverlay">
   <div class="modal" style="max-width:520px;">
     <h3 id="crmModalTitle">Proiect / Ofert&#259; nou&#259;</h3>
@@ -746,7 +890,7 @@
       adminToken = password;
       const ok = await fetchBookings(true);
       if (!ok) { err.textContent = '✗ Eroare de autentificare'; adminToken = ''; }
-      else { fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); }
+      else { fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); }
     } catch { err.textContent = '✗ Eroare de rețea'; }
   }
 
@@ -758,12 +902,14 @@
     document.getElementById('panel-' + tab).classList.add('active');
     if (tab === 'gibilan') loadGibilan();
     if (tab === 'crm') { fetchCrm(); loadGibilan(); }
+    if (tab === 'clients') { fetchClients(); loadGibilan(); }
   }
 
   function refreshCurrent() {
     if (currentTab === 'gibilan') loadGibilan();
     else if (currentTab === 'bookings') fetchBookings();
-    else if (currentTab === 'crm') fetchCrm();
+    else if (currentTab === 'crm') { fetchCrm(); loadGibilan(); }
+    else if (currentTab === 'clients') { fetchClients(); loadGibilan(); }
     else if (currentTab === 'blog') fetchBlog();
     else if (currentTab === 'social') fetchSocial();
     else if (currentTab === 'settings') fetchSettings();
@@ -977,6 +1123,7 @@
 
   document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
   document.getElementById('crmModalOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeCrmModal(); });
+  document.getElementById('clientModalOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeClientModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeCrmModal(); } });
 
   // -- CRM --
@@ -1309,6 +1456,217 @@
     } catch { btn.textContent = '✕ Eroare'; btn.disabled = false; }
   }
 
+  // -- CLIENȚI --
+  let clientsData = [];
+  let selectedClientId = null;
+
+  async function fetchClients() {
+    if (!adminToken) return;
+    try {
+      const res = await fetch('/api/clients?token=' + encodeURIComponent(adminToken));
+      if (!res.ok) return;
+      clientsData = await res.json();
+      populateClientDropdowns();
+      if (currentTab === 'clients') renderClients();
+    } catch {}
+  }
+
+  function populateClientDropdowns() {
+    const opts = clientsData.map(c => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');
+    ['gib-m-client','gib-t-client','gib-d-client','sb-m-client','sb-t-client','sb-d-client'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '<option value="">— fără client —</option>' + opts;
+    });
+  }
+
+  function renderClients() {
+    const grid = document.getElementById('clientsGrid');
+    if (!grid) return;
+    if (!clientsData.length) {
+      grid.innerHTML = '<div class="gib-empty" style="padding:32px 0;">Niciun client adăugat încă. Apasă &quot;+ Client nou&quot; să începi.</div>';
+      return;
+    }
+    grid.innerHTML = clientsData.map(c => {
+      const meetings  = (gibData.meetings  || []).filter(m => m.clientId === c.id).length;
+      const todos     = (gibData.todos     || []).filter(t => t.clientId === c.id && !t.done).length;
+      const deadlines = (gibData.deadlines || []).filter(d => d.clientId === c.id).length;
+      return `<div class="client-card" onclick="showClientDetail('${esc(c.id)}')">
+        <div class="client-card-name">${esc(c.name)}</div>
+        <div class="client-card-contact">${c.contact ? esc(c.contact) : ''}${c.phone ? ' · ' + esc(c.phone) : ''}</div>
+        <div class="client-card-meta">
+          <span>📅 ${meetings} întâlniri</span>
+          <span>✅ ${todos} to-do</span>
+          <span>⚠ ${deadlines} deadline</span>
+        </div>
+        <div class="client-card-actions" onclick="event.stopPropagation()">
+          <button class="client-btn-sm" onclick="showClientDetail('${esc(c.id)}')">Deschide</button>
+          <button class="client-btn-sm" onclick="openClientModal('${esc(c.id)}')">Editează</button>
+          <button class="client-btn-sm client-btn-del" onclick="deleteClient('${esc(c.id)}')">Șterge</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function showClientDetail(id) {
+    selectedClientId = id;
+    const c = clientsData.find(x => x.id === id);
+    if (!c) return;
+    document.getElementById('clients-list-view').classList.add('hidden');
+    document.getElementById('client-detail-view').classList.add('active');
+    document.getElementById('cd-name').textContent = c.name;
+    document.getElementById('cd-info').innerHTML = `
+      ${c.contact ? `<div class="client-info-item"><div class="client-info-label">Persoana contact</div>${esc(c.contact)}</div>` : ''}
+      ${c.phone   ? `<div class="client-info-item"><div class="client-info-label">Telefon</div><a href="tel:${esc(c.phone)}" style="color:var(--teal)">${esc(c.phone)}</a></div>` : ''}
+      ${c.email   ? `<div class="client-info-item"><div class="client-info-label">Email</div><a href="mailto:${esc(c.email)}" style="color:var(--teal)">${esc(c.email)}</a></div>` : ''}
+      ${c.notes   ? `<div class="client-info-item" style="grid-column:1/-1"><div class="client-info-label">Note</div>${esc(c.notes)}</div>` : ''}
+      <div class="client-info-item"><div class="client-info-label">Client din</div>${esc(c.createdAt || '—')}</div>`;
+    renderClientDetail(id);
+  }
+
+  function renderClientDetail(id) {
+    const today     = new Date().toISOString().split('T')[0];
+    const meetings  = (gibData.meetings  || []).filter(m => m.clientId === id).sort((a,b) => (a.date+a.time).localeCompare(b.date+b.time));
+    const todos     = (gibData.todos     || []).filter(t => t.clientId === id);
+    const deadlines = (gibData.deadlines || []).filter(d => d.clientId === id).sort((a,b) => a.date.localeCompare(b.date));
+
+    const mWrap = document.getElementById('cd-meetings');
+    if (mWrap) mWrap.innerHTML = meetings.length ? meetings.map(m => `
+      <div class="gib-item">
+        <span style="font-family:monospace;font-size:.78rem;color:var(--teal);flex-shrink:0;">${esc(m.time||'--:--')}</span>
+        <span class="gib-title" style="font-size:.83rem;">${esc(m.title)} <span style="font-size:.68rem;color:var(--muted);">${m.date===today?'<span style=color:#febc2e>AZI</span>':formatDate(m.date)}</span></span>
+        <button class="gib-del" onclick="deleteGibilanItem('meeting','${esc(m.id)}')" title="Șterge">🗑</button>
+      </div>`).join('') : '<div class="gib-empty">Nicio întâlnire.</div>';
+
+    const tWrap = document.getElementById('cd-todos');
+    if (tWrap) tWrap.innerHTML = todos.length ? todos.map(t => `
+      <div class="gib-item${t.done?' done':''}${t.priority==='high'?' gib-priority-high':''}">
+        <input type="checkbox" class="gib-todo-cb" ${t.done?'checked':''} onchange="toggleTodo('${esc(t.id)}')">
+        <span class="gib-title" style="font-size:.83rem;">${esc(t.title)}${t.priority==='high'?' <span style="font-size:.65rem;color:#febc2e;font-weight:700;">URGENT</span>':''}</span>
+        <button class="gib-del" onclick="deleteGibilanItem('todo','${esc(t.id)}')" title="Șterge">🗑</button>
+      </div>`).join('') : '<div class="gib-empty">Niciun task.</div>';
+
+    const dWrap = document.getElementById('cd-deadlines');
+    if (dWrap) dWrap.innerHTML = deadlines.length ? deadlines.map(d => `
+      <div class="gib-item${d.date===today?' gib-deadline-today':''}">
+        <span style="font-size:.7rem;font-weight:700;color:${d.date===today?'#ff5f57':'#febc2e'};flex-shrink:0;">${d.date===today?'AZI':formatDate(d.date)}</span>
+        <span class="gib-title" style="font-size:.83rem;">${esc(d.title)}${d.project?` <span style="font-size:.72rem;color:var(--muted);">· ${esc(d.project)}</span>`:''}</span>
+        <button class="gib-del" onclick="deleteGibilanItem('deadline','${esc(d.id)}')" title="Șterge">🗑</button>
+      </div>`).join('') : '<div class="gib-empty">Niciun deadline.</div>';
+  }
+
+  function backToClients() {
+    selectedClientId = null;
+    document.getElementById('clients-list-view').classList.remove('hidden');
+    document.getElementById('client-detail-view').classList.remove('active');
+  }
+
+  function toggleClientForm(id) {
+    const f = document.getElementById(id);
+    if (!f) return;
+    const wasOpen = f.classList.contains('open');
+    document.querySelectorAll('.client-form-inline').forEach(x => x.classList.remove('open'));
+    if (!wasOpen) f.classList.add('open');
+  }
+
+  async function addMeetingForClient() {
+    const title = document.getElementById('cf-m-title').value.trim();
+    const date  = document.getElementById('cf-m-date').value;
+    const time  = document.getElementById('cf-m-time').value;
+    const notes = document.getElementById('cf-m-notes').value.trim();
+    if (!title || !date) { alert('Titlul și data sunt obligatorii.'); return; }
+    await fetch('/api/gibilan/meeting?token=' + encodeURIComponent(adminToken), {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ title, date, time, notes, clientId: selectedClientId })
+    });
+    ['cf-m-title','cf-m-date','cf-m-time','cf-m-notes'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+    document.getElementById('cf-meeting').classList.remove('open');
+    await loadGibilan();
+    if (selectedClientId) renderClientDetail(selectedClientId);
+  }
+
+  async function addTodoForClient() {
+    const title    = document.getElementById('cf-t-title').value.trim();
+    const dueDate  = document.getElementById('cf-t-due').value;
+    const priority = document.getElementById('cf-t-priority').value;
+    if (!title) { alert('Titlul este obligatoriu.'); return; }
+    await fetch('/api/gibilan/todo?token=' + encodeURIComponent(adminToken), {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ title, dueDate, priority, clientId: selectedClientId })
+    });
+    ['cf-t-title','cf-t-due'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+    document.getElementById('cf-todo').classList.remove('open');
+    await loadGibilan();
+    if (selectedClientId) renderClientDetail(selectedClientId);
+  }
+
+  async function addDeadlineForClient() {
+    const title   = document.getElementById('cf-d-title').value.trim();
+    const date    = document.getElementById('cf-d-date').value;
+    const project = document.getElementById('cf-d-project').value.trim();
+    if (!title || !date) { alert('Titlul și data sunt obligatorii.'); return; }
+    await fetch('/api/gibilan/deadline?token=' + encodeURIComponent(adminToken), {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ title, date, project, clientId: selectedClientId })
+    });
+    ['cf-d-title','cf-d-date','cf-d-project'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+    document.getElementById('cf-deadline').classList.remove('open');
+    await loadGibilan();
+    if (selectedClientId) renderClientDetail(selectedClientId);
+  }
+
+  function openClientModal(id) {
+    if (id) {
+      const c = clientsData.find(x => x.id === id);
+      if (!c) return;
+      document.getElementById('clientModalTitle').textContent = 'Editează client';
+      document.getElementById('clientEditId').value = id;
+      document.getElementById('clientName').value    = c.name;
+      document.getElementById('clientContact').value = c.contact || '';
+      document.getElementById('clientPhone').value   = c.phone   || '';
+      document.getElementById('clientEmail').value   = c.email   || '';
+      document.getElementById('clientNotes').value   = c.notes   || '';
+    } else {
+      document.getElementById('clientModalTitle').textContent = 'Client nou';
+      document.getElementById('clientEditId').value = '';
+      ['clientName','clientContact','clientPhone','clientEmail','clientNotes'].forEach(i => { document.getElementById(i).value=''; });
+    }
+    document.getElementById('clientModalOverlay').classList.add('open');
+  }
+
+  function closeClientModal() {
+    document.getElementById('clientModalOverlay').classList.remove('open');
+  }
+
+  async function saveClient() {
+    const id      = document.getElementById('clientEditId').value;
+    const name    = document.getElementById('clientName').value.trim();
+    const contact = document.getElementById('clientContact').value.trim();
+    const phone   = document.getElementById('clientPhone').value.trim();
+    const email   = document.getElementById('clientEmail').value.trim();
+    const notes   = document.getElementById('clientNotes').value.trim();
+    if (!name) { alert('Numele este obligatoriu.'); return; }
+    const body = { name, contact, phone, email, notes };
+    if (id) {
+      await fetch('/api/client/' + id + '?token=' + encodeURIComponent(adminToken), {
+        method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+      });
+    } else {
+      await fetch('/api/client?token=' + encodeURIComponent(adminToken), {
+        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+      });
+    }
+    closeClientModal();
+    await fetchClients();
+    if (id && selectedClientId === id) showClientDetail(id);
+  }
+
+  async function deleteClient(id) {
+    if (!confirm('Ștergi clientul? Întâlnirile și task-urile asociate rămân în Gibilan fără client atașat.')) return;
+    await fetch('/api/client/' + id + '?token=' + encodeURIComponent(adminToken), { method:'DELETE' });
+    if (selectedClientId === id) backToClients();
+    await fetchClients();
+  }
+
   // -- GIBILAN --
 
   let gibData = { meetings: [], todos: [], deadlines: [] };
@@ -1355,6 +1713,8 @@
       renderGibilanDeadlines();
       renderGibilanSidebar();
       rotateGibMessage();
+      if (selectedClientId) renderClientDetail(selectedClientId);
+      if (currentTab === 'clients') renderClients();
     } catch {}
   }
 
@@ -1485,9 +1845,9 @@
     if (!title || !date) { alert('Titlul și data sunt obligatorii.'); return; }
     await fetch('/api/gibilan/meeting?token=' + encodeURIComponent(adminToken), {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({title, date, time, notes})
+      body: JSON.stringify({title, date, time, notes, clientId: document.getElementById('sb-m-client').value})
     });
-    ['sb-m-title','sb-m-date','sb-m-time','sb-m-notes'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+    ['sb-m-title','sb-m-date','sb-m-time','sb-m-notes','sb-m-client'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
     document.getElementById('sbf-meeting').classList.remove('open');
     await loadGibilan();
   }
@@ -1499,9 +1859,9 @@
     if (!title) { alert('Titlul este obligatoriu.'); return; }
     await fetch('/api/gibilan/todo?token=' + encodeURIComponent(adminToken), {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({title, dueDate, priority})
+      body: JSON.stringify({title, dueDate, priority, clientId: document.getElementById('sb-t-client').value})
     });
-    ['sb-t-title','sb-t-due'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+    ['sb-t-title','sb-t-due','sb-t-client'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
     document.getElementById('sbf-todo').classList.remove('open');
     await loadGibilan();
   }
@@ -1513,9 +1873,9 @@
     if (!title || !date) { alert('Titlul și data sunt obligatorii.'); return; }
     await fetch('/api/gibilan/deadline?token=' + encodeURIComponent(adminToken), {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({title, date, project})
+      body: JSON.stringify({title, date, project, clientId: document.getElementById('sb-d-client').value})
     });
-    ['sb-d-title','sb-d-date','sb-d-project'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+    ['sb-d-title','sb-d-date','sb-d-project','sb-d-client'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
     document.getElementById('sbf-deadline').classList.remove('open');
     await loadGibilan();
   }
@@ -1537,12 +1897,13 @@
     try {
       await fetch('/api/gibilan/meeting?token=' + encodeURIComponent(adminToken), {
         method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ title, date, time, notes }),
+        body: JSON.stringify({ title, date, time, notes, clientId: document.getElementById('gib-m-client').value }),
       });
       document.getElementById('gib-m-title').value = '';
       document.getElementById('gib-m-date').value = '';
       document.getElementById('gib-m-time').value = '';
       document.getElementById('gib-m-notes').value = '';
+      document.getElementById('gib-m-client').value = '';
       document.getElementById('form-meeting').classList.remove('open');
       await loadGibilan();
     } catch { alert('Eroare la salvare.'); }
@@ -1556,11 +1917,12 @@
     try {
       await fetch('/api/gibilan/todo?token=' + encodeURIComponent(adminToken), {
         method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ title, dueDate, priority }),
+        body: JSON.stringify({ title, dueDate, priority, clientId: document.getElementById('gib-t-client').value }),
       });
       document.getElementById('gib-t-title').value = '';
       document.getElementById('gib-t-due').value = '';
       document.getElementById('gib-t-priority').value = 'normal';
+      document.getElementById('gib-t-client').value = '';
       document.getElementById('form-todo').classList.remove('open');
       await loadGibilan();
     } catch { alert('Eroare la salvare.'); }
@@ -1575,12 +1937,13 @@
     try {
       await fetch('/api/gibilan/deadline?token=' + encodeURIComponent(adminToken), {
         method: 'POST', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ title, date, project, notes }),
+        body: JSON.stringify({ title, date, project, notes, clientId: document.getElementById('gib-d-client').value }),
       });
       document.getElementById('gib-d-title').value = '';
       document.getElementById('gib-d-date').value = '';
       document.getElementById('gib-d-project').value = '';
       document.getElementById('gib-d-notes').value = '';
+      document.getElementById('gib-d-client').value = '';
       document.getElementById('form-deadline').classList.remove('open');
       await loadGibilan();
     } catch { alert('Eroare la salvare.'); }

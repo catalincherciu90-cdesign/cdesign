@@ -923,13 +923,13 @@ export default {
     if (path === '/api/gibilan/meeting' && request.method === 'POST') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
-        const { title, date, time, notes } = await request.json();
+        const { title, date, time, notes, clientId } = await request.json();
         if (!title || !date) return json({ error: 'Titlul și data sunt obligatorii' }, 400);
         const raw = await env.PROGRAMARI.get('__gibilan__');
         const data = raw ? JSON.parse(raw) : { meetings: [], todos: [], deadlines: [] };
         const id = `m_${Date.now()}`;
         data.meetings = data.meetings || [];
-        data.meetings.push({ id, title, date, time: time || '', notes: notes || '' });
+        data.meetings.push({ id, title, date, time: time || '', notes: notes || '', clientId: clientId || '' });
         await env.PROGRAMARI.put('__gibilan__', JSON.stringify(data));
         return json({ success: true, id });
       } catch { return json({ error: 'Eroare server' }, 500); }
@@ -950,13 +950,13 @@ export default {
     if (path === '/api/gibilan/todo' && request.method === 'POST') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
-        const { title, dueDate, priority } = await request.json();
+        const { title, dueDate, priority, clientId } = await request.json();
         if (!title) return json({ error: 'Titlul este obligatoriu' }, 400);
         const raw = await env.PROGRAMARI.get('__gibilan__');
         const data = raw ? JSON.parse(raw) : { meetings: [], todos: [], deadlines: [] };
         const id = `t_${Date.now()}`;
         data.todos = data.todos || [];
-        data.todos.push({ id, title, dueDate: dueDate || '', priority: priority || 'normal', done: false });
+        data.todos.push({ id, title, dueDate: dueDate || '', priority: priority || 'normal', done: false, clientId: clientId || '' });
         await env.PROGRAMARI.put('__gibilan__', JSON.stringify(data));
         return json({ success: true, id });
       } catch { return json({ error: 'Eroare server' }, 500); }
@@ -991,13 +991,13 @@ export default {
     if (path === '/api/gibilan/deadline' && request.method === 'POST') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
-        const { title, date, project, notes } = await request.json();
+        const { title, date, project, notes, clientId } = await request.json();
         if (!title || !date) return json({ error: 'Titlul și data sunt obligatorii' }, 400);
         const raw = await env.PROGRAMARI.get('__gibilan__');
         const data = raw ? JSON.parse(raw) : { meetings: [], todos: [], deadlines: [] };
         const id = `d_${Date.now()}`;
         data.deadlines = data.deadlines || [];
-        data.deadlines.push({ id, title, date, project: project || '', notes: notes || '' });
+        data.deadlines.push({ id, title, date, project: project || '', notes: notes || '', clientId: clientId || '' });
         await env.PROGRAMARI.put('__gibilan__', JSON.stringify(data));
         return json({ success: true, id });
       } catch { return json({ error: 'Eroare server' }, 500); }
@@ -1012,6 +1012,60 @@ export default {
         data.deadlines = (data.deadlines || []).filter(d => d.id !== id);
         await env.PROGRAMARI.put('__gibilan__', JSON.stringify(data));
         return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    // ── CLIENȚI ──────────────────────────────────────────────
+    if (path === '/api/clients' && request.method === 'GET') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const raw = await env.PROGRAMARI.get('__clients__');
+        return json(raw ? JSON.parse(raw) : []);
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path === '/api/client' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const { name, contact, phone, email, notes } = await request.json();
+        if (!name) return json({ error: 'Numele este obligatoriu' }, 400);
+        const raw = await env.PROGRAMARI.get('__clients__');
+        const clients = raw ? JSON.parse(raw) : [];
+        const client = {
+          id: 'c_' + Date.now(), name,
+          contact: contact || '', phone: phone || '',
+          email: email || '', notes: notes || '',
+          createdAt: new Date().toISOString().split('T')[0]
+        };
+        clients.push(client);
+        await env.PROGRAMARI.put('__clients__', JSON.stringify(clients));
+        return json(client);
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path.match(/^\/api\/client\/[^/]+$/) && request.method === 'PATCH') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/client/', '');
+        const body = await request.json();
+        const raw = await env.PROGRAMARI.get('__clients__');
+        const clients = raw ? JSON.parse(raw) : [];
+        const idx = clients.findIndex(c => c.id === id);
+        if (idx === -1) return json({ error: 'Client negăsit' }, 404);
+        clients[idx] = { ...clients[idx], ...body };
+        await env.PROGRAMARI.put('__clients__', JSON.stringify(clients));
+        return json(clients[idx]);
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path.match(/^\/api\/client\/[^/]+$/) && request.method === 'DELETE') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/client/', '');
+        const raw = await env.PROGRAMARI.get('__clients__');
+        const clients = raw ? JSON.parse(raw) : [];
+        await env.PROGRAMARI.put('__clients__', JSON.stringify(clients.filter(c => c.id !== id)));
+        return json({ ok: true });
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
 
