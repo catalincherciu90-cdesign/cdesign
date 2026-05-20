@@ -21,7 +21,7 @@
   <meta name="keywords" content="web design România, web design profesional, creare site web, site de prezentare, redesign site, design grafic, logo profesional, mentenanță site, web design afaceri mici, pachet startup online">
   <meta name="author" content="C Design">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-  <meta name="theme-color" content="#00c8b4">
+  <meta name="theme-color" content="#2979ff">
   <meta name="google-site-verification" content="q4Cg4xzz3vCgMRFCoO23f1V2A88O2Eiv5f8QZt5vmdo">
   <link rel="canonical" href="https://www.c-design.ro/">
   <link rel="icon" type="image/png" href="/logo-c-design.png">
@@ -110,10 +110,10 @@
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --teal:#00c8b4;--teal-dk:#00a898;--teal-lt:#33d4c3;
-      --teal-dim:rgba(0,200,180,.08);--teal-glow:rgba(0,200,180,.18);--teal-border:rgba(0,200,180,.28);
-      --bg:#080b0e;--bg2:#0d1117;--bg3:#111820;--bg4:#161e28;
-      --text:#e8edf2;--soft:#9aa5b4;--muted:#6a7585;
+      --teal:#2979ff;--teal-dk:#1357e6;--teal-lt:#5494ff;
+      --teal-dim:rgba(41,121,255,.08);--teal-glow:rgba(41,121,255,.18);--teal-border:rgba(41,121,255,.30);
+      --bg:#020b18;--bg2:#040f22;--bg3:#071428;--bg4:#091832;
+      --text:#e8edf2;--soft:#8fa8cc;--muted:#4d6b8a;
       --border:rgba(255,255,255,.07);--border-soft:rgba(255,255,255,.11);--r:10px;
     }
     html{scroll-behavior:smooth}
@@ -123,11 +123,12 @@
     #matrix-canvas{position:fixed;inset:0;z-index:0;opacity:.18;pointer-events:none;}
     .scroll-bar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--teal),var(--teal-lt));width:0%;z-index:9999;transition:width .1s linear;box-shadow:0 0 8px var(--teal);}
     .container{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
-    nav{position:sticky;top:0;z-index:100;background:rgba(8,11,14,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    nav{position:sticky;top:0;z-index:100;background:rgba(2,11,24,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);position:relative;}
+    nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(41,121,255,.6) 40%,rgba(83,148,255,.4) 60%,transparent);pointer-events:none;}
     .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px;}
     .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.35rem;color:#fff;letter-spacing:-.5px;display:flex;align-items:center;gap:6px;}
-    .logo-c{color:var(--teal);font-size:1.6rem;line-height:1;text-shadow:0 0 12px rgba(0,200,180,.6);animation:logo-pulse 3s ease-in-out infinite;}
-    @keyframes logo-pulse{0%,100%{text-shadow:0 0 12px rgba(0,200,180,.6)}50%{text-shadow:0 0 24px rgba(0,200,180,1),0 0 48px rgba(0,200,180,.4)}}
+    .logo-c{color:var(--teal);font-size:1.6rem;line-height:1;text-shadow:0 0 12px rgba(41,121,255,.6);animation:logo-pulse 3s ease-in-out infinite;}
+    @keyframes logo-pulse{0%,100%{text-shadow:0 0 12px rgba(41,121,255,.6)}50%{text-shadow:0 0 24px rgba(41,121,255,1),0 0 48px rgba(41,121,255,.4)}}
     .nav-links{display:flex;align-items:center;gap:28px;list-style:none;}
     .nav-links a{font-size:.875rem;color:var(--muted);font-weight:400;transition:color .2s;position:relative;}
     .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--teal);transform:scaleX(0);transition:transform .2s;}
@@ -135,30 +136,31 @@
     .nav-links a:hover::after{transform:scaleX(1)}
     .nav-phone{font-family:'Share Tech Mono',monospace;font-size:.875rem;color:var(--teal);border:1px solid var(--teal-border);padding:6px 14px;border-radius:6px;transition:background .2s,box-shadow .2s;}
     .nav-phone:hover{background:var(--teal-dim);box-shadow:0 0 12px var(--teal-glow);}
-    .btn-nav{background:var(--teal);color:#080b0e;font-weight:600;font-size:.875rem;font-family:'DM Sans',sans-serif;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:background .2s,box-shadow .2s,transform .15s;text-decoration:none;}
-    .btn-nav:hover{background:var(--teal-lt);box-shadow:0 0 20px rgba(0,200,180,.4);transform:translateY(-1px);}
+    .btn-nav{background:var(--teal);color:#020b18;font-weight:600;font-size:.875rem;font-family:'DM Sans',sans-serif;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:background .2s,box-shadow .2s,transform .15s;text-decoration:none;}
+    .btn-nav:hover{background:var(--teal-lt);box-shadow:0 0 20px rgba(41,121,255,.4);transform:translateY(-1px);}
     .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:6px;}
     .hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;}
     .hero{min-height:calc(100svh - 68px);display:flex;align-items:center;position:relative;padding:80px 0;overflow:hidden;}
     .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
-    .hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,200,180,.012) 2px,rgba(0,200,180,.012) 4px);pointer-events:none;z-index:0;}
+    .hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(41,121,255,.14) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;z-index:0;}
+    .hero::after{content:'';position:absolute;top:-10%;right:5%;width:700px;height:700px;background:radial-gradient(circle,rgba(41,121,255,.13) 0%,transparent 65%);pointer-events:none;z-index:0;}
     .hero-content{position:relative;z-index:1}
     .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--teal);background:var(--teal-dim);border:1px solid var(--teal-border);padding:5px 14px;border-radius:4px;margin-bottom:24px;letter-spacing:.08em;}
     .hero-eyebrow::before{content:'';width:6px;height:6px;background:var(--teal);border-radius:50%;animation:blink 1.2s step-end infinite;}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
     .hero h1{font-family:'Syne',sans-serif;font-size:clamp(2.2rem,4.5vw,3.6rem);font-weight:800;line-height:1.08;letter-spacing:-.03em;color:#fff;margin-bottom:20px;}
-    .hero h1 .hl{background:linear-gradient(135deg,var(--teal-lt),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 16px rgba(0,200,180,.4));}
+    .hero h1 .hl{background:linear-gradient(135deg,var(--teal-lt),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 16px rgba(41,121,255,.4));}
     .hero-desc{font-size:1.05rem;color:var(--soft);line-height:1.75;font-weight:300;max-width:480px;margin-bottom:36px;}
     .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;}
-    .btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#080b0e;font-weight:600;font-size:1rem;padding:14px 28px;border-radius:8px;border:none;cursor:pointer;transition:background .2s,box-shadow .2s,transform .15s;text-decoration:none;font-family:'DM Sans',sans-serif;}
-    .btn-primary:hover{background:var(--teal-lt);box-shadow:0 0 28px rgba(0,200,180,.45);transform:translateY(-2px);}
+    .btn-primary{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#3b82f6,#2979ff);color:#fff;font-weight:700;font-size:1rem;padding:14px 28px;border-radius:8px;border:none;cursor:pointer;transition:box-shadow .2s,transform .15s;text-decoration:none;font-family:'DM Sans',sans-serif;box-shadow:0 0 24px rgba(41,121,255,.4);}
+    .btn-primary:hover{box-shadow:0 0 40px rgba(41,121,255,.65);transform:translateY(-2px);}
     .btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--soft);font-size:1rem;padding:14px 28px;border-radius:8px;border:1px solid var(--border-soft);cursor:pointer;transition:border-color .2s,color .2s;text-decoration:none;font-family:'DM Sans',sans-serif;}
     .btn-ghost:hover{border-color:var(--teal-border);color:var(--teal)}
     .hero-stats{display:flex;gap:32px;flex-wrap:wrap}
-    .hero-stat-num{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:800;color:var(--teal);line-height:1;text-shadow:0 0 20px rgba(0,200,180,.4);}
+    .hero-stat-num{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:800;color:var(--teal);line-height:1;text-shadow:0 0 20px rgba(41,121,255,.4);}
     .hero-stat-label{font-size:.78rem;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.06em;}
     .hero-terminal{position:relative;z-index:1}
-    .terminal{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;overflow:hidden;box-shadow:0 0 60px rgba(0,200,180,.08),0 20px 60px rgba(0,0,0,.6);}
+    .terminal{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;overflow:hidden;box-shadow:0 0 60px rgba(41,121,255,.08),0 20px 60px rgba(0,0,0,.6);}
     .terminal-bar{background:var(--bg3);padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}
     .t-dot{width:10px;height:10px;border-radius:50%}
     .t-red{background:#ff5f57}.t-yellow{background:#febc2e}.t-green{background:#28c840}
@@ -174,7 +176,7 @@
     .stats-bar{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:36px 0;}
     .stats-inner{display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap;}
     .stat-item{text-align:center}
-    .stat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--teal);line-height:1;text-shadow:0 0 16px rgba(0,200,180,.35);}
+    .stat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--teal);line-height:1;text-shadow:0 0 16px rgba(41,121,255,.35);}
     .stat-lbl{font-size:.8rem;color:var(--muted);margin-top:6px;font-family:'Share Tech Mono',monospace;letter-spacing:.04em;}
     .stat-div{width:1px;height:40px;background:var(--border-soft)}
 
@@ -195,8 +197,8 @@
     .bs-1{background:linear-gradient(135deg,#050c10 0%,#071a1e 50%,#0a2020 100%);}
     .bs-1 .bs-tag{color:var(--teal);background:var(--teal-dim);border:1px solid var(--teal-border);}
     .bs-1 .bs-sub{color:var(--soft);}
-    .bs-1 .bs-cta{background:var(--teal);color:#080b0e;box-shadow:0 0 20px rgba(0,200,180,.35);}
-    .bs-1 .bs-cta:hover{background:var(--teal-lt);box-shadow:0 0 32px rgba(0,200,180,.55);}
+    .bs-1 .bs-cta{background:var(--teal);color:#020b18;box-shadow:0 0 20px rgba(41,121,255,.35);}
+    .bs-1 .bs-cta:hover{background:var(--teal-lt);box-shadow:0 0 32px rgba(41,121,255,.55);}
     .bs-1-deco{position:absolute;inset:0;z-index:1;pointer-events:none;}
     .bs-2{background:linear-gradient(135deg,#0a0812 0%,#120d20 50%,#18102a 100%);}
     .bs-2 .bs-h .hl2{background:linear-gradient(135deg,#c084fc,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
@@ -221,7 +223,7 @@
     .services-bg{background:var(--bg)}
     .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
     .svc-card{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;overflow:hidden;padding:0;transition:border-color .25s,box-shadow .25s,transform .25s;}
-    .svc-card:hover{border-color:var(--teal-border);box-shadow:0 0 40px rgba(0,200,180,.1),0 8px 32px rgba(0,0,0,.5);transform:translateY(-4px);}
+    .svc-card:hover{border-color:var(--teal-border);box-shadow:0 0 40px rgba(41,121,255,.1),0 8px 32px rgba(0,0,0,.5);transform:translateY(-4px);}
     .svc-term-bar{background:var(--bg3);padding:10px 14px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--border);}
     .svc-term-bar .td{width:10px;height:10px;border-radius:50%;flex-shrink:0}
     .svc-term-bar .td-r{background:#ff5f57}.svc-term-bar .td-y{background:#febc2e}.svc-term-bar .td-g{background:#28c840}
@@ -235,18 +237,18 @@
     .svc-term-text{color:var(--soft)}.svc-term-accent{color:var(--teal)}
     .process-bg{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
     .process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;position:relative;}
-    .process-grid::before{content:'';position:absolute;top:27px;left:calc(12.5% + 14px);right:calc(12.5% + 14px);height:1px;background:linear-gradient(90deg,var(--teal),rgba(0,200,180,.2),var(--teal));animation:line-scan 3s linear infinite;}
+    .process-grid::before{content:'';position:absolute;top:27px;left:calc(12.5% + 14px);right:calc(12.5% + 14px);height:1px;background:linear-gradient(90deg,var(--teal),rgba(41,121,255,.2),var(--teal));animation:line-scan 3s linear infinite;}
     @keyframes line-scan{0%{opacity:.4}50%{opacity:1}100%{opacity:.4}}
     .process-step{text-align:center;padding:8px}
     .p-num{width:54px;height:54px;border-radius:50%;border:1px solid var(--teal-border);background:var(--bg);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:'Share Tech Mono',monospace;font-size:1rem;font-weight:700;color:var(--teal);position:relative;z-index:1;transition:background .3s,box-shadow .3s;}
-    .process-step:hover .p-num{background:var(--teal-dim);box-shadow:0 0 20px rgba(0,200,180,.3)}
+    .process-step:hover .p-num{background:var(--teal-dim);box-shadow:0 0 20px rgba(41,121,255,.3)}
     .process-step h3{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:#fff;margin-bottom:8px;}
     .process-step p{font-size:.82rem;color:var(--muted);line-height:1.6}
     .portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
     .port-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .25s,box-shadow .25s,transform .25s;}
-    .port-card:hover{border-color:var(--teal-border);box-shadow:0 0 32px rgba(0,200,180,.08);transform:translateY(-3px);}
+    .port-card:hover{border-color:var(--teal-border);box-shadow:0 0 32px rgba(41,121,255,.08);transform:translateY(-3px);}
     .port-thumb{height:160px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:2.8rem;position:relative;overflow:hidden;}
-    .port-grid-overlay{position:absolute;inset:0;background-image:linear-gradient(rgba(0,200,180,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,180,.06) 1px,transparent 1px);background-size:32px 32px;}
+    .port-grid-overlay{position:absolute;inset:0;background-image:linear-gradient(rgba(41,121,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(41,121,255,.06) 1px,transparent 1px);background-size:32px 32px;}
     .port-emoji{position:relative;z-index:1}
     .port-info{padding:18px 20px}
     .port-tag{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--teal);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;}
@@ -264,7 +266,7 @@
     .t-name{font-size:.875rem;font-weight:500;color:var(--text);display:block}
     .t-role{font-size:.78rem;color:var(--muted);display:block}
     .cta-section{background:linear-gradient(135deg,var(--bg3),var(--bg4));border-top:1px solid var(--teal-border);border-bottom:1px solid var(--teal-border);padding:80px 0;text-align:center;position:relative;overflow:hidden;}
-    .cta-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(0,200,180,.07) 0%,transparent 65%);pointer-events:none;animation:glow-pulse 5s ease-in-out infinite;}
+    .cta-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(41,121,255,.07) 0%,transparent 65%);pointer-events:none;animation:glow-pulse 5s ease-in-out infinite;}
     @keyframes glow-pulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:1}50%{transform:translate(-50%,-50%) scale(1.15);opacity:.6}}
     .cta-section h2{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:800;color:#fff;letter-spacing:-.03em;margin-bottom:12px;position:relative;}
     .cta-section p{font-size:1.05rem;color:var(--soft);font-weight:300;margin-bottom:36px;max-width:460px;margin-left:auto;margin-right:auto;position:relative;}
@@ -282,19 +284,19 @@
     .f-label{display:block;font-size:.8rem;font-weight:500;color:var(--soft);margin-bottom:7px;font-family:'Share Tech Mono',monospace;letter-spacing:.04em;}
     .f-input{width:100%;padding:12px 16px;background:var(--bg3);border:1px solid var(--border-soft);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s,box-shadow .2s;min-height:48px;}
     .f-input::placeholder{color:var(--muted)}
-    .f-input:focus{border-color:var(--teal-border);box-shadow:0 0 0 3px rgba(0,200,180,.1);}
+    .f-input:focus{border-color:var(--teal-border);box-shadow:0 0 0 3px rgba(41,121,255,.1);}
     input[type="date"].f-input{color-scheme:dark}
     textarea.f-input{min-height:100px;resize:vertical;line-height:1.6}
     .f-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
     .f-select{width:100%;padding:12px 16px;background:var(--bg3);border:1px solid var(--border-soft);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;cursor:pointer;min-height:48px;transition:border-color .2s;}
     .f-select:focus{border-color:var(--teal-border)}
-    .btn-submit{width:100%;background:var(--teal);color:#080b0e;font-weight:700;font-size:1rem;padding:15px;border-radius:8px;border:none;cursor:pointer;transition:background .2s,box-shadow .2s;font-family:'DM Sans',sans-serif;letter-spacing:.01em;}
-    .btn-submit:hover{background:var(--teal-lt);box-shadow:0 0 24px rgba(0,200,180,.4);}
+    .btn-submit{width:100%;background:var(--teal);color:#020b18;font-weight:700;font-size:1rem;padding:15px;border-radius:8px;border:none;cursor:pointer;transition:background .2s,box-shadow .2s;font-family:'DM Sans',sans-serif;letter-spacing:.01em;}
+    .btn-submit:hover{background:var(--teal-lt);box-shadow:0 0 24px rgba(41,121,255,.4);}
     .btn-submit:disabled{opacity:.7;cursor:not-allowed}
     footer{background:var(--bg2);border-top:1px solid var(--border);padding:52px 0 28px;}
     .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;}
     .footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;color:#fff;display:flex;align-items:center;gap:5px;margin-bottom:12px;}
-    .footer-logo .fc{color:var(--teal);text-shadow:0 0 10px rgba(0,200,180,.5);}
+    .footer-logo .fc{color:var(--teal);text-shadow:0 0 10px rgba(41,121,255,.5);}
     .footer-about{font-size:.875rem;color:var(--muted);line-height:1.7;margin-bottom:20px;}
     .footer-social{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
     .footer-social a{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;border:1px solid var(--border-soft);color:var(--muted);font-size:1rem;transition:border-color .2s,color .2s,background .2s;}
@@ -456,12 +458,12 @@
     <!-- Slide 1: 21 zile -->
     <div class="banner-slide bs-1" role="group" aria-label="Banner 1 din 4">
       <svg class="bs-1-deco" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
-        <defs><radialGradient id="g1" cx="80%" cy="50%" r="50%"><stop offset="0%" stop-color="#00c8b4" stop-opacity=".12"/><stop offset="100%" stop-color="#00c8b4" stop-opacity="0"/></radialGradient></defs>
+        <defs><radialGradient id="g1" cx="80%" cy="50%" r="50%"><stop offset="0%" stop-color="#2979ff" stop-opacity=".12"/><stop offset="100%" stop-color="#2979ff" stop-opacity="0"/></radialGradient></defs>
         <rect width="1440" height="320" fill="url(#g1)"/>
-        <line x1="900" y1="0" x2="1440" y2="320" stroke="rgba(0,200,180,.06)" stroke-width="1"/>
-        <line x1="960" y1="0" x2="1440" y2="240" stroke="rgba(0,200,180,.05)" stroke-width="1"/>
-        <circle cx="1100" cy="160" r="140" fill="none" stroke="rgba(0,200,180,.07)" stroke-width="1"/>
-        <circle cx="1100" cy="160" r="90" fill="none" stroke="rgba(0,200,180,.05)" stroke-width="1"/>
+        <line x1="900" y1="0" x2="1440" y2="320" stroke="rgba(41,121,255,.06)" stroke-width="1"/>
+        <line x1="960" y1="0" x2="1440" y2="240" stroke="rgba(41,121,255,.05)" stroke-width="1"/>
+        <circle cx="1100" cy="160" r="140" fill="none" stroke="rgba(41,121,255,.07)" stroke-width="1"/>
+        <circle cx="1100" cy="160" r="90" fill="none" stroke="rgba(41,121,255,.05)" stroke-width="1"/>
       </svg>
       <div class="bs-inner">
         <div class="bs-text">
@@ -472,21 +474,21 @@
         </div>
         <div class="bs-visual" aria-hidden="true">
           <svg viewBox="0 0 220 180" width="220" height="180">
-            <rect x="10" y="10" width="200" height="160" rx="10" fill="#0d1117" stroke="rgba(0,200,180,.25)" stroke-width="1"/>
-            <rect x="10" y="10" width="200" height="32" rx="10" fill="#111820"/>
-            <rect x="10" y="30" width="200" height="12" fill="#111820"/>
+            <rect x="10" y="10" width="200" height="160" rx="10" fill="#040f22" stroke="rgba(41,121,255,.25)" stroke-width="1"/>
+            <rect x="10" y="10" width="200" height="32" rx="10" fill="#071428"/>
+            <rect x="10" y="30" width="200" height="12" fill="#071428"/>
             <circle cx="30" cy="26" r="5" fill="#ff5f57"/><circle cx="48" cy="26" r="5" fill="#febc2e"/><circle cx="66" cy="26" r="5" fill="#28c840"/>
-            <text x="110" y="30" font-family="monospace" font-size="8" fill="#6a7585" text-anchor="middle">livrez-site.sh</text>
-            <text x="22" y="62" font-family="monospace" font-size="8" fill="#00c8b4">$</text>
+            <text x="110" y="30" font-family="monospace" font-size="8" fill="#4d6b8a" text-anchor="middle">livrez-site.sh</text>
+            <text x="22" y="62" font-family="monospace" font-size="8" fill="#2979ff">$</text>
             <text x="32" y="62" font-family="monospace" font-size="8" fill="#e8edf2">./start --client</text>
             <text x="22" y="80" font-family="monospace" font-size="8" fill="#28c840">✓</text>
-            <text x="32" y="80" font-family="monospace" font-size="8" fill="#9aa5b4">Design aprobat</text>
+            <text x="32" y="80" font-family="monospace" font-size="8" fill="#8fa8cc">Design aprobat</text>
             <text x="22" y="96" font-family="monospace" font-size="8" fill="#28c840">✓</text>
-            <text x="32" y="96" font-family="monospace" font-size="8" fill="#9aa5b4">Cod livrat</text>
+            <text x="32" y="96" font-family="monospace" font-size="8" fill="#8fa8cc">Cod livrat</text>
             <text x="22" y="112" font-family="monospace" font-size="8" fill="#28c840">✓</text>
-            <text x="32" y="112" font-family="monospace" font-size="8" fill="#00c8b4">LIVE în 21 zile</text>
-            <text x="22" y="132" font-family="monospace" font-size="8" fill="#00c8b4">$</text>
-            <rect x="32" y="122" width="7" height="13" rx="1" fill="#00c8b4" opacity=".9"><animate attributeName="opacity" values="1;0;1" dur=".8s" repeatCount="indefinite"/></rect>
+            <text x="32" y="112" font-family="monospace" font-size="8" fill="#2979ff">LIVE în 21 zile</text>
+            <text x="22" y="132" font-family="monospace" font-size="8" fill="#2979ff">$</text>
+            <rect x="32" y="122" width="7" height="13" rx="1" fill="#2979ff" opacity=".9"><animate attributeName="opacity" values="1;0;1" dur=".8s" repeatCount="indefinite"/></rect>
           </svg>
         </div>
       </div>
@@ -514,13 +516,13 @@
             <rect x="20" y="15" width="180" height="44" rx="12" fill="#18102a"/>
             <rect x="20" y="46" width="180" height="13" fill="#18102a"/>
             <text x="110" y="42" font-family="monospace" font-size="9" fill="#c084fc" text-anchor="middle" font-weight="bold">📅 CONSULTANȚĂ</text>
-            <text x="40" y="80" font-family="monospace" font-size="8" fill="#9aa5b4">Data:</text>
+            <text x="40" y="80" font-family="monospace" font-size="8" fill="#8fa8cc">Data:</text>
             <text x="80" y="80" font-family="monospace" font-size="8" fill="#e8edf2">Astăzi</text>
-            <text x="40" y="97" font-family="monospace" font-size="8" fill="#9aa5b4">Ora:</text>
+            <text x="40" y="97" font-family="monospace" font-size="8" fill="#8fa8cc">Ora:</text>
             <text x="80" y="97" font-family="monospace" font-size="8" fill="#c084fc" font-weight="bold">10:00</text>
-            <text x="40" y="114" font-family="monospace" font-size="8" fill="#9aa5b4">Durată:</text>
+            <text x="40" y="114" font-family="monospace" font-size="8" fill="#8fa8cc">Durată:</text>
             <text x="90" y="114" font-family="monospace" font-size="8" fill="#e8edf2">30 min</text>
-            <text x="40" y="131" font-family="monospace" font-size="8" fill="#9aa5b4">Cost:</text>
+            <text x="40" y="131" font-family="monospace" font-size="8" fill="#8fa8cc">Cost:</text>
             <text x="80" y="131" font-family="monospace" font-size="8" fill="#28c840" font-weight="bold">GRATUIT</text>
             <rect x="55" y="143" width="110" height="14" rx="4" fill="rgba(192,132,252,.2)" stroke="rgba(192,132,252,.4)" stroke-width="1"/>
             <text x="110" y="153" font-family="monospace" font-size="7" fill="#c084fc" text-anchor="middle">CONFIRMĂ →</text>
@@ -544,22 +546,22 @@
           <div class="bs-tag" style="color:#fbbf24;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.22);">// pachet_startup</div>
           <h2 class="bs-h">Pornești o afacere?<br><span class="hl3">Tot online-ul</span> dintr-o dată</h2>
           <p class="bs-sub">Site + Logo + Pagină Facebook — tot ce-ți trebuie pentru a atrage primii clienți, într-un singur pachet.</p>
-          <a href="#contact" class="bs-cta" style="background:linear-gradient(135deg,#fbbf24,#f97316);color:#080b0e;box-shadow:0 0 20px rgba(251,191,36,.3);">Vreau pachetul →</a>
+          <a href="#contact" class="bs-cta" style="background:linear-gradient(135deg,#fbbf24,#f97316);color:#020b18;box-shadow:0 0 20px rgba(251,191,36,.3);">Vreau pachetul →</a>
         </div>
         <div class="bs-visual" aria-hidden="true">
           <svg viewBox="0 0 220 180" width="220" height="180">
             <rect x="10" y="20" width="130" height="90" rx="8" fill="#1a1202" stroke="rgba(251,191,36,.2)" stroke-width="1"/>
             <text x="75" y="50" font-size="22" text-anchor="middle">🌐</text>
             <text x="75" y="72" font-family="monospace" font-size="7" fill="#fbbf24" text-anchor="middle">SITE</text>
-            <text x="75" y="84" font-family="monospace" font-size="6" fill="#9aa5b4" text-anchor="middle">profesional</text>
+            <text x="75" y="84" font-family="monospace" font-size="6" fill="#8fa8cc" text-anchor="middle">profesional</text>
             <rect x="80" y="20" width="130" height="90" rx="8" fill="#1a1202" stroke="rgba(249,115,22,.2)" stroke-width="1"/>
             <text x="145" y="50" font-size="22" text-anchor="middle">✏️</text>
             <text x="145" y="72" font-family="monospace" font-size="7" fill="#f97316" text-anchor="middle">LOGO</text>
-            <text x="145" y="84" font-family="monospace" font-size="6" fill="#9aa5b4" text-anchor="middle">unic</text>
+            <text x="145" y="84" font-family="monospace" font-size="6" fill="#8fa8cc" text-anchor="middle">unic</text>
             <rect x="45" y="85" width="130" height="75" rx="8" fill="#1a1202" stroke="rgba(251,191,36,.15)" stroke-width="1"/>
             <text x="110" y="115" font-size="20" text-anchor="middle">📘</text>
             <text x="110" y="137" font-family="monospace" font-size="7" fill="#fbbf24" text-anchor="middle">FACEBOOK</text>
-            <text x="110" y="149" font-family="monospace" font-size="6" fill="#9aa5b4" text-anchor="middle">pagină activă</text>
+            <text x="110" y="149" font-family="monospace" font-size="6" fill="#8fa8cc" text-anchor="middle">pagină activă</text>
           </svg>
         </div>
       </div>
@@ -584,7 +586,7 @@
         <div class="bs-visual" aria-hidden="true">
           <svg viewBox="0 0 220 180" width="220" height="180">
             <rect x="10" y="30" width="88" height="120" rx="6" fill="#1a0c0f" stroke="rgba(251,113,133,.15)" stroke-width="1"/>
-            <text x="54" y="55" font-family="monospace" font-size="6" fill="#6a7585" text-anchor="middle">ÎNAINTE</text>
+            <text x="54" y="55" font-family="monospace" font-size="6" fill="#4d6b8a" text-anchor="middle">ÎNAINTE</text>
             <rect x="20" y="62" width="68" height="5" rx="2" fill="#2a1218"/>
             <rect x="20" y="72" width="50" height="5" rx="2" fill="#2a1218"/>
             <rect x="20" y="85" width="68" height="40" rx="4" fill="#220d10"/>
@@ -689,7 +691,7 @@
 </section>
 
 <!-- STRIP PACHET STARTUP -->
-<div style="background:linear-gradient(135deg,rgba(0,200,180,.07),rgba(0,200,180,.03));border-top:1px solid rgba(0,200,180,.2);border-bottom:1px solid rgba(0,200,180,.2);padding:40px 0;">
+<div style="background:linear-gradient(135deg,rgba(41,121,255,.07),rgba(41,121,255,.03));border-top:1px solid rgba(41,121,255,.2);border-bottom:1px solid rgba(41,121,255,.2);padding:40px 0;">
   <div class="container">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;">
       <div>
@@ -697,7 +699,7 @@
         <div style="font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:4px;">Abia pornești afacerea? Avem un pachet complet pentru tine.</div>
         <div style="font-size:.9rem;color:var(--soft);">Site + logo + domeniu & găzduire + 2 conturi social media — totul dintr-un loc.</div>
       </div>
-      <a href="/pachet-startup" style="display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#080b0e;font-weight:600;font-size:.95rem;padding:12px 24px;border-radius:8px;text-decoration:none;white-space:nowrap;font-family:'DM Sans',sans-serif;flex-shrink:0;transition:background .2s;" onmouseover="this.style.background='#33d4c3'" onmouseout="this.style.background='var(--teal)'">Vezi Pachetul Startup →</a>
+      <a href="/pachet-startup" style="display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#020b18;font-weight:600;font-size:.95rem;padding:12px 24px;border-radius:8px;text-decoration:none;white-space:nowrap;font-family:'DM Sans',sans-serif;flex-shrink:0;transition:background .2s;" onmouseover="this.style.background='#5494ff'" onmouseout="this.style.background='var(--teal)'">Vezi Pachetul Startup →</a>
     </div>
   </div>
 </div>
@@ -846,8 +848,8 @@
     for(let i=0;i<cols;i++){
       const c=Math.random()>.5?'1':'0';const x=i*18,y=drops[i]*18;
       ctx.fillStyle='rgba(180,255,248,0.9)';ctx.fillText(c,x,y);
-      ctx.fillStyle='rgba(0,200,180,0.55)';ctx.fillText(Math.random()>.5?'1':'0',x,y-18);
-      ctx.fillStyle='rgba(0,200,180,0.3)';ctx.fillText(Math.random()>.5?'1':'0',x,y-36);
+      ctx.fillStyle='rgba(41,121,255,0.55)';ctx.fillText(Math.random()>.5?'1':'0',x,y-18);
+      ctx.fillStyle='rgba(41,121,255,0.3)';ctx.fillText(Math.random()>.5?'1':'0',x,y-36);
       if(y>H+100)drops[i]=0;drops[i]+=0.4+Math.random()*0.3;
     }
   }
@@ -1102,7 +1104,7 @@ document.getElementById('bookingForm').addEventListener('submit', async function
   Programează 30 min gratuit →
 </a>
 <style>
-.sticky-cta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:300;background:var(--teal);color:#080b0e;font-weight:700;font-size:1rem;text-align:center;padding:16px 24px;text-decoration:none;border-top:2px solid rgba(0,0,0,.15);transition:opacity .3s;}
+.sticky-cta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:300;background:var(--teal);color:#020b18;font-weight:700;font-size:1rem;text-align:center;padding:16px 24px;text-decoration:none;border-top:2px solid rgba(0,0,0,.15);transition:opacity .3s;}
 .sticky-cta:hover{background:var(--teal-lt);}
 @media(max-width:768px){.sticky-cta{display:block;}}
 </style>
