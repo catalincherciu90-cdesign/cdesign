@@ -1044,7 +1044,7 @@ document.getElementById('bookingForm').addEventListener('submit', async function
     });
     if (res.ok) {
       if (typeof fbq === 'function') fbq('track', 'Lead');
-      btn.textContent = '✓ Programare trimisă! Te confirmăm în max. 2h.';
+      btn.textContent = '✓ Mulțumim! Te contactăm în maxim 2 ore pentru confirmarea programării.';
       btn.style.background = '#28c840';
       this.reset();
       document.getElementById('fdate').min = new Date().toISOString().split('T')[0];
