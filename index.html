@@ -450,6 +450,32 @@
       .sec-sub{font-size:.97rem;}
       .stat-num{font-size:1.8rem;}
     }
+
+    /* ── DEVICE SHOWCASE ────────────────────────────────────── */
+    .dss{padding:80px 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+    .dss-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:72px;align-items:center;}
+    .dss-feats{display:flex;flex-direction:column;gap:16px;margin-top:32px;}
+    .dss-feat{display:flex;align-items:center;gap:14px;}
+    .dss-feat span{font-size:1.6rem;flex-shrink:0;}
+    .dss-feat strong{display:block;font-size:.95rem;font-weight:600;color:#f0f4f8;}
+    .dss-feat small{display:block;font-size:.8rem;color:var(--muted);margin-top:2px;}
+    /* Laptop mockup */
+    .dss-devices{position:relative;display:flex;align-items:flex-end;gap:0;}
+    .dss-laptop{flex:1;position:relative;}
+    .dss-laptop-top{background:#0d1424;border:2px solid #1e2d4a;border-bottom:none;border-radius:10px 10px 0 0;padding:8px 8px 0;box-shadow:0 0 60px rgba(41,121,255,.12),0 20px 60px rgba(0,0,0,.5);}
+    .dss-laptop-cam{width:6px;height:6px;background:#1e2d4a;border-radius:50%;margin:0 auto 6px;}
+    .dss-screen{border-radius:6px;overflow:hidden;position:relative;background:#020b18;aspect-ratio:16/10;}
+    .dss-screen-img{width:100%;height:100%;object-fit:cover;display:block;opacity:.9;}
+    .dss-screen-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(41,121,255,.08),transparent 60%);pointer-events:none;}
+    .dss-laptop-bot{height:14px;background:linear-gradient(180deg,#1e2d4a,#0d1a30);border-radius:0 0 6px 6px;margin:0 -8px;border-top:1px solid #2a3a5a;}
+    /* Phone mockup */
+    .dss-phone{width:100px;background:#0d1424;border:2px solid #1e2d4a;border-radius:16px;padding:8px 6px;margin-left:-20px;margin-bottom:20px;flex-shrink:0;box-shadow:0 0 30px rgba(41,121,255,.1),0 10px 40px rgba(0,0,0,.5);position:relative;z-index:2;}
+    .dss-phone-notch{width:32px;height:5px;background:#1e2d4a;border-radius:3px;margin:0 auto 6px;}
+    .dss-phone-screen{border-radius:10px;overflow:hidden;background:#020b18;aspect-ratio:9/16;}
+    .dss-phone-img{width:100%;height:100%;object-fit:cover;display:block;opacity:.85;}
+    .dss-phone-home{width:28px;height:4px;background:#1e2d4a;border-radius:2px;margin:6px auto 0;}
+    @media(max-width:1024px){.dss-grid{grid-template-columns:1fr;gap:48px;}.dss-devices{justify-content:center;max-width:480px;margin:0 auto;}}
+    @media(max-width:640px){.dss{padding:56px 0;}.dss-phone{display:none;}}
   </style>
 </head>
 <body>
@@ -534,6 +560,46 @@
     </div>
   </div>
 </div>
+
+<!-- DEVICE SHOWCASE -->
+<section class="dss" aria-label="Cum arată site-urile noastre">
+  <div class="container">
+    <div class="dss-grid">
+      <div class="dss-text">
+        <div class="sec-label">DESIGN RESPONSIVE</div>
+        <h2 class="sec-title">Arată perfect pe orice ecran</h2>
+        <p class="sec-sub">Desktop, tabletă sau telefon — fiecare site livrat de C Design funcționează impecabil. 70% din clienții tăi caută de pe mobil.</p>
+        <div class="dss-feats">
+          <div class="dss-feat"><span>📱</span><div><strong>Mobile-first</strong><small>Optimizat pentru telefon din start</small></div></div>
+          <div class="dss-feat"><span>⚡</span><div><strong>Sub 2 secunde</strong><small>Timp de încărcare garantat</small></div></div>
+          <div class="dss-feat"><span>🔍</span><div><strong>Vizibil pe Google</strong><small>SEO local integrat din ziua 1</small></div></div>
+        </div>
+        <a href="#contact" class="btn-primary" style="margin-top:28px;display:inline-flex;">Programează consultanță gratuită →</a>
+      </div>
+      <div class="dss-devices">
+        <div class="dss-laptop">
+          <div class="dss-laptop-top">
+            <div class="dss-laptop-cam"></div>
+            <div class="dss-screen">
+              <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=720&q=80"
+                   alt="Website profesional pe laptop" loading="lazy" class="dss-screen-img">
+              <div class="dss-screen-overlay"></div>
+            </div>
+          </div>
+          <div class="dss-laptop-bot"></div>
+        </div>
+        <div class="dss-phone">
+          <div class="dss-phone-notch"></div>
+          <div class="dss-phone-screen">
+            <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=200&q=80"
+                 alt="Website pe telefon mobil" loading="lazy" class="dss-phone-img">
+          </div>
+          <div class="dss-phone-home"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- BANNER CAROUSEL -->
 <div class="banner-carousel" id="bannerCarousel" aria-label="Bannere promoționale">

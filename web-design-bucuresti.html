@@ -96,6 +96,23 @@ footer a{color:var(--muted)}footer a:hover{color:var(--teal)}
     .plan-cta-main{background:linear-gradient(135deg,#3b82f6,#2979ff);color:#fff;box-shadow:0 0 20px rgba(41,121,255,.35);}
     .plan-cta-main:hover{box-shadow:0 0 36px rgba(41,121,255,.6);}
     @media(max-width:768px){body{font-size:1rem;line-height:1.75;}.sec-title{font-size:1.6rem;}.card{padding:24px;}}
+
+    /* ── HERO SPLIT WITH PHOTO ──────────────────────────────── */
+    .hero-split{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;text-align:left;}
+    .hero-text{position:relative;z-index:2;}
+    .hero-visual{position:relative;z-index:2;}
+    .hero-photo-wrap{position:relative;border-radius:16px;overflow:hidden;box-shadow:0 0 60px rgba(41,121,255,.15),0 20px 60px rgba(0,0,0,.5);border:1px solid rgba(41,121,255,.2);}
+    .hero-photo{width:100%;height:400px;object-fit:cover;display:block;filter:brightness(.82) saturate(1.15);}
+    .hero-photo-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(2,11,24,.18) 0%,transparent 60%,rgba(2,11,24,.3) 100%);pointer-events:none;}
+    .hero-photo-badge{position:absolute;bottom:16px;left:16px;background:rgba(2,11,24,.88);backdrop-filter:blur(16px);border:1px solid rgba(41,121,255,.28);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:10px;z-index:3;}
+    .hero-photo-badge .pb-icon{font-size:1.5rem;line-height:1;}
+    .hero-photo-badge .pb-text strong{display:block;font-size:.875rem;font-weight:700;color:#f0f4f8;font-family:'Syne',sans-serif;}
+    .hero-photo-badge .pb-text small{font-size:.7rem;color:#6080a0;}
+    .hero-photo-wrap .hero-photo-pill{position:absolute;top:16px;right:16px;background:rgba(41,121,255,.9);color:#fff;font-family:'Share Tech Mono',monospace;font-size:.7rem;padding:5px 12px;border-radius:20px;letter-spacing:.06em;z-index:3;}
+    .hero-tag,.hero h1,.hero-desc,.hero-actions,.stats{text-align:left;}
+    .stats{justify-content:flex-start;}
+    @media(max-width:900px){.hero-split{grid-template-columns:1fr;}.hero-visual{display:none;}.hero-tag,.hero h1,.hero-desc,.hero-actions,.stats{text-align:center;}.stats{justify-content:center;}}
+
 </style>
 </head>
 <body>
@@ -112,6 +129,9 @@ footer a{color:var(--muted)}footer a:hover{color:var(--teal)}
 <main>
 <section class="hero">
   <div class="container">
+    <div class="hero-split">
+    <div class="hero-text">
+
     <div class="hero-tag">WEB DESIGN BUCUREȘTI</div>
     <h1>Site profesional pentru<br>afacerea ta din <span>București</span></h1>
     <p class="hero-desc">Creăm site-uri care aduc clienți noi pentru firme și antreprenori din București și Ilfov. Livrare garantată în 21 de zile, preț fix fără surprize.</p>
@@ -123,6 +143,22 @@ footer a{color:var(--muted)}footer a:hover{color:var(--teal)}
       <div class="stat"><div class="stat-num">120+</div><div class="stat-lbl">Proiecte livrate</div></div>
       <div class="stat"><div class="stat-num">21 zile</div><div class="stat-lbl">Timp livrare garantat</div></div>
       <div class="stat"><div class="stat-num">97%</div><div class="stat-lbl">Clienți mulțumiți</div></div>
+    </div>
+      </div>
+
+    <div class="hero-visual">
+      <div class="hero-photo-wrap">
+        <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=720&q=80" alt="Web design profesional București" class="hero-photo" loading="lazy">
+        <div class="hero-photo-pill">C DESIGN</div>
+        <div class="hero-photo-badge">
+          <span class="pb-icon">💻</span>
+          <div class="pb-text">
+            <strong>Site gata în 21 zile</strong>
+            <small>livrat în 21 de zile</small>
+          </div>
+        </div>
+      </div>
+    </div>
     </div>
   </div>
 </section>
