@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculator Preț Site Web | Estimează Costul Site-ului Tău | C Design</title>
+<meta name="description" content="Calculează instant prețul estimativ pentru site-ul tău. Selectează tipul, paginile și funcționalitățile dorite — primești un estimat în 30 secunde.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.c-design.ro/calculator-pret">
+<link rel="icon" type="image/png" href="/logo-c-design.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.c-design.ro/calculator-pret">
+<meta property="og:title" content="Calculator Preț Site Web – C Design">
+<meta property="og:description" content="Estimează în 30 de secunde prețul site-ului tău. Calculator interactiv C Design.">
+<meta property="og:image" content="https://www.c-design.ro/cover.jpg">
+<meta property="og:locale" content="ro_RO">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--teal:#00c8b4;--teal-dk:#00a898;--teal-lt:#33d4c3;--teal-dim:rgba(0,200,180,.08);--teal-border:rgba(0,200,180,.28);--bg:#080b0e;--bg2:#0d1117;--bg3:#111820;--text:#e8edf2;--soft:#9aa5b4;--muted:#6a7585;--border:rgba(255,255,255,.07)}
+html{scroll-behavior:smooth}body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.container{max-width:1100px;margin:0 auto;padding:0 24px}
+nav{position:sticky;top:0;z-index:100;background:rgba(8,11,14,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+.nav-phone{font-family:'Share Tech Mono',monospace;font-size:.875rem;color:var(--teal);border:1px solid var(--teal-border);padding:6px 14px;border-radius:6px}
+.btn-nav{background:var(--teal);color:#080b0e;font-weight:600;font-size:.875rem;padding:9px 20px;border-radius:8px}
+.hero{padding:64px 0 32px;text-align:center}
+.hero-tag{display:inline-block;background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-border);padding:5px 16px;border-radius:4px;font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:.08em;margin-bottom:24px}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4.5vw,2.8rem);font-weight:800;line-height:1.15;color:#fff;margin-bottom:16px}
+.hero h1 span{color:var(--teal)}
+.hero-desc{font-size:1.02rem;color:var(--soft);max-width:620px;margin:0 auto;line-height:1.7}
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--teal);color:#080b0e;font-weight:700;font-size:1rem;padding:14px 28px;border-radius:8px;text-decoration:none;border:none;cursor:pointer;transition:background .2s,transform .15s;font-family:inherit}
+.btn-primary:hover:not(:disabled){background:var(--teal-lt);transform:translateY(-2px)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-ghost{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:var(--teal);font-weight:600;font-size:1rem;padding:13px 24px;border-radius:8px;border:1px solid var(--teal-border);text-decoration:none;cursor:pointer;transition:background .2s;font-family:inherit}
+.btn-ghost:hover{background:var(--teal-dim)}
+section{padding:32px 0 80px}
+.calc-wrap{max-width:760px;margin:0 auto;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:40px 36px}
+.progress{display:flex;gap:8px;margin-bottom:32px}
+.progress-step{flex:1;height:6px;background:var(--bg3);border-radius:3px;transition:background .3s}
+.progress-step.done{background:var(--teal)}
+.progress-step.active{background:linear-gradient(90deg,var(--teal) 50%,var(--bg3) 50%)}
+.step-label{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);letter-spacing:.08em;margin-bottom:8px}
+.step-title{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:24px}
+.step{display:none;animation:fade .35s ease}
+.step.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.opts{display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.opt{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:border-color .2s,background .2s;user-select:none}
+.opt:hover{border-color:var(--teal-border)}
+.opt.selected{border-color:var(--teal);background:var(--teal-dim)}
+.opt-main{display:flex;align-items:center;gap:14px}
+.opt-radio{width:20px;height:20px;border:2px solid var(--muted);border-radius:50%;flex-shrink:0;position:relative;transition:border-color .2s}
+.opt-check{width:20px;height:20px;border:2px solid var(--muted);border-radius:5px;flex-shrink:0;position:relative;transition:border-color .2s}
+.opt.selected .opt-radio,.opt.selected .opt-check{border-color:var(--teal)}
+.opt.selected .opt-radio::after{content:'';position:absolute;inset:3px;background:var(--teal);border-radius:50%}
+.opt.selected .opt-check::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--teal);font-size:.85rem;font-weight:700}
+.opt-name{font-weight:500;color:#fff;font-size:.98rem}
+.opt-sub{font-size:.8rem;color:var(--muted);margin-top:2px}
+.opt-price{font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--teal);white-space:nowrap}
+.opt-price.free{color:var(--muted)}
+.nav-btns{display:flex;justify-content:space-between;gap:12px;margin-top:8px}
+.live-total{position:sticky;bottom:0;background:linear-gradient(to top,var(--bg2) 60%,transparent);padding:20px 0 8px;margin-top:24px;text-align:center}
+.live-total-label{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.08em}
+.live-total-val{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;color:var(--teal);margin-top:4px}
+.result{text-align:center}
+.result-label{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--teal);letter-spacing:.1em;margin-bottom:12px}
+.result-price{font-family:'Syne',sans-serif;font-size:clamp(2.2rem,6vw,3.6rem);font-weight:800;color:#fff;line-height:1.1;margin-bottom:8px}
+.result-price span{color:var(--teal)}
+.result-note{color:var(--soft);font-size:.92rem;max-width:480px;margin:16px auto 32px}
+.includes{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:24px;margin:0 auto 32px;max-width:520px;text-align:left}
+.includes h4{font-family:'Syne',sans-serif;font-size:.95rem;color:#fff;margin-bottom:14px}
+.includes ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.includes li{color:var(--soft);font-size:.9rem;padding-left:24px;position:relative}
+.includes li::before{content:'✓';position:absolute;left:0;color:var(--teal);font-weight:700}
+.result-ctas{display:flex;flex-direction:column;gap:12px;align-items:center;margin-bottom:24px}
+.result-ctas .btn-primary{font-size:1.05rem;padding:16px 32px}
+.recalc{background:transparent;border:none;color:var(--muted);font-family:inherit;font-size:.88rem;cursor:pointer;text-decoration:underline;padding:8px}
+.recalc:hover{color:var(--teal)}
+footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color:var(--muted);font-size:.83rem}
+footer a{color:var(--muted)}footer a:hover{color:var(--teal)}
+@media(max-width:768px){
+  .calc-wrap{padding:28px 20px;border-radius:12px}
+  .opt{padding:14px 16px}
+  .opt-name{font-size:.92rem}
+  .nav-phone{display:none}
+  .step-title{font-size:1.25rem}
+  .result-ctas .btn-primary{width:100%}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="container">
+    <div class="nav-inner">
+      <a href="/" style="display:flex;align-items:center;"><img src="/logo-c-design.png" alt="C Design" style="height:42px;width:auto;"></a>
+      <a href="tel:+40753116155" class="nav-phone">0753 116 155</a>
+      <a href="/#contact" class="btn-nav">Programează acum →</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+<section class="hero">
+  <div class="container">
+    <div class="hero-tag">CALCULATOR PREȚ</div>
+    <h1>Estimează prețul<br>site-ului tău în <span>30 secunde</span></h1>
+    <p class="hero-desc">Răspunde la 4 întrebări simple și primești instant o estimare orientativă pentru proiectul tău web.</p>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="container">
+    <div class="calc-wrap">
+      <div class="progress" id="progress">
+        <div class="progress-step active"></div>
+        <div class="progress-step"></div>
+        <div class="progress-step"></div>
+        <div class="progress-step"></div>
+      </div>
+
+      <div class="step active" data-step="1">
+        <div class="step-label">PASUL 1 / 4</div>
+        <div class="step-title">Ce tip de site vrei?</div>
+        <div class="opts" data-group="type">
+          <div class="opt" data-value="prezentare" data-price="300">
+            <div class="opt-main"><span class="opt-radio"></span>
+              <div><div class="opt-name">Site de prezentare</div><div class="opt-sub">Pentru firme, servicii, portofoliu</div></div>
+            </div>
+            <div class="opt-price">de la 300€</div>
+          </div>
+          <div class="opt" data-value="magazin" data-price="800">
+            <div class="opt-main"><span class="opt-radio"></span>
+              <div><div class="opt-name">Magazin online</div><div class="opt-sub">eCommerce complet cu plăți integrate</div></div>
+            </div>
+            <div class="opt-price">de la 800€</div>
+          </div>
+          <div class="opt" data-value="redesign" data-price="250">
+            <div class="opt-main"><span class="opt-radio"></span>
+              <div><div class="opt-name">Redesign site existent</div><div class="opt-sub">Modernizare site vechi</div></div>
+            </div>
+            <div class="opt-price">de la 250€</div>
+          </div>
+        </div>
+        <div class="nav-btns">
+          <span></span>
+          <button class="btn-primary" data-next disabled>Continuă →</button>
+        </div>
+      </div>
+
+      <div class="step" data-step="2">
+        <div class="step-label">PASUL 2 / 4</div>
+        <div class="step-title">Câte pagini ai nevoie?</div>
+        <div class="opts" data-group="pages">
+          <div class="opt" data-value="small" data-price="0">
+            <div class="opt-main"><span class="opt-radio"></span>
+              <div><div class="opt-name">1 - 5 pagini</div><div class="opt-sub">Home, Despre, Servicii, Contact</div></div>
+            </div>
+            <div class="opt-price free">inclus</div>
+          </div>
+          <div class="opt" data-value="medium" data-price="150">
+            <div class="opt-main"><span class="opt-radio"></span>
+              <div><div class="opt-name">6 - 10 pagini</div><div class="opt-sub">Site mediu cu mai mult conținut</div></div>
+            </div>
+            <div class="opt-price">+150€</div>
+          </div>
+          <div class="opt" data-value="large" data-price="350">
+            <div class="opt-main"><span class="opt-radio"></span>
+              <div><div class="opt-name">10+ pagini</div><div class="opt-sub">Site complex, multe secțiuni</div></div>
+            </div>
+            <div class="opt-price">+350€</div>
+          </div>
+        </div>
+        <div class="nav-btns">
+          <button class="btn-ghost" data-back>← Înapoi</button>
+          <button class="btn-primary" data-next disabled>Continuă →</button>
+        </div>
+      </div>
+
+      <div class="step" data-step="3">
+        <div class="step-label">PASUL 3 / 4</div>
+        <div class="step-title">Ce funcționalități vrei?</div>
+        <div class="opts" data-group="features">
+          <div class="opt selected locked" data-value="contact" data-price="0">
+            <div class="opt-main"><span class="opt-check"></span>
+              <div><div class="opt-name">Formular de contact</div><div class="opt-sub">Inclus în toate pachetele</div></div>
+            </div>
+            <div class="opt-price free">inclus</div>
+          </div>
+          <div class="opt selected locked" data-value="maps" data-price="0">
+            <div class="opt-main"><span class="opt-check"></span>
+              <div><div class="opt-name">Integrare Google Maps</div><div class="opt-sub">Inclus în toate pachetele</div></div>
+            </div>
+            <div class="opt-price free">inclus</div>
+          </div>
+          <div class="opt" data-value="blog" data-price="100">
+            <div class="opt-main"><span class="opt-check"></span>
+              <div><div class="opt-name">Blog / articole</div><div class="opt-sub">Pentru SEO și conținut nou</div></div>
+            </div>
+            <div class="opt-price">+100€</div>
+          </div>
+          <div class="opt" data-value="gallery" data-price="80">
+            <div class="opt-main"><span class="opt-check"></span>
+              <div><div class="opt-name">Galerie foto / portofoliu</div><div class="opt-sub">Showcase lucrări sau produse</div></div>
+            </div>
+            <div class="opt-price">+80€</div>
+          </div>
+          <div class="opt" data-value="booking" data-price="150">
+            <div class="opt-main"><span class="opt-check"></span>
+              <div><div class="opt-name">Rezervări / programări online</div><div class="opt-sub">Calendar și formular booking</div></div>
+            </div>
+            <div class="opt-price">+150€</div>
+          </div>
+          <div class="opt" data-value="ministore" data-price="300" id="opt-ministore">
+            <div class="opt-main"><span class="opt-check"></span>
+              <div><div class="opt-name">Magazin mic (până la 20 produse)</div><div class="opt-sub">Vânzare simplă, fără ERP</div></div>
+            </div>
+            <div class="opt-price">+300€</div>
+          </div>
+          <div class="opt" data-value="multilang" data-price="200">
+            <div class="opt-main"><span class="opt-check"></span>
+              <div><div class="opt-name">Multilingv (RO + EN)</div><div class="opt-sub">Site bilingv complet</div></div>
+            </div>
+            <div class="opt-price">+200€</div>
+          </div>
+        </div>
+        <div class="live-total">
+          <div class="live-total-label">TOTAL CURENT</div>
+          <div class="live-total-val" id="liveTotal">0€</div>
+        </div>
+        <div class="nav-btns">
+          <button class="btn-ghost" data-back>← Înapoi</button>
+          <button class="btn-primary" data-next>Continuă →</button>
+        </div>
+      </div>
+
+      <div class="step" data-step="4">
+        <div class="step-label">PASUL 4 / 4</div>
+        <div class="step-title">În cât timp ai nevoie de site?</div>
+        <div class="opts" data-group="delivery">
+          <div class="opt selected" data-value="standard" data-price="0">
+            <div class="opt-main"><span class="opt-radio"></span>
+              <div><div class="opt-name">Standard — 21 zile</div><div class="opt-sub">Timp normal de livrare</div></div>
+            </div>
+            <div class="opt-price free">+0%</div>
+          </div>
+          <div class="opt" data-value="urgent" data-price="30">
+            <div class="opt-main"><span class="opt-radio"></span>
+              <div><div class="opt-name">Urgent — 10 zile</div><div class="opt-sub">Prioritate maximă, livrare rapidă</div></div>
+            </div>
+            <div class="opt-price">+30%</div>
+          </div>
+        </div>
+        <div class="nav-btns">
+          <button class="btn-ghost" data-back>← Înapoi</button>
+          <button class="btn-primary" data-next>Vezi estimarea →</button>
+        </div>
+      </div>
+
+      <div class="step" data-step="5">
+        <div class="result">
+          <div class="result-label">ESTIMAREA TA</div>
+          <div class="result-price"><span id="priceMin">0</span>€ - <span id="priceMax">0</span>€</div>
+          <div class="result-note">Aceasta este o estimare orientativă. Prețul final depinde de brief-ul complet și de specificul proiectului tău.</div>
+          <div class="includes">
+            <h4>Incluse mereu în orice pachet:</h4>
+            <ul>
+              <li>Domeniu .ro pentru primul an</li>
+              <li>Găzduire web 1 an</li>
+              <li>Certificat SSL (https)</li>
+              <li>Suport tehnic post-lansare</li>
+              <li>Design mobile-friendly</li>
+            </ul>
+          </div>
+          <div class="result-ctas">
+            <a href="/#contact" class="btn-primary">Programează 30 min gratuit pentru ofertă exactă →</a>
+            <a href="tel:+40753116155" class="btn-ghost">Sau sună acum: 0753 116 155</a>
+          </div>
+          <button class="recalc" id="recalcBtn">↻ Recalculează</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="container">
+    <p>© 2025 C Design · <a href="/">Pagina principală</a> · <a href="tel:+40753116155">0753 116 155</a> · <a href="mailto:office@c-design.ro">office@c-design.ro</a></p>
+    <p style="margin-top:8px">
+      <a href="/web-design-bucuresti">Web Design București</a> ·
+      <a href="/web-design-cluj">Web Design Cluj</a> ·
+      <a href="/web-design-timisoara">Web Design Timișoara</a> ·
+      <a href="/blog">Blog</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var state = {step:1, type:null, typePrice:0, pages:null, pagesPrice:0, featuresPrice:0, delivery:'standard', deliveryPct:0};
+  var steps = document.querySelectorAll('.step');
+  var progressBars = document.querySelectorAll('#progress .progress-step');
+
+  function showStep(n){
+    state.step = n;
+    steps.forEach(function(s){ s.classList.toggle('active', parseInt(s.dataset.step)===n); });
+    progressBars.forEach(function(p,i){
+      p.classList.remove('active','done');
+      if(n === 5){ p.classList.add('done'); return; }
+      if(i < n-1) p.classList.add('done');
+      else if(i === n-1) p.classList.add('active');
+    });
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function computeFeaturesPrice(){
+    var sum = 0;
+    document.querySelectorAll('[data-group="features"] .opt').forEach(function(o){
+      if(o.classList.contains('selected') && o.style.display !== 'none') sum += parseInt(o.dataset.price);
+    });
+    state.featuresPrice = sum;
+  }
+
+  function updateLive(){
+    var total = state.typePrice + state.pagesPrice + state.featuresPrice;
+    document.getElementById('liveTotal').textContent = total + '€';
+  }
+
+  function toggleMinistoreVisibility(){
+    var ministore = document.getElementById('opt-ministore');
+    if(state.type === 'magazin'){
+      ministore.style.display = 'none';
+      ministore.classList.remove('selected');
+    } else {
+      ministore.style.display = '';
+    }
+  }
+
+  function bindRadioGroup(groupName){
+    var group = document.querySelector('[data-group="'+groupName+'"]');
+    group.querySelectorAll('.opt').forEach(function(opt){
+      opt.addEventListener('click', function(){
+        group.querySelectorAll('.opt').forEach(function(o){ o.classList.remove('selected'); });
+        opt.classList.add('selected');
+        var price = parseInt(opt.dataset.price);
+        var val = opt.dataset.value;
+        if(groupName === 'type'){ state.type = val; state.typePrice = price; toggleMinistoreVisibility(); computeFeaturesPrice(); }
+        if(groupName === 'pages'){ state.pages = val; state.pagesPrice = price; }
+        if(groupName === 'delivery'){ state.delivery = val; state.deliveryPct = price; }
+        var step = opt.closest('.step');
+        var nextBtn = step.querySelector('[data-next]');
+        if(nextBtn) nextBtn.disabled = false;
+        updateLive();
+      });
+    });
+  }
+  bindRadioGroup('type');
+  bindRadioGroup('pages');
+  bindRadioGroup('delivery');
+
+  document.querySelectorAll('[data-group="features"] .opt').forEach(function(opt){
+    opt.addEventListener('click', function(){
+      if(opt.classList.contains('locked')) return;
+      opt.classList.toggle('selected');
+      computeFeaturesPrice();
+      updateLive();
+    });
+  });
+
+  document.querySelectorAll('[data-next]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if(state.step === 4){ showResult(); return; }
+      showStep(state.step + 1);
+    });
+  });
+  document.querySelectorAll('[data-back]').forEach(function(btn){
+    btn.addEventListener('click', function(){ showStep(state.step - 1); });
+  });
+
+  function showResult(){
+    var base = state.typePrice + state.pagesPrice + state.featuresPrice;
+    var withDelivery = Math.round(base * (1 + state.deliveryPct/100));
+    var max = Math.round(withDelivery * 1.2);
+    document.getElementById('priceMin').textContent = withDelivery;
+    document.getElementById('priceMax').textContent = max;
+    showStep(5);
+  }
+
+  document.getElementById('recalcBtn').addEventListener('click', function(){
+    state.type = null; state.typePrice = 0;
+    state.pages = null; state.pagesPrice = 0;
+    state.featuresPrice = 0;
+    state.delivery = 'standard'; state.deliveryPct = 0;
+    document.querySelectorAll('[data-group="type"] .opt, [data-group="pages"] .opt').forEach(function(o){ o.classList.remove('selected'); });
+    document.querySelectorAll('[data-group="features"] .opt').forEach(function(o){
+      if(!o.classList.contains('locked')) o.classList.remove('selected');
+    });
+    document.querySelectorAll('[data-group="delivery"] .opt').forEach(function(o){ o.classList.remove('selected'); });
+    document.querySelector('[data-group="delivery"] .opt[data-value="standard"]').classList.add('selected');
+    document.querySelectorAll('[data-step="1"] [data-next], [data-step="2"] [data-next]').forEach(function(b){ b.disabled = true; });
+    document.getElementById('opt-ministore').style.display = '';
+    computeFeaturesPrice();
+    updateLive();
+    showStep(1);
+  });
+
+  updateLive();
+})();
+</script>
+</body>
+</html>

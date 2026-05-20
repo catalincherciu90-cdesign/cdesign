@@ -50,4 +50,36 @@
     <xhtml:link rel="alternate" hreflang="ro" href="https://www.c-design.ro/web-design-timisoara"/>
   </url>
 
+  <url>
+    <loc>https://www.c-design.ro/web-design-auto</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://www.c-design.ro/web-design-auto"/>
+  </url>
+
+  <url>
+    <loc>https://www.c-design.ro/web-design-restaurante</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://www.c-design.ro/web-design-restaurante"/>
+  </url>
+
+  <url>
+    <loc>https://www.c-design.ro/web-design-afaceri-mici</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://www.c-design.ro/web-design-afaceri-mici"/>
+  </url>
+
+  <url>
+    <loc>https://www.c-design.ro/calculator-pret</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://www.c-design.ro/calculator-pret"/>
+  </url>
+
 </urlset>

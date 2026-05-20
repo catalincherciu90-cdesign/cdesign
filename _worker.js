@@ -460,6 +460,30 @@ export default {
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
 
+    if (path === '/web-design-auto') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/web-design-auto.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
+    if (path === '/web-design-restaurante') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/web-design-restaurante.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
+    if (path === '/web-design-afaceri-mici') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/web-design-afaceri-mici.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
+    if (path === '/calculator-pret') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/calculator-pret.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
     // ── AUTH ──────────────────────────────────────────────────
 
     if (path === '/api/login' && request.method === 'POST') {
