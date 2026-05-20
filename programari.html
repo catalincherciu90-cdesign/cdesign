@@ -343,7 +343,7 @@
         <!-- Stanga: caracter + adauga -->
         <div class="gibilan-char">
           <div class="clippy-wrap">
-            <div class="speech-bubble" id="gib-bubble">Bun&#259; diminea&#x21B;a! &#x2600;</div>
+            <div class="speech-bubble" id="gib-bubble">Salut! 👋</div>
             <svg viewBox="0 0 120 120" width="115" height="115" class="clippy-body">
               <defs>
                 <!-- Gradient argintiu metalic -->
@@ -1740,14 +1740,22 @@
 
   let gibData = { meetings: [], todos: [], deadlines: [] };
 
-  const GIB_MESSAGES = [
-    'Bun&#259; diminea&#x21B;a! &#x2600;',
-    'Ce facem azi?',
-    'S&#259; fim productivi!',
-    'Ai verificat agenda?',
-    'Ai grij&#259; de deadline-uri!',
-    'E o zi frumoas&#259;! &#x1F31F;',
-  ];
+  function gibGreeting() {
+    const h = new Date().getHours();
+    if (h >= 5  && h < 12) return 'Bun&#259; diminea&#x21B;a! &#x2600;';
+    if (h >= 12 && h < 18) return 'Bun&#259; ziua! &#x1F31E;';
+    if (h >= 18 && h < 22) return 'Bun&#259; seara! &#x1F307;';
+    return 'Lucrezi noaptea? &#x1F319;';
+  }
+
+  function gibTimeMessages() {
+    const h = new Date().getHours();
+    if (h >= 5  && h < 12) return ['Ce facem azi?', 'S&#259; fim productivi!', 'Ai verificat agenda?'];
+    if (h >= 12 && h < 18) return ['Cum merge ziua?', 'Mai ai task-uri active!', 'Ai verificat deadline-urile?'];
+    if (h >= 18 && h < 22) return ['O zi bun&#259; azi?', 'Preg&#259;te&#x219;te agenda de m&#xE2;ine!', 'Nu uita de deadline-uri!'];
+    return ['Ia o pauz&#259; c&#xE2;nd po&#x21B;i!', 'Lucrezi t&#xE2;rziu...', 'Ai grij&#259; de tine! &#x1F4A4;'];
+  }
+
   let gibMsgIdx = 0;
 
   function rotateGibMessage() {
@@ -1760,7 +1768,7 @@
     const dlUrgente = gibData.deadlines.filter(d => d.date >= today && d.date <= in3Str).length;
     const todosActive = gibData.todos.filter(t => !t.done).length;
 
-    const msgs = [...GIB_MESSAGES];
+    const msgs = [gibGreeting(), ...gibTimeMessages()];
     if (meetingsAzi > 0) msgs.push(`Ai ${meetingsAzi} &icirc;nt&#xE2;lnire${meetingsAzi > 1 ? 'i' : ''} azi!`);
     if (dlUrgente > 0) msgs.push(`${dlUrgente} deadline${dlUrgente > 1 ? '-uri' : ''} urgent${dlUrgente > 1 ? 'e' : ''}!`);
     if (todosActive === 0) msgs.push('Totul bifat! Campion! &#x1F3C6;');
