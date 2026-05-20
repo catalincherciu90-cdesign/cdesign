@@ -142,6 +142,22 @@
     .crm-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
     .crm-toolbar h3{font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--soft);}
     .stat-box-sub{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);margin-top:3px;letter-spacing:.04em;}
+    /* CRM + Gibilan sidebar */
+    .crm-panel-grid{display:grid;grid-template-columns:1fr 288px;gap:24px;align-items:start;}
+    .crm-sidebar{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:20px;position:sticky;top:20px;}
+    .crm-sb-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+    .crm-sb-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:#fff;}
+    .crm-sb-link{font-size:.75rem;color:var(--teal);text-decoration:none;cursor:pointer;}
+    .crm-sb-link:hover{text-decoration:underline;}
+    .crm-sb-section{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+    .crm-sb-section:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+    .crm-sb-sec-title{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+    .crm-sb-add{background:none;border:none;color:var(--teal);font-size:.82rem;cursor:pointer;padding:0;}
+    .crm-sb-add:hover{opacity:.8;}
+    .crm-sb-form{background:var(--bg3);border:1px solid var(--teal-border);border-radius:8px;padding:12px;margin-top:6px;display:none;}
+    .crm-sb-form.open{display:block;}
+    @media(max-width:1200px){.crm-panel-grid{grid-template-columns:1fr 260px;}}
+    @media(max-width:960px){.crm-panel-grid{grid-template-columns:1fr;} .crm-sidebar{position:static;}}
 
     @media(max-width:1100px){.crm-stats{grid-template-columns:repeat(3,1fr);}}
     @media(max-width:900px){
@@ -396,34 +412,96 @@
   <!-- TAB: CRM & OFERTE -->
   <div class="tab-panel" id="panel-crm">
     <div class="main">
-      <div class="crm-stats" id="crmStats">
-        <div class="stat-box"><div class="stat-box-num" id="crmTotal">&ndash;</div><div class="stat-box-lbl">// total</div></div>
-        <div class="stat-box"><div class="stat-box-num" id="crmOferta" style="color:var(--yellow)">&ndash;</div><div class="stat-box-lbl">// oferte</div></div>
-        <div class="stat-box"><div class="stat-box-num" id="crmInLucru" style="color:var(--teal)">&ndash;</div><div class="stat-box-lbl">// &icirc;n lucru</div></div>
-        <div class="stat-box"><div class="stat-box-num" id="crmFinalizat" style="color:var(--green)">&ndash;</div><div class="stat-box-lbl">// finalizate</div></div>
-        <div class="stat-box"><div class="stat-box-num" id="crmValoare" style="color:var(--teal)">&ndash;</div><div class="stat-box-lbl">// RON &icirc;n lucru</div></div>
-      </div>
-      <div class="crm-toolbar">
-        <div class="filters" style="margin-bottom:0">
-          <button class="filter-btn active" onclick="setCrmFilter('all',this)">Toate</button>
-          <button class="filter-btn" onclick="setCrmFilter('oferta',this)">Ofert&#259;</button>
-          <button class="filter-btn" onclick="setCrmFilter('in_lucru',this)">&Icirc;n lucru</button>
-          <button class="filter-btn" onclick="setCrmFilter('finalizat',this)">Finalizat</button>
-          <button class="filter-btn" onclick="setCrmFilter('anulat',this)">Anulat</button>
+      <div class="crm-panel-grid">
+        <!-- Coloana principala CRM -->
+        <div>
+          <div class="crm-stats" id="crmStats">
+            <div class="stat-box"><div class="stat-box-num" id="crmTotal">&ndash;</div><div class="stat-box-lbl">// total</div></div>
+            <div class="stat-box"><div class="stat-box-num" id="crmOferta" style="color:var(--yellow)">&ndash;</div><div class="stat-box-lbl">// oferte</div></div>
+            <div class="stat-box"><div class="stat-box-num" id="crmInLucru" style="color:var(--teal)">&ndash;</div><div class="stat-box-lbl">// &icirc;n lucru</div></div>
+            <div class="stat-box"><div class="stat-box-num" id="crmFinalizat" style="color:var(--green)">&ndash;</div><div class="stat-box-lbl">// finalizate</div></div>
+            <div class="stat-box"><div class="stat-box-num" id="crmValoare" style="color:var(--teal)">&ndash;</div><div class="stat-box-lbl">// RON &icirc;n lucru</div></div>
+          </div>
+          <div class="crm-toolbar">
+            <div class="filters" style="margin-bottom:0">
+              <button class="filter-btn active" onclick="setCrmFilter('all',this)">Toate</button>
+              <button class="filter-btn" onclick="setCrmFilter('oferta',this)">Ofert&#259;</button>
+              <button class="filter-btn" onclick="setCrmFilter('in_lucru',this)">&Icirc;n lucru</button>
+              <button class="filter-btn" onclick="setCrmFilter('finalizat',this)">Finalizat</button>
+              <button class="filter-btn" onclick="setCrmFilter('anulat',this)">Anulat</button>
+            </div>
+            <button class="btn-add" onclick="openCrmModal()">+ Proiect / Ofert&#259;</button>
+          </div>
+          <div class="table-wrap">
+            <div class="crm-head">
+              <div class="th">Client</div>
+              <div class="th">Proiect &amp; Note</div>
+              <div class="th">Valoare</div>
+              <div class="th">Termen</div>
+              <div class="th">Status</div>
+              <div class="th">Ac&#x21B;iuni</div>
+            </div>
+            <div id="crmBody"><div class="loading">Se &icirc;ncarc&#259;...</div></div>
+          </div>
         </div>
-        <button class="btn-add" onclick="openCrmModal()">+ Proiect / Ofert&#259;</button>
-      </div>
-      <div class="table-wrap">
-        <div class="crm-head">
-          <div class="th">Client</div>
-          <div class="th">Proiect &amp; Note</div>
-          <div class="th">Valoare</div>
-          <div class="th">Termen</div>
-          <div class="th">Status</div>
-          <div class="th">Ac&#x21B;iuni</div>
+
+        <!-- Sidebar Agenda & To-do (sincronizat cu Gibilan) -->
+        <div class="crm-sidebar">
+          <div class="crm-sb-top">
+            <span class="crm-sb-title">&#x1F916; Agenda &amp; To-do</span>
+            <a class="crm-sb-link" onclick="switchTab('gibilan',document.querySelector('[onclick*=gibilan]'))">Gibilan &rarr;</a>
+          </div>
+
+          <!-- Intalniri -->
+          <div class="crm-sb-section">
+            <div class="crm-sb-sec-title">
+              <span>&#x1F550; &Icirc;nt&#xE2;lniri</span>
+              <button class="crm-sb-add" onclick="toggleSbForm('sbf-meeting')">+ adaug&#259;</button>
+            </div>
+            <div class="crm-sb-form" id="sbf-meeting">
+              <input class="gib-input" type="text" id="sb-m-title" placeholder="Titlu *">
+              <input class="gib-input" type="date" id="sb-m-date" style="color-scheme:dark;">
+              <input class="gib-input" type="time" id="sb-m-time">
+              <input class="gib-input" type="text" id="sb-m-notes" placeholder="Note (op&#x21B;ional)">
+              <button class="gib-save" onclick="addMeetingSb()">Salveaz&#259;</button>
+            </div>
+            <div id="crm-meetings-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
+          </div>
+
+          <!-- To-do -->
+          <div class="crm-sb-section">
+            <div class="crm-sb-sec-title">
+              <span>&#x2705; De f&#x103;cut</span>
+              <button class="crm-sb-add" onclick="toggleSbForm('sbf-todo')">+ adaug&#259;</button>
+            </div>
+            <div class="crm-sb-form" id="sbf-todo">
+              <input class="gib-input" type="text" id="sb-t-title" placeholder="Task *">
+              <input class="gib-input" type="date" id="sb-t-due" style="color-scheme:dark;">
+              <select class="gib-input" id="sb-t-priority">
+                <option value="normal">Prioritate normal&#259;</option>
+                <option value="high">Prioritate ridicat&#259;</option>
+              </select>
+              <button class="gib-save" onclick="addTodoSb()">Salveaz&#259;</button>
+            </div>
+            <div id="crm-todos-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
+          </div>
+
+          <!-- Deadline-uri -->
+          <div class="crm-sb-section">
+            <div class="crm-sb-sec-title">
+              <span>&#x26A0; Deadline-uri</span>
+              <button class="crm-sb-add" onclick="toggleSbForm('sbf-deadline')">+ adaug&#259;</button>
+            </div>
+            <div class="crm-sb-form" id="sbf-deadline">
+              <input class="gib-input" type="text" id="sb-d-title" placeholder="Titlu *">
+              <input class="gib-input" type="date" id="sb-d-date" style="color-scheme:dark;">
+              <input class="gib-input" type="text" id="sb-d-project" placeholder="Proiect (op&#x21B;ional)">
+              <button class="gib-save" onclick="addDeadlineSb()">Salveaz&#259;</button>
+            </div>
+            <div id="crm-deadlines-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
+          </div>
         </div>
-        <div id="crmBody"><div class="loading">Se &icirc;ncarc&#259;...</div></div>
-      </div>
+      </div><!-- /crm-panel-grid -->
     </div>
   </div>
 
@@ -668,6 +746,7 @@
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     document.getElementById('panel-' + tab).classList.add('active');
     if (tab === 'gibilan') loadGibilan();
+    if (tab === 'crm') { fetchCrm(); loadGibilan(); }
   }
 
   function refreshCurrent() {
@@ -1263,6 +1342,7 @@
       renderGibilanMeetings();
       renderGibilanTodos();
       renderGibilanDeadlines();
+      renderGibilanSidebar();
       rotateGibMessage();
     } catch {}
   }
@@ -1325,6 +1405,108 @@
         <button class="gib-del" onclick="deleteGibilanItem('deadline','${esc(d.id)}')" title="&#x15C;terge">&#x1F5D1;</button>
       </div>`;
     }).join('');
+  }
+
+  function renderGibilanSidebar() {
+    const today = new Date().toISOString().split('T')[0];
+    const in7 = new Date(); in7.setDate(in7.getDate() + 7);
+    const in7Str = in7.toISOString().split('T')[0];
+
+    // Meetings
+    const mWrap = document.getElementById('crm-meetings-list');
+    if (mWrap) {
+      const list = (gibData.meetings || []).sort((a,b) => (a.date+a.time).localeCompare(b.date+b.time));
+      if (!list.length) { mWrap.innerHTML = '<div class="gib-empty">Nicio &icirc;nt&#xE2;lnire planificat&#259;.</div>'; }
+      else mWrap.innerHTML = list.map(m => {
+        const isAzi = m.date === today;
+        return `<div class="gib-item">
+          <span style="font-family:monospace;font-size:.78rem;color:var(--teal);flex-shrink:0;">${esc(m.time||'--:--')}</span>
+          <span class="gib-title" style="font-size:.83rem;">${esc(m.title)} ${isAzi?'<span style="font-size:.68rem;color:#febc2e;font-weight:700;">AZI</span>':'<span style="font-size:.68rem;color:var(--muted);">'+formatDate(m.date)+'</span>'}</span>
+          <button class="gib-del" onclick="deleteGibilanItem('meeting','${esc(m.id)}')" title="&#x15C;terge">&#x1F5D1;</button>
+        </div>`;
+      }).join('');
+    }
+
+    // Todos
+    const tWrap = document.getElementById('crm-todos-list');
+    if (tWrap) {
+      const list = gibData.todos || [];
+      if (!list.length) { tWrap.innerHTML = '<div class="gib-empty">Niciun task &icirc;n list&#259;.</div>'; }
+      else tWrap.innerHTML = list.map(t => `
+        <div class="gib-item${t.done?' done':''}${t.priority==='high'?' gib-priority-high':''}">
+          <input type="checkbox" class="gib-todo-cb" ${t.done?'checked':''} onchange="toggleTodo('${esc(t.id)}')">
+          <span class="gib-title" style="font-size:.83rem;">${esc(t.title)}${t.priority==='high'?' <span style="font-size:.65rem;color:#febc2e;font-weight:700;">URGENT</span>':''}</span>
+          <button class="gib-del" onclick="deleteGibilanItem('todo','${esc(t.id)}')" title="&#x15C;terge">&#x1F5D1;</button>
+        </div>`).join('');
+    }
+
+    // Deadlines (7 zile in CRM sidebar)
+    const dWrap = document.getElementById('crm-deadlines-list');
+    if (dWrap) {
+      const list = (gibData.deadlines || [])
+        .filter(d => d.date >= today && d.date <= in7Str)
+        .sort((a,b) => a.date.localeCompare(b.date));
+      if (!list.length) { dWrap.innerHTML = '<div class="gib-empty">Niciun deadline &icirc;n 7 zile.</div>'; }
+      else dWrap.innerHTML = list.map(d => {
+        const isAzi = d.date === today;
+        return `<div class="gib-item${isAzi?' gib-deadline-today':''}">
+          <span style="font-size:.7rem;font-weight:700;color:${isAzi?'#ff5f57':'#febc2e'};flex-shrink:0;">${isAzi?'AZI':formatDate(d.date)}</span>
+          <span class="gib-title" style="font-size:.83rem;">${esc(d.title)}${d.project?` <span style="font-size:.72rem;color:var(--muted);">· ${esc(d.project)}</span>`:''}</span>
+          <button class="gib-del" onclick="deleteGibilanItem('deadline','${esc(d.id)}')" title="&#x15C;terge">&#x1F5D1;</button>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  function toggleSbForm(id) {
+    const f = document.getElementById(id);
+    if (!f) return;
+    const wasOpen = f.classList.contains('open');
+    document.querySelectorAll('.crm-sb-form').forEach(x => x.classList.remove('open'));
+    if (!wasOpen) f.classList.add('open');
+  }
+
+  async function addMeetingSb() {
+    const title = document.getElementById('sb-m-title').value.trim();
+    const date  = document.getElementById('sb-m-date').value;
+    const time  = document.getElementById('sb-m-time').value;
+    const notes = document.getElementById('sb-m-notes').value.trim();
+    if (!title || !date) { alert('Titlul și data sunt obligatorii.'); return; }
+    await fetch('/api/gibilan/meeting?token=' + encodeURIComponent(adminToken), {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({title, date, time, notes})
+    });
+    ['sb-m-title','sb-m-date','sb-m-time','sb-m-notes'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+    document.getElementById('sbf-meeting').classList.remove('open');
+    await loadGibilan();
+  }
+
+  async function addTodoSb() {
+    const title    = document.getElementById('sb-t-title').value.trim();
+    const dueDate  = document.getElementById('sb-t-due').value;
+    const priority = document.getElementById('sb-t-priority').value;
+    if (!title) { alert('Titlul este obligatoriu.'); return; }
+    await fetch('/api/gibilan/todo?token=' + encodeURIComponent(adminToken), {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({title, dueDate, priority})
+    });
+    ['sb-t-title','sb-t-due'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+    document.getElementById('sbf-todo').classList.remove('open');
+    await loadGibilan();
+  }
+
+  async function addDeadlineSb() {
+    const title   = document.getElementById('sb-d-title').value.trim();
+    const date    = document.getElementById('sb-d-date').value;
+    const project = document.getElementById('sb-d-project').value.trim();
+    if (!title || !date) { alert('Titlul și data sunt obligatorii.'); return; }
+    await fetch('/api/gibilan/deadline?token=' + encodeURIComponent(adminToken), {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({title, date, project})
+    });
+    ['sb-d-title','sb-d-date','sb-d-project'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+    document.getElementById('sbf-deadline').classList.remove('open');
+    await loadGibilan();
   }
 
   function toggleGibForm(formId) {
