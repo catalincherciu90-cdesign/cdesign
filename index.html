@@ -142,9 +142,15 @@
     .hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;}
     .hero{min-height:calc(100svh - 68px);display:flex;align-items:center;position:relative;padding:80px 0;overflow:hidden;}
     .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
-    .hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(41,121,255,.14) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;z-index:0;}
-    .hero::after{content:'';position:absolute;top:-10%;right:5%;width:700px;height:700px;background:radial-gradient(circle,rgba(41,121,255,.13) 0%,transparent 65%);pointer-events:none;z-index:0;}
-    .hero-content{position:relative;z-index:1}
+    /* Hero background photo layers */
+    .hero-bg-photo{position:absolute;inset:0;z-index:0;background-image:url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=1800&q=80');background-size:cover;background-position:center top;}
+    .hero-bg-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,rgba(2,11,24,.97) 0%,rgba(2,11,24,.90) 35%,rgba(2,11,24,.72) 60%,rgba(4,15,34,.45) 100%);}
+    /* Dot grid texture on top of photo */
+    .hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(41,121,255,.09) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;z-index:1;}
+    /* Blue glow right side */
+    .hero::after{content:'';position:absolute;top:-10%;right:5%;width:700px;height:700px;background:radial-gradient(circle,rgba(41,121,255,.10) 0%,transparent 65%);pointer-events:none;z-index:1;}
+    .hero > .container{position:relative;z-index:2;}
+    .hero-content{position:relative;z-index:2}
     .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--teal);background:var(--teal-dim);border:1px solid var(--teal-border);padding:5px 14px;border-radius:4px;margin-bottom:24px;letter-spacing:.08em;}
     .hero-eyebrow::before{content:'';width:6px;height:6px;background:var(--teal);border-radius:50%;animation:blink 1.2s step-end infinite;}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
@@ -159,7 +165,7 @@
     .hero-stats{display:flex;gap:32px;flex-wrap:wrap}
     .hero-stat-num{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:800;color:var(--teal);line-height:1;text-shadow:0 0 20px rgba(41,121,255,.4);}
     .hero-stat-label{font-size:.78rem;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.06em;}
-    .hero-terminal{position:relative;z-index:1}
+    .hero-terminal{position:relative;z-index:2}
     .terminal{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;overflow:hidden;box-shadow:0 0 60px rgba(41,121,255,.08),0 20px 60px rgba(0,0,0,.6);}
     .terminal-bar{background:var(--bg3);padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}
     .t-dot{width:10px;height:10px;border-radius:50%}
@@ -514,6 +520,7 @@
 <main>
 
 <section class="hero" aria-labelledby="hero-heading">
+  <div class="hero-bg-photo" aria-hidden="true"></div>
   <div class="container">
     <div class="hero-grid">
       <div class="hero-content">
