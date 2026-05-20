@@ -878,6 +878,17 @@
 
   document.addEventListener('keydown', e => { if (e.key === 'Enter' && document.getElementById('loginWrap').style.display !== 'none') login(); });
 
+  // Auto-login din localStorage dacă există token salvat
+  (async () => {
+    const saved = localStorage.getItem('cdAdmin');
+    if (saved) {
+      adminToken = saved;
+      const ok = await fetchBookings(true);
+      if (!ok) { adminToken = ''; localStorage.removeItem('cdAdmin'); }
+      else { fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); }
+    }
+  })();
+
   async function login() {
     const username = document.getElementById('userInput').value.trim();
     const password = document.getElementById('passInput').value.trim();
@@ -894,7 +905,10 @@
       adminToken = password;
       const ok = await fetchBookings(true);
       if (!ok) { err.textContent = '✗ Eroare de autentificare'; adminToken = ''; }
-      else { fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); }
+      else {
+        localStorage.setItem('cdAdmin', password);
+        fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients();
+      }
     } catch { err.textContent = '✗ Eroare de rețea'; }
   }
 
@@ -2011,6 +2025,7 @@
 
   function logout() {
     adminToken = '';
+    localStorage.removeItem('cdAdmin');
     allBookings = [];
     allProjects = [];
     allCrm = [];
