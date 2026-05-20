@@ -366,6 +366,90 @@
       .hero-desc{font-size:.95rem;}
       .container{padding:0 16px;}
     }
+
+    /* ── READABILITY & GRAPHICAL IMPROVEMENTS ─────────────────── */
+
+    /* 1. Brighter base contrast */
+    :root{--text:#f0f4f8;--soft:#b0c8e0;--muted:#6080a0;}
+
+    /* 2. Bigger, airier body */
+    body{font-size:1.06rem;line-height:1.82;}
+
+    /* 3. Section titles — bigger + gradient accent line */
+    .sec-title{font-size:clamp(1.9rem,3.2vw,2.65rem);line-height:1.15;margin-bottom:14px;}
+    .sec-title::after{content:'';display:block;width:44px;height:3px;background:linear-gradient(90deg,var(--teal),var(--teal-lt),transparent);border-radius:2px;margin-top:14px;}
+    .sec-label{font-size:.7rem;letter-spacing:.16em;}
+    .sec-sub{font-size:1.05rem;font-weight:400;line-height:1.88;margin-bottom:52px;}
+
+    /* 4. Hero text bigger */
+    .hero h1{font-size:clamp(2.4rem,4.8vw,3.8rem);}
+    .hero-desc{font-size:1.12rem;line-height:1.88;}
+
+    /* 5. Stats — more dramatic */
+    .stat-num{font-size:2.6rem;}
+    .stat-lbl{font-size:.82rem;}
+    .hero-stat-num{font-size:2.1rem;}
+
+    /* 6. Service cards — colored top accent + bigger text */
+    .svc-card{border-top:2px solid var(--teal-border);}
+    .svc-card:hover{border-top-color:var(--teal);}
+    .svc-term-text{font-size:.87rem;line-height:1.78;}
+
+    /* 7. Portfolio cards — bigger text, more padding */
+    .port-info{padding:22px 24px;}
+    .port-info h3{font-size:1.05rem;margin-bottom:7px;}
+    .port-info p{font-size:.92rem;line-height:1.72;color:var(--soft);}
+    .port-thumb{height:176px;font-size:3.2rem;}
+
+    /* 8. Process steps — bigger circles + bigger text */
+    .p-num{width:60px;height:60px;font-size:1.1rem;}
+    .process-step h3{font-size:1rem;margin-bottom:10px;}
+    .process-step p{font-size:.9rem;line-height:1.72;color:var(--soft);}
+
+    /* 9. Testimonials — more readable */
+    .testi-card{padding:32px 28px;}
+    .testi-text{font-size:.97rem;line-height:1.88;}
+    .testi-card::after{font-size:5rem;opacity:.07;}
+
+    /* 10. Contact */
+    .contact-info-title{font-size:1.85rem;}
+    .contact-info-sub{font-size:1rem;line-height:1.85;}
+    .f-input{font-size:1rem;padding:13px 16px;}
+    .f-label{font-size:.78rem;}
+
+    /* 11. CTA section */
+    .cta-section h2{font-size:clamp(2.1rem,4vw,3.1rem);}
+    .cta-section p{font-size:1.1rem;line-height:1.82;}
+
+    /* 12. Section visual dividers — gradient line top/bottom */
+    .process-bg::before,.testi-bg::before{
+      content:'';display:block;height:1px;
+      background:linear-gradient(90deg,transparent,rgba(41,121,255,.35),transparent);
+      position:absolute;top:0;left:0;right:0;
+    }
+    .process-bg,.testi-bg{position:relative;}
+
+    /* 13. Portfolio card grid overlay stronger */
+    .port-grid-overlay{background-image:linear-gradient(rgba(41,121,255,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(41,121,255,.09) 1px,transparent 1px);}
+
+    /* 14. Form submit button — gradient like primary */
+    .btn-submit{background:linear-gradient(135deg,#3b82f6,#2979ff);box-shadow:0 0 22px rgba(41,121,255,.35);}
+    .btn-submit:hover{background:linear-gradient(135deg,#3b82f6,#2979ff);box-shadow:0 0 38px rgba(41,121,255,.6);}
+
+    /* 15. Nav button gradient */
+    .btn-nav{background:linear-gradient(135deg,#3b82f6,#2979ff);color:#fff;}
+    .btn-nav:hover{background:linear-gradient(135deg,#3b82f6,#2979ff);}
+
+    /* 16. Footer about text */
+    .footer-about{font-size:.9rem;line-height:1.8;}
+
+    /* Mobile overrides for new sizes */
+    @media(max-width:768px){
+      body{font-size:1rem;line-height:1.75;}
+      .sec-title{font-size:1.65rem;}
+      .sec-sub{font-size:.97rem;}
+      .stat-num{font-size:1.8rem;}
+    }
   </style>
 </head>
 <body>

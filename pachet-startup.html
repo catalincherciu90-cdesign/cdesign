@@ -180,7 +180,28 @@
       .steps{grid-template-columns:1fr;}
       .hero h1{font-size:1.9rem;}
     }
-  </style>
+  
+    /* ── READABILITY & GRAPHICAL IMPROVEMENTS ─────────────────── */
+    :root{--text:#f0f4f8;--soft:#b0c8e0;--muted:#6080a0;}
+    body{font-size:1.06rem;line-height:1.82;}
+    .sec-title{font-size:clamp(1.9rem,3.2vw,2.6rem);line-height:1.15;margin-bottom:14px;}
+    .sec-title::after{content:'';display:block;width:44px;height:3px;background:linear-gradient(90deg,var(--teal),var(--teal-lt),transparent);border-radius:2px;margin-top:14px;}
+    .sec-sub{font-size:1.05rem;font-weight:400;line-height:1.88;}
+    .hero h1{font-size:clamp(2rem,5vw,3.4rem);}
+    .hero-desc{font-size:1.1rem;line-height:1.85;}
+    .stat-num{font-size:2.5rem;}
+    .faq-a{font-size:.97rem;line-height:1.85;}
+    .faq-q{font-size:1.05rem;}
+    .card p{font-size:.92rem;line-height:1.72;color:var(--soft);}
+    .card h3{font-size:1.05rem;margin-bottom:10px;}
+    .card{padding:32px;}
+    .btn-primary{background:linear-gradient(135deg,#3b82f6,#2979ff);color:#fff;box-shadow:0 0 22px rgba(41,121,255,.38);}
+    .btn-primary:hover{box-shadow:0 0 40px rgba(41,121,255,.65);transform:translateY(-2px);}
+    .btn-nav{background:linear-gradient(135deg,#3b82f6,#2979ff);color:#fff;}
+    .plan-cta-main{background:linear-gradient(135deg,#3b82f6,#2979ff);color:#fff;box-shadow:0 0 20px rgba(41,121,255,.35);}
+    .plan-cta-main:hover{box-shadow:0 0 36px rgba(41,121,255,.6);}
+    @media(max-width:768px){body{font-size:1rem;line-height:1.75;}.sec-title{font-size:1.6rem;}.card{padding:24px;}}
+</style>
 </head>
 <body>
 
