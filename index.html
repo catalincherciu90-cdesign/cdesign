@@ -907,6 +907,13 @@ setTimeout(addLine,800);
           <div class="port-tag">${esc(p.tag)}</div>
           <h3>${esc(p.title)}</h3>
           <p>${esc(p.description)}</p>
+          ${p.problema || p.solutie || p.rezultat ? `
+          <div class="port-case" style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px;display:flex;flex-direction:column;gap:8px;">
+            ${p.problema ? `<div style="font-size:.78rem;color:var(--muted);"><span style="color:#f59e0b;font-weight:600;">Problemă:</span> ${esc(p.problema)}</div>` : ''}
+            ${p.solutie  ? `<div style="font-size:.78rem;color:var(--muted);"><span style="color:var(--teal);font-weight:600;">Soluție:</span> ${esc(p.solutie)}</div>` : ''}
+            ${p.rezultat ? `<div style="font-size:.78rem;color:var(--muted);"><span style="color:#4ade80;font-weight:600;">Rezultat:</span> ${esc(p.rezultat)}</div>` : ''}
+          </div>` : ''}
+          ${p.url ? `<a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:12px;font-size:.78rem;color:var(--teal);font-family:'Share Tech Mono',monospace;">→ Vezi site-ul live ↗</a>` : ''}
         </div>
       </div>`).join('');
     grid.querySelectorAll('.reveal').forEach(el => revObs.observe(el));

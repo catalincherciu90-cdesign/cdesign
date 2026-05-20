@@ -392,12 +392,12 @@ async function sendBookingNotification(booking) {
 }
 
 const DEFAULT_PROJECTS = [
-  { id: 'p1', emoji: '🚗', tag: 'Auto', title: 'Tractări Auto Teleorman', description: 'Site de prezentare cu zone de acoperire: Dâmbovița, Ilfov, București, Argeș, Giurgiu.', order: 0 },
-  { id: 'p2', emoji: '🏭', tag: 'Dealer Autorizat', title: 'Dealer Autorizat Lindab', description: 'Prezentare profesională cu catalog de produse și date de contact integrate.', order: 1 },
-  { id: 'p3', emoji: '🌸', tag: 'Florărie', title: 'Site Florărie', description: 'Site modern cu produse și posibilitate de comandă online, optimizat pentru mobil.', order: 2 },
-  { id: 'p4', emoji: '🏗️', tag: 'Construcții', title: 'Arhitectură & Construcții', description: 'Portofoliu vizual elegant cu proiecte realizate și testimoniale clienți.', order: 3 },
-  { id: 'p5', emoji: '💼', tag: 'Start-Up', title: 'Micul Întreprinzător', description: 'Pachet complet la start: site + identitate vizuală + prezență online activă.', order: 4 },
-  { id: 'p6', emoji: '🔧', tag: 'Servicii', title: 'Firmă Servicii Tehnice', description: 'Site de prezentare cu formular de solicitare ofertă și galerie de lucrări.', order: 5 },
+  { id: 'p1', emoji: '🚗', tag: 'Auto', title: 'Tractări Auto Teleorman', description: 'Site de prezentare cu zone de acoperire: Dâmbovița, Ilfov, București, Argeș, Giurgiu.', problema: 'Clientul nu era găsit online — toți clienții veneau doar din recomandări.', solutie: 'Site de prezentare rapid cu pagini separate pe județe, optimizat local SEO.', rezultat: 'Prima comandă online în 3 zile de la lansare. Trafic organic +180% în 2 luni.', order: 0 },
+  { id: 'p2', emoji: '🏭', tag: 'Dealer Autorizat', title: 'Dealer Autorizat Lindab', description: 'Prezentare profesională cu catalog de produse și date de contact integrate.', problema: 'Site vechi, neoptimizat pentru mobil — 70% din vizitatori plecau în primele 5 secunde.', solutie: 'Redesign complet cu catalog digital și formular de cerere ofertă integrat.', rezultat: 'Rata de abandon scăzută cu 55%. Cereri de ofertă x3 față de înainte.', order: 1 },
+  { id: 'p3', emoji: '🌸', tag: 'Florărie', title: 'Site Florărie', description: 'Site modern cu produse și posibilitate de comandă online, optimizat pentru mobil.', problema: 'Fără prezență online — clienții nu știau dacă florăria e deschisă sau ce oferte are.', solutie: 'Site cu galerie produse, program actualizabil și buton de comandă WhatsApp.', rezultat: 'Comenzi online de la zero la 15-20/săptămână în prima lună.', order: 2 },
+  { id: 'p4', emoji: '🏗️', tag: 'Construcții', title: 'Arhitectură & Construcții', description: 'Portofoliu vizual elegant cu proiecte realizate și testimoniale clienți.', problema: 'Firma lucra bine, dar nu putea dovedi asta online — fără portofoliu vizibil.', solutie: 'Site portofoliu cu galerie proiecte, testimoniale și pagină de servicii detaliată.', rezultat: 'Câștigat 2 contracte noi direct din site în prima lună. ROI investiție: 10x.', order: 3 },
+  { id: 'p5', emoji: '💼', tag: 'Start-Up', title: 'Micul Întreprinzător', description: 'Pachet complet la start: site + identitate vizuală + prezență online activă.', problema: 'Afacere nouă, zero prezență online — buget limitat, nevoie de totul dintr-o dată.', solutie: 'Pachet Startup: site + logo + domeniu + găzduire + 2 conturi social media, livrat în 14 zile.', rezultat: 'Online complet în 2 săptămâni. Primul client obținut din Google după 3 săptămâni.', order: 4 },
+  { id: 'p6', emoji: '🔧', tag: 'Servicii', title: 'Firmă Servicii Tehnice', description: 'Site de prezentare cu formular de solicitare ofertă și galerie de lucrări.', problema: 'Pierdeau clienți potențiali pentru că nu aveau o modalitate ușoară de contact online.', solutie: 'Site cu formular rapid de solicitare ofertă, galerie lucrări și recenzii Google integrate.', rezultat: 'Cereri de ofertă online: de la 0 la 8-12/lună. Economie de timp la telefon: 4h/săpt.', order: 5 },
 ];
 
 function isAdmin(url, env) {
@@ -437,6 +437,26 @@ export default {
     if (path === '/pachet-startup') {
       const assetUrl = new URL(request.url);
       assetUrl.pathname = '/pachet-startup.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
+    // ── CITY LANDING PAGES ───────────────────────────────────
+
+    if (path === '/web-design-bucuresti') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/web-design-bucuresti.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
+    if (path === '/web-design-cluj') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/web-design-cluj.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
+    if (path === '/web-design-timisoara') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/web-design-timisoara.html';
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
 

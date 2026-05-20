@@ -26,4 +26,28 @@
     <xhtml:link rel="alternate" hreflang="ro" href="https://www.c-design.ro/blog"/>
   </url>
 
+  <url>
+    <loc>https://www.c-design.ro/web-design-bucuresti</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://www.c-design.ro/web-design-bucuresti"/>
+  </url>
+
+  <url>
+    <loc>https://www.c-design.ro/web-design-cluj</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://www.c-design.ro/web-design-cluj"/>
+  </url>
+
+  <url>
+    <loc>https://www.c-design.ro/web-design-timisoara</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://www.c-design.ro/web-design-timisoara"/>
+  </url>
+
 </urlset>
