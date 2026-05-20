@@ -206,6 +206,165 @@ async function sendDeadlineNotification(entry) {
   });
 }
 
+async function sendGibilanMorningEmail(env) {
+  try {
+    const raw = await env.PROGRAMARI.get('__gibilan__');
+    const data = raw ? JSON.parse(raw) : { meetings: [], todos: [], deadlines: [] };
+
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+    const in3Days = new Date(today);
+    in3Days.setDate(today.getDate() + 3);
+    const in3Str = in3Days.toISOString().split('T')[0];
+
+    const meetingsAzi = (data.meetings || []).filter(m => m.date === todayStr);
+    const deadlinesUrgente = (data.deadlines || []).filter(d => d.date >= todayStr && d.date <= in3Str);
+    const todosActive = (data.todos || []).filter(t => !t.done);
+
+    const ziuaRo = today.toLocaleDateString('ro-RO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    const ziuaCapital = ziuaRo.charAt(0).toUpperCase() + ziuaRo.slice(1);
+
+    const nimicDeRaportat = !meetingsAzi.length && !deadlinesUrgente.length && !todosActive.length;
+
+    let meetingsHtml = '';
+    if (meetingsAzi.length) {
+      meetingsHtml = meetingsAzi.map(m => `
+        <tr>
+          <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;">
+            <span style="font-family:'Segoe UI',monospace;font-size:.85rem;color:#00a898;font-weight:700;margin-right:8px;">${m.time || '--:--'}</span>
+            <span style="color:#1a1a1a;font-weight:600;">${escHtml(m.title)}</span>
+            ${m.notes ? `<div style="font-size:.78rem;color:#888;margin-top:3px;">${escHtml(m.notes)}</div>` : ''}
+          </td>
+        </tr>`).join('');
+    } else {
+      meetingsHtml = '<tr><td style="padding:8px 12px;color:#aaa;font-style:italic;font-size:.88rem;">Nicio întâlnire azi — zi liberă!</td></tr>';
+    }
+
+    let deadlinesHtml = '';
+    if (deadlinesUrgente.length) {
+      deadlinesHtml = deadlinesUrgente.map(d => {
+        const isAzi = d.date === todayStr;
+        return `
+        <tr>
+          <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;${isAzi ? 'border-left:3px solid #ff5f57;' : ''}">
+            <span style="font-size:.78rem;color:${isAzi ? '#ff5f57' : '#f59e0b'};font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-right:8px;">${isAzi ? 'AZI' : d.date}</span>
+            <span style="color:#1a1a1a;font-weight:600;">${escHtml(d.title)}</span>
+            ${d.project ? `<span style="font-size:.8rem;color:#888;margin-left:6px;">· ${escHtml(d.project)}</span>` : ''}
+          </td>
+        </tr>`;
+      }).join('');
+    } else {
+      deadlinesHtml = '<tr><td style="padding:8px 12px;color:#aaa;font-style:italic;font-size:.88rem;">Niciun deadline urgent — respira adânc!</td></tr>';
+    }
+
+    let todosHtml = '';
+    if (todosActive.length) {
+      todosHtml = todosActive.map(t => `
+        <tr>
+          <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;${t.priority === 'high' ? 'border-left:3px solid #febc2e;background:#fffbf0;' : ''}">
+            <span style="display:inline-block;width:14px;height:14px;border:2px solid #ccc;border-radius:3px;margin-right:8px;vertical-align:middle;"></span>
+            <span style="color:#1a1a1a;">${escHtml(t.title)}</span>
+            ${t.priority === 'high' ? '<span style="font-size:.7rem;color:#f59e0b;font-weight:700;margin-left:6px;text-transform:uppercase;">URGENT</span>' : ''}
+          </td>
+        </tr>`).join('');
+    } else {
+      todosHtml = '<tr><td style="padding:8px 12px;color:#aaa;font-style:italic;font-size:.88rem;">Totul bifat! Esti un campion.</td></tr>';
+    }
+
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f4f6f8;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6f8;padding:32px 0;">
+  <tr><td align="center">
+    <table width="580" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.08);">
+      <!-- HEADER -->
+      <tr><td style="background:#060f0f;padding:28px 32px;">
+        <table width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="vertical-align:middle;">
+              <div style="font-family:'Segoe UI',Arial,sans-serif;font-size:1.3rem;font-weight:800;color:#fff;">
+                <span style="color:#00c8b4;">C</span> Design
+              </div>
+              <div style="color:#6a9494;font-size:.78rem;margin-top:2px;font-family:monospace;">// gibilan.morning_brief</div>
+            </td>
+            <td style="text-align:right;vertical-align:middle;">
+              <div style="font-size:2rem;">🤖</div>
+            </td>
+          </tr>
+        </table>
+      </td></tr>
+      <!-- GREETING -->
+      <tr><td style="padding:28px 32px 0;border-bottom:1px solid #f0f0f0;">
+        <div style="font-size:1.15rem;font-weight:700;color:#060f0f;margin-bottom:6px;">
+          Bună dimineata! ☀️
+        </div>
+        <div style="font-size:.92rem;color:#555;margin-bottom:20px;line-height:1.6;">
+          ${nimicDeRaportat
+            ? 'Zi liberă, nicio urgență! Profită de liniște, că nu durează. 😄'
+            : `Iată agenda ta pentru <strong>${ziuaCapital}</strong>. Hai să facem o zi productivă!`}
+        </div>
+        ${!nimicDeRaportat ? `
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px;background:#f0fffe;border-radius:8px;overflow:hidden;">
+          <tr>
+            <td style="padding:6px 12px;background:#00c8b4;color:#060f0f;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;width:32px;">📊</td>
+            <td style="padding:6px 12px;background:#e8faf9;font-size:.82rem;color:#1a4a44;">
+              <strong>${meetingsAzi.length}</strong> întâlniri azi &nbsp;·&nbsp;
+              <strong>${deadlinesUrgente.length}</strong> deadline-uri urgente &nbsp;·&nbsp;
+              <strong>${todosActive.length}</strong> task-uri active
+            </td>
+          </tr>
+        </table>` : ''}
+      </td></tr>
+      <!-- MEETINGS -->
+      <tr><td style="padding:24px 32px 0;">
+        <div style="font-size:.78rem;font-weight:800;color:#00a898;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;">📅 Întâlniri de azi</div>
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#fafafa;border-radius:8px;overflow:hidden;border:1px solid #eee;">
+          ${meetingsHtml}
+        </table>
+      </td></tr>
+      <!-- DEADLINES -->
+      <tr><td style="padding:20px 32px 0;">
+        <div style="font-size:.78rem;font-weight:800;color:#f59e0b;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;">⚠️ Deadline-uri (azi + 3 zile)</div>
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#fafafa;border-radius:8px;overflow:hidden;border:1px solid #eee;">
+          ${deadlinesHtml}
+        </table>
+      </td></tr>
+      <!-- TODOS -->
+      <tr><td style="padding:20px 32px 24px;">
+        <div style="font-size:.78rem;font-weight:800;color:#6a7585;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;">✅ To-do active</div>
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#fafafa;border-radius:8px;overflow:hidden;border:1px solid #eee;">
+          ${todosHtml}
+        </table>
+      </td></tr>
+      <!-- CTA -->
+      <tr><td style="padding:0 32px 28px;text-align:center;">
+        <a href="https://www.c-design.ro/programari.html" style="display:inline-block;background:#00c8b4;color:#060f0f;padding:12px 28px;border-radius:8px;font-weight:700;font-size:.9rem;text-decoration:none;">
+          Deschide Gibilan →
+        </a>
+      </td></tr>
+      <!-- FOOTER -->
+      <tr><td style="background:#f9fafb;padding:16px 32px;text-align:center;border-top:1px solid #eee;">
+        <p style="color:#9aa5b4;font-size:.75rem;margin:0;">Gibilan · C Design · <a href="https://www.c-design.ro" style="color:#00a898;text-decoration:none;">c-design.ro</a></p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body></html>`;
+
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY || RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: 'Gibilan <notificari@c-design.ro>',
+        to: [env.NOTIFY_EMAIL || NOTIFY_EMAIL],
+        subject: `🤖 Gibilan — Agenda ta pentru ${ziuaCapital}`,
+        html,
+      }),
+    });
+  } catch (e) {
+    console.error('sendGibilanMorningEmail error:', e);
+  }
+}
+
 async function checkCrmDeadlines(env) {
   const raw = await env.PROGRAMARI.get('__crm__');
   const entries = raw ? JSON.parse(raw) : [];
@@ -746,11 +905,124 @@ export default {
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
 
+    // ── GIBILAN ───────────────────────────────────────────────
+
+    if (path === '/api/gibilan/agenda' && request.method === 'GET') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const raw = await env.PROGRAMARI.get('__gibilan__');
+        const data = raw ? JSON.parse(raw) : { meetings: [], todos: [], deadlines: [] };
+        const today = new Date().toISOString().split('T')[0];
+        const meetings = (data.meetings || []).filter(m => m.date >= today);
+        const todos = (data.todos || []).filter(t => !t.done);
+        const deadlines = (data.deadlines || []).filter(d => d.date >= today);
+        return json({ meetings, todos, deadlines });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path === '/api/gibilan/meeting' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const { title, date, time, notes } = await request.json();
+        if (!title || !date) return json({ error: 'Titlul și data sunt obligatorii' }, 400);
+        const raw = await env.PROGRAMARI.get('__gibilan__');
+        const data = raw ? JSON.parse(raw) : { meetings: [], todos: [], deadlines: [] };
+        const id = `m_${Date.now()}`;
+        data.meetings = data.meetings || [];
+        data.meetings.push({ id, title, date, time: time || '', notes: notes || '' });
+        await env.PROGRAMARI.put('__gibilan__', JSON.stringify(data));
+        return json({ success: true, id });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path.startsWith('/api/gibilan/meeting/') && request.method === 'DELETE') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/gibilan/meeting/', '');
+        const raw = await env.PROGRAMARI.get('__gibilan__');
+        const data = raw ? JSON.parse(raw) : { meetings: [], todos: [], deadlines: [] };
+        data.meetings = (data.meetings || []).filter(m => m.id !== id);
+        await env.PROGRAMARI.put('__gibilan__', JSON.stringify(data));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path === '/api/gibilan/todo' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const { title, dueDate, priority } = await request.json();
+        if (!title) return json({ error: 'Titlul este obligatoriu' }, 400);
+        const raw = await env.PROGRAMARI.get('__gibilan__');
+        const data = raw ? JSON.parse(raw) : { meetings: [], todos: [], deadlines: [] };
+        const id = `t_${Date.now()}`;
+        data.todos = data.todos || [];
+        data.todos.push({ id, title, dueDate: dueDate || '', priority: priority || 'normal', done: false });
+        await env.PROGRAMARI.put('__gibilan__', JSON.stringify(data));
+        return json({ success: true, id });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path.match(/^\/api\/gibilan\/todo\/[^/]+\/done$/) && request.method === 'PATCH') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/gibilan/todo/', '').replace('/done', '');
+        const raw = await env.PROGRAMARI.get('__gibilan__');
+        const data = raw ? JSON.parse(raw) : { meetings: [], todos: [], deadlines: [] };
+        const todo = (data.todos || []).find(t => t.id === id);
+        if (!todo) return json({ error: 'Negăsit' }, 404);
+        todo.done = !todo.done;
+        await env.PROGRAMARI.put('__gibilan__', JSON.stringify(data));
+        return json({ success: true, done: todo.done });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path.startsWith('/api/gibilan/todo/') && !path.endsWith('/done') && request.method === 'DELETE') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/gibilan/todo/', '');
+        const raw = await env.PROGRAMARI.get('__gibilan__');
+        const data = raw ? JSON.parse(raw) : { meetings: [], todos: [], deadlines: [] };
+        data.todos = (data.todos || []).filter(t => t.id !== id);
+        await env.PROGRAMARI.put('__gibilan__', JSON.stringify(data));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path === '/api/gibilan/deadline' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const { title, date, project, notes } = await request.json();
+        if (!title || !date) return json({ error: 'Titlul și data sunt obligatorii' }, 400);
+        const raw = await env.PROGRAMARI.get('__gibilan__');
+        const data = raw ? JSON.parse(raw) : { meetings: [], todos: [], deadlines: [] };
+        const id = `d_${Date.now()}`;
+        data.deadlines = data.deadlines || [];
+        data.deadlines.push({ id, title, date, project: project || '', notes: notes || '' });
+        await env.PROGRAMARI.put('__gibilan__', JSON.stringify(data));
+        return json({ success: true, id });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path.startsWith('/api/gibilan/deadline/') && request.method === 'DELETE') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/gibilan/deadline/', '');
+        const raw = await env.PROGRAMARI.get('__gibilan__');
+        const data = raw ? JSON.parse(raw) : { meetings: [], todos: [], deadlines: [] };
+        data.deadlines = (data.deadlines || []).filter(d => d.id !== id);
+        await env.PROGRAMARI.put('__gibilan__', JSON.stringify(data));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
     // Fallthrough — servește fișierele statice
     return env.ASSETS.fetch(request);
   },
 
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(checkCrmDeadlines(env));
+    ctx.waitUntil(Promise.all([
+      checkCrmDeadlines(env),
+      sendGibilanMorningEmail(env),
+    ]));
   },
 };

@@ -201,6 +201,41 @@
     .plan-cta-main{background:linear-gradient(135deg,#00bfbf,#00a8a8);color:#fff;box-shadow:0 0 20px rgba(0,168,168,.35);}
     .plan-cta-main:hover{box-shadow:0 0 36px rgba(0,168,168,.6);}
     @media(max-width:768px){body{font-size:1rem;line-height:1.75;}.sec-title{font-size:1.6rem;}.card{padding:24px;}}
+
+    /* ── GIBILAN ─────────────────────────────────────────────── */
+    .gibilan-layout{display:grid;grid-template-columns:260px 1fr;gap:32px;padding:24px 0;}
+    .gibilan-char{display:flex;flex-direction:column;align-items:center;gap:16px;}
+    .gibilan-agenda{display:flex;flex-direction:column;gap:20px;}
+    .gib-section{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:20px;}
+    .gib-section-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:#fff;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+    .gib-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border-radius:8px;margin-bottom:8px;font-size:.88rem;}
+    .gib-item:last-child{margin-bottom:0;}
+    .gib-item.done{opacity:.5;}
+    .gib-item.done .gib-title{text-decoration:line-through;}
+    .gib-del{margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:2px 6px;border-radius:4px;}
+    .gib-del:hover{color:#ff5f57;background:rgba(255,95,87,.1);}
+    .gib-empty{color:var(--muted);font-size:.85rem;font-style:italic;padding:8px 0;}
+    .gib-date{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:4px;}
+    .gib-date-sub{font-size:.82rem;color:var(--muted);margin-bottom:20px;}
+    .gib-add-btns{display:flex;flex-direction:column;gap:8px;width:100%;}
+    .gib-add-btn{background:var(--bg3);border:1px solid var(--border-soft);border-radius:8px;color:var(--soft);font-size:.82rem;padding:8px 12px;cursor:pointer;text-align:left;transition:border-color .2s,color .2s;}
+    .gib-add-btn:hover{border-color:var(--teal-border);color:var(--teal);}
+    .gib-form{background:var(--bg3);border:1px solid var(--teal-border);border-radius:10px;padding:14px;margin-top:8px;display:none;}
+    .gib-form.open{display:block;}
+    .gib-input{width:100%;padding:8px 10px;background:var(--bg2);border:1px solid var(--border-soft);border-radius:6px;color:var(--text);font-size:.82rem;margin-bottom:8px;outline:none;font-family:'DM Sans',sans-serif;}
+    .gib-input:focus{border-color:var(--teal-border);}
+    .gib-save{background:var(--teal);color:#060f0f;border:none;border-radius:6px;padding:7px 14px;font-size:.82rem;font-weight:600;cursor:pointer;width:100%;}
+    .gib-deadline-today{border-left:3px solid #ff5f57 !important;}
+    .gib-priority-high{border-left:3px solid #febc2e !important;}
+    .clippy-wrap{position:relative;display:flex;flex-direction:column;align-items:center;}
+    .clippy-body{animation:clippy-bounce 2s ease-in-out infinite;}
+    @keyframes clippy-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    .speech-bubble{background:white;border:2px solid #ddd;border-radius:12px;padding:12px 16px;font-size:.88rem;color:#333;max-width:220px;position:relative;margin-bottom:12px;text-align:center;line-height:1.4;}
+    .speech-bubble::after{content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#ddd;}
+    @keyframes blink{0%,96%,100%{transform:scaleY(1)}98%{transform:scaleY(0.05)}}
+    .pupil-left,.pupil-right{animation:blink 4s ease-in-out infinite;transform-origin:center;}
+    .gib-todo-cb{accent-color:var(--teal);width:15px;height:15px;cursor:pointer;flex-shrink:0;}
+    @media(max-width:768px){.gibilan-layout{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -232,7 +267,8 @@
   </div>
 
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('bookings',this)">&#x1F4C5; Program&#259;ri</button>
+    <button class="tab active" onclick="switchTab('gibilan',this)">&#x1F916; Gibilan</button>
+    <button class="tab" onclick="switchTab('bookings',this)">&#x1F4C5; Program&#259;ri</button>
     <button class="tab" onclick="switchTab('projects',this)">&#x1F5BC; Portofoliu</button>
     <button class="tab" onclick="switchTab('crm',this)">&#x1F4CB; CRM &amp; Oferte</button>
     <button class="tab" onclick="switchTab('blog',this)">&#x270D; Blog</button>
@@ -240,8 +276,100 @@
     <button class="tab" onclick="switchTab('settings',this)">&#x2699; Set&#x103;ri</button>
   </div>
 
+  <!-- TAB: GIBILAN -->
+  <div class="tab-panel active" id="panel-gibilan">
+    <div class="main">
+      <div class="gibilan-layout">
+        <!-- Stanga: caracter + adauga -->
+        <div class="gibilan-char">
+          <div class="clippy-wrap">
+            <div class="speech-bubble" id="gib-bubble">Bun&#259; diminea&#x21B;a! &#x2600;</div>
+            <svg viewBox="0 0 80 130" width="100" height="130" class="clippy-body">
+              <!-- Corp agraf&#259; - loop exterior -->
+              <path d="M55 110 L55 35 Q55 10 40 10 Q25 10 25 35 L25 110 Q25 120 40 120 Q55 120 55 110Z"
+                stroke="#c8a020" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Loop interior -->
+              <path d="M48 105 L48 42 Q48 22 40 22 Q32 22 32 42 L32 105"
+                stroke="#c8a020" stroke-width="5" fill="none" stroke-linecap="round"/>
+              <!-- Fa&#x21B;&#259; (oval alb) -->
+              <ellipse cx="40" cy="38" rx="16" ry="14" fill="#fffef0" stroke="#e8d080" stroke-width="1"/>
+              <!-- Ochi st&#xE2;ng (alb + pupil&#259;) -->
+              <circle cx="34" cy="35" r="5" fill="white" stroke="#ccc" stroke-width="0.5"/>
+              <circle class="pupil-left" cx="35" cy="35" r="2.5" fill="#222"/>
+              <circle cx="35.8" cy="34" r="0.8" fill="white"/>
+              <!-- Ochi drept -->
+              <circle cx="46" cy="35" r="5" fill="white" stroke="#ccc" stroke-width="0.5"/>
+              <circle class="pupil-right" cx="47" cy="35" r="2.5" fill="#222"/>
+              <circle cx="47.8" cy="34" r="0.8" fill="white"/>
+              <!-- Z&#xE2;mbet -->
+              <path d="M34 43 Q40 48 46 43" stroke="#555" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <!-- Butoane adauga -->
+          <div class="gib-add-btns">
+            <button class="gib-add-btn" onclick="toggleGibForm('form-meeting')">+ &Icirc;nt&#xE2;lnire</button>
+            <div class="gib-form" id="form-meeting">
+              <input class="gib-input" type="text" id="gib-m-title" placeholder="Titlu &icirc;nt&#xE2;lnire *">
+              <input class="gib-input" type="date" id="gib-m-date" style="color-scheme:dark;">
+              <input class="gib-input" type="time" id="gib-m-time">
+              <input class="gib-input" type="text" id="gib-m-notes" placeholder="Note (op&#x21B;ional)">
+              <button class="gib-save" onclick="addMeeting()">Salveaz&#259;</button>
+            </div>
+
+            <button class="gib-add-btn" onclick="toggleGibForm('form-todo')">+ To-do</button>
+            <div class="gib-form" id="form-todo">
+              <input class="gib-input" type="text" id="gib-t-title" placeholder="Task *">
+              <input class="gib-input" type="date" id="gib-t-due" style="color-scheme:dark;">
+              <select class="gib-input" id="gib-t-priority">
+                <option value="normal">Prioritate normal&#259;</option>
+                <option value="high">Prioritate ridicat&#259;</option>
+              </select>
+              <button class="gib-save" onclick="addTodo()">Salveaz&#259;</button>
+            </div>
+
+            <button class="gib-add-btn" onclick="toggleGibForm('form-deadline')">+ Deadline</button>
+            <div class="gib-form" id="form-deadline">
+              <input class="gib-input" type="text" id="gib-d-title" placeholder="Titlu deadline *">
+              <input class="gib-input" type="date" id="gib-d-date" style="color-scheme:dark;">
+              <input class="gib-input" type="text" id="gib-d-project" placeholder="Proiect (op&#x21B;ional)">
+              <input class="gib-input" type="text" id="gib-d-notes" placeholder="Note (op&#x21B;ional)">
+              <button class="gib-save" onclick="addDeadline()">Salveaz&#259;</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dreapta: agenda zilei -->
+        <div class="gibilan-agenda">
+          <div>
+            <div class="gib-date" id="gib-date-title">Se &icirc;ncarc&#259;...</div>
+            <div class="gib-date-sub" id="gib-date-sub"></div>
+          </div>
+
+          <!-- Intalniri -->
+          <div class="gib-section">
+            <div class="gib-section-title">&#x1F550; &Icirc;NT&#xC2;LNIRI</div>
+            <div id="gib-meetings-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
+          </div>
+
+          <!-- To-do -->
+          <div class="gib-section">
+            <div class="gib-section-title">&#x2705; DE F&#x102;CUT</div>
+            <div id="gib-todos-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
+          </div>
+
+          <!-- Deadlines -->
+          <div class="gib-section">
+            <div class="gib-section-title">&#x26A0; DEADLINE-URI <span style="font-size:.72rem;font-weight:400;color:var(--muted);">(azi + 3 zile)</span></div>
+            <div id="gib-deadlines-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- TAB: PROGRAMARI -->
-  <div class="tab-panel active" id="panel-bookings">
+  <div class="tab-panel" id="panel-bookings">
     <div class="main">
       <div class="stats-row">
         <div class="stat-box"><div class="stat-box-num" id="statTotal">&ndash;</div><div class="stat-box-lbl">// total</div></div>
@@ -509,7 +637,7 @@
   let allBookings = [];
   let allProjects = [];
   let currentFilter = 'all';
-  let currentTab = 'bookings';
+  let currentTab = 'gibilan';
 
   document.addEventListener('keydown', e => { if (e.key === 'Enter' && document.getElementById('loginWrap').style.display !== 'none') login(); });
 
@@ -529,7 +657,7 @@
       adminToken = password;
       const ok = await fetchBookings(true);
       if (!ok) { err.textContent = '✗ Eroare de autentificare'; adminToken = ''; }
-      else { fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); }
+      else { fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); }
     } catch { err.textContent = '✗ Eroare de rețea'; }
   }
 
@@ -539,10 +667,12 @@
     btn.classList.add('active');
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     document.getElementById('panel-' + tab).classList.add('active');
+    if (tab === 'gibilan') loadGibilan();
   }
 
   function refreshCurrent() {
-    if (currentTab === 'bookings') fetchBookings();
+    if (currentTab === 'gibilan') loadGibilan();
+    else if (currentTab === 'bookings') fetchBookings();
     else if (currentTab === 'crm') fetchCrm();
     else if (currentTab === 'blog') fetchBlog();
     else if (currentTab === 'social') fetchSocial();
@@ -1088,6 +1218,200 @@
       setTimeout(() => { btn.textContent = '✓ Salvează'; btn.disabled = false; }, 2000);
     } catch { btn.textContent = '✕ Eroare'; btn.disabled = false; }
   }
+
+  // -- GIBILAN --
+
+  let gibData = { meetings: [], todos: [], deadlines: [] };
+
+  const GIB_MESSAGES = [
+    'Bun&#259; diminea&#x21B;a! &#x2600;',
+    'Ce facem azi?',
+    'S&#259; fim productivi!',
+    'Ai verificat agenda?',
+    'Ai grij&#259; de deadline-uri!',
+    'E o zi frumoas&#259;! &#x1F31F;',
+  ];
+  let gibMsgIdx = 0;
+
+  function rotateGibMessage() {
+    const bubble = document.getElementById('gib-bubble');
+    if (!bubble) return;
+    const today = new Date().toISOString().split('T')[0];
+    const meetingsAzi = gibData.meetings.filter(m => m.date === today).length;
+    const in3 = new Date(); in3.setDate(in3.getDate() + 3);
+    const in3Str = in3.toISOString().split('T')[0];
+    const dlUrgente = gibData.deadlines.filter(d => d.date >= today && d.date <= in3Str).length;
+    const todosActive = gibData.todos.filter(t => !t.done).length;
+
+    const msgs = [...GIB_MESSAGES];
+    if (meetingsAzi > 0) msgs.push(`Ai ${meetingsAzi} &icirc;nt&#xE2;lnire${meetingsAzi > 1 ? 'i' : ''} azi!`);
+    if (dlUrgente > 0) msgs.push(`${dlUrgente} deadline${dlUrgente > 1 ? '-uri' : ''} urgent${dlUrgente > 1 ? 'e' : ''}!`);
+    if (todosActive === 0) msgs.push('Totul bifat! Campion! &#x1F3C6;');
+    else msgs.push(`${todosActive} task${todosActive > 1 ? '-uri' : ''} active.`);
+
+    gibMsgIdx = (gibMsgIdx + 1) % msgs.length;
+    bubble.innerHTML = msgs[gibMsgIdx];
+  }
+
+  async function loadGibilan() {
+    if (!adminToken) return;
+    try {
+      const res = await fetch('/api/gibilan/agenda?token=' + encodeURIComponent(adminToken));
+      if (!res.ok) return;
+      gibData = await res.json();
+      renderGibilanDate();
+      renderGibilanMeetings();
+      renderGibilanTodos();
+      renderGibilanDeadlines();
+      rotateGibMessage();
+    } catch {}
+  }
+
+  function renderGibilanDate() {
+    const today = new Date();
+    const ziua = today.toLocaleDateString('ro-RO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    const ziuaCapital = ziua.charAt(0).toUpperCase() + ziua.slice(1);
+    const el = document.getElementById('gib-date-title');
+    const sub = document.getElementById('gib-date-sub');
+    if (el) el.textContent = ziuaCapital;
+    if (sub) sub.textContent = 'Agenda ta de azi — organizat de Gibilan';
+  }
+
+  function renderGibilanMeetings() {
+    const wrap = document.getElementById('gib-meetings-list');
+    if (!wrap) return;
+    const today = new Date().toISOString().split('T')[0];
+    const list = (gibData.meetings || []).sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+    if (!list.length) { wrap.innerHTML = '<div class="gib-empty">Nicio &icirc;nt&#xE2;lnire &icirc;n viitor.</div>'; return; }
+    wrap.innerHTML = list.map(m => {
+      const isAzi = m.date === today;
+      return `<div class="gib-item">
+        <span style="font-family:monospace;font-size:.82rem;color:var(--teal);flex-shrink:0;">${esc(m.time || '--:--')}</span>
+        <span class="gib-title">${esc(m.title)}${isAzi ? ' <span style="font-size:.7rem;color:#febc2e;font-weight:700;">AZI</span>' : ' <span style="font-size:.72rem;color:var(--muted);">' + formatDate(m.date) + '</span>'}</span>
+        <button class="gib-del" onclick="deleteGibilanItem('meeting','${esc(m.id)}')" title="&#x15C;terge">&#x1F5D1;</button>
+      </div>`;
+    }).join('');
+  }
+
+  function renderGibilanTodos() {
+    const wrap = document.getElementById('gib-todos-list');
+    if (!wrap) return;
+    const list = gibData.todos || [];
+    if (!list.length) { wrap.innerHTML = '<div class="gib-empty">Totul bifat! E&#x15F;ti un campion. &#x1F3C6;</div>'; return; }
+    wrap.innerHTML = list.map(t => `
+      <div class="gib-item${t.done ? ' done' : ''}${t.priority === 'high' ? ' gib-priority-high' : ''}">
+        <input type="checkbox" class="gib-todo-cb" ${t.done ? 'checked' : ''} onchange="toggleTodo('${esc(t.id)}')">
+        <span class="gib-title">${esc(t.title)}${t.priority === 'high' ? ' <span style="font-size:.68rem;color:#febc2e;font-weight:700;text-transform:uppercase;">URGENT</span>' : ''}</span>
+        ${t.dueDate ? `<span style="font-size:.72rem;color:var(--muted);flex-shrink:0;">${formatDate(t.dueDate)}</span>` : ''}
+        <button class="gib-del" onclick="deleteGibilanItem('todo','${esc(t.id)}')" title="&#x15C;terge">&#x1F5D1;</button>
+      </div>`).join('');
+  }
+
+  function renderGibilanDeadlines() {
+    const wrap = document.getElementById('gib-deadlines-list');
+    if (!wrap) return;
+    const today = new Date().toISOString().split('T')[0];
+    const in3 = new Date(); in3.setDate(in3.getDate() + 3);
+    const in3Str = in3.toISOString().split('T')[0];
+    const list = (gibData.deadlines || [])
+      .filter(d => d.date >= today && d.date <= in3Str)
+      .sort((a, b) => a.date.localeCompare(b.date));
+    if (!list.length) { wrap.innerHTML = '<div class="gib-empty">Niciun deadline &icirc;n urm&#259;toarele 3 zile.</div>'; return; }
+    wrap.innerHTML = list.map(d => {
+      const isAzi = d.date === today;
+      return `<div class="gib-item${isAzi ? ' gib-deadline-today' : ''}">
+        <span style="font-size:.72rem;font-weight:700;color:${isAzi ? '#ff5f57' : '#febc2e'};flex-shrink:0;">${isAzi ? 'AZI' : formatDate(d.date)}</span>
+        <span class="gib-title">${esc(d.title)}${d.project ? ` <span style="font-size:.75rem;color:var(--muted);">· ${esc(d.project)}</span>` : ''}</span>
+        <button class="gib-del" onclick="deleteGibilanItem('deadline','${esc(d.id)}')" title="&#x15C;terge">&#x1F5D1;</button>
+      </div>`;
+    }).join('');
+  }
+
+  function toggleGibForm(formId) {
+    const form = document.getElementById(formId);
+    if (!form) return;
+    const wasOpen = form.classList.contains('open');
+    document.querySelectorAll('.gib-form').forEach(f => f.classList.remove('open'));
+    if (!wasOpen) form.classList.add('open');
+  }
+
+  async function addMeeting() {
+    const title = document.getElementById('gib-m-title').value.trim();
+    const date = document.getElementById('gib-m-date').value;
+    const time = document.getElementById('gib-m-time').value;
+    const notes = document.getElementById('gib-m-notes').value.trim();
+    if (!title || !date) { alert('Titlul &#x15F;i data sunt obligatorii.'); return; }
+    try {
+      await fetch('/api/gibilan/meeting?token=' + encodeURIComponent(adminToken), {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ title, date, time, notes }),
+      });
+      document.getElementById('gib-m-title').value = '';
+      document.getElementById('gib-m-date').value = '';
+      document.getElementById('gib-m-time').value = '';
+      document.getElementById('gib-m-notes').value = '';
+      document.getElementById('form-meeting').classList.remove('open');
+      await loadGibilan();
+    } catch { alert('Eroare la salvare.'); }
+  }
+
+  async function addTodo() {
+    const title = document.getElementById('gib-t-title').value.trim();
+    const dueDate = document.getElementById('gib-t-due').value;
+    const priority = document.getElementById('gib-t-priority').value;
+    if (!title) { alert('Titlul este obligatoriu.'); return; }
+    try {
+      await fetch('/api/gibilan/todo?token=' + encodeURIComponent(adminToken), {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ title, dueDate, priority }),
+      });
+      document.getElementById('gib-t-title').value = '';
+      document.getElementById('gib-t-due').value = '';
+      document.getElementById('gib-t-priority').value = 'normal';
+      document.getElementById('form-todo').classList.remove('open');
+      await loadGibilan();
+    } catch { alert('Eroare la salvare.'); }
+  }
+
+  async function addDeadline() {
+    const title = document.getElementById('gib-d-title').value.trim();
+    const date = document.getElementById('gib-d-date').value;
+    const project = document.getElementById('gib-d-project').value.trim();
+    const notes = document.getElementById('gib-d-notes').value.trim();
+    if (!title || !date) { alert('Titlul &#x15F;i data sunt obligatorii.'); return; }
+    try {
+      await fetch('/api/gibilan/deadline?token=' + encodeURIComponent(adminToken), {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ title, date, project, notes }),
+      });
+      document.getElementById('gib-d-title').value = '';
+      document.getElementById('gib-d-date').value = '';
+      document.getElementById('gib-d-project').value = '';
+      document.getElementById('gib-d-notes').value = '';
+      document.getElementById('form-deadline').classList.remove('open');
+      await loadGibilan();
+    } catch { alert('Eroare la salvare.'); }
+  }
+
+  async function toggleTodo(id) {
+    try {
+      await fetch(`/api/gibilan/todo/${id}/done?token=` + encodeURIComponent(adminToken), { method: 'PATCH' });
+      await loadGibilan();
+    } catch {}
+  }
+
+  async function deleteGibilanItem(type, id) {
+    const labels = { meeting: 'intalnirea', todo: 'task-ul', deadline: 'deadline-ul' };
+    if (!confirm(`Stergi ${labels[type] || 'elementul'}?`)) return;
+    try {
+      const urlMap = { meeting: 'meeting', todo: 'todo', deadline: 'deadline' };
+      await fetch(`/api/gibilan/${urlMap[type]}/${id}?token=` + encodeURIComponent(adminToken), { method: 'DELETE' });
+      await loadGibilan();
+    } catch { alert('Eroare la stergere.'); }
+  }
+
+  // Rotire mesaje speech bubble la fiecare 5 secunde
+  setInterval(rotateGibMessage, 5000);
 
   // -- UTILS --
 
