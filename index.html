@@ -161,9 +161,6 @@
     .btn-primary:hover{box-shadow:0 0 40px rgba(0,168,168,.65);transform:translateY(-2px);}
     .btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--soft);font-size:1rem;padding:14px 28px;border-radius:8px;border:1px solid var(--border-soft);cursor:pointer;transition:border-color .2s,color .2s;text-decoration:none;font-family:'DM Sans',sans-serif;}
     .btn-ghost:hover{border-color:var(--teal-border);color:var(--teal)}
-    .hero-stats{display:flex;gap:32px;flex-wrap:wrap}
-    .hero-stat-num{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:800;color:var(--teal);line-height:1;text-shadow:0 0 20px rgba(0,168,168,.4);}
-    .hero-stat-label{font-size:.78rem;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.06em;}
     .hero-visual{position:relative;z-index:2;}
     .hero-proof-card{background:rgba(10,24,24,.88);border:1px solid var(--border-soft);border-radius:16px;padding:28px;box-shadow:0 0 60px rgba(0,168,168,.1),0 20px 60px rgba(0,0,0,.6);backdrop-filter:blur(12px);}
     .hpc-stars{display:flex;gap:3px;margin-bottom:6px;}
@@ -543,11 +540,6 @@
         <div class="hero-actions">
           <a href="#contact" class="btn-primary">Hai să vorbim gratuit →</a>
           <a href="#portofoliu" class="btn-ghost">Vezi lucrările →</a>
-        </div>
-        <div class="hero-stats" aria-label="Statistici">
-          <div class="hero-stat"><div class="hero-stat-num" data-count="120">0</div><div class="hero-stat-label">afaceri ajutate</div></div>
-          <div class="hero-stat"><div class="hero-stat-num" data-count="8">0</div><div class="hero-stat-label">ani de experiență</div></div>
-          <div class="hero-stat"><div class="hero-stat-num" data-count="97">0</div><div class="hero-stat-label">% clienți mulțumiți</div></div>
         </div>
       </div>
       <div class="hero-visual" aria-hidden="true">
@@ -1088,9 +1080,6 @@ const reveals=document.querySelectorAll('.reveal');
 const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revObs.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
 reveals.forEach(el=>revObs.observe(el));
 
-function countUp(el,target,dur){let s=0;const step=target/(dur/16);const t=setInterval(()=>{s+=step;if(s>=target){clearInterval(t);el.textContent=target;return;}el.textContent=Math.floor(s);},16);}
-const cObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){document.querySelectorAll('[data-count]').forEach(el=>countUp(el,+el.dataset.count,1200));cObs.disconnect();}});},{threshold:0.5});
-const hs=document.querySelector('.hero-stats');if(hs)cObs.observe(hs);
 
 
 (async function loadProjects() {
