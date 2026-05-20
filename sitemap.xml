@@ -82,4 +82,12 @@
     <xhtml:link rel="alternate" hreflang="ro" href="https://www.c-design.ro/calculator-pret"/>
   </url>
 
+  <url>
+    <loc>https://www.c-design.ro/abonament-lunar</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://www.c-design.ro/abonament-lunar"/>
+  </url>
+
 </urlset>

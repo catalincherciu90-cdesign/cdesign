@@ -484,6 +484,12 @@ export default {
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
 
+    if (path === '/abonament-lunar') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/abonament-lunar.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
     // ── AUTH ──────────────────────────────────────────────────
 
     if (path === '/api/login' && request.method === 'POST') {
