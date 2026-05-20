@@ -120,7 +120,6 @@
     body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.65;overflow-x:hidden;}
     a{color:inherit;text-decoration:none}
     img{max-width:100%;display:block}
-    #matrix-canvas{position:fixed;inset:0;z-index:0;opacity:.18;pointer-events:none;}
     .scroll-bar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--teal),var(--teal-lt));width:0%;z-index:9999;transition:width .1s linear;box-shadow:0 0 8px var(--teal);}
     .container{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
     nav{position:sticky;top:0;z-index:100;background:rgba(6,15,15,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);position:relative;}
@@ -165,25 +164,24 @@
     .hero-stats{display:flex;gap:32px;flex-wrap:wrap}
     .hero-stat-num{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:800;color:var(--teal);line-height:1;text-shadow:0 0 20px rgba(0,168,168,.4);}
     .hero-stat-label{font-size:.78rem;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.06em;}
-    .hero-terminal{position:relative;z-index:2}
-    .terminal{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;overflow:hidden;box-shadow:0 0 60px rgba(0,168,168,.08),0 20px 60px rgba(0,0,0,.6);}
-    .terminal-bar{background:var(--bg3);padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}
-    .t-dot{width:10px;height:10px;border-radius:50%}
-    .t-red{background:#ff5f57}.t-yellow{background:#febc2e}.t-green{background:#28c840}
-    .t-title{flex:1;text-align:center;font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--muted);}
-    .terminal-body{padding:24px;font-family:'Share Tech Mono',monospace;font-size:.82rem;line-height:1.8;min-height:280px;}
-    .t-line{display:flex;gap:8px;align-items:flex-start}
-    .t-prompt{color:var(--teal);flex-shrink:0}
-    .t-cmd{color:#e8edf2}
-    .t-out{color:var(--soft);padding-left:16px}
-    .t-out.ok{color:#28c840}.t-out.warn{color:#febc2e}.t-out.accent{color:var(--teal)}
-    .t-cursor{display:inline-block;width:8px;height:14px;background:var(--teal);animation:cursor-blink .8s step-end infinite;vertical-align:middle;}
-    @keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}
+    .hero-visual{position:relative;z-index:2;}
+    .hero-proof-card{background:rgba(10,24,24,.88);border:1px solid var(--border-soft);border-radius:16px;padding:28px;box-shadow:0 0 60px rgba(0,168,168,.1),0 20px 60px rgba(0,0,0,.6);backdrop-filter:blur(12px);}
+    .hpc-stars{display:flex;gap:3px;margin-bottom:6px;}
+    .hpc-stars span{color:var(--teal);font-size:1rem;}
+    .hpc-rating{font-family:'Syne',sans-serif;font-size:.82rem;color:var(--soft);margin-bottom:20px;}
+    .hpc-divider{height:1px;background:var(--border);margin:20px 0;}
+    .hpc-item{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;}
+    .hpc-item:last-child{margin-bottom:0;}
+    .hpc-icon{width:38px;height:38px;border-radius:10px;background:var(--teal-dim);border:1px solid var(--teal-border);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+    .hpc-item-title{font-size:.875rem;font-weight:600;color:#f0f4f8;margin-bottom:2px;}
+    .hpc-item-sub{font-size:.78rem;color:var(--soft);}
+    .hpc-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
+    .hpc-badge{font-size:.72rem;font-weight:600;color:var(--teal);background:var(--teal-dim);border:1px solid var(--teal-border);padding:4px 11px;border-radius:20px;letter-spacing:.04em;}
     .stats-bar{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:36px 0;}
     .stats-inner{display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap;}
     .stat-item{text-align:center}
     .stat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--teal);line-height:1;text-shadow:0 0 16px rgba(0,168,168,.35);}
-    .stat-lbl{font-size:.8rem;color:var(--muted);margin-top:6px;font-family:'Share Tech Mono',monospace;letter-spacing:.04em;}
+    .stat-lbl{font-size:.8rem;color:var(--muted);margin-top:6px;letter-spacing:.04em;text-transform:uppercase;}
     .stat-div{width:1px;height:40px;background:var(--border-soft)}
 
     /* CAROUSEL */
@@ -228,19 +226,15 @@
     .sec-sub{font-size:1rem;color:var(--soft);font-weight:300;max-width:520px;line-height:1.7;margin-bottom:56px;}
     .services-bg{background:var(--bg)}
     .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
-    .svc-card{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;overflow:hidden;padding:0;transition:border-color .25s,box-shadow .25s,transform .25s;}
+    .svc-card{background:var(--bg2);border:1px solid var(--border-soft);border-radius:16px;padding:28px 26px;transition:border-color .25s,box-shadow .25s,transform .25s;}
     .svc-card:hover{border-color:var(--teal-border);box-shadow:0 0 40px rgba(0,168,168,.1),0 8px 32px rgba(0,0,0,.5);transform:translateY(-4px);}
-    .svc-term-bar{background:var(--bg3);padding:10px 14px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--border);}
-    .svc-term-bar .td{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-    .svc-term-bar .td-r{background:#ff5f57}.svc-term-bar .td-y{background:#febc2e}.svc-term-bar .td-g{background:#28c840}
-    .svc-term-title{flex:1;text-align:center;font-family:'Share Tech Mono',monospace;font-size:.67rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .svc-term-body{padding:16px 18px 20px;font-family:'Share Tech Mono',monospace;font-size:.78rem;line-height:1.9;}
-    .svc-term-cmd{display:flex;gap:6px;margin-bottom:10px;}
-    .svc-term-prompt{color:var(--teal);flex-shrink:0}
-    .svc-term-name{color:#e8edf2;font-size:.82rem}
-    .svc-term-line{display:flex;gap:8px;align-items:flex-start;}
-    .svc-term-arrow{color:var(--muted);flex-shrink:0}.svc-term-check{color:#28c840;flex-shrink:0}
-    .svc-term-text{color:var(--soft)}.svc-term-accent{color:var(--teal)}
+    .svc-icon{font-size:2.2rem;margin-bottom:18px;display:block;line-height:1;}
+    .svc-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:#f0f4f8;margin-bottom:10px;letter-spacing:-.02em;}
+    .svc-features{list-style:none;display:flex;flex-direction:column;gap:9px;margin-top:14px;}
+    .svc-features li{font-size:.9rem;color:var(--soft);display:flex;align-items:flex-start;gap:9px;line-height:1.5;}
+    .svc-features li::before{content:'✓';color:var(--teal);font-weight:700;flex-shrink:0;font-size:.85rem;margin-top:1px;}
+    .svc-link{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;color:var(--teal);font-weight:500;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);width:100%;transition:opacity .2s;}
+    .svc-link:hover{opacity:.75;}
     .process-bg{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
     .process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;position:relative;}
     .process-grid::before{content:'';position:absolute;top:27px;left:calc(12.5% + 14px);right:calc(12.5% + 14px);height:1px;background:linear-gradient(90deg,var(--teal),rgba(0,168,168,.2),var(--teal));animation:line-scan 3s linear infinite;}
@@ -340,7 +334,7 @@
     @keyframes glitch-1{0%,94%{transform:none;opacity:0}95%{transform:translate(-2px,1px);opacity:.8}96%{transform:translate(2px,-1px);opacity:.8}97%,100%{transform:none;opacity:0}}
     @keyframes glitch-2{0%,96%{transform:none;opacity:0}97%{transform:translate(2px,1px);opacity:.6}98%{transform:translate(-2px,-1px);opacity:.6}99%,100%{transform:none;opacity:0}}
     @media(max-width:1024px){
-      .hero-grid{grid-template-columns:1fr;gap:48px}.hero-terminal{max-width:520px}
+      .hero-grid{grid-template-columns:1fr;gap:48px}.hero-visual{max-width:520px}
       .services-grid,.portfolio-grid,.testi-grid{grid-template-columns:1fr 1fr}
       .process-grid{grid-template-columns:1fr 1fr}.process-grid::before{display:none}
       .footer-grid{grid-template-columns:1fr 1fr}.contact-grid{grid-template-columns:1fr;gap:40px}
@@ -364,7 +358,7 @@
       .stats-inner{gap:14px 18px;}
       section{padding:48px 0;}
       .banner-slide{height:auto;min-height:200px;padding:24px 0;}
-      .hero-terminal{display:none;}
+      .hero-visual{display:none;}
       .footer-grid{grid-template-columns:1fr;}
       .bs-h{font-size:1.2rem;}
       .bs-sub{font-size:.82rem;}
@@ -396,10 +390,9 @@
     .stat-lbl{font-size:.82rem;}
     .hero-stat-num{font-size:2.1rem;}
 
-    /* 6. Service cards — colored top accent + bigger text */
+    /* 6. Service cards — colored top accent */
     .svc-card{border-top:2px solid var(--teal-border);}
     .svc-card:hover{border-top-color:var(--teal);}
-    .svc-term-text{font-size:.87rem;line-height:1.78;}
 
     /* 7. Portfolio cards — bigger text, more padding */
     .port-info{padding:22px 24px;}
@@ -486,7 +479,6 @@
 </head>
 <body>
 
-<canvas id="matrix-canvas"></canvas>
 <div class="scroll-bar" id="scrollBar"></div>
 
 <nav aria-label="Navigare principală">
@@ -526,7 +518,7 @@
       <div class="hero-content">
         <div class="hero-eyebrow">CONSULTANȚĂ GRATUITĂ DISPONIBILĂ</div>
         <h1 id="hero-heading">
-          <span class="glitch" data-text="Web Design">Web Design</span><br>
+          Web Design<br>
           care aduce<br>
           <span class="hl">clienți reali</span>
         </h1>
@@ -541,13 +533,32 @@
           <div class="hero-stat"><div class="hero-stat-num" data-count="24">0</div><div class="hero-stat-label">h timp de răspuns</div></div>
         </div>
       </div>
-      <div class="hero-terminal" aria-hidden="true">
-        <div class="terminal">
-          <div class="terminal-bar">
-            <div class="t-dot t-red"></div><div class="t-dot t-yellow"></div><div class="t-dot t-green"></div>
-            <div class="t-title">c-design.ro — terminal</div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-proof-card">
+          <div class="hpc-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+          <div class="hpc-rating">5.0 · 12 recenzii verificate Google</div>
+          <div class="hpc-item">
+            <div class="hpc-icon">🚀</div>
+            <div><div class="hpc-item-title">Livrare garantată în 21 zile</div><div class="hpc-item-sub">Termen contractual, fără surprize</div></div>
           </div>
-          <div class="terminal-body" id="terminal-body"></div>
+          <div class="hpc-item">
+            <div class="hpc-icon">🔍</div>
+            <div><div class="hpc-item-title">Vizibil pe Google din ziua 1</div><div class="hpc-item-sub">SEO local integrat în fiecare proiect</div></div>
+          </div>
+          <div class="hpc-item">
+            <div class="hpc-icon">📱</div>
+            <div><div class="hpc-item-title">Arată perfect pe orice ecran</div><div class="hpc-item-sub">Mobile-first, testat pe 20+ dispozitive</div></div>
+          </div>
+          <div class="hpc-divider"></div>
+          <div class="hpc-item">
+            <div class="hpc-icon">💬</div>
+            <div><div class="hpc-item-title">"Primul client în prima lună"</div><div class="hpc-item-sub">— Ioana A., consultant financiar</div></div>
+          </div>
+          <div class="hpc-badges">
+            <span class="hpc-badge">Domeniu .ro inclus</span>
+            <span class="hpc-badge">Preț fix</span>
+            <span class="hpc-badge">Fără surprize</span>
+          </div>
         </div>
       </div>
     </div>
@@ -557,13 +568,13 @@
 <div class="stats-bar" aria-label="Cifre cheie">
   <div class="container">
     <div class="stats-inner">
-      <div class="stat-item"><div class="stat-num">120+</div><div class="stat-lbl">// proiecte_livrate</div></div>
+      <div class="stat-item"><div class="stat-num">120+</div><div class="stat-lbl">Proiecte livrate</div></div>
       <div class="stat-div" aria-hidden="true"></div>
-      <div class="stat-item"><div class="stat-num">8 ani</div><div class="stat-lbl">// experienta_web</div></div>
+      <div class="stat-item"><div class="stat-num">8 ani</div><div class="stat-lbl">Experiență web</div></div>
       <div class="stat-div" aria-hidden="true"></div>
-      <div class="stat-item"><div class="stat-num">97%</div><div class="stat-lbl">// clienti_multumiti</div></div>
+      <div class="stat-item"><div class="stat-num">97%</div><div class="stat-lbl">Clienți mulțumiți</div></div>
       <div class="stat-div" aria-hidden="true"></div>
-      <div class="stat-item"><div class="stat-num">&lt;21 zile</div><div class="stat-lbl">// timp_livrare</div></div>
+      <div class="stat-item"><div class="stat-num">&lt;21 zile</div><div class="stat-lbl">Timp de livrare</div></div>
     </div>
   </div>
 </div>
@@ -624,7 +635,7 @@
       </svg>
       <div class="bs-inner">
         <div class="bs-text">
-          <div class="bs-tag">// oferta_standard</div>
+          <div class="bs-tag">OFERTĂ STANDARD</div>
           <h2 class="bs-h">De la idee la site live<br><span style="color:var(--teal)">înainte să uiți parola</span> 😄</h2>
           <p class="bs-sub">Garantat contractual. Domeniu .ro + găzduire incluse. Arată perfect pe orice dispozitiv.</p>
           <a href="#contact" class="bs-cta">Programează acum →</a>
@@ -662,7 +673,7 @@
       </svg>
       <div class="bs-inner">
         <div class="bs-text">
-          <div class="bs-tag" style="color:#c084fc;background:rgba(192,132,252,.08);border:1px solid rgba(192,132,252,.25);">// consultanta_gratuita</div>
+          <div class="bs-tag" style="color:#c084fc;background:rgba(192,132,252,.08);border:1px solid rgba(192,132,252,.25);">CONSULTANȚĂ GRATUITĂ</div>
           <h2 class="bs-h">Consultanță<br><span class="hl2">gratuită</span> disponibilă</h2>
           <p class="bs-sub">30 de minute cu un specialist dedicat afacerii tale. Fără obligații, fără costuri ascunse.</p>
           <a href="#contact" class="bs-cta" style="background:linear-gradient(135deg,#c084fc,#818cf8);color:#fff;box-shadow:0 0 20px rgba(192,132,252,.3);">Rezervă locul →</a>
@@ -700,7 +711,7 @@
       </svg>
       <div class="bs-inner">
         <div class="bs-text">
-          <div class="bs-tag" style="color:#fbbf24;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.22);">// pachet_startup</div>
+          <div class="bs-tag" style="color:#fbbf24;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.22);">PACHET STARTUP</div>
           <h2 class="bs-h">Pornești o afacere?<br><span class="hl3">Tot online-ul</span> dintr-o dată</h2>
           <p class="bs-sub">Site + Logo + Pagină Facebook — tot ce-ți trebuie pentru a atrage primii clienți, într-un singur pachet.</p>
           <a href="#contact" class="bs-cta" style="background:linear-gradient(135deg,#fbbf24,#f97316);color:#060f0f;box-shadow:0 0 20px rgba(251,191,36,.3);">Vreau pachetul →</a>
@@ -735,7 +746,7 @@
       </svg>
       <div class="bs-inner">
         <div class="bs-text">
-          <div class="bs-tag" style="color:#fb7185;background:rgba(251,113,133,.08);border:1px solid rgba(251,113,133,.22);">// redesign_site</div>
+          <div class="bs-tag" style="color:#fb7185;background:rgba(251,113,133,.08);border:1px solid rgba(251,113,133,.22);">REDESIGN SITE</div>
           <h2 class="bs-h">Site vechi = <span class="hl4">clienți pierduți</span></h2>
           <p class="bs-sub">Îl transformăm complet: mai rapid, mai modern, mai convingător. Poziția pe Google rămâne. Tu câștigi mai mult.</p>
           <a href="#contact" class="bs-cta" style="background:linear-gradient(135deg,#fb7185,#f43f5e);color:#fff;box-shadow:0 0 20px rgba(244,63,94,.3);">Modernizează acum →</a>
@@ -778,70 +789,70 @@
 
 <section class="services-bg" id="servicii" aria-labelledby="servicii-heading">
   <div class="container">
-    <div class="sec-label reveal">// servicii.js</div>
+    <div class="sec-label reveal">SERVICII</div>
     <h2 class="sec-title reveal" id="servicii-heading">Tot ce ai nevoie pentru o prezență online serioasă</h2>
     <p class="sec-sub reveal">Soluții complete de web design pentru afacerea ta, de la zero până la lansare.</p>
     <div class="services-grid">
       <article class="svc-card reveal">
-        <div class="svc-term-bar" aria-hidden="true"><div class="td td-r"></div><div class="td td-y"></div><div class="td td-g"></div><div class="svc-term-title">site-de-prezentare.sh</div></div>
-        <div class="svc-term-body">
-          <div class="svc-term-cmd"><span class="svc-term-prompt">$ </span><span class="svc-term-name">./site-prezentare --afacerea-ta</span></div>
-          <div class="svc-term-line"><span class="svc-term-check">✓</span><span class="svc-term-accent">Site complet livrat în max. 21 zile</span></div>
-          <div class="svc-term-line"><span class="svc-term-arrow">→</span><span class="svc-term-text">Domeniu .ro + găzduire incluse</span></div>
-          <div class="svc-term-line"><span class="svc-term-arrow">→</span><span class="svc-term-text">Arată perfect pe telefon și PC</span></div>
-          <div class="svc-term-line"><span class="svc-term-check">✓</span><span class="svc-term-accent">Clienții te găsesc pe Google</span></div>
-        </div>
+        <span class="svc-icon">🌐</span>
+        <h3 class="svc-title">Site de Prezentare</h3>
+        <ul class="svc-features">
+          <li>Site complet livrat în max. 21 zile</li>
+          <li>Domeniu .ro + găzduire incluse</li>
+          <li>Arată perfect pe telefon și PC</li>
+          <li>Clienții te găsesc pe Google</li>
+        </ul>
       </article>
       <article class="svc-card reveal reveal-delay-1">
-        <div class="svc-term-bar" aria-hidden="true"><div class="td td-r"></div><div class="td td-y"></div><div class="td td-g"></div><div class="svc-term-title">pachet-startup.sh</div></div>
-        <div class="svc-term-body">
-          <div class="svc-term-cmd"><span class="svc-term-prompt">$ </span><span class="svc-term-name">./pornesc-afacerea --complet</span></div>
-          <div class="svc-term-line"><span class="svc-term-check">✓</span><span class="svc-term-accent">Site + logo + pagină Facebook</span></div>
-          <div class="svc-term-line"><span class="svc-term-arrow">→</span><span class="svc-term-text">Tot ce-ți trebuie ca să începi</span></div>
-          <div class="svc-term-line"><span class="svc-term-arrow">→</span><span class="svc-term-text">Fără cunoștințe tehnice necesare</span></div>
-          <div class="svc-term-line"><span class="svc-term-check">✓</span><span class="svc-term-accent">Gata să primești primul client</span></div>
-          <div class="svc-term-line" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)"><a href="/pachet-startup" style="color:var(--teal);font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:.04em;">→ detalii_pachet.html ↗</a></div>
-        </div>
+        <span class="svc-icon">🚀</span>
+        <h3 class="svc-title">Pachet Start-Up Online</h3>
+        <ul class="svc-features">
+          <li>Site + logo + pagină Facebook</li>
+          <li>Tot ce-ți trebuie ca să începi</li>
+          <li>Fără cunoștințe tehnice necesare</li>
+          <li>Gata să primești primul client</li>
+        </ul>
+        <a href="/pachet-startup" class="svc-link">Vezi detalii pachet →</a>
       </article>
       <article class="svc-card reveal reveal-delay-2">
-        <div class="svc-term-bar" aria-hidden="true"><div class="td td-r"></div><div class="td td-y"></div><div class="td td-g"></div><div class="svc-term-title">administrare-facebook.sh</div></div>
-        <div class="svc-term-body">
-          <div class="svc-term-cmd"><span class="svc-term-prompt">$ </span><span class="svc-term-name">./facebook --pagina-ta --lunar</span></div>
-          <div class="svc-term-line"><span class="svc-term-check">✓</span><span class="svc-term-accent">3–4 postări pe săptămână</span></div>
-          <div class="svc-term-line"><span class="svc-term-arrow">→</span><span class="svc-term-text">Răspundem la mesaje și comentarii</span></div>
-          <div class="svc-term-line"><span class="svc-term-arrow">→</span><span class="svc-term-text">Mai mulți urmăritori, organic</span></div>
-          <div class="svc-term-line"><span class="svc-term-check">✓</span><span class="svc-term-accent">Tu conduci afacerea, noi pagina</span></div>
-        </div>
+        <span class="svc-icon">📘</span>
+        <h3 class="svc-title">Administrare Facebook</h3>
+        <ul class="svc-features">
+          <li>3–4 postări pe săptămână</li>
+          <li>Răspundem la mesaje și comentarii</li>
+          <li>Mai mulți urmăritori, organic</li>
+          <li>Tu conduci afacerea, noi pagina</li>
+        </ul>
       </article>
       <article class="svc-card reveal">
-        <div class="svc-term-bar" aria-hidden="true"><div class="td td-r"></div><div class="td td-y"></div><div class="td td-g"></div><div class="svc-term-title">redesign-site.sh</div></div>
-        <div class="svc-term-body">
-          <div class="svc-term-cmd"><span class="svc-term-prompt">$ </span><span class="svc-term-name">./modernizez --site-vechi</span></div>
-          <div class="svc-term-line"><span class="svc-term-check">✓</span><span class="svc-term-accent">Site vechi transformat, complet nou</span></div>
-          <div class="svc-term-line"><span class="svc-term-arrow">→</span><span class="svc-term-text">Se încarcă de 2–3× mai rapid</span></div>
-          <div class="svc-term-line"><span class="svc-term-arrow">→</span><span class="svc-term-text">Poziția pe Google se păstrează</span></div>
-          <div class="svc-term-line"><span class="svc-term-check">✓</span><span class="svc-term-accent">Fără întrerupere în activitate</span></div>
-        </div>
+        <span class="svc-icon">🔄</span>
+        <h3 class="svc-title">Redesign Site</h3>
+        <ul class="svc-features">
+          <li>Site vechi transformat, complet nou</li>
+          <li>Se încarcă de 2–3× mai rapid</li>
+          <li>Poziția pe Google se păstrează</li>
+          <li>Fără întrerupere în activitate</li>
+        </ul>
       </article>
       <article class="svc-card reveal reveal-delay-1">
-        <div class="svc-term-bar" aria-hidden="true"><div class="td td-r"></div><div class="td td-y"></div><div class="td td-g"></div><div class="svc-term-title">design-grafic.sh</div></div>
-        <div class="svc-term-body">
-          <div class="svc-term-cmd"><span class="svc-term-prompt">$ </span><span class="svc-term-name">./creez-brandul --logo --materiale</span></div>
-          <div class="svc-term-line"><span class="svc-term-check">✓</span><span class="svc-term-accent">Logo unic, creat doar pentru tine</span></div>
-          <div class="svc-term-line"><span class="svc-term-arrow">→</span><span class="svc-term-text">Carte de vizită și bannere incluse</span></div>
-          <div class="svc-term-line"><span class="svc-term-arrow">→</span><span class="svc-term-text">Culori și fonturi definite clar</span></div>
-          <div class="svc-term-line"><span class="svc-term-check">✓</span><span class="svc-term-accent">Aspect unitar pe tot ce prezinți</span></div>
-        </div>
+        <span class="svc-icon">🎨</span>
+        <h3 class="svc-title">Design Grafic & Logo</h3>
+        <ul class="svc-features">
+          <li>Logo unic, creat doar pentru tine</li>
+          <li>Carte de vizită și bannere incluse</li>
+          <li>Culori și fonturi definite clar</li>
+          <li>Aspect unitar pe tot ce prezinți</li>
+        </ul>
       </article>
       <article class="svc-card reveal reveal-delay-2">
-        <div class="svc-term-bar" aria-hidden="true"><div class="td td-r"></div><div class="td td-y"></div><div class="td td-g"></div><div class="svc-term-title">mentenanta-suport.sh</div></div>
-        <div class="svc-term-body">
-          <div class="svc-term-cmd"><span class="svc-term-prompt">$ </span><span class="svc-term-name">./monitorizez --zilnic --secure</span></div>
-          <div class="svc-term-line"><span class="svc-term-check">✓</span><span class="svc-term-accent">Modificări de conținut incluse</span></div>
-          <div class="svc-term-line"><span class="svc-term-arrow">→</span><span class="svc-term-text">Site monitorizat zilnic, fără pauze</span></div>
-          <div class="svc-term-line"><span class="svc-term-arrow">→</span><span class="svc-term-text">Backup complet în caz de urgență</span></div>
-          <div class="svc-term-line"><span class="svc-term-check">✓</span><span class="svc-term-accent">Suni, descriei, rezolvăm rapid</span></div>
-        </div>
+        <span class="svc-icon">🛡️</span>
+        <h3 class="svc-title">Mentenanță & Suport</h3>
+        <ul class="svc-features">
+          <li>Modificări de conținut incluse</li>
+          <li>Site monitorizat zilnic, fără pauze</li>
+          <li>Backup complet în caz de urgență</li>
+          <li>Suni, descrii, rezolvăm rapid</li>
+        </ul>
       </article>
     </div>
   </div>
@@ -852,7 +863,7 @@
   <div class="container">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;">
       <div>
-        <div style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--teal);letter-spacing:.1em;margin-bottom:8px;">// pachet.startup — de la 300€</div>
+        <div style="font-size:.72rem;color:var(--teal);letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase;font-weight:600;">PACHET STARTUP · De la 300€</div>
         <div style="font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:4px;">Abia pornești afacerea? Avem un pachet complet pentru tine.</div>
         <div style="font-size:.9rem;color:var(--soft);">Site + logo + domeniu & găzduire + 2 conturi social media — totul dintr-un loc.</div>
       </div>
@@ -863,7 +874,7 @@
 
 <section class="process-bg" id="proces" aria-labelledby="proces-heading">
   <div class="container">
-    <div class="sec-label reveal">// process.init()</div>
+    <div class="sec-label reveal">PROCES</div>
     <h2 class="sec-title reveal" id="proces-heading">4 pași simpli până la site-ul live</h2>
     <p class="sec-sub reveal">Proces transparent, fără surprize. Știi mereu ce urmează.</p>
     <div class="process-grid">
@@ -877,7 +888,7 @@
 
 <section id="portofoliu" aria-labelledby="portofoliu-heading">
   <div class="container">
-    <div class="sec-label reveal">// portfolio.load()</div>
+    <div class="sec-label reveal">PORTOFOLIU</div>
     <h2 class="sec-title reveal" id="portofoliu-heading">Proiectele noastre</h2>
     <p class="sec-sub reveal">Proiecte reale pentru afaceri reale din România.</p>
     <div class="portfolio-grid" id="portfolioGrid"></div>
@@ -886,7 +897,7 @@
 
 <section class="testi-bg" id="testimoniale" aria-labelledby="testi-heading">
   <div class="container">
-    <div class="sec-label reveal">// reviews.verified()</div>
+    <div class="sec-label reveal">RECENZII</div>
     <h2 class="sec-title reveal" id="testi-heading">Ce spun clienții noștri</h2>
     <div class="testi-grid">
       <div class="testi-card reveal"><div class="testi-stars" aria-label="5 stele"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="testi-text">"A fost simplu de la început până la final. Mi-au explicat fiecare pas, n-am simțit că nu înțeleg ce se întâmplă. Exact ce aveam nevoie."</p><div class="testi-author"><div class="t-avatar" aria-hidden="true">MB</div><div><span class="t-name">Mihai B.</span><span class="t-role">Servicii auto</span></div></div></div>
@@ -898,7 +909,7 @@
 
 <div class="cta-section">
   <div class="container">
-    <div class="sec-label" style="margin-bottom:14px">// booking.open()</div>
+    <div class="sec-label" style="margin-bottom:14px">PROGRAMARE</div>
     <h2>Vrei un site care aduce clienți?</h2>
     <p>Consultanță gratuită, 30 de minute, fără obligații. Îți spunem exact ce ai nevoie și cât costă.</p>
     <div class="cta-actions">
@@ -912,7 +923,7 @@
   <div class="container">
     <div class="contact-grid">
       <div>
-        <div class="sec-label reveal">// booking.new()</div>
+        <div class="sec-label reveal">CONTACT</div>
         <h2 class="contact-info-title reveal" id="contact-heading">Hai să vorbim despre<br>afacerea ta</h2>
         <p class="contact-info-sub reveal">30 de minute gratuit — fără obligații. Alege data și ora, te confirmăm în maxim 2 ore.</p>
         <address class="contact-items" style="font-style:normal">
@@ -993,26 +1004,6 @@
 </footer>
 
 <script>
-(function(){
-  const canvas=document.getElementById('matrix-canvas');
-  const ctx=canvas.getContext('2d');
-  let W,H,cols,drops;
-  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;cols=Math.floor(W/18);drops=Array(cols).fill(1).map(()=>Math.random()*-100);}
-  window.addEventListener('resize',resize);resize();
-  function draw(){
-    ctx.fillStyle='rgba(8,11,14,0.08)';ctx.fillRect(0,0,W,H);
-    ctx.font='13px "Share Tech Mono",monospace';
-    for(let i=0;i<cols;i++){
-      const c=Math.random()>.5?'1':'0';const x=i*18,y=drops[i]*18;
-      ctx.fillStyle='rgba(180,255,248,0.9)';ctx.fillText(c,x,y);
-      ctx.fillStyle='rgba(0,168,168,0.55)';ctx.fillText(Math.random()>.5?'1':'0',x,y-18);
-      ctx.fillStyle='rgba(0,168,168,0.3)';ctx.fillText(Math.random()>.5?'1':'0',x,y-36);
-      if(y>H+100)drops[i]=0;drops[i]+=0.4+Math.random()*0.3;
-    }
-  }
-  setInterval(draw,40);
-})();
-
 const scrollBar=document.getElementById('scrollBar');
 window.addEventListener('scroll',()=>{const pct=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100;scrollBar.style.width=pct+'%';},{passive:true});
 
@@ -1024,31 +1015,6 @@ function countUp(el,target,dur){let s=0;const step=target/(dur/16);const t=setIn
 const cObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){document.querySelectorAll('[data-count]').forEach(el=>countUp(el,+el.dataset.count,1200));cObs.disconnect();}});},{threshold:0.5});
 const hs=document.querySelector('.hero-stats');if(hs)cObs.observe(hs);
 
-const lines=[
-  {type:'cmd',text:'./consultanta.sh --gratuit'},
-  {type:'out ok',text:'✓ Slot disponibil găsit'},
-  {type:'out',text:'  → Durată: 30 minute'},
-  {type:'out',text:'  → Fără obligații'},
-  {type:'cmd',text:'./analiza-afacere --chiajna --ilfov'},
-  {type:'out ok',text:'✓ Obiective identificate'},
-  {type:'out accent',text:'  → Soluție personalizată pregătită'},
-  {type:'out',text:'  → Buget estimat: transparent'},
-  {type:'cmd',text:'./livrez-site --21-zile --garantat'},
-  {type:'out ok',text:'✓ Site live, clienți activi'},
-  {type:'out warn',text:'  → Livrare garantată contractual'},
-  {type:'out ok',text:'✓ office@c-design.ro · 0753 116 155'},
-];
-const tbody=document.getElementById('terminal-body');let li=0;
-function addLine(){
-  if(li>=lines.length)return;const l=lines[li++];const d=document.createElement('div');d.className='t-line';
-  if(l.type==='cmd'){d.innerHTML=`<span class="t-prompt">~/c-design $</span><span class="t-cmd"> ${l.text}</span>`;}
-  else{d.innerHTML=`<span class="t-out ${l.type.replace('out','').trim()}">${l.text}</span>`;}
-  tbody.appendChild(d);tbody.scrollTop=tbody.scrollHeight;
-  const delay=l.type==='cmd'?600:200;
-  if(li<lines.length)setTimeout(addLine,delay);
-  else setTimeout(()=>{const c=document.createElement('div');c.className='t-line';c.innerHTML=`<span class="t-prompt">~/c-design $</span><span class="t-cursor"></span>`;tbody.appendChild(c);},400);
-}
-setTimeout(addLine,800);
 
 (async function loadProjects() {
   const grid = document.getElementById('portfolioGrid');
