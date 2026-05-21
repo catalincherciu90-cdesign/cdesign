@@ -157,7 +157,7 @@
     .hero.h-auto   {min-height:0;height:auto;padding:100px 0 80px;}
     .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
     /* Hero background photo layers */
-    .hero-bg-photo{position:absolute;inset:0;z-index:0;background-image:url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=1800&q=80');background-size:cover;background-position:center center;background-repeat:no-repeat;transition:background-image .4s,background-position .4s,background-size .4s;}
+    .hero-bg-photo{position:absolute;inset:0;z-index:0;background-image:url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=1800&q=80');background-size:cover;background-position:center center;background-repeat:no-repeat;background-color:var(--bg);transition:background-image .4s,background-position .4s,background-size .4s;}
     .hero-bg-photo::after{content:'';position:absolute;inset:0;background:var(--hero-grad);transition:opacity .4s;}
     .hero.no-gradient .hero-bg-photo::after{opacity:0;}
     .hero.no-text .hero-content,.hero.no-text .hero-visual{visibility:hidden;opacity:0;transition:opacity .3s;}
@@ -228,7 +228,7 @@
     .banner-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:background .2s,transform .2s;}
     .banner-dot.active{background:var(--teal);transform:scale(1.3);}
 
-    section{padding:96px 0;position:relative}
+    section{padding:96px 0;position:relative;content-visibility:auto;contain-intrinsic-size:0 600px}
     .sec-label{font-family:'Share Tech Mono',monospace;font-size:.95rem;color:var(--teal);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;}
     .sec-title{font-family:'Syne',sans-serif;font-size:clamp(1.7rem,3vw,2.4rem);font-weight:700;color:#fff;letter-spacing:-.025em;line-height:1.2;margin-bottom:12px;}
     .sec-sub{font-size:1rem;color:var(--soft);font-weight:300;max-width:520px;line-height:1.7;margin-bottom:56px;}
@@ -332,8 +332,8 @@
     .mobile-menu.open{display:flex}
     .mobile-menu a{font-size:1rem;font-weight:500;color:var(--soft);padding:13px 0;border-bottom:1px solid var(--border);transition:color .2s}
     .mobile-menu a:hover{color:var(--teal)}.mobile-menu .btn-nav{margin-top:12px;text-align:center;width:100%}
-    .reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
-    .reveal.visible{opacity:1;transform:translateY(0)}
+    .reveal{opacity:0;transition:opacity .6s ease}
+    .reveal.visible{opacity:1}
     .reveal-delay-1{transition-delay:80ms}.reveal-delay-2{transition-delay:160ms}.reveal-delay-3{transition-delay:240ms}
     .glitch{position:relative;display:inline-block}
     .glitch::before,.glitch::after{content:attr(data-text);position:absolute;inset:0;background:transparent}
@@ -999,7 +999,7 @@
     <div class="sec-label reveal">PORTOFOLIU</div>
     <h2 class="sec-title reveal" id="portofoliu-heading">Afaceri ca a ta, rezultate reale</h2>
     <p class="sec-sub reveal">Iată câteva dintre proiectele pe care le-am livrat — mici afaceri de familie, freelanceri, restaurante, firme de construcții. Oameni reali, site-uri care funcționează.</p>
-    <div class="portfolio-grid" id="portfolioGrid"></div>
+    <div class="portfolio-grid" id="portfolioGrid" style="min-height:280px"></div>
   </div>
 </section>
 
@@ -1553,38 +1553,8 @@ document.getElementById('bookingForm').addEventListener('submit', async function
         hero.classList.remove('h-large','h-medium','h-auto');
         if(d.heroHeight && d.heroHeight !== 'full') hero.classList.add('h-'+d.heroHeight);
       }
-      // Ajustează înălțimea hero după aspect ratio imagini (contain / 100% auto)
-      // Funcționează separat pentru desktop și mobil
-      if(hero) {
-        var imgCache = {};
-        function loadImg(src, cb) {
-          if(imgCache[src]) { cb(imgCache[src]); return; }
-          var i = new Image();
-          i.onload = function(){ imgCache[src] = i; cb(i); };
-          i.src = src;
-        }
-        function fitHeroNow() {
-          var mob    = window.innerWidth <= 768;
-          var size   = (mob && d.heroSizeMobile)  ? d.heroSizeMobile  : (d.heroSize  || '');
-          var imgSrc = (mob && d.heroImageMobile)  ? d.heroImageMobile : (d.heroImage || '');
-          var needsFit = imgSrc && (size === 'contain' || size === '100% auto');
-          if(!needsFit) return;
-          loadImg(imgSrc, function(img) {
-            var w = hero.offsetWidth;
-            if(!w || !img.naturalWidth) return;
-            var ratio = img.naturalHeight / img.naturalWidth;
-            hero.style.minHeight = '0';
-            hero.style.height    = Math.round(w * ratio) + 'px';
-            hero.style.padding   = '0';
-          });
-        }
-        fitHeroNow();
-        var fitTimer;
-        window.addEventListener('resize', function() {
-          clearTimeout(fitTimer);
-          fitTimer = setTimeout(fitHeroNow, 80);
-        }, { passive: true });
-      }
+      // NOTE: nu mai modificăm înălțimea hero din JS — previne CLS
+      // Imaginea se va afișa cu contain în cadrul CSS al hero-ului
     }).catch(function(){});
 })();
 </script>
