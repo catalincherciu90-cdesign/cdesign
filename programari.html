@@ -388,6 +388,12 @@
     .media-btn.del:hover{border-color:rgba(255,95,87,.4);color:#ff5f57;}
     .media-upload-zone{border:2px dashed var(--border-soft);border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:border-color .2s;grid-column:1/-1;}
     .media-upload-zone:hover,.media-upload-zone.drag{border-color:var(--teal-border);}
+    .mpick-item{cursor:pointer;border-radius:8px;overflow:hidden;border:2px solid transparent;transition:border-color .15s,transform .15s;background:var(--bg3);}
+    .mpick-item:hover{border-color:var(--teal);transform:scale(1.03);}
+    .mpick-item img{width:100%;aspect-ratio:1;object-fit:cover;display:block;}
+    .mpick-name{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--muted);padding:5px 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .media-pick-btn{background:var(--bg3);border:1px solid var(--border-soft);color:var(--soft);font-family:'Share Tech Mono',monospace;font-size:.65rem;padding:5px 9px;border-radius:5px;cursor:pointer;white-space:nowrap;transition:all .15s;}
+    .media-pick-btn:hover{border-color:var(--teal-border);color:var(--teal);}
 
     /* ── GIBILAN ─────────────────────────────────────────────── */
     .gibilan-layout{display:grid;grid-template-columns:260px 1fr;gap:32px;padding:24px 0;}
@@ -1115,6 +1121,7 @@
             <div style="flex:1;min-width:200px;">
               <div style="display:flex;gap:8px;margin-bottom:8px;">
                 <input class="f-input" id="hero-img-url" placeholder="URL imagine (https://...)" style="flex:1;margin:0;">
+                <button class="media-pick-btn" onclick="openMediaPickerForInput('hero-img-url','applyHeroPreview')" style="height:42px;padding:0 12px;">📂 Media</button>
                 <button onclick="uploadHeroImage()" style="background:var(--teal);color:#060f0f;border:none;border-radius:6px;padding:0 14px;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;height:42px;">⬆ Upload</button>
               </div>
               <div style="display:flex;gap:8px;">
@@ -1133,6 +1140,7 @@
             <div style="flex:1;min-width:200px;">
               <div style="display:flex;gap:8px;margin-bottom:8px;">
                 <input class="f-input" id="hero-mob-url" placeholder="URL imagine mobil (opțional)" style="flex:1;margin:0;">
+                <button class="media-pick-btn" onclick="openMediaPickerForInput('hero-mob-url','applyHeroMobilePreview')" style="height:42px;padding:0 12px;">📂 Media</button>
                 <button onclick="uploadHeroImageMobile()" style="background:var(--teal);color:#060f0f;border:none;border-radius:6px;padding:0 14px;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;height:42px;">⬆ Upload</button>
               </div>
               <div style="display:flex;gap:8px;">
@@ -1281,6 +1289,23 @@
         <button class="layout-reset-btn" onclick="closeBlockPicker()">Anulează</button>
         <button class="btn-save" onclick="confirmAddBlock()">Adaugă bloc</button>
       </div>
+    </div>
+  </div>
+
+  <!-- MEDIA PICKER MODAL -->
+  <div id="mediaPickerOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:2000;align-items:flex-start;justify-content:center;padding:24px;overflow-y:auto;" onclick="if(event.target===this)closeMediaPicker()">
+    <div style="background:var(--bg2);border:1px solid var(--border-soft);border-radius:14px;width:100%;max-width:860px;padding:24px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+        <span style="font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--soft);">// selectează imagine din media</span>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <label style="background:var(--teal);color:#060f0f;font-weight:700;font-size:.78rem;padding:7px 16px;border-radius:7px;cursor:pointer;">
+            ⬆ Upload nou
+            <input type="file" accept="image/*" style="display:none" onchange="mediaPickerUpload(this)">
+          </label>
+          <button onclick="closeMediaPicker()" style="background:none;border:1px solid var(--border-soft);color:var(--muted);border-radius:7px;padding:7px 14px;cursor:pointer;font-size:.85rem;">✕ Închide</button>
+        </div>
+      </div>
+      <div id="mediaPickerGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;max-height:60vh;overflow-y:auto;"></div>
     </div>
   </div>
 
@@ -3310,6 +3335,7 @@
         fields = imgPreview
           + '<div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">'
           + '<input data-upload-field="'+ci+'-'+ei+'-src" placeholder="URL imagine (https://...)" value="'+esc(el.src||'')+'" oninput="updateColEl('+ci+','+ei+',\'src\',this.value)" style="flex:1;">'
+          + '<button class="media-pick-btn" onclick="openMediaPickerForColEl('+ci+','+ei+',\'src\',\''+imgUploadId+'\')">📂</button>'
           + '<button onclick="triggerImageUpload('+ci+','+ei+',\'src\',\''+imgUploadId+'\')" style="background:var(--teal);color:#060f0f;border:none;border-radius:5px;padding:5px 10px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">⬆ Upload</button>'
           + '</div>'
           + '<span id="'+imgUploadId+'" style="font-size:.72rem;color:var(--teal);display:block;margin-bottom:6px;min-height:14px;"></span>'
@@ -3337,6 +3363,7 @@
           + '<label style="font-size:.75rem;color:var(--muted);">Bg culoare:</label>'
           + '<input type="color" value="'+(el.bgColor||'#0a2020')+'" oninput="updateColEl('+ci+','+ei+',\'bgColor\',this.value)" style="width:36px;height:28px;border:none;padding:0;background:none;cursor:pointer;">'
           + '<input data-upload-field="'+ci+'-'+ei+'-bgImg" placeholder="sau URL imagine fundal" value="'+esc(el.bgImg||'')+'" oninput="updateColEl('+ci+','+ei+',\'bgImg\',this.value)">'
+          + '<button class="media-pick-btn" onclick="openMediaPickerForColEl('+ci+','+ei+',\'bgImg\',\''+bannerUploadId+'\')">📂</button>'
           + '<button onclick="triggerImageUpload('+ci+','+ei+',\'bgImg\',\''+bannerUploadId+'\')" style="background:var(--teal);color:#060f0f;border:none;border-radius:5px;padding:5px 10px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">⬆ Upload</button>'
           + '</div>'
           + '<span id="'+bannerUploadId+'" style="font-size:.72rem;color:var(--teal);display:block;min-height:14px;"></span>';
@@ -3806,6 +3833,91 @@
     t.style.opacity = '1';
     clearTimeout(t._timer);
     t._timer = setTimeout(() => { t.style.opacity = '0'; }, 3000);
+  }
+
+  // -- MEDIA PICKER --
+
+  var _mediaPickerCallback = null;
+
+  function openMediaPicker(callback) {
+    _mediaPickerCallback = callback;
+    var overlay = document.getElementById('mediaPickerOverlay');
+    var grid = document.getElementById('mediaPickerGrid');
+    if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);font-family:\'Share Tech Mono\',monospace;font-size:.8rem;">Se încarcă...</div>';
+    if (overlay) overlay.style.display = 'flex';
+    fetch('/api/media?token=' + encodeURIComponent(adminToken))
+      .then(function(r){ return r.json(); })
+      .then(function(d){ renderMediaPickerGrid(d.files || []); })
+      .catch(function(){ if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);">Eroare la încărcare.</div>'; });
+  }
+
+  function renderMediaPickerGrid(files) {
+    var grid = document.getElementById('mediaPickerGrid');
+    if (!grid) return;
+    if (!files.length) {
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--muted);font-family:\'Share Tech Mono\',monospace;font-size:.8rem;">// nicio imagine — încarcă una cu butonul de sus</div>';
+      return;
+    }
+    grid.innerHTML = files.map(function(f) {
+      var fullUrl = location.origin + f.url;
+      return '<div class="mpick-item" onclick="selectMediaItem(\'' + fullUrl + '\')">'
+        + '<img src="' + f.url + '" alt="' + f.filename + '" loading="lazy" onerror="this.style.opacity=\'.15\'">'
+        + '<div class="mpick-name">' + f.filename + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  function selectMediaItem(url) {
+    if (_mediaPickerCallback) _mediaPickerCallback(url);
+    closeMediaPicker();
+  }
+
+  function closeMediaPicker() {
+    var overlay = document.getElementById('mediaPickerOverlay');
+    if (overlay) overlay.style.display = 'none';
+    _mediaPickerCallback = null;
+  }
+
+  function mediaPickerUpload(input) {
+    var file = input.files[0];
+    if (!file) return;
+    input.value = '';
+    var grid = document.getElementById('mediaPickerGrid');
+    if (grid) {
+      var notice = document.createElement('div');
+      notice.style.cssText = 'grid-column:1/-1;text-align:center;padding:12px;color:var(--teal);font-family:\'Share Tech Mono\',monospace;font-size:.78rem;';
+      notice.textContent = 'Se încarcă...';
+      grid.prepend(notice);
+    }
+    uploadMedia(file, function(url) {
+      fetch('/api/media?token=' + encodeURIComponent(adminToken))
+        .then(function(r){ return r.json(); })
+        .then(function(d){ renderMediaPickerGrid(d.files || []); });
+    }, function() { alert('Eroare la upload.'); });
+  }
+
+  // Deschide picker pentru un input text simplu (hero fields)
+  function openMediaPickerForInput(inputId, previewFn) {
+    openMediaPicker(function(url) {
+      var inp = document.getElementById(inputId);
+      if (inp) {
+        inp.value = url;
+        inp.dispatchEvent(new Event('input'));
+      }
+      if (previewFn && window[previewFn]) window[previewFn]();
+    });
+  }
+
+  // Deschide picker pentru câmpuri din editorul de coloane
+  function openMediaPickerForColEl(ci, ei, field, statusElId) {
+    openMediaPicker(function(url) {
+      updateColEl(ci, ei, field, url);
+      var inputEl = document.querySelector('[data-upload-field="'+ci+'-'+ei+'-'+field+'"]');
+      if (inputEl) inputEl.value = url;
+      var statusEl = document.getElementById(statusElId);
+      if (statusEl) statusEl.textContent = '✓ Selectat din media';
+      if (field === 'src') reRenderColItems(ci);
+    });
   }
 
   // -- UTILS --
