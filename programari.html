@@ -2752,25 +2752,10 @@
           + '<div class="block-field"><label>Conținut</label><textarea rows="6" oninput="updateEditingBlock(\'content\',this.value)">' + esc(block.content||'') + '</textarea></div>';
 
       case 'columns':
-        var citems = (block.columns||[]).map(function(col, i) {
-          return '<div class="block-col-item" id="col-item-'+i+'">'
-            + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'
-            + '<span style="font-family:\'Share Tech Mono\',monospace;font-size:.7rem;color:var(--soft);">Coloana '+(i+1)+'</span>'
-            + '<button class="block-del-item" onclick="deleteColumn('+i+')">✕ șterge</button></div>'
-            + '<div style="display:grid;grid-template-columns:56px 1fr;gap:8px;margin-bottom:8px;">'
-            + '<input placeholder="Icon 🎯" value="'+esc(col.icon||'')+'" oninput="updateColumn('+i+',\'icon\',this.value)" style="text-align:center;font-size:1.2rem;">'
-            + '<input placeholder="Titlu coloană" value="'+esc(col.title||'')+'" oninput="updateColumn('+i+',\'title\',this.value)">'
-            + '</div>'
-            + '<textarea rows="2" placeholder="Text / descriere" oninput="updateColumn('+i+',\'text\',this.value)" style="margin-bottom:8px;">'+esc(col.text||'')+'</textarea>'
-            + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">'
-            + '<input placeholder="Text buton (opțional)" value="'+esc(col.btnText||'')+'" oninput="updateColumn('+i+',\'btnText\',this.value)">'
-            + '<input placeholder="URL buton" value="'+esc(col.btnUrl||'')+'" oninput="updateColumn('+i+',\'btnUrl\',this.value)">'
-            + '</div></div>';
-        }).join('');
         return '<div class="block-field"><label>Titlu secțiune (opțional)</label><input value="'+esc(block.title||'')+'" oninput="updateEditingBlock(\'title\',this.value)"></div>'
           + '<div class="block-field"><label>Subtitlu (opțional)</label><input value="'+esc(block.subtitle||'')+'" oninput="updateEditingBlock(\'subtitle\',this.value)"></div>'
           + '<div class="block-field"><label>Coloane</label>'
-          + '<div id="colItems">'+citems+'</div>'
+          + '<div id="colItems">'+renderColEditors(block.columns||[])+'</div>'
           + '<button class="gib-btn" style="font-size:.78rem;padding:6px 14px;margin-top:4px;" onclick="addColumn()">+ Adaugă coloană</button></div>';
 
       default: return '<p style="color:var(--muted);">Tip de bloc necunoscut.</p>';
@@ -2866,61 +2851,198 @@
     }
   }
 
-  function updateColumn(i, key, value) {
-    if (!editingBlockId || !layoutData) return;
-    var block = layoutData.blocks[editingBlockId];
-    if (!block || !block.columns || !block.columns[i]) return;
-    block.columns[i][key] = value;
+  // Tipuri de elemente disponibile per coloană
+  var COL_EL_TYPES = [
+    { type:'icon',    icon:'😀', label:'Icon / Emoji' },
+    { type:'heading', icon:'H', label:'Titlu' },
+    { type:'text',    icon:'¶', label:'Paragraf text' },
+    { type:'badge',   icon:'🏷', label:'Badge / etichetă' },
+    { type:'button',  icon:'⬛', label:'Buton' },
+    { type:'list',    icon:'≡', label:'Listă cu puncte' },
+    { type:'divider', icon:'—', label:'Separator' },
+  ];
+
+  function renderColElementEditor(ci, ei, el) {
+    var header = '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">'
+      + '<span style="font-family:\'Share Tech Mono\',monospace;font-size:.68rem;color:var(--soft);">'+(COL_EL_TYPES.find(function(t){return t.type===el.type;})||{label:el.type}).label+'</span>'
+      + '<div style="flex:1;"></div>'
+      + '<button onclick="moveColEl('+ci+','+ei+',-1)" title="Sus" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:4px;padding:2px 7px;cursor:pointer;font-size:.75rem;">↑</button>'
+      + '<button onclick="moveColEl('+ci+','+ei+',1)" title="Jos" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:4px;padding:2px 7px;cursor:pointer;font-size:.75rem;">↓</button>'
+      + '<button class="block-del-item" onclick="deleteColEl('+ci+','+ei+')" style="margin-left:4px;">✕</button>'
+      + '</div>';
+    var fields = '';
+    switch(el.type) {
+      case 'icon':
+        fields = '<input placeholder="Emoji (ex: ✅)" value="'+esc(el.content||'')+'" oninput="updateColEl('+ci+','+ei+',\'content\',this.value)" style="font-size:1.4rem;text-align:center;width:70px;"> '
+          + '<select onchange="updateColEl('+ci+','+ei+',\'size\',this.value)" style="background:var(--bg2);border:1px solid var(--border-soft);color:var(--text);border-radius:5px;padding:5px 8px;font-size:.8rem;">'
+          + '<option value="normal"'+(el.size!=='large'?' selected':'')+'>Normal (2rem)</option>'
+          + '<option value="large"'+(el.size==='large'?' selected':'')+'>Mare (3rem)</option>'
+          + '</select>';
+        break;
+      case 'heading':
+        fields = '<input placeholder="Text titlu" value="'+esc(el.content||'')+'" oninput="updateColEl('+ci+','+ei+',\'content\',this.value)"> '
+          + '<select onchange="updateColEl('+ci+','+ei+',\'size\',this.value)" style="background:var(--bg2);border:1px solid var(--border-soft);color:var(--text);border-radius:5px;padding:5px 8px;font-size:.8rem;margin-top:6px;">'
+          + '<option value="normal"'+(el.size!=='large'?' selected':'')+'>Mic (1rem)</option>'
+          + '<option value="large"'+(el.size==='large'?' selected':'')+'>Mare (1.3rem)</option>'
+          + '</select>';
+        break;
+      case 'text':
+        fields = '<textarea rows="3" placeholder="Paragraf de text..." oninput="updateColEl('+ci+','+ei+',\'content\',this.value)">'+esc(el.content||'')+'</textarea>';
+        break;
+      case 'badge':
+        fields = '<input placeholder="Text badge (ex: Popular)" value="'+esc(el.content||'')+'" oninput="updateColEl('+ci+','+ei+',\'content\',this.value)">';
+        break;
+      case 'divider':
+        fields = '<span style="font-size:.75rem;color:var(--muted);">—— linie separator ——</span>';
+        break;
+      case 'button':
+        fields = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">'
+          + '<input placeholder="Text buton" value="'+esc(el.btnText||'')+'" oninput="updateColEl('+ci+','+ei+',\'btnText\',this.value)">'
+          + '<input placeholder="URL" value="'+esc(el.btnUrl||'')+'" oninput="updateColEl('+ci+','+ei+',\'btnUrl\',this.value)">'
+          + '</div>'
+          + '<select onchange="updateColEl('+ci+','+ei+',\'btnStyle\',this.value)" style="background:var(--bg2);border:1px solid var(--border-soft);color:var(--text);border-radius:5px;padding:5px 8px;font-size:.8rem;">'
+          + '<option value="primary"'+(el.btnStyle!=='ghost'?' selected':'')+'>Primary (teal plin)</option>'
+          + '<option value="ghost"'+(el.btnStyle==='ghost'?' selected':'')+'>Ghost (contur)</option>'
+          + '</select>';
+        break;
+      case 'list':
+        var listInputs = (el.items||[]).map(function(li, li_i) {
+          return '<div style="display:flex;gap:6px;margin-bottom:6px;">'
+            + '<input placeholder="Element listă" value="'+esc(li)+'" oninput="updateColListItem('+ci+','+ei+','+li_i+',this.value)" style="flex:1;">'
+            + '<button class="block-del-item" onclick="deleteColListItem('+ci+','+ei+','+li_i+')">✕</button>'
+            + '</div>';
+        }).join('');
+        fields = '<div id="col-list-'+ci+'-'+ei+'">'+listInputs+'</div>'
+          + '<button onclick="addColListItem('+ci+','+ei+')" style="background:none;border:1px solid var(--border-soft);color:var(--teal);border-radius:5px;padding:4px 10px;font-size:.75rem;cursor:pointer;margin-top:4px;">+ adaugă element</button>';
+        break;
+    }
+    return '<div class="block-col-item" style="margin-bottom:8px;">'+header+fields+'</div>';
   }
 
-  function deleteColumn(i) {
-    if (!editingBlockId || !layoutData) return;
-    var block = layoutData.blocks[editingBlockId];
-    if (!block || !block.columns) return;
-    block.columns.splice(i, 1);
-    var container = document.getElementById('colItems');
-    if (container) container.innerHTML = (block.columns||[]).map(function(col, idx) {
-      return '<div class="block-col-item" id="col-item-'+idx+'">'
-        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'
-        + '<span style="font-family:\'Share Tech Mono\',monospace;font-size:.7rem;color:var(--soft);">Coloana '+(idx+1)+'</span>'
-        + '<button class="block-del-item" onclick="deleteColumn('+idx+')">✕ șterge</button></div>'
-        + '<div style="display:grid;grid-template-columns:56px 1fr;gap:8px;margin-bottom:8px;">'
-        + '<input placeholder="Icon 🎯" value="'+esc(col.icon||'')+'" oninput="updateColumn('+idx+',\'icon\',this.value)" style="text-align:center;font-size:1.2rem;">'
-        + '<input placeholder="Titlu coloană" value="'+esc(col.title||'')+'" oninput="updateColumn('+idx+',\'title\',this.value)">'
-        + '</div>'
-        + '<textarea rows="2" placeholder="Text / descriere" oninput="updateColumn('+idx+',\'text\',this.value)" style="margin-bottom:8px;">'+esc(col.text||'')+'</textarea>'
-        + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">'
-        + '<input placeholder="Text buton (opțional)" value="'+esc(col.btnText||'')+'" oninput="updateColumn('+idx+',\'btnText\',this.value)">'
-        + '<input placeholder="URL buton" value="'+esc(col.btnUrl||'')+'" oninput="updateColumn('+idx+',\'btnUrl\',this.value)">'
+  function renderColEditors(columns) {
+    return (columns||[]).map(function(col, ci) {
+      var items = (col.items||[]).map(function(el,ei){ return renderColElementEditor(ci,ei,el); }).join('');
+      return '<div class="block-col-item" id="col-'+ci+'" style="border-color:rgba(0,168,168,.25);">'
+        + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">'
+        + '<span style="font-family:\'Share Tech Mono\',monospace;font-size:.72rem;color:var(--teal);">Coloana '+(ci+1)+'</span>'
+        + '<button class="block-del-item" onclick="deleteColumn('+ci+')">✕ șterge coloana</button></div>'
+        + '<div id="col-els-'+ci+'">'+items+'</div>'
+        + '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">'
+        + COL_EL_TYPES.map(function(t){
+            return '<button onclick="addColEl('+ci+',\''+t.type+'\')" style="background:var(--bg2);border:1px solid var(--border-soft);color:var(--text);border-radius:5px;padding:4px 10px;font-size:.75rem;cursor:pointer;">'+t.icon+' '+t.label+'</button>';
+          }).join('')
         + '</div></div>';
     }).join('');
   }
 
+  function reRenderColItems(ci) {
+    var block = layoutData.blocks[editingBlockId];
+    var container = document.getElementById('col-els-'+ci);
+    if (container && block && block.columns && block.columns[ci]) {
+      container.innerHTML = (block.columns[ci].items||[]).map(function(el,ei){ return renderColElementEditor(ci,ei,el); }).join('');
+    }
+  }
+
+  function reRenderAllCols() {
+    var block = layoutData.blocks[editingBlockId];
+    var container = document.getElementById('colItems');
+    if (container && block) container.innerHTML = renderColEditors(block.columns||[]);
+  }
+
+  function addColEl(ci, type) {
+    var block = layoutData.blocks[editingBlockId];
+    if (!block || !block.columns || !block.columns[ci]) return;
+    if (!block.columns[ci].items) block.columns[ci].items = [];
+    var defaults = { icon:{type:'icon',content:'📌',size:'normal'}, heading:{type:'heading',content:'Titlu',size:'normal'},
+      text:{type:'text',content:'Text paragraf...'}, badge:{type:'badge',content:'Badge'},
+      button:{type:'button',btnText:'Apasă here',btnUrl:'#',btnStyle:'primary'},
+      list:{type:'list',items:['Element 1','Element 2']}, divider:{type:'divider'} };
+    block.columns[ci].items.push(Object.assign({}, defaults[type]||{type:type}));
+    reRenderColItems(ci);
+  }
+
+  function deleteColEl(ci, ei) {
+    var block = layoutData.blocks[editingBlockId];
+    if (!block || !block.columns || !block.columns[ci] || !block.columns[ci].items) return;
+    block.columns[ci].items.splice(ei, 1);
+    reRenderColItems(ci);
+  }
+
+  function moveColEl(ci, ei, dir) {
+    var block = layoutData.blocks[editingBlockId];
+    if (!block || !block.columns || !block.columns[ci]) return;
+    var items = block.columns[ci].items || [];
+    var newIdx = ei + dir;
+    if (newIdx < 0 || newIdx >= items.length) return;
+    var tmp = items[ei]; items[ei] = items[newIdx]; items[newIdx] = tmp;
+    reRenderColItems(ci);
+  }
+
+  function updateColEl(ci, ei, key, value) {
+    var block = layoutData.blocks[editingBlockId];
+    if (!block || !block.columns || !block.columns[ci] || !block.columns[ci].items || !block.columns[ci].items[ei]) return;
+    block.columns[ci].items[ei][key] = value;
+  }
+
+  function updateColListItem(ci, ei, li, value) {
+    var block = layoutData.blocks[editingBlockId];
+    if (!block || !block.columns || !block.columns[ci] || !block.columns[ci].items || !block.columns[ci].items[ei]) return;
+    if (!block.columns[ci].items[ei].items) block.columns[ci].items[ei].items = [];
+    block.columns[ci].items[ei].items[li] = value;
+  }
+
+  function deleteColListItem(ci, ei, li) {
+    var block = layoutData.blocks[editingBlockId];
+    if (!block || !block.columns || !block.columns[ci] || !block.columns[ci].items || !block.columns[ci].items[ei]) return;
+    var el = block.columns[ci].items[ei];
+    if (!el.items) return;
+    el.items.splice(li, 1);
+    var container = document.getElementById('col-list-'+ci+'-'+ei);
+    if (container) container.innerHTML = (el.items||[]).map(function(li_v, li_i) {
+      return '<div style="display:flex;gap:6px;margin-bottom:6px;">'
+        + '<input placeholder="Element" value="'+esc(li_v)+'" oninput="updateColListItem('+ci+','+ei+','+li_i+',this.value)" style="flex:1;">'
+        + '<button class="block-del-item" onclick="deleteColListItem('+ci+','+ei+','+li_i+')">✕</button>'
+        + '</div>';
+    }).join('');
+  }
+
+  function addColListItem(ci, ei) {
+    var block = layoutData.blocks[editingBlockId];
+    if (!block || !block.columns || !block.columns[ci] || !block.columns[ci].items || !block.columns[ci].items[ei]) return;
+    var el = block.columns[ci].items[ei];
+    if (!el.items) el.items = [];
+    el.items.push('');
+    var li = el.items.length - 1;
+    var container = document.getElementById('col-list-'+ci+'-'+ei);
+    if (container) {
+      var div = document.createElement('div');
+      div.innerHTML = '<div style="display:flex;gap:6px;margin-bottom:6px;">'
+        + '<input placeholder="Element" oninput="updateColListItem('+ci+','+ei+','+li+',this.value)" style="flex:1;">'
+        + '<button class="block-del-item" onclick="deleteColListItem('+ci+','+ei+','+li+')">✕</button>'
+        + '</div>';
+      container.appendChild(div.firstElementChild);
+    }
+  }
+
+  function deleteColumn(ci) {
+    var block = layoutData.blocks[editingBlockId];
+    if (!block || !block.columns) return;
+    block.columns.splice(ci, 1);
+    reRenderAllCols();
+  }
+
   function addColumn() {
-    if (!editingBlockId || !layoutData) return;
     var block = layoutData.blocks[editingBlockId];
     if (!block) return;
     if (!block.columns) block.columns = [];
-    block.columns.push({ icon:'📌', title:'Coloană nouă', text:'', btnText:'', btnUrl:'' });
-    var i = block.columns.length - 1;
-    var container = document.getElementById('colItems');
-    if (container) {
-      var div = document.createElement('div');
-      div.innerHTML = '<div class="block-col-item" id="col-item-'+i+'">'
-        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'
-        + '<span style="font-family:\'Share Tech Mono\',monospace;font-size:.7rem;color:var(--soft);">Coloana '+(i+1)+'</span>'
-        + '<button class="block-del-item" onclick="deleteColumn('+i+')">✕ șterge</button></div>'
-        + '<div style="display:grid;grid-template-columns:56px 1fr;gap:8px;margin-bottom:8px;">'
-        + '<input placeholder="Icon 🎯" value="📌" oninput="updateColumn('+i+',\'icon\',this.value)" style="text-align:center;font-size:1.2rem;">'
-        + '<input placeholder="Titlu coloană" oninput="updateColumn('+i+',\'title\',this.value)">'
-        + '</div>'
-        + '<textarea rows="2" placeholder="Text / descriere" oninput="updateColumn('+i+',\'text\',this.value)" style="margin-bottom:8px;"></textarea>'
-        + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">'
-        + '<input placeholder="Text buton (opțional)" oninput="updateColumn('+i+',\'btnText\',this.value)">'
-        + '<input placeholder="URL buton" oninput="updateColumn('+i+',\'btnUrl\',this.value)">'
-        + '</div></div>';
-      container.appendChild(div.firstElementChild);
-    }
+    block.columns.push({ items: [] });
+    reRenderAllCols();
+  }
+
+  function updateColumn(i, key, value) {
+    var block = layoutData.blocks[editingBlockId];
+    if (!block || !block.columns || !block.columns[i]) return;
+    block.columns[i][key] = value;
   }
 
   function saveBlockEdit() {

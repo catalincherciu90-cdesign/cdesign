@@ -1359,14 +1359,43 @@ document.getElementById('bookingForm').addEventListener('submit', async function
       +'</div></section>';
   }
 
+  function renderColElement(el) {
+    switch(el.type) {
+      case 'heading':
+        return '<h3 style="font-family:\'Syne\',sans-serif;font-size:'+(el.size==='large'?'1.3rem':'1rem')+';font-weight:700;color:#fff;margin:0 0 10px;">'+escHtml(el.content||'')+'</h3>';
+      case 'text':
+        return '<p style="color:var(--soft);font-size:.92rem;line-height:1.75;margin:0 0 10px;">'+escHtml(el.content||'').replace(/\n/g,'<br>')+'</p>';
+      case 'badge':
+        return '<span style="display:inline-block;background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-border);padding:3px 12px;border-radius:20px;font-size:.72rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin:0 0 12px;">'+escHtml(el.content||'')+'</span>';
+      case 'divider':
+        return '<hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:14px 0;">';
+      case 'list':
+        return '<ul style="padding-left:18px;margin:0 0 10px;">'+(el.items||[]).map(function(li){return '<li style="color:var(--soft);font-size:.92rem;margin-bottom:5px;">'+escHtml(li)+'</li>';}).join('')+'</ul>';
+      case 'button':
+        var s = el.btnStyle==='ghost'
+          ? 'display:inline-block;background:transparent;color:var(--teal);border:1px solid var(--teal-border);font-weight:600;font-size:.85rem;padding:9px 22px;border-radius:7px;text-decoration:none;margin:8px 0;'
+          : 'display:inline-block;background:var(--teal);color:#060f0f;font-weight:700;font-size:.85rem;padding:10px 22px;border-radius:7px;text-decoration:none;margin:8px 0;';
+        return '<a href="'+escHtml(el.btnUrl||'#')+'" style="'+s+'">'+escHtml(el.btnText||'Află mai mult')+'</a>';
+      case 'icon':
+        return '<div style="font-size:'+(el.size==='large'?'3rem':'2rem')+';margin:0 0 12px;line-height:1;">'+escHtml(el.content||'')+'</div>';
+      default: return '';
+    }
+  }
+
   function renderColumns(id, b) {
     var cols = (b.columns||[]).map(function(col){
-      var btn = col.btnText ? '<a href="'+escHtml(col.btnUrl||'#')+'" style="display:inline-block;background:var(--teal);color:#060f0f;font-weight:700;font-size:.82rem;padding:9px 20px;border-radius:7px;text-decoration:none;margin-top:14px;">'+escHtml(col.btnText)+'</a>' : '';
-      return '<div style="background:var(--bg2);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:28px 24px;">'
-        +(col.icon?'<div style="font-size:2rem;margin-bottom:14px;">'+escHtml(col.icon)+'</div>':'')
-        +'<h3 style="font-family:\'Syne\',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:10px;">'+escHtml(col.title||'')+'</h3>'
-        +'<p style="color:var(--soft);font-size:.92rem;line-height:1.7;">'+escHtml(col.text||'')+'</p>'
-        +btn+'</div>';
+      var inner;
+      if (col.items && col.items.length) {
+        // Format nou cu elemente nested
+        inner = col.items.map(renderColElement).join('');
+      } else {
+        // Backward compat: format vechi cu icon/title/text/btnText
+        inner = (col.icon?'<div style="font-size:2rem;margin-bottom:14px;">'+escHtml(col.icon)+'</div>':'')
+          +(col.title?'<h3 style="font-family:\'Syne\',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:10px;">'+escHtml(col.title)+'</h3>':'')
+          +(col.text?'<p style="color:var(--soft);font-size:.92rem;line-height:1.7;">'+escHtml(col.text)+'</p>':'')
+          +(col.btnText?'<a href="'+escHtml(col.btnUrl||'#')+'" style="display:inline-block;background:var(--teal);color:#060f0f;font-weight:700;font-size:.82rem;padding:9px 20px;border-radius:7px;text-decoration:none;margin-top:14px;">'+escHtml(col.btnText)+'</a>':'');
+      }
+      return '<div style="background:var(--bg2);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:28px 24px;">'+inner+'</div>';
     }).join('');
     var minW = (b.columns||[]).length <= 2 ? '260px' : '200px';
     return '<section data-section="'+id+'" style="padding:64px 0;">'
