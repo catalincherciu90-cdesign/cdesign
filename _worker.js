@@ -1159,6 +1159,102 @@ export default {
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
 
+    // ── THEME ─────────────────────────────────────────────────
+
+    const THEME_DEFAULT = {
+      teal:        '#00a8a8',
+      bg:          '#060f0f',
+      bg2:         '#0a1818',
+      bg3:         '#0f2020',
+      text:        '#e8edf2',
+      soft:        '#8bbaba',
+      fontHeading: 'Syne',
+      fontBody:    'DM Sans'
+    };
+
+    function hexToRgba(hex, alpha) {
+      const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+      return `rgba(${r},${g},${b},${alpha})`;
+    }
+
+    function lightenHex(hex, amount) {
+      let r = Math.min(255, parseInt(hex.slice(1,3),16) + amount);
+      let g = Math.min(255, parseInt(hex.slice(3,5),16) + amount);
+      let b = Math.min(255, parseInt(hex.slice(5,7),16) + amount);
+      return '#' + [r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+    }
+
+    function darkenHex(hex, amount) {
+      let r = Math.max(0, parseInt(hex.slice(1,3),16) - amount);
+      let g = Math.max(0, parseInt(hex.slice(3,5),16) - amount);
+      let b = Math.max(0, parseInt(hex.slice(5,7),16) - amount);
+      return '#' + [r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+    }
+
+    const FONT_GOOGLE_MAP = {
+      'Syne':          'Syne:wght@700;800',
+      'Raleway':       'Raleway:wght@700;800',
+      'Oswald':        'Oswald:wght@500;700',
+      'Space Grotesk': 'Space+Grotesk:wght@600;700',
+      'Bebas Neue':    'Bebas+Neue',
+      'DM Sans':       'DM+Sans:ital,wght@0,300;0,400;0,500;1,400',
+      'Inter':         'Inter:wght@300;400;500',
+      'Nunito':        'Nunito:wght@300;400;600',
+      'Roboto':        'Roboto:wght@300;400;500',
+      'Open Sans':     'Open+Sans:wght@300;400;600',
+      'Lato':          'Lato:wght@300;400;700',
+    };
+
+    function buildThemeCss(t) {
+      const teal = t.teal || THEME_DEFAULT.teal;
+      const bg   = t.bg   || THEME_DEFAULT.bg;
+      const bg2  = t.bg2  || THEME_DEFAULT.bg2;
+      const bg3  = t.bg3  || THEME_DEFAULT.bg3;
+      const text = t.text || THEME_DEFAULT.text;
+      const soft = t.soft || THEME_DEFAULT.soft;
+      const fh   = t.fontHeading || THEME_DEFAULT.fontHeading;
+      const fb   = t.fontBody    || THEME_DEFAULT.fontBody;
+      const tealDk  = darkenHex(teal, 30);
+      const tealLt  = lightenHex(teal, 30);
+      const bg4     = lightenHex(bg3, 8);
+      const muted   = darkenHex(soft, 40);
+      const fonts = [...new Set([FONT_GOOGLE_MAP[fh], FONT_GOOGLE_MAP[fb]].filter(Boolean))];
+      const importUrl = fonts.length ? `@import url('https://fonts.googleapis.com/css2?family=${fonts.join('&family=')}&display=swap');\n` : '';
+      return `${importUrl}:root{` +
+        `--teal:${teal};--teal-dk:${tealDk};--teal-lt:${tealLt};` +
+        `--teal-dim:${hexToRgba(teal,.08)};--teal-glow:${hexToRgba(teal,.18)};--teal-border:${hexToRgba(teal,.30)};` +
+        `--bg:${bg};--bg2:${bg2};--bg3:${bg3};--bg4:${bg4};` +
+        `--text:${text};--soft:${soft};--muted:${muted};` +
+        `--font-heading:'${fh}',sans-serif;--font-body:'${fb}',sans-serif}` +
+        `body{font-family:'${fb}',sans-serif!important}` +
+        `h1,h2,h3,h4,h5,h6,.logo,.hero h1,.section-title,.card-title{font-family:'${fh}',sans-serif!important}`;
+    }
+
+    if (path === '/theme.css') {
+      try {
+        const raw  = await env.PROGRAMARI.get('__theme__');
+        const t    = raw ? JSON.parse(raw) : THEME_DEFAULT;
+        const css  = buildThemeCss(t);
+        return new Response(css, { headers: { 'Content-Type': 'text/css;charset=utf-8', 'Cache-Control': 'no-cache' } });
+      } catch { return new Response('', { headers: { 'Content-Type': 'text/css' } }); }
+    }
+
+    if (path === '/api/theme' && request.method === 'GET') {
+      try {
+        const raw = await env.PROGRAMARI.get('__theme__');
+        return json(raw ? JSON.parse(raw) : THEME_DEFAULT);
+      } catch { return json(THEME_DEFAULT); }
+    }
+
+    if (path === '/api/theme' && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const body = await request.json();
+        await env.PROGRAMARI.put('__theme__', JSON.stringify(body));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
     // Fallthrough — servește fișierele statice
     return env.ASSETS.fetch(request);
   },

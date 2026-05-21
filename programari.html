@@ -305,6 +305,26 @@
     .calc-save-bar{position:sticky;bottom:0;background:var(--bg2);border-top:1px solid var(--border-soft);padding:16px 0;margin-top:8px;display:flex;justify-content:flex-end;gap:12px;}
     @media(max-width:600px){.calc-opt-row{grid-template-columns:1fr;}}
 
+    /* ── THEME EDITOR ───────────────────────────────────────── */
+    .theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
+    .theme-card{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:20px;}
+    .theme-card-title{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--soft);letter-spacing:.06em;margin-bottom:16px;}
+    .theme-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;}
+    .theme-row:last-child{margin-bottom:0;}
+    .theme-label{font-size:.82rem;color:var(--text);min-width:100px;}
+    .theme-color-wrap{display:flex;align-items:center;gap:8px;}
+    .theme-color-swatch{width:34px;height:34px;border-radius:8px;border:2px solid var(--border-soft);cursor:pointer;padding:0;background:none;overflow:hidden;flex-shrink:0;}
+    .theme-color-swatch input[type=color]{width:52px;height:52px;border:none;outline:none;cursor:pointer;margin:-9px;transform:scale(1.5);}
+    .theme-hex-input{width:90px;background:var(--bg3);border:1px solid var(--border-soft);border-radius:6px;color:var(--text);font-family:'Share Tech Mono',monospace;font-size:.8rem;padding:6px 10px;outline:none;text-transform:uppercase;}
+    .theme-select{background:var(--bg3);border:1px solid var(--border-soft);border-radius:6px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.85rem;padding:7px 10px;outline:none;flex:1;cursor:pointer;}
+    .theme-preview-box{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:20px;margin-bottom:20px;}
+    .theme-preview-title{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--soft);letter-spacing:.06em;margin-bottom:14px;}
+    .theme-preview-inner{background:#060f0f;border-radius:8px;padding:20px;display:flex;flex-direction:column;gap:10px;}
+    .theme-save-bar{display:flex;gap:12px;justify-content:flex-end;align-items:center;padding-top:16px;border-top:1px solid var(--border-soft);}
+    .theme-reset-btn{background:none;border:1px solid var(--border-soft);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.82rem;padding:8px 16px;border-radius:7px;cursor:pointer;}
+    .theme-reset-btn:hover{border-color:var(--soft);color:var(--text);}
+    @media(max-width:768px){.theme-grid{grid-template-columns:1fr;}}
+
     /* ── GIBILAN ─────────────────────────────────────────────── */
     .gibilan-layout{display:grid;grid-template-columns:260px 1fr;gap:32px;padding:24px 0;}
     .gibilan-char{display:flex;flex-direction:column;align-items:center;gap:16px;}
@@ -386,6 +406,7 @@
     <button class="tab" onclick="switchTab('blog',this)">&#x270D; Blog</button>
     <button class="tab" onclick="switchTab('social',this)">&#x1F4F1; Social Media</button>
     <button class="tab" onclick="switchTab('calculator',this)">&#x1F9EE; Calculator</button>
+    <button class="tab" onclick="switchTab('tema',this)">&#x1F3A8; Tem&#x103;</button>
     <button class="tab" onclick="switchTab('settings',this)">&#x2699; Set&#x103;ri</button>
   </div>
 
@@ -786,6 +807,118 @@
     </div>
   </div>
 
+  <!-- TAB: TEMA -->
+  <div class="tab-panel" id="panel-tema">
+    <div class="main">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+        <h3 style="font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--soft);">// theme_builder &mdash; culori și fonturi</h3>
+      </div>
+
+      <!-- Preview live -->
+      <div class="theme-preview-box">
+        <div class="theme-preview-title">// preview live</div>
+        <div class="theme-preview-inner" id="theme-preview-inner">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div id="prev-logo" style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:#fff;"><span id="prev-logo-c" style="color:#00a8a8;">C</span>DESIGN</div>
+          </div>
+          <div id="prev-h1" style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:#fff;line-height:1.2;">Web design profesional pentru afacerea ta</div>
+          <div id="prev-body" style="font-family:'DM Sans',sans-serif;font-size:.88rem;color:#8bbaba;line-height:1.6;">Creăm site-uri moderne, rapide și optimizate SEO care atrag clienți noi.</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <div id="prev-btn" style="background:#00a8a8;color:#060f0f;font-weight:700;font-size:.82rem;padding:9px 20px;border-radius:7px;display:inline-block;">Solicită ofertă</div>
+            <div id="prev-btn2" style="background:rgba(0,168,168,.08);color:#00a8a8;border:1px solid rgba(0,168,168,.3);font-size:.82rem;padding:9px 20px;border-radius:7px;display:inline-block;">Vezi portofoliu</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="theme-grid">
+        <!-- Culori -->
+        <div class="theme-card">
+          <div class="theme-card-title">// culori</div>
+          <div class="theme-row">
+            <span class="theme-label">Accent (teal)</span>
+            <div class="theme-color-wrap">
+              <label class="theme-color-swatch"><input type="color" id="tc-teal" value="#00a8a8" oninput="onThemeColor('teal',this.value)"></label>
+              <input class="theme-hex-input" id="th-teal" value="#00A8A8" maxlength="7" oninput="onThemeHex('teal',this.value)">
+            </div>
+          </div>
+          <div class="theme-row">
+            <span class="theme-label">Background</span>
+            <div class="theme-color-wrap">
+              <label class="theme-color-swatch"><input type="color" id="tc-bg" value="#060f0f" oninput="onThemeColor('bg',this.value)"></label>
+              <input class="theme-hex-input" id="th-bg" value="#060F0F" maxlength="7" oninput="onThemeHex('bg',this.value)">
+            </div>
+          </div>
+          <div class="theme-row">
+            <span class="theme-label">Card / secțiuni</span>
+            <div class="theme-color-wrap">
+              <label class="theme-color-swatch"><input type="color" id="tc-bg2" value="#0a1818" oninput="onThemeColor('bg2',this.value)"></label>
+              <input class="theme-hex-input" id="th-bg2" value="#0A1818" maxlength="7" oninput="onThemeHex('bg2',this.value)">
+            </div>
+          </div>
+          <div class="theme-row">
+            <span class="theme-label">Card interior</span>
+            <div class="theme-color-wrap">
+              <label class="theme-color-swatch"><input type="color" id="tc-bg3" value="#0f2020" oninput="onThemeColor('bg3',this.value)"></label>
+              <input class="theme-hex-input" id="th-bg3" value="#0F2020" maxlength="7" oninput="onThemeHex('bg3',this.value)">
+            </div>
+          </div>
+          <div class="theme-row">
+            <span class="theme-label">Text principal</span>
+            <div class="theme-color-wrap">
+              <label class="theme-color-swatch"><input type="color" id="tc-text" value="#e8edf2" oninput="onThemeColor('text',this.value)"></label>
+              <input class="theme-hex-input" id="th-text" value="#E8EDF2" maxlength="7" oninput="onThemeHex('text',this.value)">
+            </div>
+          </div>
+          <div class="theme-row">
+            <span class="theme-label">Text secundar</span>
+            <div class="theme-color-wrap">
+              <label class="theme-color-swatch"><input type="color" id="tc-soft" value="#8bbaba" oninput="onThemeColor('soft',this.value)"></label>
+              <input class="theme-hex-input" id="th-soft" value="#8BBABA" maxlength="7" oninput="onThemeHex('soft',this.value)">
+            </div>
+          </div>
+        </div>
+
+        <!-- Fonturi -->
+        <div class="theme-card">
+          <div class="theme-card-title">// fonturi</div>
+          <div class="theme-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
+            <span class="theme-label">Titluri (H1, H2...)</span>
+            <select class="theme-select" id="ts-fontHeading" onchange="onThemeFont('fontHeading',this.value)">
+              <option value="Syne">Syne — modern, bold</option>
+              <option value="Raleway">Raleway — elegant</option>
+              <option value="Oswald">Oswald — condensed</option>
+              <option value="Space Grotesk">Space Grotesk — tech</option>
+              <option value="Bebas Neue">Bebas Neue — display</option>
+            </select>
+            <div id="prev-font-heading" style="font-size:1.1rem;font-weight:700;color:#fff;margin-top:4px;">The quick brown fox</div>
+          </div>
+          <div style="height:1px;background:var(--border-soft);margin:14px 0;"></div>
+          <div class="theme-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
+            <span class="theme-label">Text body</span>
+            <select class="theme-select" id="ts-fontBody" onchange="onThemeFont('fontBody',this.value)">
+              <option value="DM Sans">DM Sans — clean, modern</option>
+              <option value="Inter">Inter — neutru, lizibil</option>
+              <option value="Nunito">Nunito — rotunjit, friendly</option>
+              <option value="Roboto">Roboto — clasic Google</option>
+              <option value="Open Sans">Open Sans — universal</option>
+              <option value="Lato">Lato — profesional</option>
+            </select>
+            <div id="prev-font-body" style="font-size:.9rem;color:#8bbaba;margin-top:4px;line-height:1.6;">The quick brown fox jumps over the lazy dog. 0123456789</div>
+          </div>
+          <div style="background:rgba(0,168,168,.06);border:1px solid rgba(0,168,168,.2);border-radius:8px;padding:10px 12px;margin-top:16px;">
+            <span style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--soft);">ℹ Fonturile se încarcă din Google Fonts. Share Tech Mono rămâne neschimbat (labels/cod).</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Butoane save/reset -->
+      <div class="theme-save-bar">
+        <button class="theme-reset-btn" onclick="resetTheme()">↺ Resetează la default</button>
+        <button class="btn-save" id="theme-save-btn" onclick="saveTheme()">💾 Salvează tema</button>
+      </div>
+    </div>
+  </div>
+
   <!-- TAB: SETARI -->
   <div class="tab-panel" id="panel-settings">
     <div class="main">
@@ -1009,7 +1142,7 @@
       adminToken = saved;
       const ok = await fetchBookings(true);
       if (!ok) { adminToken = ''; localStorage.removeItem('cdAdmin'); }
-      else { fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); fetchCalculatorAdmin(); }
+      else { fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); fetchCalculatorAdmin(); fetchTheme(); }
     }
   })();
 
@@ -1031,7 +1164,7 @@
       if (!ok) { err.textContent = '✗ Eroare de autentificare'; adminToken = ''; }
       else {
         localStorage.setItem('cdAdmin', password);
-        fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); fetchCalculatorAdmin();
+        fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); fetchCalculatorAdmin(); fetchTheme();
       }
     } catch { err.textContent = '✗ Eroare de rețea'; }
   }
@@ -1046,6 +1179,7 @@
     if (tab === 'crm') { fetchCrm(); loadGibilan(); }
     if (tab === 'clients') { fetchClients(); loadGibilan(); }
     if (tab === 'calculator') fetchCalculatorAdmin();
+    if (tab === 'tema') fetchTheme();
   }
 
   function refreshCurrent() {
@@ -1057,6 +1191,7 @@
     else if (currentTab === 'social') fetchSocial();
     else if (currentTab === 'settings') fetchSettings();
     else if (currentTab === 'calculator') fetchCalculatorAdmin();
+    else if (currentTab === 'tema') fetchTheme();
     else fetchProjects();
   }
 
@@ -2269,6 +2404,136 @@
     } catch {
       if (!silent && btn) { btn.textContent = '✗ Eroare rețea'; btn.disabled = false; }
     }
+  }
+
+  // -- THEME EDITOR --
+
+  const THEME_DEFAULT_VALS = {
+    teal:'#00a8a8', bg:'#060f0f', bg2:'#0a1818', bg3:'#0f2020',
+    text:'#e8edf2', soft:'#8bbaba', fontHeading:'Syne', fontBody:'DM Sans'
+  };
+
+  let themeData = Object.assign({}, THEME_DEFAULT_VALS);
+
+  const FONT_GOOGLE_MAP = {
+    'Syne':         'Syne:wght@700;800',
+    'Raleway':      'Raleway:wght@700;800',
+    'Oswald':       'Oswald:wght@500;700',
+    'Space Grotesk':'Space+Grotesk:wght@600;700',
+    'Bebas Neue':   'Bebas+Neue',
+    'DM Sans':      'DM+Sans:wght@300;400;500',
+    'Inter':        'Inter:wght@300;400;500',
+    'Nunito':       'Nunito:wght@300;400;600',
+    'Roboto':       'Roboto:wght@300;400;500',
+    'Open Sans':    'Open+Sans:wght@300;400;600',
+    'Lato':         'Lato:wght@300;400;700'
+  };
+
+  async function fetchTheme() {
+    try {
+      const r = await fetch('/api/theme');
+      if (!r.ok) return;
+      themeData = await r.json();
+      applyThemeToEditor(themeData);
+    } catch {}
+  }
+
+  function applyThemeToEditor(t) {
+    const colors = ['teal','bg','bg2','bg3','text','soft'];
+    colors.forEach(k => {
+      const v = t[k] || THEME_DEFAULT_VALS[k];
+      const cp = document.getElementById('tc-' + k);
+      const hi = document.getElementById('th-' + k);
+      if (cp) cp.value = v;
+      if (hi) hi.value = v.toUpperCase();
+    });
+    const fh = document.getElementById('ts-fontHeading');
+    const fb = document.getElementById('ts-fontBody');
+    if (fh) fh.value = t.fontHeading || 'Syne';
+    if (fb) fb.value = t.fontBody || 'DM Sans';
+    updatePreview();
+  }
+
+  function onThemeColor(key, value) {
+    themeData[key] = value;
+    const hi = document.getElementById('th-' + key);
+    if (hi) hi.value = value.toUpperCase();
+    updatePreview();
+  }
+
+  function onThemeHex(key, value) {
+    if (!/^#[0-9a-fA-F]{6}$/.test(value)) return;
+    themeData[key] = value;
+    const cp = document.getElementById('tc-' + key);
+    if (cp) cp.value = value;
+    updatePreview();
+  }
+
+  function onThemeFont(key, value) {
+    themeData[key] = value;
+    loadGoogleFont(value);
+    updatePreview();
+  }
+
+  function loadGoogleFont(name) {
+    const q = FONT_GOOGLE_MAP[name];
+    if (!q) return;
+    const id = 'gf-' + name.replace(/\s/g,'-');
+    if (document.getElementById(id)) return;
+    const link = document.createElement('link');
+    link.id = id; link.rel = 'stylesheet';
+    link.href = `https://fonts.googleapis.com/css2?family=${q}&display=swap`;
+    document.head.appendChild(link);
+  }
+
+  function updatePreview() {
+    const t = themeData;
+    const inner = document.getElementById('theme-preview-inner');
+    if (inner) inner.style.background = t.bg || '#060f0f';
+    const h1 = document.getElementById('prev-h1');
+    if (h1) { h1.style.fontFamily = `'${t.fontHeading||'Syne'}', sans-serif`; h1.style.color = t.text || '#e8edf2'; }
+    const body = document.getElementById('prev-body');
+    if (body) { body.style.fontFamily = `'${t.fontBody||'DM Sans'}', sans-serif`; body.style.color = t.soft || '#8bbaba'; }
+    const logo = document.getElementById('prev-logo');
+    if (logo) logo.style.fontFamily = `'${t.fontHeading||'Syne'}', sans-serif`;
+    const logoC = document.getElementById('prev-logo-c');
+    if (logoC) logoC.style.color = t.teal || '#00a8a8';
+    const btn = document.getElementById('prev-btn');
+    if (btn) { btn.style.background = t.teal || '#00a8a8'; btn.style.color = t.bg || '#060f0f'; }
+    const btn2 = document.getElementById('prev-btn2');
+    if (btn2) {
+      const teal = t.teal || '#00a8a8';
+      btn2.style.color = teal;
+      btn2.style.borderColor = teal + '4d';
+      btn2.style.background = teal + '14';
+    }
+    const pfh = document.getElementById('prev-font-heading');
+    if (pfh) pfh.style.fontFamily = `'${t.fontHeading||'Syne'}', sans-serif`;
+    const pfb = document.getElementById('prev-font-body');
+    if (pfb) pfb.style.fontFamily = `'${t.fontBody||'DM Sans'}', sans-serif`;
+  }
+
+  async function saveTheme() {
+    const btn = document.getElementById('theme-save-btn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Se salvează...'; }
+    try {
+      const r = await fetch('/api/theme?token=' + encodeURIComponent(adminToken), {
+        method: 'PUT', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(themeData)
+      });
+      if (!r.ok) throw new Error();
+      if (btn) { btn.textContent = '✓ Salvat! (activ pe site)'; setTimeout(() => { btn.disabled = false; btn.textContent = '💾 Salvează tema'; }, 2500); }
+    } catch {
+      if (btn) { btn.disabled = false; btn.textContent = '💾 Salvează tema'; }
+      alert('Eroare la salvare!');
+    }
+  }
+
+  async function resetTheme() {
+    if (!confirm('Resetezi la tema implicită (teal + dark)?')) return;
+    themeData = Object.assign({}, THEME_DEFAULT_VALS);
+    applyThemeToEditor(themeData);
+    await saveTheme();
   }
 
   // -- UTILS --
