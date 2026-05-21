@@ -1273,6 +1273,20 @@ export default {
       const tealLt  = lightenHex(teal, 30);
       const bg4     = lightenHex(bg3, 8);
       const muted   = darkenHex(soft, 40);
+      // Adaptive vars based on bg luminance
+      const bgR = parseInt(bg.slice(1,3),16);
+      const bgG = parseInt(bg.slice(3,5),16);
+      const bgB = parseInt(bg.slice(5,7),16);
+      const lum = 0.2126*bgR/255 + 0.7152*bgG/255 + 0.0722*bgB/255;
+      const isLight = lum > 0.5;
+      const border     = isLight ? 'rgba(0,0,0,.10)'  : 'rgba(255,255,255,.07)';
+      const borderSoft = isLight ? 'rgba(0,0,0,.16)'  : 'rgba(255,255,255,.11)';
+      const navBg      = `rgba(${bgR},${bgG},${bgB},.92)`;
+      const navBgSolid = `rgba(${bgR},${bgG},${bgB},.97)`;
+      const hG = (a) => `rgba(${bgR},${bgG},${bgB},${a})`;
+      const heroGrad    = `linear-gradient(105deg,${hG(.97)} 0%,${hG(.90)} 35%,${hG(.72)} 60%,${hG(.45)} 100%)`;
+      const heroGradMob = `linear-gradient(180deg,${hG(.82)} 0%,${hG(.75)} 50%,${hG(.92)} 100%)`;
+      const heroGradXs  = `linear-gradient(180deg,${hG(.88)} 0%,${hG(.72)} 55%,${hG(.95)} 100%)`;
       const fonts = [...new Set([FONT_GOOGLE_MAP[fh], FONT_GOOGLE_MAP[fb]].filter(Boolean))];
       const importUrl = fonts.length ? `@import url('https://fonts.googleapis.com/css2?family=${fonts.join('&family=')}&display=swap');\n` : '';
       return `${importUrl}:root{` +
@@ -1280,6 +1294,9 @@ export default {
         `--teal-dim:${hexToRgba(teal,.08)};--teal-glow:${hexToRgba(teal,.18)};--teal-border:${hexToRgba(teal,.30)};` +
         `--bg:${bg};--bg2:${bg2};--bg3:${bg3};--bg4:${bg4};` +
         `--text:${text};--soft:${soft};--muted:${muted};` +
+        `--border:${border};--border-soft:${borderSoft};` +
+        `--nav-bg:${navBg};--nav-bg-solid:${navBgSolid};` +
+        `--hero-grad:${heroGrad};--hero-grad-mob:${heroGradMob};--hero-grad-xs:${heroGradXs};` +
         `--font-heading:'${fh}',sans-serif;--font-body:'${fb}',sans-serif}` +
         `body{font-family:'${fb}',sans-serif!important}` +
         `h1,h2,h3,h4,h5,h6,.logo,.hero h1,.section-title,.card-title{font-family:'${fh}',sans-serif!important}`;
