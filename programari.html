@@ -769,10 +769,20 @@
   <!-- TAB: CALCULATOR -->
   <div class="tab-panel" id="panel-calculator">
     <div class="main">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
-        <h3 style="font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--soft);">// calculator_preturi &#x2014; editare op&#x21B;iuni &#x15F;i pre&#x21B;uri</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+        <h3 style="font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--soft);">// calculator_preturi &mdash; editare opțiuni și prețuri</h3>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);" id="calc-status-label">activ</span>
+          <label class="calc-toggle" title="Activează / dezactivează calculatorul pe site" style="width:44px;height:24px;">
+            <input type="checkbox" id="calc-enabled-toggle" checked onchange="toggleCalculatorEnabled(this.checked)">
+            <span class="calc-toggle-slider"></span>
+          </label>
+        </div>
       </div>
-      <div id="calc-admin-wrap"><div class="loading">Se &icirc;ncarc&#x103;...</div></div>
+      <div id="calc-disabled-banner" style="display:none;background:rgba(255,95,87,.08);border:1px solid rgba(255,95,87,.3);border-radius:8px;padding:12px 16px;margin-bottom:20px;font-family:'Share Tech Mono',monospace;font-size:.78rem;color:#f87171;">
+        ⚠ Calculatorul este dezactivat și nu apare pe site. Activează toggle-ul pentru a-l face vizibil.
+      </div>
+      <div id="calc-admin-wrap"><div class="loading">Se încarcă...</div></div>
     </div>
   </div>
 
@@ -2151,8 +2161,25 @@
       const res = await fetch('/api/calculator');
       if (!res.ok) return;
       calcData = await res.json();
+      const toggle = document.getElementById('calc-enabled-toggle');
+      const label = document.getElementById('calc-status-label');
+      const banner = document.getElementById('calc-disabled-banner');
+      const enabled = calcData.enabled !== false;
+      if (toggle) toggle.checked = enabled;
+      if (label) { label.textContent = enabled ? 'activ' : 'dezactivat'; label.style.color = enabled ? 'var(--teal)' : '#f87171'; }
+      if (banner) banner.style.display = enabled ? 'none' : 'block';
       renderCalculatorAdmin();
     } catch {}
+  }
+
+  async function toggleCalculatorEnabled(enabled) {
+    if (!calcData) return;
+    calcData.enabled = enabled;
+    const label = document.getElementById('calc-status-label');
+    const banner = document.getElementById('calc-disabled-banner');
+    if (label) { label.textContent = enabled ? 'activ' : 'dezactivat'; label.style.color = enabled ? 'var(--teal)' : '#f87171'; }
+    if (banner) banner.style.display = enabled ? 'none' : 'block';
+    await saveCalculator(true);
   }
 
   function renderCalculatorAdmin() {
@@ -2224,10 +2251,10 @@
     renderCalculatorAdmin();
   }
 
-  async function saveCalculator() {
+  async function saveCalculator(silent = false) {
     if (!calcData || !adminToken) return;
     const btn = document.querySelector('[onclick="saveCalculator()"]');
-    if (btn) { btn.textContent = 'Se salvează...'; btn.disabled = true; }
+    if (!silent && btn) { btn.textContent = 'Se salvează...'; btn.disabled = true; }
     try {
       const res = await fetch('/api/calculator?token=' + encodeURIComponent(adminToken), {
         method: 'PUT',
@@ -2235,12 +2262,12 @@
         body: JSON.stringify(calcData)
       });
       if (res.ok) {
-        if (btn) { btn.textContent = '✓ Salvat!'; setTimeout(() => { btn.textContent = '💾 Salvează tot'; btn.disabled = false; }, 2000); }
+        if (!silent && btn) { btn.textContent = '✓ Salvat!'; setTimeout(() => { btn.textContent = '💾 Salvează tot'; btn.disabled = false; }, 2000); }
       } else {
-        if (btn) { btn.textContent = '✗ Eroare'; btn.disabled = false; }
+        if (!silent && btn) { btn.textContent = '✗ Eroare'; btn.disabled = false; }
       }
     } catch {
-      if (btn) { btn.textContent = '✗ Eroare rețea'; btn.disabled = false; }
+      if (!silent && btn) { btn.textContent = '✗ Eroare rețea'; btn.disabled = false; }
     }
   }
 

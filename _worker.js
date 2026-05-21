@@ -1117,6 +1117,7 @@ export default {
     // ── CALCULATOR ───────────────────────────────────────────
 
     const CALC_DEFAULT = {
+      enabled: true,
       type: [
         {value:'prezentare', name:'Site de prezentare', sub:'Pentru firme, servicii, portofoliu', price:300, priceLabel:'de la 300€', active:true, locked:false},
         {value:'magazin', name:'Magazin online', sub:'eCommerce complet cu plăți integrate', price:800, priceLabel:'de la 800€', active:true, locked:false},
