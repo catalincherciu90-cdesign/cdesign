@@ -1255,6 +1255,45 @@ export default {
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
 
+    // ── LAYOUT (section order per page) ──────────────────────
+
+    const LAYOUT_DEFAULTS = {
+      index: ['hero','carousel','showcase','services','startup','industries','process','portfolio','testimonials','contact'],
+      'web-design-bucuresti': ['hero','trust','services','portfolio','process','contact'],
+      'web-design-cluj':      ['hero','trust','services','portfolio','process','contact'],
+      'web-design-timisoara': ['hero','trust','services','portfolio','process','contact'],
+      'web-design-auto':      ['hero','trust','services','portfolio','process','contact'],
+      'web-design-restaurante':['hero','trust','services','portfolio','process','contact'],
+      'web-design-afaceri-mici':['hero','trust','services','portfolio','process','contact'],
+    };
+
+    const LAYOUT_LABELS = {
+      hero:'Hero principal', carousel:'Banner carousel', showcase:'Device showcase',
+      services:'Servicii', startup:'Strip pachet startup', industries:'Industrii',
+      process:'Procesul nostru', portfolio:'Portofoliu', testimonials:'Testimoniale',
+      contact:'Contact', trust:'Trust / statistici',
+    };
+
+    if (path.startsWith('/api/layout/') && request.method === 'GET') {
+      const page = path.replace('/api/layout/','');
+      if (!LAYOUT_DEFAULTS[page]) return json({ error: 'Pagină necunoscută' }, 404);
+      try {
+        const raw = await env.PROGRAMARI.get('__layout__' + page);
+        return json({ order: raw ? JSON.parse(raw) : LAYOUT_DEFAULTS[page], labels: LAYOUT_LABELS, default: LAYOUT_DEFAULTS[page] });
+      } catch { return json({ order: LAYOUT_DEFAULTS[page], labels: LAYOUT_LABELS, default: LAYOUT_DEFAULTS[page] }); }
+    }
+
+    if (path.startsWith('/api/layout/') && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      const page = path.replace('/api/layout/','');
+      if (!LAYOUT_DEFAULTS[page]) return json({ error: 'Pagină necunoscută' }, 404);
+      try {
+        const { order } = await request.json();
+        await env.PROGRAMARI.put('__layout__' + page, JSON.stringify(order));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
     // Fallthrough — servește fișierele statice
     return env.ASSETS.fetch(request);
   },

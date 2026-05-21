@@ -518,9 +518,9 @@
   <a href="#contact" class="btn-nav">Programează acum →</a>
 </div>
 
-<main>
+<main style="display:flex;flex-direction:column;">
 
-<section class="hero" aria-labelledby="hero-heading">
+<section class="hero" aria-labelledby="hero-heading" data-section="hero">
   <div class="hero-bg-photo" aria-hidden="true"></div>
   <div class="container">
     <div class="hero-grid">
@@ -570,7 +570,7 @@
 </section>
 
 <!-- BANNER CAROUSEL -->
-<div class="banner-carousel" id="bannerCarousel" aria-label="Bannere promoționale">
+<div class="banner-carousel" id="bannerCarousel" aria-label="Bannere promoționale" data-section="carousel">
   <div class="banner-track" id="bannerTrack">
 
     <!-- Slide 1: 21 zile -->
@@ -739,7 +739,7 @@
 
 
 <!-- DEVICE SHOWCASE -->
-<section class="dss" aria-label="Cum arată site-urile noastre">
+<section class="dss" aria-label="Cum arată site-urile noastre" data-section="showcase">
   <div class="container">
     <div class="dss-grid">
       <div class="dss-text">
@@ -778,7 +778,7 @@
   </div>
 </section>
 
-<section class="services-bg" id="servicii" aria-labelledby="servicii-heading">
+<section class="services-bg" id="servicii" aria-labelledby="servicii-heading" data-section="services">
   <div class="container">
     <div class="sec-label reveal">CE PUTEM FACE PENTRU TINE</div>
     <h2 class="sec-title reveal" id="servicii-heading">Indiferent unde ești,<br>avem soluția potrivită</h2>
@@ -850,7 +850,7 @@
 </section>
 
 <!-- STRIP PACHET STARTUP -->
-<div style="background:linear-gradient(135deg,rgba(0,168,168,.07),rgba(0,168,168,.03));border-top:1px solid rgba(0,168,168,.2);border-bottom:1px solid rgba(0,168,168,.2);padding:40px 0;">
+<div style="background:linear-gradient(135deg,rgba(0,168,168,.07),rgba(0,168,168,.03));border-top:1px solid rgba(0,168,168,.2);border-bottom:1px solid rgba(0,168,168,.2);padding:40px 0;" data-section="startup">
   <div class="container">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;">
       <div>
@@ -864,7 +864,7 @@
 </div>
 
 <!-- INDUSTRIES SECTION -->
-<section class="ind-bg" aria-labelledby="ind-heading">
+<section class="ind-bg" aria-labelledby="ind-heading" data-section="industries">
   <div class="container">
     <div class="ind-layout">
       <div>
@@ -922,7 +922,7 @@
   </div>
 </section>
 
-<section class="process-bg" id="proces" aria-labelledby="proces-heading">
+<section class="process-bg" id="proces" aria-labelledby="proces-heading" data-section="process">
   <div class="container">
     <div class="sec-label reveal">CUM LUCRĂM</div>
     <h2 class="sec-title reveal" id="proces-heading">Simplu de la început până la final</h2>
@@ -936,7 +936,7 @@
   </div>
 </section>
 
-<section id="portofoliu" aria-labelledby="portofoliu-heading">
+<section id="portofoliu" aria-labelledby="portofoliu-heading" data-section="portfolio">
   <div class="container">
     <div class="sec-label reveal">PORTOFOLIU</div>
     <h2 class="sec-title reveal" id="portofoliu-heading">Afaceri ca a ta, rezultate reale</h2>
@@ -945,7 +945,7 @@
   </div>
 </section>
 
-<section class="testi-bg" id="testimoniale" aria-labelledby="testi-heading">
+<section class="testi-bg" id="testimoniale" aria-labelledby="testi-heading" data-section="testimonials">
   <div class="container">
     <div class="sec-label reveal">RECENZII REALE</div>
     <h2 class="sec-title reveal" id="testi-heading">Ei ne-au ales — și nu au regretat</h2>
@@ -969,7 +969,7 @@
   </div>
 </div>
 
-<section class="contact-bg" id="contact" aria-labelledby="contact-heading">
+<section class="contact-bg" id="contact" aria-labelledby="contact-heading" data-section="contact">
   <div class="container">
     <div class="contact-grid">
       <div>
@@ -1301,6 +1301,22 @@ document.getElementById('bookingForm').addEventListener('submit', async function
       cta.style.display = entries[0].isIntersecting ? 'none' : '';
     }, {threshold: 0.1}).observe(contact);
   }
+})();
+</script>
+<script>
+(function(){
+  fetch('/api/layout/index')
+    .then(function(r){return r.ok?r.json():null;})
+    .then(function(data){
+      if(!data||!data.order) return;
+      var main=document.querySelector('main[style*="flex"]');
+      if(!main) return;
+      var order=data.order;
+      order.forEach(function(id,i){
+        var el=main.querySelector('[data-section="'+id+'"]');
+        if(el) el.style.order=i;
+      });
+    }).catch(function(){});
 })();
 </script>
 </body>
