@@ -142,7 +142,7 @@
     .hero{min-height:calc(100svh - 68px);display:flex;align-items:center;position:relative;padding:80px 0;overflow:hidden;}
     .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
     /* Hero background photo layers */
-    .hero-bg-photo{position:absolute;inset:0;z-index:0;background-image:url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=1800&q=80');background-size:cover;background-position:center top;}
+    .hero-bg-photo{position:absolute;inset:0;z-index:0;background-image:url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=1800&q=80');background-size:cover;background-position:center top;transition:background-image .4s;}
     .hero-bg-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,rgba(6,15,15,.97) 0%,rgba(6,15,15,.90) 35%,rgba(6,15,15,.72) 60%,rgba(6,15,15,.45) 100%);}
     /* Dot grid texture on top of photo */
     .hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(0,168,168,.09) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;z-index:1;}
@@ -1456,6 +1456,16 @@ document.getElementById('bookingForm').addEventListener('submit', async function
         var el = tmp.firstElementChild;
         if(el) { el.style.order = i; main.appendChild(el); }
       });
+    }).catch(function(){});
+
+  // Hero background image dinamic
+  fetch('/api/site-settings')
+    .then(function(r){return r.ok?r.json():null;})
+    .then(function(d){
+      if(d && d.heroImage) {
+        var el = document.querySelector('.hero-bg-photo');
+        if(el) el.style.backgroundImage = "url('"+d.heroImage+"')";
+      }
     }).catch(function(){});
 })();
 </script>

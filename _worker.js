@@ -1361,6 +1361,25 @@ export default {
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
 
+    // ── SITE SETTINGS (hero image etc.) ──────────────────────
+    if (path === '/api/site-settings' && request.method === 'GET') {
+      try {
+        const raw = await env.PROGRAMARI.get('__site_settings__');
+        return json(raw ? JSON.parse(raw) : {});
+      } catch { return json({}); }
+    }
+    if (path === '/api/site-settings' && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const raw = await env.PROGRAMARI.get('__site_settings__');
+        const existing = raw ? JSON.parse(raw) : {};
+        const body = await request.json();
+        const updated = Object.assign({}, existing, body);
+        await env.PROGRAMARI.put('__site_settings__', JSON.stringify(updated));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare' }, 500); }
+    }
+
     // ── MAINTENANCE API ───────────────────────────────────────
     if (path === '/api/maintenance' && request.method === 'GET') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);

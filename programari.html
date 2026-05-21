@@ -1052,6 +1052,27 @@
           <div id="blockedDatesList" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
         </div>
 
+        <!-- HERO BANNER IMAGE -->
+        <div style="margin-top:36px;padding-top:28px;border-top:1px solid var(--border);">
+          <div class="f-label" style="margin-bottom:16px;">// hero_banner_imagine</div>
+          <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;max-width:660px;">
+            <div id="hero-img-preview" style="width:160px;height:90px;border-radius:8px;border:1px solid var(--border-soft);background:var(--bg3) url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=400&q=60') center/cover no-repeat;flex-shrink:0;position:relative;overflow:hidden;">
+              <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(6,15,15,.6),transparent);"></div>
+            </div>
+            <div style="flex:1;min-width:200px;">
+              <div style="display:flex;gap:8px;margin-bottom:8px;">
+                <input class="f-input" id="hero-img-url" placeholder="URL imagine (https://...)" style="flex:1;margin:0;">
+                <button onclick="uploadHeroImage()" style="background:var(--teal);color:#060f0f;border:none;border-radius:6px;padding:0 14px;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;height:42px;">⬆ Upload</button>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button onclick="saveHeroImage()" class="btn-save" style="flex:1;">💾 Salvează imagine</button>
+                <button onclick="resetHeroImage()" style="background:none;border:1px solid var(--border-soft);color:var(--muted);border-radius:6px;padding:0 14px;font-size:.8rem;cursor:pointer;white-space:nowrap;height:36px;">↺ Resetează</button>
+              </div>
+              <div id="hero-img-status" style="font-size:.75rem;color:var(--teal);margin-top:6px;min-height:16px;"></div>
+            </div>
+          </div>
+        </div>
+
         <!-- MAINTENANCE MODE -->
         <div style="margin-top:36px;padding-top:28px;border-top:1px solid var(--border);">
           <div class="f-label" style="margin-bottom:16px;">// under_construction_mode</div>
@@ -1821,6 +1842,68 @@
       renderSettings();
     } catch {}
     fetchMaintenance();
+    fetchHeroImage();
+  }
+
+  async function fetchHeroImage() {
+    try {
+      const res = await fetch('/api/site-settings');
+      const d = await res.json();
+      if (d.heroImage) {
+        document.getElementById('hero-img-url').value = d.heroImage;
+        applyHeroPreview(d.heroImage);
+      }
+    } catch {}
+  }
+
+  function applyHeroPreview(url) {
+    var prev = document.getElementById('hero-img-preview');
+    if (prev) prev.style.backgroundImage = "url('" + url + "')";
+  }
+
+  function uploadHeroImage() {
+    var inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'image/*';
+    inp.onchange = function() {
+      var file = inp.files[0]; if (!file) return;
+      var statusEl = document.getElementById('hero-img-status');
+      statusEl.textContent = 'Se încarcă...';
+      uploadMedia(file, function(url) {
+        document.getElementById('hero-img-url').value = url;
+        applyHeroPreview(url);
+        statusEl.textContent = '✓ Imagine încărcată — apasă Salvează';
+      }, function(err) {
+        statusEl.textContent = '✕ ' + err;
+      });
+    };
+    inp.click();
+  }
+
+  async function saveHeroImage() {
+    var url = document.getElementById('hero-img-url').value.trim();
+    var statusEl = document.getElementById('hero-img-status');
+    if (!url) { statusEl.textContent = '✕ Completează URL-ul imaginii'; return; }
+    try {
+      await fetch('/api/site-settings?token=' + encodeURIComponent(adminToken), {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ heroImage: url })
+      });
+      applyHeroPreview(url);
+      statusEl.textContent = '✓ Salvat! Imaginea hero a fost actualizată.';
+      setTimeout(function(){ statusEl.textContent = ''; }, 3000);
+    } catch { statusEl.textContent = '✕ Eroare la salvare'; }
+  }
+
+  async function resetHeroImage() {
+    var defaultUrl = 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=1800&q=80';
+    document.getElementById('hero-img-url').value = defaultUrl;
+    applyHeroPreview(defaultUrl);
+    await fetch('/api/site-settings?token=' + encodeURIComponent(adminToken), {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ heroImage: defaultUrl })
+    });
+    document.getElementById('hero-img-status').textContent = '✓ Resetat la imaginea implicită';
+    setTimeout(function(){ document.getElementById('hero-img-status').textContent = ''; }, 2500);
   }
 
   async function fetchMaintenance() {
