@@ -348,7 +348,8 @@
     @media(max-width:768px){
       nav .nav-links,.nav-phone,.btn-nav{display:none}.hamburger{display:flex}
       /* Hero — se adaptează conținutului pe mobil */
-      .hero,.hero.h-large,.hero.h-medium,.hero.h-auto{min-height:0;height:auto;padding:100px 0 60px;align-items:center;}
+      .hero,.hero.h-large,.hero.h-medium,.hero.h-auto{min-height:0;height:auto;padding:80px 0 48px;align-items:center;}
+      .hero.no-text{padding:0;}
       .hero-bg-photo{background-position:center center;}
       .hero-bg-photo::after{background:linear-gradient(180deg,rgba(6,15,15,.82) 0%,rgba(6,15,15,.75) 50%,rgba(6,15,15,.92) 100%);}
       .hero-grid{gap:32px;}
@@ -1522,6 +1523,21 @@ document.getElementById('bookingForm').addEventListener('submit', async function
         hero.classList.toggle('no-text',     d.heroText     === false);
         hero.classList.remove('h-large','h-medium','h-auto');
         if(d.heroHeight && d.heroHeight !== 'full') hero.classList.add('h-'+d.heroHeight);
+      }
+      // Dacă imaginea e pe "contain" sau "100% auto" — ajustează înălțimea hero
+      // după aspect ratio-ul imaginii reale, eliminând spațiile goale
+      var needsFit = d.heroImage && (d.heroSize === 'contain' || d.heroSize === '100% auto');
+      if(needsFit && hero) {
+        var tmpImg = new Image();
+        tmpImg.onload = function() {
+          var w = hero.offsetWidth;
+          if(!w || !tmpImg.naturalWidth) return;
+          var ratio = tmpImg.naturalHeight / tmpImg.naturalWidth;
+          hero.style.minHeight = '0';
+          hero.style.height    = Math.round(w * ratio) + 'px';
+          hero.style.padding   = '0';
+        };
+        tmpImg.src = d.heroImage;
       }
     }).catch(function(){});
 })();
