@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAYS by Christou 1910 — Design Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --yellow: #FFD700;
+    --red:    #FF2D1A;
+    --mint:   #00D48C;
+    --blue:   #5B5FFF;
+    --black:  #000000;
+    --white:  #FFFFFF;
+    --coral:  #FF6B35;
+    --pink:   #FF3EA5;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--white);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed; width: 18px; height: 18px;
+    background: var(--black); border-radius: 50%;
+    pointer-events: none; z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: transform .1s, width .2s, height .2s, background .2s;
+    mix-blend-mode: difference;
+  }
+  .cursor.hover { width: 48px; height: 48px; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: var(--black);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 60px;
+    border-bottom: 3px solid var(--yellow);
+  }
+  .nav-logo {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.8rem; color: var(--yellow);
+    letter-spacing: 2px; line-height: 1;
+  }
+  .nav-logo span { color: var(--white); font-size: 1rem; letter-spacing: 4px; display: block; }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem; color: var(--white); text-decoration: none;
+    letter-spacing: 2px;
+    transition: color .15s;
+  }
+  .nav-links a:hover { color: var(--yellow); }
+  .nav-cta {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; letter-spacing: 2px;
+    background: var(--yellow); color: var(--black);
+    border: none; padding: 8px 24px; cursor: pointer;
+    font-weight: 900; border: 3px solid var(--black);
+    transition: transform .1s, box-shadow .1s;
+  }
+  .nav-cta:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--white); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: var(--yellow);
+    position: relative;
+    display: flex; align-items: center;
+    overflow: hidden;
+    padding-top: 60px;
+    border-bottom: 4px solid var(--black);
+  }
+  .hero-bg-text {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(120px, 22vw, 260px);
+    color: rgba(0,0,0,.06);
+    white-space: nowrap;
+    letter-spacing: -4px;
+    user-select: none;
+    pointer-events: none;
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 60px 48px;
+    max-width: 700px;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: var(--black); color: var(--yellow);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: .9rem; letter-spacing: 4px;
+    padding: 6px 16px; margin-bottom: 24px;
+    border: 3px solid var(--black);
+  }
+  .hero-headline {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(72px, 10vw, 128px);
+    line-height: .9; color: var(--black);
+    letter-spacing: -2px;
+    margin-bottom: 24px;
+  }
+  .hero-headline .accent { color: var(--red); display: block; }
+  .hero-sub {
+    font-size: 1.1rem; font-weight: 600; color: var(--black);
+    max-width: 400px; line-height: 1.5; margin-bottom: 36px;
+    opacity: .75;
+  }
+  .btn-primary {
+    display: inline-block;
+    background: var(--black); color: var(--yellow);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem; letter-spacing: 3px;
+    padding: 14px 40px;
+    border: 3px solid var(--black);
+    text-decoration: none; cursor: pointer;
+    transition: transform .1s, box-shadow .1s;
+  }
+  .btn-primary:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 var(--black); background: var(--red); }
+  .btn-ghost {
+    display: inline-block;
+    background: transparent; color: var(--black);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem; letter-spacing: 3px;
+    padding: 12px 36px;
+    border: 3px solid var(--black);
+    text-decoration: none; cursor: pointer; margin-left: 16px;
+    transition: transform .1s, box-shadow .1s, background .1s;
+  }
+  .btn-ghost:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 var(--black); background: var(--white); }
+
+  /* Hero product float */
+  .hero-product {
+    position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+    z-index: 3;
+    animation: float-hero 3s ease-in-out infinite;
+  }
+  .hero-product svg { width: clamp(260px, 30vw, 420px); height: auto; }
+  @keyframes float-hero {
+    0%, 100% { transform: translateY(-50%) rotate(-6deg); }
+    50% { transform: translateY(-54%) rotate(-4deg); }
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    background: var(--black); border-top: 3px solid var(--black);
+    border-bottom: 4px solid var(--black);
+    overflow: hidden; padding: 14px 0;
+  }
+  .marquee-track {
+    display: flex; gap: 0; width: max-content;
+    animation: marquee 18s linear infinite;
+  }
+  .marquee-item {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.5rem; letter-spacing: 2px;
+    color: var(--yellow); white-space: nowrap;
+    padding: 0 48px;
+  }
+  .marquee-item::before { content: '★ '; color: var(--red); }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* PRODUCTS SPLIT */
+  .products {
+    display: grid; grid-template-columns: 1fr 1fr;
+    min-height: 90vh;
+    border-bottom: 4px solid var(--black);
+  }
+  .product-col {
+    padding: 80px 60px;
+    position: relative; overflow: hidden;
+    border-right: 4px solid var(--black);
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .product-col:last-child { border-right: none; }
+  .product-col.comfy { background: var(--white); }
+  .product-col.fresh { background: var(--mint); }
+
+  .product-vertical {
+    position: absolute; top: 50%; right: 24px;
+    transform: translateY(-50%) rotate(90deg);
+    font-family: 'Anton', sans-serif;
+    font-size: 5rem; letter-spacing: 8px;
+    color: rgba(0,0,0,.07); white-space: nowrap;
+    pointer-events: none;
+  }
+  .product-number {
+    font-family: 'Anton', sans-serif;
+    font-size: 10rem; line-height: 1; color: var(--yellow);
+    -webkit-text-stroke: 4px var(--black);
+    margin-bottom: -20px;
+  }
+  .product-col.fresh .product-number { color: var(--white); }
+  .product-name {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(56px, 6vw, 88px);
+    line-height: .9; color: var(--black);
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+  }
+  .product-sub {
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; letter-spacing: 4px;
+    background: var(--black); color: var(--white);
+    padding: 4px 14px; margin-bottom: 24px;
+  }
+  .product-col.fresh .product-sub { background: var(--white); color: var(--black); }
+  .product-desc {
+    font-size: 1rem; line-height: 1.6;
+    color: var(--black); max-width: 360px;
+    margin-bottom: 32px; font-weight: 500;
+  }
+  .product-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 36px; }
+  .tag {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: .85rem; letter-spacing: 2px;
+    padding: 5px 14px; border: 2px solid var(--black);
+    background: transparent;
+  }
+  .product-col.fresh .tag { border-color: var(--black); background: rgba(0,0,0,.08); }
+  .product-illustration {
+    position: absolute; bottom: 40px; right: 40px;
+    opacity: .15;
+  }
+
+  /* SCROLL PARALLAX SECTION */
+  .parallax-section {
+    background: var(--red);
+    min-height: 80vh;
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    border-bottom: 4px solid var(--black);
+  }
+  .parallax-bg-word {
+    position: absolute; font-family: 'Anton', sans-serif;
+    font-size: clamp(160px, 28vw, 360px);
+    color: rgba(0,0,0,.08); white-space: nowrap;
+    letter-spacing: -6px; user-select: none;
+    will-change: transform;
+  }
+  .parallax-content {
+    position: relative; z-index: 2;
+    text-align: center; padding: 80px 32px;
+  }
+  .parallax-content .big-text {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(56px, 9vw, 120px);
+    color: var(--white); line-height: .9;
+    letter-spacing: -2px; margin-bottom: 32px;
+  }
+  .parallax-content .big-text em { color: var(--yellow); font-style: normal; display: block; }
+  .pill-container {
+    display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;
+    max-width: 800px;
+  }
+  .pill {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem; letter-spacing: 3px;
+    padding: 10px 28px;
+    border: 3px solid var(--white);
+    color: var(--white);
+    border-radius: 60px;
+    transition: background .15s, color .15s;
+    cursor: default;
+  }
+  .pill:hover { background: var(--white); color: var(--red); }
+
+  /* STATS */
+  .stats {
+    background: var(--black);
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-bottom: 4px solid var(--yellow);
+  }
+  .stat-item {
+    padding: 60px 40px;
+    border-right: 3px solid rgba(255,215,0,.2);
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-number {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(56px, 6vw, 88px);
+    color: var(--yellow); line-height: 1;
+    display: block;
+  }
+  .stat-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; letter-spacing: 3px;
+    color: rgba(255,255,255,.5); margin-top: 8px;
+    display: block;
+  }
+
+  /* MASCOT SECTION */
+  .mascot-section {
+    background: var(--blue);
+    padding: 100px 48px;
+    display: flex; align-items: center; gap: 80px;
+    border-bottom: 4px solid var(--black);
+    overflow: hidden; position: relative;
+  }
+  .mascot-text { flex: 1; position: relative; z-index: 2; }
+  .mascot-eyebrow {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; letter-spacing: 5px;
+    background: var(--yellow); color: var(--black);
+    padding: 5px 16px; display: inline-block;
+    margin-bottom: 20px;
+  }
+  .mascot-headline {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(56px, 7vw, 100px);
+    color: var(--white); line-height: .9;
+    letter-spacing: -2px; margin-bottom: 28px;
+  }
+  .mascot-headline .line-yellow { color: var(--yellow); }
+  .mascot-body {
+    font-size: 1.05rem; font-weight: 500;
+    color: rgba(255,255,255,.8);
+    max-width: 460px; line-height: 1.7; margin-bottom: 36px;
+  }
+  .mascot-svg { flex: 0 0 340px; position: relative; z-index: 2; }
+  .mascot-svg svg { width: 100%; height: auto; animation: mascot-bounce 2.4s ease-in-out infinite; }
+  @keyframes mascot-bounce {
+    0%, 100% { transform: translateY(0) rotate(-4deg); }
+    50% { transform: translateY(-20px) rotate(-2deg); }
+  }
+  .mascot-bg-circle {
+    position: absolute; width: 600px; height: 600px;
+    background: rgba(255,255,255,.06); border-radius: 50%;
+    right: -100px; top: 50%; transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  /* KIDS COMFY */
+  .kids-section {
+    background: var(--pink);
+    padding: 100px 48px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center;
+    border-bottom: 4px solid var(--black);
+    position: relative; overflow: hidden;
+  }
+  .kids-visual {
+    display: flex; gap: 20px; flex-wrap: wrap;
+    position: relative; z-index: 2;
+  }
+  .kids-pill-img {
+    width: 140px; height: 200px;
+    background: var(--yellow);
+    border-radius: 100px;
+    border: 4px solid var(--black);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem;
+    position: relative; overflow: hidden;
+    flex-shrink: 0;
+  }
+  .kids-pill-img:nth-child(2) { background: var(--mint); margin-top: 40px; }
+  .kids-pill-img:nth-child(3) { background: var(--blue); margin-top: 20px; width: 110px; height: 160px; }
+  .kids-text { position: relative; z-index: 2; }
+  .kids-tag {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: .9rem; letter-spacing: 4px;
+    background: var(--black); color: var(--pink);
+    padding: 5px 14px; display: inline-block; margin-bottom: 20px;
+  }
+  .kids-headline {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(52px, 6vw, 88px);
+    color: var(--black); line-height: .9;
+    letter-spacing: -1px; margin-bottom: 24px;
+  }
+  .kids-desc {
+    font-size: 1rem; font-weight: 500; color: rgba(0,0,0,.7);
+    line-height: 1.65; max-width: 380px; margin-bottom: 32px;
+  }
+  .kids-bg-text {
+    position: absolute; bottom: -20px; left: 0;
+    font-family: 'Anton', sans-serif;
+    font-size: 18vw; color: rgba(0,0,0,.05);
+    letter-spacing: -4px; white-space: nowrap;
+    pointer-events: none;
+  }
+
+  /* CTA */
+  .cta-section {
+    background: var(--yellow);
+    padding: 120px 48px;
+    text-align: center; position: relative; overflow: hidden;
+    border-bottom: 4px solid var(--black);
+  }
+  .cta-bg { position: absolute; inset: 0; pointer-events: none; }
+  .cta-headline {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(72px, 11vw, 150px);
+    color: var(--black); line-height: .85;
+    letter-spacing: -3px; margin-bottom: 40px;
+    position: relative; z-index: 2;
+  }
+  .cta-headline .red { color: var(--red); }
+  .cta-btns { position: relative; z-index: 2; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+
+  /* FOOTER */
+  footer {
+    background: var(--black);
+    padding: 60px 48px 32px;
+    border-top: 4px solid var(--yellow);
+  }
+  .footer-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 48px; flex-wrap: wrap; gap: 32px;
+  }
+  .footer-brand {
+    font-family: 'Anton', sans-serif;
+    font-size: 2.5rem; color: var(--yellow); letter-spacing: 2px;
+  }
+  .footer-brand span { font-size: 1rem; color: rgba(255,255,255,.4); display: block; letter-spacing: 4px; }
+  .footer-slogan {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; letter-spacing: 4px;
+    color: rgba(255,255,255,.35); margin-top: 8px;
+  }
+  .footer-links { display: flex; gap: 48px; flex-wrap: wrap; }
+  .footer-col h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: .85rem; letter-spacing: 4px;
+    color: var(--yellow); margin-bottom: 16px;
+  }
+  .footer-col a {
+    display: block; color: rgba(255,255,255,.5);
+    text-decoration: none; font-size: .9rem;
+    margin-bottom: 10px; transition: color .15s;
+    font-weight: 500;
+  }
+  .footer-col a:hover { color: var(--white); }
+  .footer-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid rgba(255,255,255,.1); padding-top: 24px;
+    font-size: .8rem; color: rgba(255,255,255,.25);
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-bottom b { color: var(--yellow); font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px; }
+
+  /* FIXED MASCOT */
+  .fixed-mascot {
+    position: fixed; bottom: 28px; right: 28px;
+    z-index: 9000; cursor: pointer;
+    animation: fixed-bounce 3s ease-in-out infinite;
+    transition: transform .2s;
+  }
+  .fixed-mascot:hover { transform: scale(1.15); }
+  .fixed-mascot svg { width: 72px; height: auto; filter: drop-shadow(4px 4px 0 rgba(0,0,0,.3)); }
+  @keyframes fixed-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .fixed-mascot-bubble {
+    position: absolute; bottom: 100%; right: 0;
+    background: var(--yellow); color: var(--black);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: .85rem; letter-spacing: 2px;
+    padding: 8px 16px; border: 3px solid var(--black);
+    white-space: nowrap; margin-bottom: 8px;
+    opacity: 0; transform: translateY(4px);
+    transition: opacity .2s, transform .2s;
+    pointer-events: none;
+  }
+  .fixed-mascot-bubble::after {
+    content: '';
+    position: absolute; top: 100%; right: 20px;
+    border: 6px solid transparent;
+    border-top-color: var(--black);
+  }
+  .fixed-mascot:hover .fixed-mascot-bubble { opacity: 1; transform: translateY(0); }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-left { opacity: 0; transform: translateX(-60px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal-left.visible { opacity: 1; transform: translateX(0); }
+  .reveal-right { opacity: 0; transform: translateX(60px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+  /* TILTED LABEL */
+  .tilted {
+    display: inline-block;
+    transform: rotate(-4deg);
+    transform-origin: left center;
+  }
+  .tilted-pos { transform: rotate(3deg); }
+
+  /* STICKER */
+  .sticker {
+    display: inline-block;
+    background: var(--yellow); color: var(--black);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: .9rem; letter-spacing: 3px;
+    padding: 6px 16px;
+    border: 3px solid var(--black);
+    transform: rotate(-3deg);
+    box-shadow: 3px 3px 0 var(--black);
+  }
+
+  @media (max-width: 900px) {
+    .products { grid-template-columns: 1fr; }
+    .product-col { border-right: none; border-bottom: 4px solid var(--black); }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .stat-item:nth-child(2) { border-right: none; }
+    .mascot-section { flex-direction: column; }
+    .kids-section { grid-template-columns: 1fr; }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hero-product { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+
+<!-- FIXED MASCOT -->
+<div class="fixed-mascot" id="fixedMascot">
+  <div class="fixed-mascot-bubble">OH HAPPY DAYS! 🎉</div>
+  <!-- Cloud mascot SVG -->
+  <svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="60" cy="58" rx="44" ry="34" fill="white" stroke="black" stroke-width="4"/>
+    <circle cx="38" cy="46" r="20" fill="white" stroke="black" stroke-width="4"/>
+    <circle cx="60" cy="38" r="24" fill="white" stroke="black" stroke-width="4"/>
+    <circle cx="82" cy="46" r="18" fill="white" stroke="black" stroke-width="4"/>
+    <circle cx="43" cy="55" r="5" fill="black"/>
+    <circle cx="72" cy="55" r="5" fill="black"/>
+    <path d="M50 66 Q57 72 70 66" stroke="black" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <!-- legs -->
+    <rect x="42" y="86" width="12" height="32" rx="6" fill="#FFD700" stroke="black" stroke-width="3"/>
+    <rect x="66" y="86" width="12" height="32" rx="6" fill="#FFD700" stroke="black" stroke-width="3"/>
+    <!-- shoes -->
+    <ellipse cx="48" cy="122" rx="14" ry="8" fill="black"/>
+    <ellipse cx="72" cy="122" rx="14" ry="8" fill="black"/>
+  </svg>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">DAYS<span>BY CHRISTOU 1910</span></div>
+  <ul class="nav-links">
+    <li><a href="#">COMFY</a></li>
+    <li><a href="#">FRESH</a></li>
+    <li><a href="#">KIDS</a></li>
+    <li><a href="#">ABOUT</a></li>
+  </ul>
+  <button class="nav-cta">SHOP NOW</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-text">DAYS</div>
+  <div class="hero-content">
+    <div class="hero-tag tilted">★ EST. 1910 ★</div>
+    <h1 class="hero-headline">
+      OH<br>
+      HAPPY<br>
+      <span class="accent">DAYS!</span>
+    </h1>
+    <p class="hero-sub">Healthy Movement Matters — branțuri anatomice pentru picioare fericite în fiecare pas.</p>
+    <a href="#" class="btn-primary">DISCOVER NOW</a>
+    <a href="#" class="btn-ghost">LEARN MORE</a>
+  </div>
+
+  <!-- Hero product illustration -->
+  <div class="hero-product">
+    <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Insole shape -->
+      <path d="M60 220 C40 200 30 160 35 120 C40 80 60 50 100 35 C140 20 200 18 250 25 C300 32 340 60 360 100 C375 130 370 165 350 190 C330 215 290 228 240 232 C190 236 140 235 100 228 Z" fill="white" stroke="black" stroke-width="6"/>
+      <!-- Arch support detail -->
+      <path d="M80 180 C75 155 80 130 95 115" stroke="#FFD700" stroke-width="8" stroke-linecap="round" fill="none"/>
+      <path d="M80 180 C85 195 100 205 120 210" stroke="#FFD700" stroke-width="8" stroke-linecap="round" fill="none"/>
+      <!-- brand text on insole -->
+      <text x="130" y="130" font-family="Anton, sans-serif" font-size="36" fill="black" letter-spacing="2">DAYS</text>
+      <text x="150" y="158" font-family="Bebas Neue, sans-serif" font-size="14" fill="#888" letter-spacing="3">COMFY</text>
+      <!-- dots pattern -->
+      <circle cx="200" cy="180" r="3" fill="#FFD700"/>
+      <circle cx="215" cy="185" r="3" fill="#FFD700"/>
+      <circle cx="230" cy="178" r="3" fill="#FFD700"/>
+      <circle cx="245" cy="183" r="3" fill="#FFD700"/>
+      <circle cx="260" cy="176" r="3" fill="#FFD700"/>
+      <!-- Sun decoration -->
+      <g transform="translate(310, 40)">
+        <circle cx="0" cy="0" r="28" fill="#FFD700" stroke="black" stroke-width="3"/>
+        <circle cx="-8" cy="-6" r="4" fill="black"/>
+        <circle cx="8" cy="-6" r="4" fill="black"/>
+        <path d="M-8 8 Q0 14 8 8" stroke="black" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <line x1="0" y1="-34" x2="0" y2="-28" stroke="black" stroke-width="3" stroke-linecap="round"/>
+        <line x1="0" y1="28" x2="0" y2="34" stroke="black" stroke-width="3" stroke-linecap="round"/>
+        <line x1="-34" y1="0" x2="-28" y2="0" stroke="black" stroke-width="3" stroke-linecap="round"/>
+        <line x1="28" y1="0" x2="34" y2="0" stroke="black" stroke-width="3" stroke-linecap="round"/>
+        <line x1="-24" y1="-24" x2="-20" y2="-20" stroke="black" stroke-width="3" stroke-linecap="round"/>
+        <line x1="20" y1="-20" x2="24" y2="-24" stroke="black" stroke-width="3" stroke-linecap="round"/>
+        <line x1="-24" y1="24" x2="-20" y2="20" stroke="black" stroke-width="3" stroke-linecap="round"/>
+        <line x1="20" y1="20" x2="24" y2="24" stroke="black" stroke-width="3" stroke-linecap="round"/>
+        <!-- arms -->
+        <path d="M28 10 Q40 14 36 24" stroke="black" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M-28 10 Q-40 14 -36 24" stroke="black" stroke-width="3" stroke-linecap="round" fill="none"/>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marqueeTrack">
+    <span class="marquee-item">OH HAPPY DAYS</span>
+    <span class="marquee-item">HEALTHY MOVEMENT MATTERS</span>
+    <span class="marquee-item">THE MORE YOU MOVE THE BETTER YOUR MOOD</span>
+    <span class="marquee-item">READY, STEADY, JUMP! RUN!</span>
+    <span class="marquee-item">INSPIRED BY SCIENCE & NATURE</span>
+    <span class="marquee-item">SUSTAINABLE & RESPONSIBLE</span>
+    <span class="marquee-item">OH HAPPY DAYS</span>
+    <span class="marquee-item">HEALTHY MOVEMENT MATTERS</span>
+    <span class="marquee-item">THE MORE YOU MOVE THE BETTER YOUR MOOD</span>
+    <span class="marquee-item">READY, STEADY, JUMP! RUN!</span>
+    <span class="marquee-item">INSPIRED BY SCIENCE & NATURE</span>
+    <span class="marquee-item">SUSTAINABLE & RESPONSIBLE</span>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="products">
+  <div class="product-col comfy reveal-left">
+    <div class="product-vertical">COMFY</div>
+    <div class="product-number">01</div>
+    <div class="product-sub">SPORT & DAILY USE</div>
+    <h2 class="product-name">DAYS<br>COMFY</h2>
+    <p class="product-desc">Suport de arc superior, amortizare maximă, distribuire inteligentă a presiunii. Fiecare pas contează — fă-l bine.</p>
+    <div class="product-tags">
+      <span class="tag">Arch Support</span>
+      <span class="tag">Shock Absorption</span>
+      <span class="tag">Posture +</span>
+      <span class="tag">Fatigue -</span>
+    </div>
+    <a href="#" class="btn-primary">SHOP COMFY →</a>
+    <!-- Rocket illustration -->
+    <div class="product-illustration">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <path d="M60 10 C75 10 90 30 90 60 L90 90 C90 90 75 80 60 80 C45 80 30 90 30 90 L30 60 C30 30 45 10 60 10Z" fill="black"/>
+        <ellipse cx="60" cy="45" rx="12" ry="12" fill="#FFD700"/>
+        <path d="M30 85 L15 105 L35 98 Z" fill="black"/>
+        <path d="M90 85 L105 105 L85 98 Z" fill="black"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="product-col fresh reveal-right">
+    <div class="product-vertical">FRESH</div>
+    <div class="product-number tilted-pos" style="color:var(--black);-webkit-text-stroke:4px white;">02</div>
+    <div class="product-sub">MINT & CITRUS</div>
+    <h2 class="product-name">DAYS<br>FRESH</h2>
+    <p class="product-desc">Ingrediente active Mint & Citrus pentru o prospețime autentică toată ziua. Feel good, smell good — mereu.</p>
+    <div class="product-tags">
+      <span class="tag">Mint Active</span>
+      <span class="tag">Citrus Fresh</span>
+      <span class="tag">All Day</span>
+      <span class="tag">Feel Good</span>
+    </div>
+    <a href="#" class="btn-primary" style="background:var(--black);color:var(--mint);">SHOP FRESH →</a>
+    <!-- Peace hand -->
+    <div class="product-illustration">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <path d="M55 20 L55 70 Q55 80 65 80 Q75 80 75 70 L75 20 Q75 10 65 10 Q55 10 55 20Z" fill="black"/>
+        <path d="M35 35 L35 72 Q35 80 45 80 Q55 80 55 72 L55 50" fill="none" stroke="black" stroke-width="10" stroke-linecap="round"/>
+        <path d="M75 50 L75 72 Q75 80 85 80 Q95 80 95 72 L95 50" fill="none" stroke="black" stroke-width="10" stroke-linecap="round"/>
+        <path d="M35 80 Q25 82 25 95 Q25 105 35 107 L85 107 Q95 105 95 95 Q95 82 85 80" fill="black"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- PARALLAX SECTION -->
+<section class="parallax-section">
+  <div class="parallax-bg-word" id="parallaxWord">MOVE</div>
+  <div class="parallax-content reveal">
+    <h2 class="big-text">
+      THE MORE<br>
+      YOU MOVE<br>
+      <em>THE BETTER!</em>
+    </h2>
+    <div class="pill-container">
+      <span class="pill">Suport Arc</span>
+      <span class="pill">Amortizare Superioară</span>
+      <span class="pill">Distribuire Presiune</span>
+      <span class="pill">Reducere Oboseală</span>
+      <span class="pill">Postură Îmbunătățită</span>
+      <span class="pill">Stabilizare Picior</span>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-item reveal">
+    <span class="stat-number">1910</span>
+    <span class="stat-label">AN FONDARE</span>
+  </div>
+  <div class="stat-item reveal" style="transition-delay:.1s">
+    <span class="stat-number">100+</span>
+    <span class="stat-label">ANI DE EXPERIENȚĂ</span>
+  </div>
+  <div class="stat-item reveal" style="transition-delay:.2s">
+    <span class="stat-number">50K+</span>
+    <span class="stat-label">CLIENȚI FERICIȚI</span>
+  </div>
+  <div class="stat-item reveal" style="transition-delay:.3s">
+    <span class="stat-number">∞</span>
+    <span class="stat-label">PAȘI SĂNĂTOȘI</span>
+  </div>
+</div>
+
+<!-- MASCOT / BRAND STORY -->
+<section class="mascot-section">
+  <div class="mascot-bg-circle"></div>
+  <div class="mascot-text reveal-left">
+    <div class="mascot-eyebrow tilted">INSPIRED BY SCIENCE</div>
+    <h2 class="mascot-headline">
+      HEALTHY<br>
+      <span class="line-yellow">MOVEMENT</span><br>
+      MATTERS!
+    </h2>
+    <p class="mascot-body">De la primul pas al dimineții până la ultimul al zilei, DAYS te susține. Proiectate pe știința corpului uman, branțurile noastre anatomice îți transformă fiecare mișcare într-o bucurie.</p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;">
+      <a href="#" class="btn-primary" style="background:var(--yellow);color:var(--black);">AFLĂ MAI MULT</a>
+      <a href="#" class="btn-ghost" style="border-color:rgba(255,255,255,.4);color:white;">OUR STORY →</a>
+    </div>
+  </div>
+
+  <div class="mascot-svg reveal-right">
+    <!-- Large cloud mascot -->
+    <svg viewBox="0 0 280 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Cloud body -->
+      <ellipse cx="140" cy="130" rx="100" ry="75" fill="white" stroke="black" stroke-width="6"/>
+      <circle cx="88" cy="108" r="46" fill="white" stroke="black" stroke-width="6"/>
+      <circle cx="140" cy="88" r="55" fill="white" stroke="black" stroke-width="6"/>
+      <circle cx="192" cy="108" r="42" fill="white" stroke="black" stroke-width="6"/>
+      <!-- Face -->
+      <circle cx="118" cy="128" r="10" fill="black"/>
+      <circle cx="162" cy="128" r="10" fill="black"/>
+      <circle cx="121" cy="124" r="3" fill="white"/>
+      <circle cx="165" cy="124" r="3" fill="white"/>
+      <path d="M122 148 Q140 162 158 148" stroke="black" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <!-- Star decorations -->
+      <text x="68" y="90" font-size="18" fill="#FFD700">★</text>
+      <text x="194" y="85" font-size="14" fill="#FF2D1A">★</text>
+      <!-- Arms -->
+      <path d="M50 148 Q20 138 18 118 Q16 98 36 100" stroke="black" stroke-width="7" stroke-linecap="round" fill="none"/>
+      <path d="M230 148 Q260 138 262 118 Q264 98 244 100" stroke="black" stroke-width="7" stroke-linecap="round" fill="none"/>
+      <!-- Hand left - peace sign -->
+      <circle cx="32" cy="96" r="18" fill="#FFD700" stroke="black" stroke-width="4"/>
+      <text x="23" y="102" font-size="14">✌️</text>
+      <!-- Hand right - wave -->
+      <circle cx="248" cy="96" r="18" fill="#FFD700" stroke="black" stroke-width="4"/>
+      <text x="239" y="102" font-size="14">👋</text>
+      <!-- Legs -->
+      <rect x="100" y="196" width="26" height="72" rx="13" fill="#FFD700" stroke="black" stroke-width="5"/>
+      <rect x="154" y="196" width="26" height="72" rx="13" fill="#FFD700" stroke="black" stroke-width="5"/>
+      <!-- Shoes -->
+      <ellipse cx="113" cy="274" rx="32" ry="16" fill="black"/>
+      <ellipse cx="167" cy="274" rx="32" ry="16" fill="black"/>
+      <!-- Shoe brand -->
+      <text x="97" y="277" font-family="Anton, sans-serif" font-size="9" fill="#FFD700" letter-spacing="1">DAYS</text>
+      <text x="151" y="277" font-family="Anton, sans-serif" font-size="9" fill="#FFD700" letter-spacing="1">DAYS</text>
+    </svg>
+  </div>
+</section>
+
+<!-- KIDS -->
+<section class="kids-section">
+  <div class="kids-visual reveal-left">
+    <div class="kids-pill-img">👟</div>
+    <div class="kids-pill-img">🏃</div>
+    <div class="kids-pill-img">⚡</div>
+  </div>
+  <div class="kids-text reveal-right">
+    <div class="kids-tag tilted">NEW!</div>
+    <h2 class="kids-headline">
+      KIDS<br>
+      COMFY
+    </h2>
+    <p class="kids-desc">Pentru micii exploratori în mișcare continuă. Același suport anatomic de calitate, adaptat pentru picioarele în creștere. Ready, Steady, Jump!</p>
+    <a href="#" class="btn-primary" style="background:var(--black);color:var(--pink);">PENTRU COPII →</a>
+  </div>
+  <div class="kids-bg-text">KIDS</div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section">
+  <h2 class="cta-headline reveal">
+    READY,<br>
+    STEADY,<br>
+    <span class="red">JUMP!</span>
+  </h2>
+  <div class="cta-btns">
+    <a href="#" class="btn-primary">SHOP NOW →</a>
+    <a href="#" class="btn-ghost">FIND A STORE</a>
+  </div>
+  <!-- Floating decorations -->
+  <svg style="position:absolute;top:40px;left:60px;opacity:.12;pointer-events:none;" width="80" height="80" viewBox="0 0 80 80">
+    <circle cx="40" cy="40" r="36" fill="none" stroke="black" stroke-width="6"/>
+    <path d="M28 40 L38 50 L52 30" stroke="black" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </svg>
+  <svg style="position:absolute;bottom:40px;right:120px;opacity:.12;pointer-events:none;transform:rotate(20deg);" width="60" height="60" viewBox="0 0 60 60">
+    <polygon points="30,4 37,22 56,22 42,34 47,52 30,40 13,52 18,34 4,22 23,22" fill="black"/>
+  </svg>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">DAYS<span>BY CHRISTOU 1910</span></div>
+      <div class="footer-slogan">OH HAPPY DAYS! ★</div>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>PRODUSE</h4>
+        <a href="#">DAYS Comfy</a>
+        <a href="#">DAYS Fresh</a>
+        <a href="#">Kids Comfy</a>
+      </div>
+      <div class="footer-col">
+        <h4>BRAND</h4>
+        <a href="#">Our Story</a>
+        <a href="#">Sustainability</a>
+        <a href="#">Science</a>
+      </div>
+      <div class="footer-col">
+        <h4>CONTACT</h4>
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 <b>CHRISTOU 1910</b> — All rights reserved.</span>
+    <span>Healthy Movement Matters ★</span>
+  </div>
+</footer>
+
+<script>
+  // Custom cursor
+  var cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', function(e) {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .fixed-mascot').forEach(function(el) {
+    el.addEventListener('mouseenter', function(){ cursor.classList.add('hover'); });
+    el.addEventListener('mouseleave', function(){ cursor.classList.remove('hover'); });
+  });
+
+  // Scroll reveal
+  var reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+  function checkReveal() {
+    reveals.forEach(function(el) {
+      var rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight - 80) el.classList.add('visible');
+    });
+  }
+  window.addEventListener('scroll', checkReveal, { passive: true });
+  checkReveal();
+
+  // Parallax background word
+  var parallaxWord = document.getElementById('parallaxWord');
+  var parallaxSection = parallaxWord ? parallaxWord.closest('section') : null;
+  window.addEventListener('scroll', function() {
+    if (!parallaxWord || !parallaxSection) return;
+    var rect = parallaxSection.getBoundingClientRect();
+    var progress = -rect.top / (window.innerHeight + rect.height);
+    parallaxWord.style.transform = 'translateX(' + (progress * 180 - 20) + '%) translateY(-50%)';
+    parallaxWord.style.top = '50%';
+  }, { passive: true });
+
+  // Fixed mascot click
+  document.getElementById('fixedMascot').addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Marquee pause on hover
+  var marquee = document.getElementById('marqueeTrack');
+  if (marquee) {
+    marquee.parentElement.addEventListener('mouseenter', function(){ marquee.style.animationPlayState = 'paused'; });
+    marquee.parentElement.addEventListener('mouseleave', function(){ marquee.style.animationPlayState = 'running'; });
+  }
+</script>
+</body>
+</html>
