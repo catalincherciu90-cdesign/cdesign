@@ -558,20 +558,15 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
     });
 
   function showDisabled() {
-    var wrap = document.getElementById('calc-wrap') || document.querySelector('.calc-container') || document.querySelector('main') || document.body;
-    // Ascunde tot conținutul calculatorului
-    var calcSection = document.querySelector('.calculator-section') || document.querySelector('.calc-hero') || document.querySelector('[data-calc]');
-    // Găsim containerul principal și îl înlocuim
-    var hero = document.querySelector('.calc-hero-wrap, .calc-section, section, main');
-    if (hero) hero.style.display = 'none';
-    // Afișăm mesaj în body
-    var msg = document.createElement('div');
-    msg.style.cssText = 'min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:60px 20px;text-align:center;';
-    msg.innerHTML = '<div style="font-size:3rem;">🔧</div>'
-      + '<h1 style="font-family:Syne,sans-serif;font-size:1.6rem;font-weight:700;color:#fff;margin:0;">Calculator indisponibil momentan</h1>'
-      + '<p style="color:#8ca0a0;font-family:\'DM Sans\',sans-serif;max-width:380px;margin:0;line-height:1.6;">Această funcție este temporar dezactivată. Revino curând sau contactează-ne direct pentru un deviz personalizat.</p>'
-      + '<a href="/contact.html" style="display:inline-block;background:#00a8a8;color:#060f0f;font-family:\'DM Sans\',sans-serif;font-weight:700;padding:12px 28px;border-radius:8px;text-decoration:none;">Contactează-ne</a>';
-    document.body.appendChild(msg);
+    var main = document.querySelector('main');
+    if (main) {
+      main.innerHTML = '<div style="min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:80px 20px;text-align:center;">'
+        + '<div style="font-size:3rem;line-height:1;">🔧</div>'
+        + '<h1 style="font-family:Syne,sans-serif;font-size:1.8rem;font-weight:800;color:#fff;margin:0;">Calculator indisponibil momentan</h1>'
+        + '<p style="color:#8ca0a0;font-family:\'DM Sans\',sans-serif;font-size:1rem;max-width:400px;margin:0;line-height:1.7;">Această funcție este temporar dezactivată. Revino curând sau contactează-ne direct pentru un deviz personalizat.</p>'
+        + '<a href="/contact.html" style="display:inline-block;background:#00a8a8;color:#060f0f;font-family:\'DM Sans\',sans-serif;font-weight:700;font-size:.95rem;padding:13px 32px;border-radius:8px;text-decoration:none;margin-top:8px;">Contactează-ne</a>'
+        + '</div>';
+    }
   }
 })();
 </script>
