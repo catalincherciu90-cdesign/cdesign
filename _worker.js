@@ -1453,8 +1453,11 @@ export default {
         const list = await env.PROGRAMARI.list({ prefix: '__media__' });
         const files = list.keys.map(k => ({
           filename: k.name.replace('__media__', ''),
-          url: '/media/' + k.name.replace('__media__', '')
+          url: '/media/' + k.name.replace('__media__', ''),
+          ct: k.metadata?.ct || 'image/*',
+          ts: parseInt((k.name.match(/(\d+)\./) || [])[1] || '0')
         }));
+        files.sort((a, b) => b.ts - a.ts);
         return json({ files });
       } catch { return json({ error: 'Eroare' }, 500); }
     }

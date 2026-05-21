@@ -373,6 +373,22 @@
     .theme-reset-btn:hover{border-color:var(--soft);color:var(--text);}
     @media(max-width:768px){.theme-grid{grid-template-columns:1fr;}}
 
+    /* ── MEDIA LIBRARY ───────────────────────────────────────── */
+    .media-card{background:var(--bg2);border:1px solid var(--border-soft);border-radius:10px;overflow:hidden;transition:border-color .2s;}
+    .media-card:hover{border-color:var(--teal-border);}
+    .media-card.active-img{border-color:var(--teal);box-shadow:0 0 0 1px var(--teal);}
+    .media-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--bg3);display:block;}
+    .media-thumb.portrait{aspect-ratio:9/16;object-fit:cover;}
+    .media-info{padding:10px 12px;}
+    .media-name{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:8px;}
+    .media-badge{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:.6rem;padding:2px 7px;border-radius:4px;background:rgba(0,168,168,.12);color:var(--teal);border:1px solid rgba(0,168,168,.25);margin-bottom:8px;}
+    .media-actions{display:flex;gap:6px;}
+    .media-btn{flex:1;background:var(--bg3);border:1px solid var(--border-soft);color:var(--soft);font-family:'Share Tech Mono',monospace;font-size:.65rem;padding:5px 0;border-radius:5px;cursor:pointer;transition:all .2s;text-align:center;}
+    .media-btn:hover{border-color:var(--teal-border);color:var(--teal);}
+    .media-btn.del:hover{border-color:rgba(255,95,87,.4);color:#ff5f57;}
+    .media-upload-zone{border:2px dashed var(--border-soft);border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:border-color .2s;grid-column:1/-1;}
+    .media-upload-zone:hover,.media-upload-zone.drag{border-color:var(--teal-border);}
+
     /* ── GIBILAN ─────────────────────────────────────────────── */
     .gibilan-layout{display:grid;grid-template-columns:260px 1fr;gap:32px;padding:24px 0;}
     .gibilan-char{display:flex;flex-direction:column;align-items:center;gap:16px;}
@@ -456,6 +472,7 @@
     <button class="tab" onclick="switchTab('social',this)">&#x1F4F1; Social Media</button>
     <button class="tab" onclick="switchTab('calculator',this)">&#x1F9EE; Calculator</button>
     <button class="tab" onclick="switchTab('pagini',this)">&#x1F4C4; Pagini</button>
+    <button class="tab" onclick="switchTab('media',this)">&#x1F5BC; Media</button>
     <button class="tab" onclick="switchTab('tema',this)">&#x1F3A8; Tem&#x103;</button>
     <button class="tab" onclick="switchTab('settings',this)">&#x2699; Set&#x103;ri</button>
   </div>
@@ -885,6 +902,28 @@
           <button class="layout-reset-btn" onclick="resetLayout()">↺ Ordine implicită</button>
           <button class="btn-save" id="layout-save-btn" onclick="saveLayout()">💾 Salvează</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: MEDIA -->
+  <div class="tab-panel" id="panel-media">
+    <div class="main">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+        <h3 style="font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--soft);">// arhiva_media — imagini încărcate</h3>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span id="media-count" style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);"></span>
+          <label class="btn-save" style="cursor:pointer;padding:8px 18px;font-size:.85rem;">
+            ⬆ Upload imagine
+            <input type="file" accept="image/*" style="display:none" onchange="mediaUploadFile(this)">
+          </label>
+        </div>
+      </div>
+
+      <div id="media-active-banner" style="display:none;background:rgba(0,168,168,.07);border:1px solid rgba(0,168,168,.2);border-radius:10px;padding:12px 16px;margin-bottom:18px;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--soft);"></div>
+
+      <div id="media-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;">
+        <div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:.8rem;">Se încarcă...</div>
       </div>
     </div>
   </div>
@@ -1464,6 +1503,7 @@
     if (tab === 'calculator') fetchCalculatorAdmin();
     if (tab === 'pagini') { var sel = document.getElementById('layout-page-sel'); loadLayoutPage(sel ? sel.value : 'index'); }
     if (tab === 'tema') fetchTheme();
+    if (tab === 'media') fetchMedia();
   }
 
   function refreshCurrent() {
@@ -1477,6 +1517,7 @@
     else if (currentTab === 'calculator') fetchCalculatorAdmin();
     else if (currentTab === 'pagini') { var sel = document.getElementById('layout-page-sel'); loadLayoutPage(sel ? sel.value : 'index'); }
     else if (currentTab === 'tema') fetchTheme();
+    else if (currentTab === 'media') fetchMedia();
     else fetchProjects();
   }
 
@@ -3641,6 +3682,130 @@
     themeData = Object.assign({}, p);
     applyThemeToEditor(themeData);
     await saveTheme();
+  }
+
+  // -- MEDIA LIBRARY --
+
+  let mediaList = [];
+  let mediaActiveUrls = new Set();
+
+  async function fetchMedia() {
+    const grid = document.getElementById('media-grid');
+    try {
+      // Fetch active URLs from site-settings to mark active images
+      const sr = await fetch('/api/site-settings');
+      if (sr.ok) {
+        const ss = await sr.json();
+        mediaActiveUrls = new Set([ss.heroImage, ss.heroImageMobile].filter(Boolean));
+        const banner = document.getElementById('media-active-banner');
+        if (mediaActiveUrls.size > 0 && banner) {
+          banner.style.display = 'block';
+          banner.textContent = 'ℹ Imaginile marcate cu "ACTIV" sunt folosite acum pe site. Ștergerea lor va elimina banner-ul hero.';
+        }
+      }
+      const r = await fetch('/api/media?token=' + encodeURIComponent(adminToken));
+      if (!r.ok) throw new Error();
+      const d = await r.json();
+      mediaList = d.files || [];
+      const cnt = document.getElementById('media-count');
+      if (cnt) cnt.textContent = mediaList.length + ' fișiere';
+      renderMediaGrid();
+    } catch {
+      if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--muted);font-family:\'Share Tech Mono\',monospace;font-size:.8rem;">Eroare la încărcare.</div>';
+    }
+  }
+
+  function renderMediaGrid() {
+    const grid = document.getElementById('media-grid');
+    if (!grid) return;
+    if (!mediaList.length) {
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted);font-family:\'Share Tech Mono\',monospace;font-size:.8rem;">// nicio imagine încărcată încă</div>';
+      return;
+    }
+    grid.innerHTML = mediaList.map(f => {
+      const isActive = mediaActiveUrls.has(f.url) || mediaActiveUrls.has(location.origin + f.url);
+      const isPortrait = f.filename.toLowerCase().includes('mobile') || f.filename.toLowerCase().includes('portrait');
+      return `<div class="media-card${isActive ? ' active-img' : ''}" id="mcard-${CSS.escape(f.filename)}">
+        <img class="media-thumb${isPortrait ? ' portrait' : ''}" src="${f.url}" alt="${f.filename}" loading="lazy" onerror="this.style.background='var(--bg3)';this.style.opacity='.3'">
+        <div class="media-info">
+          ${isActive ? '<span class="media-badge">✓ ACTIV</span>' : ''}
+          <div class="media-name" title="${f.filename}">${f.filename}</div>
+          <div class="media-actions">
+            <button class="media-btn" onclick="mediaCopyUrl('${f.url}')">📋 Copiază</button>
+            <button class="media-btn" onclick="mediaSetHero('${f.url}')">🖼 Hero</button>
+            <button class="media-btn del" onclick="mediaDelete('${f.filename}')">🗑</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function mediaCopyUrl(url) {
+    const full = location.origin + url;
+    navigator.clipboard.writeText(full).then(() => {
+      showToast('URL copiat: ' + full);
+    }).catch(() => {
+      prompt('Copiază URL-ul:', full);
+    });
+  }
+
+  async function mediaSetHero(url) {
+    const full = location.origin + url;
+    if (!confirm('Setezi această imagine ca Hero Banner desktop?')) return;
+    try {
+      const sr = await fetch('/api/site-settings');
+      const existing = sr.ok ? await sr.json() : {};
+      existing.heroImage = full;
+      await fetch('/api/site-settings?token=' + encodeURIComponent(adminToken), {
+        method: 'PUT', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(existing)
+      });
+      mediaActiveUrls = new Set([full, existing.heroImageMobile].filter(Boolean));
+      renderMediaGrid();
+      showToast('Hero banner actualizat!');
+    } catch { alert('Eroare la salvare.'); }
+  }
+
+  async function mediaDelete(filename) {
+    if (mediaActiveUrls.has('/media/' + filename) || mediaActiveUrls.has(location.origin + '/media/' + filename)) {
+      if (!confirm('⚠️ Această imagine este folosită ca hero banner. O ștergi?')) return;
+    } else {
+      if (!confirm('Ștergi imaginea "' + filename + '"?')) return;
+    }
+    try {
+      const r = await fetch('/api/media/' + filename + '?token=' + encodeURIComponent(adminToken), { method: 'DELETE' });
+      if (!r.ok) throw new Error();
+      mediaList = mediaList.filter(f => f.filename !== filename);
+      const cnt = document.getElementById('media-count');
+      if (cnt) cnt.textContent = mediaList.length + ' fișiere';
+      renderMediaGrid();
+      showToast('Imagine ștearsă.');
+    } catch { alert('Eroare la ștergere.'); }
+  }
+
+  async function mediaUploadFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    input.value = '';
+    showToast('Se încarcă...');
+    uploadMedia(file, (url) => {
+      fetchMedia();
+      showToast('Încărcat: ' + url);
+    }, () => { alert('Eroare la upload.'); });
+  }
+
+  function showToast(msg) {
+    let t = document.getElementById('admin-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'admin-toast';
+      t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bg3);color:var(--text);border:1px solid var(--teal-border);padding:10px 22px;border-radius:8px;font-family:\'Share Tech Mono\',monospace;font-size:.78rem;z-index:9999;transition:opacity .3s;white-space:nowrap;';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.opacity = '1';
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => { t.style.opacity = '0'; }, 3000);
   }
 
   // -- UTILS --
