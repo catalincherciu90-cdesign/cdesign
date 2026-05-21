@@ -1537,28 +1537,37 @@ document.getElementById('bookingForm').addEventListener('submit', async function
         hero.classList.remove('h-large','h-medium','h-auto');
         if(d.heroHeight && d.heroHeight !== 'full') hero.classList.add('h-'+d.heroHeight);
       }
-      // Dacă imaginea e pe "contain" sau "100% auto" — ajustează înălțimea hero
-      // după aspect ratio-ul imaginii reale, eliminând spațiile goale
-      var needsFit = d.heroImage && (d.heroSize === 'contain' || d.heroSize === '100% auto');
-      if(needsFit && hero) {
-        var tmpImg = new Image();
-        tmpImg.onload = function() {
-          function fitHero() {
+      // Ajustează înălțimea hero după aspect ratio imagini (contain / 100% auto)
+      // Funcționează separat pentru desktop și mobil
+      if(hero) {
+        var imgCache = {};
+        function loadImg(src, cb) {
+          if(imgCache[src]) { cb(imgCache[src]); return; }
+          var i = new Image();
+          i.onload = function(){ imgCache[src] = i; cb(i); };
+          i.src = src;
+        }
+        function fitHeroNow() {
+          var mob    = window.innerWidth <= 768;
+          var size   = (mob && d.heroSizeMobile)  ? d.heroSizeMobile  : (d.heroSize  || '');
+          var imgSrc = (mob && d.heroImageMobile)  ? d.heroImageMobile : (d.heroImage || '');
+          var needsFit = imgSrc && (size === 'contain' || size === '100% auto');
+          if(!needsFit) return;
+          loadImg(imgSrc, function(img) {
             var w = hero.offsetWidth;
-            if(!w || !tmpImg.naturalWidth) return;
-            var ratio = tmpImg.naturalHeight / tmpImg.naturalWidth;
+            if(!w || !img.naturalWidth) return;
+            var ratio = img.naturalHeight / img.naturalWidth;
             hero.style.minHeight = '0';
             hero.style.height    = Math.round(w * ratio) + 'px';
             hero.style.padding   = '0';
-          }
-          fitHero();
-          var resizeTimer;
-          window.addEventListener('resize', function() {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(fitHero, 80);
-          }, { passive: true });
-        };
-        tmpImg.src = d.heroImage;
+          });
+        }
+        fitHeroNow();
+        var fitTimer;
+        window.addEventListener('resize', function() {
+          clearTimeout(fitTimer);
+          fitTimer = setTimeout(fitHeroNow, 80);
+        }, { passive: true });
       }
     }).catch(function(){});
 })();
