@@ -1378,6 +1378,24 @@ document.getElementById('bookingForm').addEventListener('submit', async function
         return '<a href="'+escHtml(el.btnUrl||'#')+'" style="'+s+'">'+escHtml(el.btnText||'Află mai mult')+'</a>';
       case 'icon':
         return '<div style="font-size:'+(el.size==='large'?'3rem':'2rem')+';margin:0 0 12px;line-height:1;">'+escHtml(el.content||'')+'</div>';
+      case 'image': {
+        var imgTag = '<img src="'+escHtml(el.src||'')+'" alt="'+escHtml(el.alt||'')+'" loading="lazy" style="'
+          + (el.fit==='round' ? 'width:80px;height:80px;border-radius:50%;object-fit:cover;'
+            : el.fit==='fixed' ? 'width:'+(el.width||200)+'px;max-width:100%;height:auto;'
+            : 'width:100%;height:auto;display:block;')
+          + 'margin:0 0 12px;">';
+        return el.link ? '<a href="'+escHtml(el.link)+'" target="_blank" rel="noopener">'+imgTag+'</a>' : imgTag;
+      }
+      case 'banner': {
+        var bgStyle = el.bgImg
+          ? 'background:url('+escHtml(el.bgImg)+') center/cover no-repeat;'
+          : 'background:'+(el.bgColor||'#0a2020')+';';
+        return '<div style="'+bgStyle+'border-radius:10px;padding:28px 24px;text-align:center;margin:0 0 12px;">'
+          + (el.title ? '<div style="font-family:\'Syne\',sans-serif;font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:8px;">'+escHtml(el.title)+'</div>' : '')
+          + (el.subtitle ? '<div style="font-size:.88rem;color:rgba(255,255,255,.65);margin-bottom:14px;">'+escHtml(el.subtitle)+'</div>' : '')
+          + (el.btnText ? '<a href="'+escHtml(el.btnUrl||'#')+'" style="display:inline-block;background:var(--teal);color:#060f0f;font-weight:700;font-size:.82rem;padding:9px 22px;border-radius:7px;text-decoration:none;">'+escHtml(el.btnText)+'</a>' : '')
+          + '</div>';
+      }
       default: return '';
     }
   }

@@ -2859,6 +2859,8 @@
     { type:'badge',   icon:'🏷', label:'Badge / etichetă' },
     { type:'button',  icon:'⬛', label:'Buton' },
     { type:'list',    icon:'≡', label:'Listă cu puncte' },
+    { type:'image',   icon:'🖼', label:'Imagine' },
+    { type:'banner',  icon:'📢', label:'Banner' },
     { type:'divider', icon:'—', label:'Separator' },
   ];
 
@@ -2904,6 +2906,32 @@
           + '<option value="primary"'+(el.btnStyle!=='ghost'?' selected':'')+'>Primary (teal plin)</option>'
           + '<option value="ghost"'+(el.btnStyle==='ghost'?' selected':'')+'>Ghost (contur)</option>'
           + '</select>';
+        break;
+      case 'image':
+        fields = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">'
+          + '<input placeholder="URL imagine (https://...)" value="'+esc(el.src||'')+'" oninput="updateColEl('+ci+','+ei+',\'src\',this.value)" style="grid-column:1/-1;">'
+          + '<input placeholder="Alt text" value="'+esc(el.alt||'')+'" oninput="updateColEl('+ci+','+ei+',\'alt\',this.value)">'
+          + '<input placeholder="Link (opțional)" value="'+esc(el.link||'')+'" oninput="updateColEl('+ci+','+ei+',\'link\',this.value)">'
+          + '</div>'
+          + '<select onchange="updateColEl('+ci+','+ei+',\'fit\',this.value)" style="background:var(--bg2);border:1px solid var(--border-soft);color:var(--text);border-radius:5px;padding:5px 8px;font-size:.8rem;margin-bottom:6px;">'
+          + '<option value="full"'+(el.fit!=='fixed'&&el.fit!=='round'?' selected':'')+'>Lățime 100%</option>'
+          + '<option value="fixed"'+(el.fit==='fixed'?' selected':'')+'>Dimensiune fixă (px)</option>'
+          + '<option value="round"'+(el.fit==='round'?' selected':'')+'>Rotundă (avatar)</option>'
+          + '</select>'
+          + (el.fit==='fixed' ? '<input type="number" placeholder="Lățime px" value="'+(el.width||200)+'" oninput="updateColEl('+ci+','+ei+',\'width\',this.value)" style="width:90px;margin-left:8px;">' : '');
+        break;
+      case 'banner':
+        fields = '<input placeholder="Titlu banner" value="'+esc(el.title||'')+'" oninput="updateColEl('+ci+','+ei+',\'title\',this.value)" style="margin-bottom:6px;">'
+          + '<input placeholder="Subtitlu / descriere (opțional)" value="'+esc(el.subtitle||'')+'" oninput="updateColEl('+ci+','+ei+',\'subtitle\',this.value)" style="margin-bottom:6px;">'
+          + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">'
+          + '<input placeholder="Text buton (opțional)" value="'+esc(el.btnText||'')+'" oninput="updateColEl('+ci+','+ei+',\'btnText\',this.value)">'
+          + '<input placeholder="URL buton" value="'+esc(el.btnUrl||'')+'" oninput="updateColEl('+ci+','+ei+',\'btnUrl\',this.value)">'
+          + '</div>'
+          + '<div style="display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:10px;">'
+          + '<label style="font-size:.75rem;color:var(--muted);">Bg culoare:</label>'
+          + '<input type="color" value="'+(el.bgColor||'#0a2020')+'" oninput="updateColEl('+ci+','+ei+',\'bgColor\',this.value)" style="width:36px;height:28px;border:none;padding:0;background:none;cursor:pointer;">'
+          + '<input placeholder="sau URL imagine bg" value="'+esc(el.bgImg||'')+'" oninput="updateColEl('+ci+','+ei+',\'bgImg\',this.value)">'
+          + '</div>';
         break;
       case 'list':
         var listInputs = (el.items||[]).map(function(li, li_i) {
@@ -2956,7 +2984,9 @@
     var defaults = { icon:{type:'icon',content:'📌',size:'normal'}, heading:{type:'heading',content:'Titlu',size:'normal'},
       text:{type:'text',content:'Text paragraf...'}, badge:{type:'badge',content:'Badge'},
       button:{type:'button',btnText:'Apasă here',btnUrl:'#',btnStyle:'primary'},
-      list:{type:'list',items:['Element 1','Element 2']}, divider:{type:'divider'} };
+      list:{type:'list',items:['Element 1','Element 2']}, divider:{type:'divider'},
+      image:{type:'image',src:'',alt:'',link:'',fit:'full'},
+      banner:{type:'banner',title:'Banner titlu',subtitle:'',btnText:'',btnUrl:'#',bgColor:'#0a2020',bgImg:''} };
     block.columns[ci].items.push(Object.assign({}, defaults[type]||{type:type}));
     reRenderColItems(ci);
   }
