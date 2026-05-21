@@ -1305,16 +1305,90 @@ document.getElementById('bookingForm').addEventListener('submit', async function
 </script>
 <script>
 (function(){
+  // Template functions pentru blocuri custom
+  function renderBlock(id, block) {
+    switch(block.type) {
+      case 'faq': return renderFaq(id, block);
+      case 'cta': return renderCta(id, block);
+      case 'stats': return renderStats(id, block);
+      case 'text': return renderTextBlock(id, block);
+      default: return '';
+    }
+  }
+
+  function renderFaq(id, b) {
+    var items = (b.items||[]).map(function(item){
+      return '<details style="background:var(--bg3);border:1px solid rgba(255,255,255,.07);border-radius:10px;overflow:hidden;margin-bottom:10px;">'
+        +'<summary style="padding:18px 20px;cursor:pointer;font-weight:500;color:#fff;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;">'
+        +'<span>'+escHtml(item.q||'')+'</span><span style="color:var(--teal);font-size:1.4rem;flex-shrink:0;">+</span></summary>'
+        +'<div style="padding:0 20px 18px;color:var(--soft);font-size:.95rem;line-height:1.7;">'+escHtml(item.a||'')+'</div></details>';
+    }).join('');
+    return '<section data-section="'+id+'" style="padding:64px 0;background:var(--bg2);">'
+      +'<div class="container"><h2 style="font-family:\'Syne\',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:#fff;margin-bottom:40px;text-align:center;">'+escHtml(b.title||'Întrebări frecvente')+'</h2>'
+      +'<div style="max-width:700px;margin:0 auto;">'+items+'</div></div></section>';
+  }
+
+  function renderCta(id, b) {
+    return '<section data-section="'+id+'" style="padding:60px 0;background:linear-gradient(135deg,rgba(0,168,168,.07),rgba(0,168,168,.03));border-top:1px solid rgba(0,168,168,.2);border-bottom:1px solid rgba(0,168,168,.2);">'
+      +'<div class="container" style="text-align:center;">'
+      +'<h2 style="font-family:\'Syne\',sans-serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:800;color:#fff;margin-bottom:12px;">'+escHtml(b.title||'Pregătit să începem?')+'</h2>'
+      +'<p style="color:var(--soft);font-size:1rem;max-width:500px;margin:0 auto 28px;">'+escHtml(b.subtitle||'')+'</p>'
+      +'<a href="'+escHtml(b.btnUrl||'/programari')+'" style="display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#060f0f;font-weight:700;font-size:1rem;padding:14px 32px;border-radius:8px;text-decoration:none;">'+escHtml(b.btnText||'Contactează-ne')+' →</a>'
+      +'</div></section>';
+  }
+
+  function renderStats(id, b) {
+    var items = (b.items||[]).map(function(item){
+      return '<div style="text-align:center;padding:28px 20px;background:var(--bg2);border-radius:12px;border:1px solid rgba(255,255,255,.07);">'
+        +'<div style="font-family:\'Syne\',sans-serif;font-size:2.2rem;font-weight:800;color:var(--teal);">'+escHtml(item.number||'')+'</div>'
+        +'<div style="color:var(--soft);font-size:.88rem;margin-top:6px;">'+escHtml(item.label||'')+'</div></div>';
+    }).join('');
+    return '<section data-section="'+id+'" style="padding:64px 0;">'
+      +'<div class="container">'
+      +'<h2 style="font-family:\'Syne\',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:#fff;margin-bottom:36px;text-align:center;">'+escHtml(b.title||'Cifre')+'</h2>'
+      +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;">'+items+'</div>'
+      +'</div></section>';
+  }
+
+  function renderTextBlock(id, b) {
+    return '<section data-section="'+id+'" style="padding:64px 0;">'
+      +'<div class="container" style="max-width:760px;">'
+      +'<h2 style="font-family:\'Syne\',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:#fff;margin-bottom:20px;">'+escHtml(b.title||'')+'</h2>'
+      +'<div style="color:var(--soft);font-size:1rem;line-height:1.8;">'+escHtml(b.content||'').replace(/\n/g,'<br>')+'</div>'
+      +'</div></section>';
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
   fetch('/api/layout/index')
     .then(function(r){return r.ok?r.json():null;})
     .then(function(data){
-      if(!data||!data.order) return;
-      var main=document.querySelector('main[style*="flex"]');
+      if(!data) return;
+      var main = document.querySelector('main[style*="flex"]');
       if(!main) return;
-      var order=data.order;
-      order.forEach(function(id,i){
-        var el=main.querySelector('[data-section="'+id+'"]');
-        if(el) el.style.order=i;
+
+      // 1. Reordonare + ascundere secțiuni existente
+      var order = data.order || [];
+      var hidden = data.hidden || [];
+      order.forEach(function(id, i){
+        var el = main.querySelector('[data-section="'+id+'"]');
+        if(el) { el.style.order = i; el.style.display = hidden.indexOf(id) > -1 ? 'none' : ''; }
+      });
+
+      // 2. Injectare blocuri custom
+      var blocks = data.blocks || {};
+      order.forEach(function(id, i){
+        if(!blocks[id]) return; // e sectiune builtin
+        var existing = main.querySelector('[data-section="'+id+'"]');
+        if(existing) { existing.style.order = i; if(hidden.indexOf(id)>-1) existing.style.display='none'; return; }
+        var html = renderBlock(id, blocks[id]);
+        if(!html) return;
+        var tmp = document.createElement('div');
+        tmp.innerHTML = html;
+        var el = tmp.firstElementChild;
+        if(el) { el.style.order = i; main.appendChild(el); }
       });
     }).catch(function(){});
 })();

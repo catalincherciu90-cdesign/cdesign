@@ -1279,8 +1279,16 @@ export default {
       if (!LAYOUT_DEFAULTS[page]) return json({ error: 'Pagină necunoscută' }, 404);
       try {
         const raw = await env.PROGRAMARI.get('__layout__' + page);
-        return json({ order: raw ? JSON.parse(raw) : LAYOUT_DEFAULTS[page], labels: LAYOUT_LABELS, default: LAYOUT_DEFAULTS[page] });
-      } catch { return json({ order: LAYOUT_DEFAULTS[page], labels: LAYOUT_LABELS, default: LAYOUT_DEFAULTS[page] }); }
+        const stored = raw ? JSON.parse(raw) : {};
+        const normalized = Array.isArray(stored) ? { order: stored } : stored;
+        return json({
+          order:  normalized.order  || LAYOUT_DEFAULTS[page],
+          hidden: normalized.hidden || [],
+          blocks: normalized.blocks || {},
+          labels: LAYOUT_LABELS,
+          default: LAYOUT_DEFAULTS[page]
+        });
+      } catch { return json({ order: LAYOUT_DEFAULTS[page], hidden: [], blocks: {}, labels: LAYOUT_LABELS, default: LAYOUT_DEFAULTS[page] }); }
     }
 
     if (path.startsWith('/api/layout/') && request.method === 'PUT') {
@@ -1288,8 +1296,12 @@ export default {
       const page = path.replace('/api/layout/','');
       if (!LAYOUT_DEFAULTS[page]) return json({ error: 'Pagină necunoscută' }, 404);
       try {
-        const { order } = await request.json();
-        await env.PROGRAMARI.put('__layout__' + page, JSON.stringify(order));
+        const body = await request.json();
+        await env.PROGRAMARI.put('__layout__' + page, JSON.stringify({
+          order:  body.order  || [],
+          hidden: body.hidden || [],
+          blocks: body.blocks || {}
+        }));
         return json({ success: true });
       } catch { return json({ error: 'Eroare server' }, 500); }
     }

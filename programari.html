@@ -320,6 +320,35 @@
     .layout-reset-btn{background:none;border:1px solid var(--border-soft);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.82rem;padding:8px 16px;border-radius:7px;cursor:pointer;}
     .layout-reset-btn:hover{border-color:var(--soft);color:var(--text);}
     .layout-info{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--muted);}
+    .block-picker-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;}
+    .block-picker-box{background:var(--bg2);border:1px solid var(--border-soft);border-radius:16px;padding:28px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;}
+    .block-picker-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:20px;}
+    .block-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+    .block-type-card{background:var(--bg3);border:2px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:border-color .15s;text-align:left;}
+    .block-type-card:hover,.block-type-card.selected{border-color:var(--teal);}
+    .block-type-icon{font-size:1.6rem;margin-bottom:8px;}
+    .block-type-label{font-size:.85rem;font-weight:600;color:#fff;display:block;}
+    .block-type-desc{font-size:.75rem;color:var(--muted);margin-top:3px;display:block;}
+    .block-editor-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1001;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
+    .block-editor-box{background:var(--bg2);border:1px solid var(--border-soft);border-radius:16px;padding:28px;width:100%;max-width:600px;margin:auto;}
+    .block-editor-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:20px;}
+    .block-field{margin-bottom:16px;}
+    .block-field label{display:block;font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--soft);margin-bottom:6px;}
+    .block-field input,.block-field textarea{width:100%;background:var(--bg3);border:1px solid var(--border-soft);border-radius:7px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.88rem;padding:9px 12px;outline:none;resize:vertical;}
+    .block-faq-items{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;}
+    .block-faq-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;position:relative;}
+    .block-faq-item input{width:100%;background:var(--bg2);border:1px solid var(--border-soft);border-radius:5px;color:var(--text);font-size:.82rem;padding:6px 10px;outline:none;margin-bottom:6px;}
+    .block-faq-item textarea{width:100%;background:var(--bg2);border:1px solid var(--border-soft);border-radius:5px;color:var(--text);font-size:.82rem;padding:6px 10px;outline:none;resize:none;height:60px;}
+    .block-stats-items{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;}
+    .block-stats-item{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+    .block-stats-item input{background:var(--bg2);border:1px solid var(--border-soft);border-radius:5px;color:var(--text);font-size:.82rem;padding:6px 10px;outline:none;width:100%;}
+    .block-del-item{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.9rem;padding:4px 6px;border-radius:4px;}
+    .block-del-item:hover{color:#ff5f57;}
+    .layout-eye-btn{background:none;border:none;font-size:1rem;cursor:pointer;padding:4px 6px;border-radius:4px;color:var(--muted);transition:color .15s;}
+    .layout-eye-btn.hidden{color:rgba(255,255,255,.2);}
+    .layout-edit-btn{background:none;border:none;font-size:.8rem;cursor:pointer;padding:4px 8px;border-radius:4px;color:var(--teal);border:1px solid rgba(0,168,168,.25);}
+    .layout-del-btn{background:none;border:none;font-size:.8rem;cursor:pointer;padding:4px 8px;border-radius:4px;color:var(--muted);border:1px solid var(--border);}
+    .layout-del-btn:hover{color:#ff5f57;border-color:rgba(255,95,87,.4);}
 
     /* ── THEME EDITOR ───────────────────────────────────────── */
     .theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
@@ -844,11 +873,14 @@
         <span style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--soft);">✦ Trage secțiunile pentru a le reordona. Apasă Salvează pentru a aplica ordinea pe site.</span>
       </div>
       <ul class="layout-list" id="layout-list"><li style="color:var(--muted);padding:20px;font-family:'Share Tech Mono',monospace;font-size:.8rem;">Se încarcă...</li></ul>
+      <div style="margin-bottom:16px;">
+        <button class="gib-btn" style="font-size:.82rem;padding:8px 18px;" onclick="openBlockPicker()">➕ Adaugă bloc nou</button>
+      </div>
       <div class="layout-save-bar">
         <span class="layout-info" id="layout-info"></span>
         <div style="display:flex;gap:10px;">
           <button class="layout-reset-btn" onclick="resetLayout()">↺ Ordine implicită</button>
-          <button class="btn-save" id="layout-save-btn" onclick="saveLayout()">💾 Salvează ordinea</button>
+          <button class="btn-save" id="layout-save-btn" onclick="saveLayout()">💾 Salvează</button>
         </div>
       </div>
     </div>
@@ -1017,6 +1049,30 @@
           <div id="blockedDatesList" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
         </div>
 
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCK PICKER MODAL -->
+  <div class="block-picker-overlay" id="blockPickerOverlay" style="display:none;" onclick="if(event.target===this)closeBlockPicker()">
+    <div class="block-picker-box">
+      <div class="block-picker-title">Alege tipul de bloc</div>
+      <div class="block-type-grid" id="blockTypeGrid"></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button class="layout-reset-btn" onclick="closeBlockPicker()">Anulează</button>
+        <button class="btn-save" onclick="confirmAddBlock()">Adaugă bloc</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCK EDITOR MODAL -->
+  <div class="block-editor-overlay" id="blockEditorOverlay" style="display:none;" onclick="if(event.target===this)closeBlockEditor()">
+    <div class="block-editor-box">
+      <div class="block-editor-title" id="blockEditorTitle">Editează bloc</div>
+      <div id="blockEditorFields"></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;">
+        <button class="layout-reset-btn" onclick="closeBlockEditor()">Anulează</button>
+        <button class="btn-save" onclick="saveBlockEdit()">💾 Salvează</button>
       </div>
     </div>
   </div>
@@ -2459,16 +2515,28 @@
 
   const SECTION_ICONS = {
     hero:'🏠', carousel:'🎠', showcase:'📱', services:'⚙️', startup:'🚀',
-    industries:'🏭', process:'📋', portfolio:'🖼️', testimonials:'⭐', contact:'📬',
-    trust:'🏆',
+    industries:'🏭', process:'📋', portfolio:'🖼️', testimonials:'⭐', contact:'📬', trust:'🏆',
   };
+
+  const BLOCK_TYPES = [
+    { type:'faq',   icon:'❓', label:'FAQ', desc:'Întrebări și răspunsuri accordion',
+      default:{ title:'Întrebări frecvente', items:[{q:'Cât durează un site?',a:'De obicei 2-3 săptămâni.'},{q:'Ce include prețul?',a:'Design, dezvoltare, testare și lansare.'}] }},
+    { type:'cta',   icon:'📣', label:'CTA Banner', desc:'Chemare la acțiune cu buton',
+      default:{ title:'Pregătit să începem?', subtitle:'Contactează-ne pentru o consultație gratuită.', btnText:'Contactează-ne', btnUrl:'/programari' }},
+    { type:'stats', icon:'📊', label:'Statistici', desc:'Cifre și numere importante',
+      default:{ title:'De ce ne aleg clienții', items:[{number:'50+',label:'Proiecte livrate'},{number:'3 ani',label:'Experiență'},{number:'98%',label:'Clienți mulțumiți'},{number:'24h',label:'Răspuns rapid'}] }},
+    { type:'text',  icon:'📝', label:'Bloc text', desc:'Secțiune cu titlu și paragraf',
+      default:{ title:'Titlu secțiune', content:'Adaugă conținutul tău aici. Poți edita din admin.' }},
+  ];
 
   let layoutData = null;
   let layoutPage = 'index';
   let sortableInstance = null;
+  let selectedBlockType = null;
+  let editingBlockId = null;
 
   function initSortable() {
-    const list = document.getElementById('layout-list');
+    var list = document.getElementById('layout-list');
     if (!list || typeof Sortable === 'undefined') return;
     if (sortableInstance) sortableInstance.destroy();
     sortableInstance = Sortable.create(list, {
@@ -2476,71 +2544,311 @@
       animation: 150,
       ghostClass: 'sortable-ghost',
       chosenClass: 'sortable-chosen',
-      onEnd: function() {
-        const info = document.getElementById('layout-info');
-        if (info) info.textContent = '● modificat — apasă Salvează';
-      }
+      onEnd: function() { markLayoutDirty(); }
     });
+  }
+
+  function markLayoutDirty() {
+    var info = document.getElementById('layout-info');
+    if (info) info.textContent = '● modificat — apasă Salvează';
   }
 
   async function loadLayoutPage(page) {
     layoutPage = page;
-    const list = document.getElementById('layout-list');
-    const info = document.getElementById('layout-info');
+    var list = document.getElementById('layout-list');
+    var info = document.getElementById('layout-info');
     if (list) list.innerHTML = '<li style="color:var(--muted);padding:20px;font-family:\'Share Tech Mono\',monospace;font-size:.8rem;">Se încarcă...</li>';
     if (info) info.textContent = '';
     try {
-      const r = await fetch('/api/layout/' + page);
-      if (!r.ok) { if (list) list.innerHTML = '<li style="color:#f87171;padding:20px;">Eroare la încărcare.</li>'; return; }
+      var r = await fetch('/api/layout/' + page);
+      if (!r.ok) { if (list) list.innerHTML = '<li style="color:#f87171;padding:20px;">Eroare.</li>'; return; }
       layoutData = await r.json();
-      renderLayoutList(layoutData.order, layoutData.labels);
-    } catch { if (list) list.innerHTML = '<li style="color:#f87171;padding:20px;">Eroare de rețea.</li>'; }
+      renderLayoutList();
+    } catch { if (list) list.innerHTML = '<li style="color:#f87171;padding:20px;">Eroare rețea.</li>'; }
   }
 
-  function renderLayoutList(order, labels) {
-    const list = document.getElementById('layout-list');
-    if (!list) return;
+  function renderLayoutList() {
+    var list = document.getElementById('layout-list');
+    if (!list || !layoutData) return;
+    var order = layoutData.order || [];
+    var hidden = layoutData.hidden || [];
+    var blocks = layoutData.blocks || {};
+    var labels = layoutData.labels || {};
     list.innerHTML = order.map(function(id, i) {
-      const label = (labels && labels[id]) || id;
-      const icon = SECTION_ICONS[id] || '📄';
+      var isCustom = !!blocks[id];
+      var label = isCustom ? (BLOCK_TYPES.find(function(b){return b.type===blocks[id].type;})||{label:blocks[id].type}).label + ' (custom)' : (labels[id] || id);
+      var icon = isCustom ? (BLOCK_TYPES.find(function(b){return b.type===blocks[id].type;})||{icon:'📄'}).icon : (SECTION_ICONS[id] || '📄');
+      var isHidden = hidden.indexOf(id) > -1;
       return '<li class="layout-item" data-id="' + id + '">'
         + '<span class="layout-drag-handle">⠿</span>'
         + '<span class="layout-item-icon">' + icon + '</span>'
-        + '<span class="layout-item-name">' + label + '</span>'
-        + '<span class="layout-item-badge">' + (i + 1) + '</span>'
+        + '<span class="layout-item-name">' + esc(label) + '</span>'
+        + '<button class="layout-eye-btn' + (isHidden?' hidden':'') + '" title="' + (isHidden?'Afișează':'Ascunde') + '" onclick="toggleSectionHidden(\'' + id + '\')">' + (isHidden?'🙈':'👁️') + '</button>'
+        + (isCustom ? '<button class="layout-edit-btn" onclick="editBlock(\'' + id + '\')">✏️ edit</button>' : '')
+        + (isCustom ? '<button class="layout-del-btn" onclick="deleteBlock(\'' + id + '\')">✕</button>' : '')
+        + '<span class="layout-item-badge">' + (i+1) + '</span>'
         + '</li>';
     }).join('');
     initSortable();
   }
 
+  function toggleSectionHidden(id) {
+    if (!layoutData) return;
+    if (!layoutData.hidden) layoutData.hidden = [];
+    var idx = layoutData.hidden.indexOf(id);
+    if (idx > -1) layoutData.hidden.splice(idx, 1);
+    else layoutData.hidden.push(id);
+    renderLayoutList();
+    markLayoutDirty();
+  }
+
   async function saveLayout() {
-    const btn = document.getElementById('layout-save-btn');
-    const info = document.getElementById('layout-info');
+    var btn = document.getElementById('layout-save-btn');
+    var info = document.getElementById('layout-info');
     if (btn) { btn.disabled = true; btn.textContent = 'Se salvează...'; }
-    const items = document.querySelectorAll('#layout-list .layout-item');
-    const order = Array.from(items).map(function(el) { return el.dataset.id; });
+    var items = document.querySelectorAll('#layout-list .layout-item');
+    var order = Array.from(items).map(function(el) { return el.dataset.id; });
+    if (!layoutData) layoutData = {};
+    layoutData.order = order;
     try {
-      const r = await fetch('/api/layout/' + layoutPage + '?token=' + encodeURIComponent(adminToken), {
+      var r = await fetch('/api/layout/' + layoutPage + '?token=' + encodeURIComponent(adminToken), {
         method: 'PUT', headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ order: order })
+        body: JSON.stringify({ order: order, hidden: layoutData.hidden || [], blocks: layoutData.blocks || {} })
       });
       if (!r.ok) throw new Error();
-      // Update badge numbers
-      items.forEach(function(el, i) { const b = el.querySelector('.layout-item-badge'); if (b) b.textContent = i + 1; });
-      if (btn) { btn.textContent = '✓ Salvat! (activ pe site)'; setTimeout(function(){ btn.disabled = false; btn.textContent = '💾 Salvează ordinea'; }, 2500); }
+      items.forEach(function(el, i) { var b = el.querySelector('.layout-item-badge'); if (b) b.textContent = i+1; });
+      if (btn) { btn.textContent = '✓ Salvat!'; setTimeout(function(){ btn.disabled=false; btn.textContent='💾 Salvează'; }, 2000); }
       if (info) info.textContent = '';
     } catch {
-      if (btn) { btn.disabled = false; btn.textContent = '💾 Salvează ordinea'; }
+      if (btn) { btn.disabled=false; btn.textContent='💾 Salvează'; }
       alert('Eroare la salvare!');
     }
   }
 
   async function resetLayout() {
-    if (!confirm('Resetezi la ordinea implicită pentru această pagină?')) return;
+    if (!confirm('Resetezi la ordinea implicită? Blocurile custom rămân.')) return;
     if (!layoutData || !layoutData.default) return;
-    renderLayoutList(layoutData.default, layoutData.labels);
-    const info = document.getElementById('layout-info');
-    if (info) info.textContent = '● resetat — apasă Salvează pentru a aplica';
+    // Keep custom blocks in order, add default built-ins at start
+    var customIds = Object.keys(layoutData.blocks || {});
+    layoutData.order = layoutData.default.concat(customIds);
+    layoutData.hidden = [];
+    renderLayoutList();
+    markLayoutDirty();
+  }
+
+  // -- BLOCK PICKER --
+
+  function openBlockPicker() {
+    selectedBlockType = null;
+    var grid = document.getElementById('blockTypeGrid');
+    if (grid) {
+      grid.innerHTML = BLOCK_TYPES.map(function(bt) {
+        return '<div class="block-type-card" data-type="' + bt.type + '" onclick="selectBlockType(\'' + bt.type + '\')">'
+          + '<div class="block-type-icon">' + bt.icon + '</div>'
+          + '<span class="block-type-label">' + bt.label + '</span>'
+          + '<span class="block-type-desc">' + bt.desc + '</span>'
+          + '</div>';
+      }).join('');
+    }
+    var overlay = document.getElementById('blockPickerOverlay');
+    if (overlay) overlay.style.display = 'flex';
+  }
+
+  function closeBlockPicker() {
+    var overlay = document.getElementById('blockPickerOverlay');
+    if (overlay) overlay.style.display = 'none';
+    selectedBlockType = null;
+  }
+
+  function selectBlockType(type) {
+    selectedBlockType = type;
+    document.querySelectorAll('.block-type-card').forEach(function(c) {
+      c.classList.toggle('selected', c.dataset.type === type);
+    });
+  }
+
+  function confirmAddBlock() {
+    if (!selectedBlockType) { alert('Alege un tip de bloc.'); return; }
+    var bt = BLOCK_TYPES.find(function(b){ return b.type === selectedBlockType; });
+    if (!bt) return;
+    var id = bt.type + '_' + Date.now();
+    if (!layoutData) layoutData = { order:[], hidden:[], blocks:{} };
+    if (!layoutData.blocks) layoutData.blocks = {};
+    layoutData.blocks[id] = JSON.parse(JSON.stringify(bt.default));
+    layoutData.blocks[id].type = bt.type;
+    if (!layoutData.order) layoutData.order = [];
+    layoutData.order.push(id);
+    closeBlockPicker();
+    renderLayoutList();
+    markLayoutDirty();
+    // Deschide editorul imediat
+    editBlock(id);
+  }
+
+  // -- BLOCK EDITOR --
+
+  function editBlock(id) {
+    if (!layoutData || !layoutData.blocks || !layoutData.blocks[id]) return;
+    editingBlockId = id;
+    var block = layoutData.blocks[id];
+    var bt = BLOCK_TYPES.find(function(b){ return b.type === block.type; });
+    var title = document.getElementById('blockEditorTitle');
+    var fields = document.getElementById('blockEditorFields');
+    if (title) title.textContent = (bt ? bt.icon + ' ' + bt.label : 'Bloc') + ' — editare';
+    if (fields) fields.innerHTML = buildBlockEditorFields(block);
+    var overlay = document.getElementById('blockEditorOverlay');
+    if (overlay) overlay.style.display = 'flex';
+  }
+
+  function closeBlockEditor() {
+    var overlay = document.getElementById('blockEditorOverlay');
+    if (overlay) overlay.style.display = 'none';
+    editingBlockId = null;
+  }
+
+  function buildBlockEditorFields(block) {
+    switch(block.type) {
+      case 'faq':
+        var items = (block.items||[]).map(function(item, i) {
+          return '<div class="block-faq-item">'
+            + '<input placeholder="Întrebare" value="' + esc(item.q||'') + '" oninput="updateFaqItem(' + i + ',\'q\',this.value)">'
+            + '<textarea placeholder="Răspuns" oninput="updateFaqItem(' + i + ',\'a\',this.value)">' + esc(item.a||'') + '</textarea>'
+            + '<button class="block-del-item" onclick="deleteFaqItem(' + i + ')">✕ șterge</button>'
+            + '</div>';
+        }).join('');
+        return '<div class="block-field"><label>Titlu secțiune</label><input value="' + esc(block.title||'') + '" oninput="updateEditingBlock(\'title\',this.value)"></div>'
+          + '<div class="block-field"><label>Întrebări</label><div class="block-faq-items" id="faqItems">' + items + '</div>'
+          + '<button class="gib-btn" style="font-size:.78rem;padding:6px 14px;" onclick="addFaqItem()">+ Adaugă întrebare</button></div>';
+
+      case 'cta':
+        return '<div class="block-field"><label>Titlu</label><input value="' + esc(block.title||'') + '" oninput="updateEditingBlock(\'title\',this.value)"></div>'
+          + '<div class="block-field"><label>Subtitlu</label><input value="' + esc(block.subtitle||'') + '" oninput="updateEditingBlock(\'subtitle\',this.value)"></div>'
+          + '<div class="block-field"><label>Text buton</label><input value="' + esc(block.btnText||'') + '" oninput="updateEditingBlock(\'btnText\',this.value)"></div>'
+          + '<div class="block-field"><label>URL buton</label><input value="' + esc(block.btnUrl||'') + '" oninput="updateEditingBlock(\'btnUrl\',this.value)"></div>';
+
+      case 'stats':
+        var sitems = (block.items||[]).map(function(item, i) {
+          return '<div class="block-stats-item">'
+            + '<input placeholder="Număr (ex: 50+)" value="' + esc(item.number||'') + '" oninput="updateStatItem(' + i + ',\'number\',this.value)">'
+            + '<input placeholder="Etichetă" value="' + esc(item.label||'') + '" oninput="updateStatItem(' + i + ',\'label\',this.value)">'
+            + '<button class="block-del-item" onclick="deleteStatItem(' + i + ')">✕</button>'
+            + '</div>';
+        }).join('');
+        return '<div class="block-field"><label>Titlu</label><input value="' + esc(block.title||'') + '" oninput="updateEditingBlock(\'title\',this.value)"></div>'
+          + '<div class="block-field"><label>Cifre</label><div class="block-stats-items" id="statItems">' + sitems + '</div>'
+          + '<button class="gib-btn" style="font-size:.78rem;padding:6px 14px;" onclick="addStatItem()">+ Adaugă cifră</button></div>';
+
+      case 'text':
+        return '<div class="block-field"><label>Titlu</label><input value="' + esc(block.title||'') + '" oninput="updateEditingBlock(\'title\',this.value)"></div>'
+          + '<div class="block-field"><label>Conținut</label><textarea rows="6" oninput="updateEditingBlock(\'content\',this.value)">' + esc(block.content||'') + '</textarea></div>';
+
+      default: return '<p style="color:var(--muted);">Tip de bloc necunoscut.</p>';
+    }
+  }
+
+  function updateEditingBlock(key, value) {
+    if (!editingBlockId || !layoutData || !layoutData.blocks[editingBlockId]) return;
+    layoutData.blocks[editingBlockId][key] = value;
+  }
+
+  function updateFaqItem(i, key, value) {
+    if (!editingBlockId || !layoutData) return;
+    var block = layoutData.blocks[editingBlockId];
+    if (!block || !block.items || !block.items[i]) return;
+    block.items[i][key] = value;
+  }
+
+  function deleteFaqItem(i) {
+    if (!editingBlockId || !layoutData) return;
+    var block = layoutData.blocks[editingBlockId];
+    if (!block || !block.items) return;
+    block.items.splice(i, 1);
+    var container = document.getElementById('faqItems');
+    if (container) {
+      container.innerHTML = (block.items||[]).map(function(item, idx) {
+        return '<div class="block-faq-item">'
+          + '<input placeholder="Întrebare" value="' + esc(item.q||'') + '" oninput="updateFaqItem(' + idx + ',\'q\',this.value)">'
+          + '<textarea placeholder="Răspuns" oninput="updateFaqItem(' + idx + ',\'a\',this.value)">' + esc(item.a||'') + '</textarea>'
+          + '<button class="block-del-item" onclick="deleteFaqItem(' + idx + ')">✕ șterge</button>'
+          + '</div>';
+      }).join('');
+    }
+  }
+
+  function addFaqItem() {
+    if (!editingBlockId || !layoutData) return;
+    var block = layoutData.blocks[editingBlockId];
+    if (!block) return;
+    if (!block.items) block.items = [];
+    block.items.push({q:'', a:''});
+    var i = block.items.length - 1;
+    var container = document.getElementById('faqItems');
+    if (container) {
+      var div = document.createElement('div');
+      div.innerHTML = '<div class="block-faq-item">'
+        + '<input placeholder="Întrebare" oninput="updateFaqItem(' + i + ',\'q\',this.value)">'
+        + '<textarea placeholder="Răspuns" oninput="updateFaqItem(' + i + ',\'a\',this.value)"></textarea>'
+        + '<button class="block-del-item" onclick="deleteFaqItem(' + i + ')">✕ șterge</button>'
+        + '</div>';
+      container.appendChild(div.firstElementChild);
+    }
+  }
+
+  function updateStatItem(i, key, value) {
+    if (!editingBlockId || !layoutData) return;
+    var block = layoutData.blocks[editingBlockId];
+    if (!block || !block.items || !block.items[i]) return;
+    block.items[i][key] = value;
+  }
+
+  function deleteStatItem(i) {
+    if (!editingBlockId || !layoutData) return;
+    var block = layoutData.blocks[editingBlockId];
+    if (!block || !block.items) return;
+    block.items.splice(i, 1);
+    var container = document.getElementById('statItems');
+    if (container) container.innerHTML = (block.items||[]).map(function(item, idx) {
+      return '<div class="block-stats-item">'
+        + '<input placeholder="Număr" value="' + esc(item.number||'') + '" oninput="updateStatItem(' + idx + ',\'number\',this.value)">'
+        + '<input placeholder="Etichetă" value="' + esc(item.label||'') + '" oninput="updateStatItem(' + idx + ',\'label\',this.value)">'
+        + '<button class="block-del-item" onclick="deleteStatItem(' + idx + ')">✕</button>'
+        + '</div>';
+    }).join('');
+  }
+
+  function addStatItem() {
+    if (!editingBlockId || !layoutData) return;
+    var block = layoutData.blocks[editingBlockId];
+    if (!block) return;
+    if (!block.items) block.items = [];
+    block.items.push({number:'', label:''});
+    var i = block.items.length - 1;
+    var container = document.getElementById('statItems');
+    if (container) {
+      var div = document.createElement('div');
+      div.innerHTML = '<div class="block-stats-item">'
+        + '<input placeholder="Număr" oninput="updateStatItem(' + i + ',\'number\',this.value)">'
+        + '<input placeholder="Etichetă" oninput="updateStatItem(' + i + ',\'label\',this.value)">'
+        + '<button class="block-del-item" onclick="deleteStatItem(' + i + ')">✕</button>'
+        + '</div>';
+      container.appendChild(div.firstElementChild);
+    }
+  }
+
+  function saveBlockEdit() {
+    closeBlockEditor();
+    renderLayoutList();
+    markLayoutDirty();
+  }
+
+  function deleteBlock(id) {
+    if (!confirm('Ștergi acest bloc?')) return;
+    if (!layoutData) return;
+    if (layoutData.blocks) delete layoutData.blocks[id];
+    if (layoutData.order) layoutData.order = layoutData.order.filter(function(x){ return x !== id; });
+    if (layoutData.hidden) layoutData.hidden = layoutData.hidden.filter(function(x){ return x !== id; });
+    renderLayoutList();
+    markLayoutDirty();
   }
 
   // -- THEME EDITOR --
