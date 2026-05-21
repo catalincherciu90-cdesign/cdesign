@@ -140,8 +140,9 @@
     .nav-links a:hover::after{transform:scaleX(1)}
     .nav-phone{font-family:'Share Tech Mono',monospace;font-size:.875rem;color:var(--teal);border:1px solid var(--teal-border);padding:6px 14px;border-radius:6px;transition:background .2s,box-shadow .2s;}
     .nav-phone:hover{background:var(--teal-dim);box-shadow:0 0 12px var(--teal-glow);}
-    .btn-nav{background:var(--teal);color:#060f0f;font-weight:600;font-size:.875rem;font-family:'DM Sans',sans-serif;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:background .2s,box-shadow .2s,transform .15s;text-decoration:none;}
-    .btn-nav:hover{background:var(--teal-lt);box-shadow:0 0 20px rgba(0,168,168,.4);transform:translateY(-1px);}
+    @keyframes btn-glow{0%,100%{box-shadow:0 0 18px rgba(255,255,255,.5),0 4px 16px rgba(255,255,255,.2)}50%{box-shadow:0 0 38px rgba(255,255,255,.95),0 4px 32px rgba(255,255,255,.4)}}
+    .btn-nav{background:#fff;color:#111;font-weight:600;font-size:.875rem;font-family:'DM Sans',sans-serif;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:transform .15s;text-decoration:none;animation:btn-glow 2.8s ease-in-out infinite;}
+    .btn-nav:hover{background:#f0f0f0;transform:translateY(-1px);}
     .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:6px;}
     .hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;}
     /* Hero height — default full screen, override cu clase */
@@ -168,10 +169,10 @@
     .hero h1 .hl{background:linear-gradient(135deg,var(--teal-lt),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 16px rgba(0,168,168,.4));}
     .hero-desc{font-size:1.05rem;color:var(--soft);line-height:1.75;font-weight:300;max-width:480px;margin-bottom:36px;}
     .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;}
-    .btn-primary{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#00bfbf,#00a8a8);color:#fff;font-weight:700;font-size:1rem;padding:14px 28px;border-radius:8px;border:none;cursor:pointer;transition:box-shadow .2s,transform .15s;text-decoration:none;font-family:'DM Sans',sans-serif;box-shadow:0 0 24px rgba(0,168,168,.4);}
-    .btn-primary:hover{box-shadow:0 0 40px rgba(0,168,168,.65);transform:translateY(-2px);}
-    .btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--soft);font-size:1rem;padding:14px 28px;border-radius:8px;border:1px solid var(--border-soft);cursor:pointer;transition:border-color .2s,color .2s;text-decoration:none;font-family:'DM Sans',sans-serif;}
-    .btn-ghost:hover{border-color:var(--teal-border);color:var(--teal)}
+    .btn-primary{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#111;font-weight:700;font-size:1rem;padding:14px 28px;border-radius:8px;border:none;cursor:pointer;transition:transform .15s;text-decoration:none;font-family:'DM Sans',sans-serif;animation:btn-glow 2.8s ease-in-out infinite;}
+    .btn-primary:hover{background:#f0f0f0;transform:translateY(-2px);}
+    .btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:#fff;font-size:1rem;padding:14px 28px;border-radius:8px;border:1px solid rgba(255,255,255,.35);cursor:pointer;transition:border-color .2s,background .2s;text-decoration:none;font-family:'DM Sans',sans-serif;}
+    .btn-ghost:hover{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.08)}
     .hero-visual{position:relative;z-index:2;}
     .hero-proof-card{background:rgba(10,24,24,.88);border:1px solid var(--border-soft);border-radius:16px;padding:28px;box-shadow:0 0 60px rgba(0,168,168,.1),0 20px 60px rgba(0,0,0,.6);backdrop-filter:blur(12px);}
     .hpc-stars{display:flex;gap:3px;margin-bottom:6px;}
@@ -292,9 +293,9 @@
     .f-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
     .f-select{width:100%;padding:12px 16px;background:var(--bg3);border:1px solid var(--border-soft);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;cursor:pointer;min-height:48px;transition:border-color .2s;}
     .f-select:focus{border-color:var(--teal-border)}
-    .btn-submit{width:100%;background:var(--teal);color:#060f0f;font-weight:700;font-size:1rem;padding:15px;border-radius:8px;border:none;cursor:pointer;transition:background .2s,box-shadow .2s;font-family:'DM Sans',sans-serif;letter-spacing:.01em;}
-    .btn-submit:hover{background:var(--teal-lt);box-shadow:0 0 24px rgba(0,168,168,.4);}
-    .btn-submit:disabled{opacity:.7;cursor:not-allowed}
+    .btn-submit{width:100%;background:#fff;color:#111;font-weight:700;font-size:1rem;padding:15px;border-radius:8px;border:none;cursor:pointer;transition:transform .15s;font-family:'DM Sans',sans-serif;letter-spacing:.01em;animation:btn-glow 2.8s ease-in-out infinite;}
+    .btn-submit:hover{background:#f0f0f0;transform:translateY(-1px);}
+    .btn-submit:disabled{opacity:.7;cursor:not-allowed;animation:none;}
     footer{background:var(--bg2);border-top:1px solid var(--border);padding:52px 0 28px;}
     .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;gap:24px;margin-bottom:40px;}
     .footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;color:#fff;display:flex;align-items:center;gap:5px;margin-bottom:12px;}
@@ -475,13 +476,13 @@
     /* 13. Portfolio card grid overlay stronger */
     .port-grid-overlay{background-image:linear-gradient(rgba(0,168,168,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(0,168,168,.09) 1px,transparent 1px);}
 
-    /* 14. Form submit button — gradient like primary */
-    .btn-submit{background:linear-gradient(135deg,#00bfbf,#00a8a8);box-shadow:0 0 22px rgba(0,168,168,.35);}
-    .btn-submit:hover{background:linear-gradient(135deg,#00bfbf,#00a8a8);box-shadow:0 0 38px rgba(0,168,168,.6);}
+    /* 14. Form submit button — alb cu glow */
+    .btn-submit{background:#fff;color:#111;box-shadow:none;}
+    .btn-submit:hover{background:#f0f0f0;}
 
-    /* 15. Nav button gradient */
-    .btn-nav{background:linear-gradient(135deg,#00bfbf,#00a8a8);color:#fff;}
-    .btn-nav:hover{background:linear-gradient(135deg,#00bfbf,#00a8a8);}
+    /* 15. Nav button — alb cu glow */
+    .btn-nav{background:#fff;color:#111;}
+    .btn-nav:hover{background:#f0f0f0;}
 
     /* 16. Footer about text */
     .footer-about{font-size:.9rem;line-height:1.8;}
@@ -1328,8 +1329,8 @@ document.getElementById('bookingForm').addEventListener('submit', async function
   Programează 30 min gratuit →
 </a>
 <style>
-.sticky-cta{display:none;position:fixed;top:0;left:0;right:0;z-index:300;background:var(--teal);color:#060f0f;font-weight:700;font-size:1rem;text-align:center;padding:16px 24px;text-decoration:none;border-bottom:2px solid rgba(0,0,0,.15);transition:opacity .3s;}
-.sticky-cta:hover{background:var(--teal-lt);}
+.sticky-cta{display:none;position:fixed;top:0;left:0;right:0;z-index:300;background:#fff;color:#111;font-weight:700;font-size:1rem;text-align:center;padding:16px 24px;text-decoration:none;border-bottom:2px solid rgba(0,0,0,.08);transition:opacity .3s;animation:btn-glow 2.8s ease-in-out infinite;}
+.sticky-cta:hover{background:#f0f0f0;}
 @media(max-width:768px){.sticky-cta{display:block;}}
 </style>
 <script>
