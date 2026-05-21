@@ -1530,12 +1530,20 @@ document.getElementById('bookingForm').addEventListener('submit', async function
       if(needsFit && hero) {
         var tmpImg = new Image();
         tmpImg.onload = function() {
-          var w = hero.offsetWidth;
-          if(!w || !tmpImg.naturalWidth) return;
-          var ratio = tmpImg.naturalHeight / tmpImg.naturalWidth;
-          hero.style.minHeight = '0';
-          hero.style.height    = Math.round(w * ratio) + 'px';
-          hero.style.padding   = '0';
+          function fitHero() {
+            var w = hero.offsetWidth;
+            if(!w || !tmpImg.naturalWidth) return;
+            var ratio = tmpImg.naturalHeight / tmpImg.naturalWidth;
+            hero.style.minHeight = '0';
+            hero.style.height    = Math.round(w * ratio) + 'px';
+            hero.style.padding   = '0';
+          }
+          fitHero();
+          var resizeTimer;
+          window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(fitHero, 80);
+          }, { passive: true });
         };
         tmpImg.src = d.heroImage;
       }
