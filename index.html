@@ -144,6 +144,7 @@
     .nav-phone{font-family:'Share Tech Mono',monospace;font-size:.875rem;color:var(--teal);border:1px solid var(--teal-border);padding:6px 14px;border-radius:6px;transition:background .2s,box-shadow .2s;}
     .nav-phone:hover{background:var(--teal-dim);box-shadow:0 0 12px var(--teal-glow);}
     @keyframes btn-glow{0%,100%{box-shadow:0 0 18px rgba(255,255,255,.5),0 4px 16px rgba(255,255,255,.2)}50%{box-shadow:0 0 38px rgba(255,255,255,.95),0 4px 32px rgba(255,255,255,.4)}}
+    .col-btn-glow{animation:btn-glow 2.8s ease-in-out infinite;}
     .btn-nav{background:#fff;color:#111;font-weight:600;font-size:.875rem;font-family:'DM Sans',sans-serif;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:transform .15s;text-decoration:none;animation:btn-glow 2.8s ease-in-out infinite;}
     .btn-nav:hover{background:#f0f0f0;transform:translateY(-1px);}
     .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:6px;}
@@ -174,8 +175,8 @@
     .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;}
     .btn-primary{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#111;font-weight:700;font-size:1rem;padding:14px 28px;border-radius:8px;border:none;cursor:pointer;transition:transform .15s;text-decoration:none;font-family:'DM Sans',sans-serif;animation:btn-glow 2.8s ease-in-out infinite;}
     .btn-primary:hover{background:#f0f0f0;transform:translateY(-2px);}
-    .btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:#fff;font-size:1rem;padding:14px 28px;border-radius:8px;border:1px solid rgba(255,255,255,.35);cursor:pointer;transition:border-color .2s,background .2s;text-decoration:none;font-family:'DM Sans',sans-serif;}
-    .btn-ghost:hover{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.08)}
+    .btn-ghost{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);color:#fff;font-size:1rem;padding:14px 28px;border-radius:8px;border:1px solid rgba(255,255,255,.35);cursor:pointer;transition:border-color .2s,background .2s;text-decoration:none;font-family:'DM Sans',sans-serif;animation:btn-glow 2.8s ease-in-out infinite;}
+    .btn-ghost:hover{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.15)}
     .hero-visual{position:relative;z-index:2;}
     .hero-proof-card{background:rgba(10,24,24,.88);border:1px solid var(--border-soft);border-radius:16px;padding:28px;box-shadow:0 0 60px rgba(0,168,168,.1),0 20px 60px rgba(0,0,0,.6);backdrop-filter:blur(12px);}
     .hpc-stars{display:flex;gap:3px;margin-bottom:6px;}
@@ -1430,9 +1431,9 @@ document.getElementById('bookingForm').addEventListener('submit', async function
         return '<ul style="padding-left:18px;margin:0 0 10px;">'+(el.items||[]).map(function(li){return '<li style="color:var(--soft);font-size:.92rem;margin-bottom:5px;">'+escHtml(li)+'</li>';}).join('')+'</ul>';
       case 'button':
         var s = el.btnStyle==='ghost'
-          ? 'display:inline-block;background:transparent;color:var(--teal);border:1px solid var(--teal-border);font-weight:600;font-size:.85rem;padding:9px 22px;border-radius:7px;text-decoration:none;margin:8px 0;'
-          : 'display:inline-block;background:var(--teal);color:#060f0f;font-weight:700;font-size:.85rem;padding:10px 22px;border-radius:7px;text-decoration:none;margin:8px 0;';
-        return '<a href="'+escHtml(el.btnUrl||'#')+'" style="'+s+'">'+escHtml(el.btnText||'Află mai mult')+'</a>';
+          ? 'display:inline-block;background:#fff;color:#111;border:none;font-weight:700;font-size:.85rem;padding:9px 22px;border-radius:7px;text-decoration:none;margin:8px 0;'
+          : 'display:inline-block;background:#fff;color:#111;font-weight:700;font-size:.85rem;padding:10px 22px;border-radius:7px;text-decoration:none;margin:8px 0;';
+        return '<a href="'+escHtml(el.btnUrl||'#')+'" class="col-btn-glow" style="'+s+'">'+escHtml(el.btnText||'Află mai mult')+'</a>';
       case 'icon':
         return '<div style="font-size:'+(el.size==='large'?'3rem':'2rem')+';margin:0 0 12px;line-height:1;">'+escHtml(el.content||'')+'</div>';
       case 'image': {
@@ -1455,7 +1456,7 @@ document.getElementById('bookingForm').addEventListener('submit', async function
         var banHtml = '<div style="'+bgStyle+'border-radius:10px;padding:28px 24px;text-align:center;margin:0 0 12px;"'+(banVisClass?' class="'+banVisClass.trim()+'"':'')+' >'
           + (el.title ? '<div style="font-family:\'Syne\',sans-serif;font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:8px;">'+escHtml(el.title)+'</div>' : '')
           + (el.subtitle ? '<div style="font-size:.88rem;color:rgba(255,255,255,.65);margin-bottom:14px;">'+escHtml(el.subtitle)+'</div>' : '')
-          + (el.btnText ? '<a href="'+escHtml(el.btnUrl||'#')+'" style="display:inline-block;background:var(--teal);color:#060f0f;font-weight:700;font-size:.82rem;padding:9px 22px;border-radius:7px;text-decoration:none;">'+escHtml(el.btnText)+'</a>' : '')
+          + (el.btnText ? '<a href="'+escHtml(el.btnUrl||'#')+'" class="col-btn-glow" style="display:inline-block;background:#fff;color:#111;font-weight:700;font-size:.82rem;padding:9px 22px;border-radius:7px;text-decoration:none;">'+escHtml(el.btnText)+'</a>' : '')
           + '</div>';
         return banHtml;
       }
