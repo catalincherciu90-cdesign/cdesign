@@ -2907,9 +2907,16 @@
           + '<option value="ghost"'+(el.btnStyle==='ghost'?' selected':'')+'>Ghost (contur)</option>'
           + '</select>';
         break;
-      case 'image':
-        fields = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">'
-          + '<input placeholder="URL imagine (https://...)" value="'+esc(el.src||'')+'" oninput="updateColEl('+ci+','+ei+',\'src\',this.value)" style="grid-column:1/-1;">'
+      case 'image': {
+        var imgUploadId = 'img-upl-'+ci+'-'+ei;
+        var imgPreview = el.src ? '<img src="'+esc(el.src)+'" style="max-width:100%;max-height:80px;border-radius:5px;margin-bottom:6px;display:block;" onerror="this.style.display=\'none\'">' : '';
+        fields = imgPreview
+          + '<div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">'
+          + '<input data-upload-field="'+ci+'-'+ei+'-src" placeholder="URL imagine (https://...)" value="'+esc(el.src||'')+'" oninput="updateColEl('+ci+','+ei+',\'src\',this.value)" style="flex:1;">'
+          + '<button onclick="triggerImageUpload('+ci+','+ei+',\'src\',\''+imgUploadId+'\')" style="background:var(--teal);color:#060f0f;border:none;border-radius:5px;padding:5px 10px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">⬆ Upload</button>'
+          + '</div>'
+          + '<span id="'+imgUploadId+'" style="font-size:.72rem;color:var(--teal);display:block;margin-bottom:6px;min-height:14px;"></span>'
+          + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">'
           + '<input placeholder="Alt text" value="'+esc(el.alt||'')+'" oninput="updateColEl('+ci+','+ei+',\'alt\',this.value)">'
           + '<input placeholder="Link (opțional)" value="'+esc(el.link||'')+'" oninput="updateColEl('+ci+','+ei+',\'link\',this.value)">'
           + '</div>'
@@ -2920,19 +2927,24 @@
           + '</select>'
           + (el.fit==='fixed' ? '<input type="number" placeholder="Lățime px" value="'+(el.width||200)+'" oninput="updateColEl('+ci+','+ei+',\'width\',this.value)" style="width:90px;margin-left:8px;">' : '');
         break;
-      case 'banner':
+      }
+      case 'banner': {
+        var bannerUploadId = 'banner-upl-'+ci+'-'+ei;
         fields = '<input placeholder="Titlu banner" value="'+esc(el.title||'')+'" oninput="updateColEl('+ci+','+ei+',\'title\',this.value)" style="margin-bottom:6px;">'
           + '<input placeholder="Subtitlu / descriere (opțional)" value="'+esc(el.subtitle||'')+'" oninput="updateColEl('+ci+','+ei+',\'subtitle\',this.value)" style="margin-bottom:6px;">'
           + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">'
           + '<input placeholder="Text buton (opțional)" value="'+esc(el.btnText||'')+'" oninput="updateColEl('+ci+','+ei+',\'btnText\',this.value)">'
           + '<input placeholder="URL buton" value="'+esc(el.btnUrl||'')+'" oninput="updateColEl('+ci+','+ei+',\'btnUrl\',this.value)">'
           + '</div>'
-          + '<div style="display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:10px;">'
+          + '<div style="display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:8px;margin-bottom:4px;">'
           + '<label style="font-size:.75rem;color:var(--muted);">Bg culoare:</label>'
           + '<input type="color" value="'+(el.bgColor||'#0a2020')+'" oninput="updateColEl('+ci+','+ei+',\'bgColor\',this.value)" style="width:36px;height:28px;border:none;padding:0;background:none;cursor:pointer;">'
-          + '<input placeholder="sau URL imagine bg" value="'+esc(el.bgImg||'')+'" oninput="updateColEl('+ci+','+ei+',\'bgImg\',this.value)">'
-          + '</div>';
+          + '<input data-upload-field="'+ci+'-'+ei+'-bgImg" placeholder="sau URL imagine fundal" value="'+esc(el.bgImg||'')+'" oninput="updateColEl('+ci+','+ei+',\'bgImg\',this.value)">'
+          + '<button onclick="triggerImageUpload('+ci+','+ei+',\'bgImg\',\''+bannerUploadId+'\')" style="background:var(--teal);color:#060f0f;border:none;border-radius:5px;padding:5px 10px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">⬆ Upload</button>'
+          + '</div>'
+          + '<span id="'+bannerUploadId+'" style="font-size:.72rem;color:var(--teal);display:block;min-height:14px;"></span>';
         break;
+      }
       case 'list':
         var listInputs = (el.items||[]).map(function(li, li_i) {
           return '<div style="display:flex;gap:6px;margin-bottom:6px;">'
@@ -3052,6 +3064,44 @@
         + '</div>';
       container.appendChild(div.firstElementChild);
     }
+  }
+
+  function uploadMedia(file, onSuccess, onError) {
+    var token = localStorage.getItem('cdAdmin');
+    var statusId = 'upload-status-' + Date.now();
+    // afișăm status dacă există un element cu id-ul dat
+    fetch('/api/media?token=' + encodeURIComponent(token), {
+      method: 'POST',
+      headers: { 'Content-Type': file.type },
+      body: file
+    }).then(function(r){ return r.json(); }).then(function(d) {
+      if (d.url) onSuccess(d.url);
+      else onError(d.error || 'Eroare upload');
+    }).catch(function(){ onError('Eroare rețea'); });
+  }
+
+  function triggerImageUpload(ci, ei, field, statusElId) {
+    var inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = 'image/*';
+    inp.onchange = function() {
+      var file = inp.files[0];
+      if (!file) return;
+      var statusEl = document.getElementById(statusElId);
+      if (statusEl) statusEl.textContent = 'Se încarcă...';
+      uploadMedia(file, function(url) {
+        updateColEl(ci, ei, field, url);
+        // actualizăm și input-ul text
+        var inputEl = document.querySelector('[data-upload-field="'+ci+'-'+ei+'-'+field+'"]');
+        if (inputEl) inputEl.value = url;
+        if (statusEl) statusEl.textContent = '✓ Încărcat';
+        // dacă e câmpul src, actualizăm preview
+        if (field === 'src') reRenderColItems(ci);
+      }, function(err) {
+        if (statusEl) statusEl.textContent = '✕ ' + err;
+      });
+    };
+    inp.click();
   }
 
   function deleteColumn(ci) {
