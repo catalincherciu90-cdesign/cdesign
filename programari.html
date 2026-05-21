@@ -3331,24 +3331,39 @@
         break;
       case 'image': {
         var imgUploadId = 'img-upl-'+ci+'-'+ei;
+        var imgMobUploadId = 'img-mob-upl-'+ci+'-'+ei;
         var imgPreview = el.src ? '<img src="'+esc(el.src)+'" style="max-width:100%;max-height:80px;border-radius:5px;margin-bottom:6px;display:block;" onerror="this.style.display=\'none\'">' : '';
+        var selectSt = 'background:var(--bg2);border:1px solid var(--border-soft);color:var(--text);border-radius:5px;padding:5px 8px;font-size:.8rem;margin-bottom:6px;width:100%;';
         fields = imgPreview
-          + '<div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">'
-          + '<input data-upload-field="'+ci+'-'+ei+'-src" placeholder="URL imagine (https://...)" value="'+esc(el.src||'')+'" oninput="updateColEl('+ci+','+ei+',\'src\',this.value)" style="flex:1;">'
+          + '<div style="display:flex;gap:6px;align-items:center;margin-bottom:4px;">'
+          + '<input data-upload-field="'+ci+'-'+ei+'-src" placeholder="Desktop — URL imagine" value="'+esc(el.src||'')+'" oninput="updateColEl('+ci+','+ei+',\'src\',this.value)" style="flex:1;">'
           + '<button class="media-pick-btn" onclick="openMediaPickerForColEl('+ci+','+ei+',\'src\',\''+imgUploadId+'\')">📂</button>'
-          + '<button onclick="triggerImageUpload('+ci+','+ei+',\'src\',\''+imgUploadId+'\')" style="background:var(--teal);color:#060f0f;border:none;border-radius:5px;padding:5px 10px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">⬆ Upload</button>'
+          + '<button onclick="triggerImageUpload('+ci+','+ei+',\'src\',\''+imgUploadId+'\')" style="background:var(--teal);color:#060f0f;border:none;border-radius:5px;padding:5px 10px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">⬆</button>'
           + '</div>'
-          + '<span id="'+imgUploadId+'" style="font-size:.72rem;color:var(--teal);display:block;margin-bottom:6px;min-height:14px;"></span>'
+          + '<span id="'+imgUploadId+'" style="font-size:.72rem;color:var(--teal);display:block;margin-bottom:4px;min-height:14px;"></span>'
+          + '<div style="display:flex;gap:6px;align-items:center;margin-bottom:4px;">'
+          + '<input data-upload-field="'+ci+'-'+ei+'-srcMobile" placeholder="📱 Mobil — URL diferit (opțional)" value="'+esc(el.srcMobile||'')+'" oninput="updateColEl('+ci+','+ei+',\'srcMobile\',this.value)" style="flex:1;">'
+          + '<button class="media-pick-btn" onclick="openMediaPickerForColEl('+ci+','+ei+',\'srcMobile\',\''+imgMobUploadId+'\')">📂</button>'
+          + '<button onclick="triggerImageUpload('+ci+','+ei+',\'srcMobile\',\''+imgMobUploadId+'\')" style="background:var(--teal);color:#060f0f;border:none;border-radius:5px;padding:5px 10px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">⬆</button>'
+          + '</div>'
+          + '<span id="'+imgMobUploadId+'" style="font-size:.72rem;color:var(--teal);display:block;margin-bottom:6px;min-height:14px;"></span>'
           + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">'
           + '<input placeholder="Alt text" value="'+esc(el.alt||'')+'" oninput="updateColEl('+ci+','+ei+',\'alt\',this.value)">'
           + '<input placeholder="Link (opțional)" value="'+esc(el.link||'')+'" oninput="updateColEl('+ci+','+ei+',\'link\',this.value)">'
           + '</div>'
-          + '<select onchange="updateColEl('+ci+','+ei+',\'fit\',this.value)" style="background:var(--bg2);border:1px solid var(--border-soft);color:var(--text);border-radius:5px;padding:5px 8px;font-size:.8rem;margin-bottom:6px;">'
+          + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">'
+          + '<select onchange="updateColEl('+ci+','+ei+',\'fit\',this.value)" style="'+selectSt+'">'
           + '<option value="full"'+(el.fit!=='fixed'&&el.fit!=='round'?' selected':'')+'>Lățime 100%</option>'
           + '<option value="fixed"'+(el.fit==='fixed'?' selected':'')+'>Dimensiune fixă (px)</option>'
           + '<option value="round"'+(el.fit==='round'?' selected':'')+'>Rotundă (avatar)</option>'
           + '</select>'
-          + (el.fit==='fixed' ? '<input type="number" placeholder="Lățime px" value="'+(el.width||200)+'" oninput="updateColEl('+ci+','+ei+',\'width\',this.value)" style="width:90px;margin-left:8px;">' : '');
+          + '<select onchange="updateColEl('+ci+','+ei+',\'visibility\',this.value)" style="'+selectSt+'">'
+          + '<option value="all"'+((!el.visibility||el.visibility==='all')?' selected':'')+'>👁 Toate dispozitivele</option>'
+          + '<option value="desktop"'+(el.visibility==='desktop'?' selected':'')+'>🖥 Doar desktop</option>'
+          + '<option value="mobile"'+(el.visibility==='mobile'?' selected':'')+'>📱 Doar mobil</option>'
+          + '</select>'
+          + '</div>'
+          + (el.fit==='fixed' ? '<input type="number" placeholder="Lățime px" value="'+(el.width||200)+'" oninput="updateColEl('+ci+','+ei+',\'width\',this.value)" style="width:90px;">' : '');
         break;
       }
       case 'banner': {
@@ -3366,7 +3381,12 @@
           + '<button class="media-pick-btn" onclick="openMediaPickerForColEl('+ci+','+ei+',\'bgImg\',\''+bannerUploadId+'\')">📂</button>'
           + '<button onclick="triggerImageUpload('+ci+','+ei+',\'bgImg\',\''+bannerUploadId+'\')" style="background:var(--teal);color:#060f0f;border:none;border-radius:5px;padding:5px 10px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">⬆ Upload</button>'
           + '</div>'
-          + '<span id="'+bannerUploadId+'" style="font-size:.72rem;color:var(--teal);display:block;min-height:14px;"></span>';
+          + '<span id="'+bannerUploadId+'" style="font-size:.72rem;color:var(--teal);display:block;margin-bottom:6px;min-height:14px;"></span>'
+          + '<select onchange="updateColEl('+ci+','+ei+',\'visibility\',this.value)" style="background:var(--bg2);border:1px solid var(--border-soft);color:var(--text);border-radius:5px;padding:5px 8px;font-size:.8rem;width:100%;">'
+          + '<option value="all"'+((!el.visibility||el.visibility==='all')?' selected':'')+'>👁 Vizibil pe toate dispozitivele</option>'
+          + '<option value="desktop"'+(el.visibility==='desktop'?' selected':'')+'>🖥 Doar desktop</option>'
+          + '<option value="mobile"'+(el.visibility==='mobile'?' selected':'')+'>📱 Doar mobil</option>'
+          + '</select>';
         break;
       }
       case 'list':
