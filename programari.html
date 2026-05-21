@@ -2192,7 +2192,7 @@
       </label>
       ${opt.locked
         ? `<span class="calc-locked-badge">inclus</span>`
-        : `<button class="calc-del-btn" onclick="deleteCalcOption('${section}',${idx})" title="\u15Cterge">🗑</button>`
+        : `<button class="calc-del-btn" onclick="deleteCalcOption('${section}',${idx})" title="Șterge">🗑</button>`
       }
     </div>`;
   }
@@ -2219,7 +2219,7 @@
   }
 
   function deleteCalcOption(section, idx) {
-    if (!confirm('\u15Ctergi această opțiune?')) return;
+    if (!confirm('Ștergi această opțiune?')) return;
     calcData[section].splice(idx, 1);
     renderCalculatorAdmin();
   }
