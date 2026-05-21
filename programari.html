@@ -1055,6 +1055,9 @@
         <!-- HERO BANNER IMAGE -->
         <div style="margin-top:36px;padding-top:28px;border-top:1px solid var(--border);">
           <div class="f-label" style="margin-bottom:16px;">// hero_banner_imagine</div>
+
+          <!-- Desktop image -->
+          <div style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--teal);margin-bottom:8px;">🖥 Desktop / Tablet</div>
           <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;max-width:660px;">
             <div id="hero-img-preview" style="width:160px;height:90px;border-radius:8px;border:1px solid var(--border-soft);background:var(--bg3) url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=400&q=60') center/cover no-repeat;flex-shrink:0;position:relative;overflow:hidden;">
               <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(6,15,15,.6),transparent);"></div>
@@ -1065,10 +1068,32 @@
                 <button onclick="uploadHeroImage()" style="background:var(--teal);color:#060f0f;border:none;border-radius:6px;padding:0 14px;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;height:42px;">⬆ Upload</button>
               </div>
               <div style="display:flex;gap:8px;">
-                <button onclick="saveHeroImage()" class="btn-save" style="flex:1;">💾 Salvează imagine</button>
-                <button onclick="resetHeroImage()" style="background:none;border:1px solid var(--border-soft);color:var(--muted);border-radius:6px;padding:0 14px;font-size:.8rem;cursor:pointer;white-space:nowrap;height:36px;">↺ Resetează</button>
+                <button onclick="saveHeroImage()" class="btn-save" style="flex:1;">💾 Salvează</button>
+                <button onclick="resetHeroImage()" style="background:none;border:1px solid var(--border-soft);color:var(--muted);border-radius:6px;padding:0 14px;font-size:.8rem;cursor:pointer;white-space:nowrap;height:36px;">↺ Reset</button>
               </div>
-              <div id="hero-img-status" style="font-size:.75rem;color:var(--teal);margin-top:6px;min-height:16px;"></div>
+            </div>
+          </div>
+
+          <!-- Mobile image -->
+          <div style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--teal);margin-top:18px;margin-bottom:8px;">📱 Mobil (≤768px)</div>
+          <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;max-width:660px;">
+            <div id="hero-mob-preview" style="width:80px;height:90px;border-radius:8px;border:1px solid var(--border-soft);background:var(--bg3) center/cover no-repeat;flex-shrink:0;position:relative;overflow:hidden;">
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--muted);" id="hero-mob-placeholder">📵</div>
+            </div>
+            <div style="flex:1;min-width:200px;">
+              <div style="display:flex;gap:8px;margin-bottom:8px;">
+                <input class="f-input" id="hero-mob-url" placeholder="URL imagine mobil (opțional)" style="flex:1;margin:0;">
+                <button onclick="uploadHeroImageMobile()" style="background:var(--teal);color:#060f0f;border:none;border-radius:6px;padding:0 14px;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;height:42px;">⬆ Upload</button>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button onclick="saveHeroImageMobile()" class="btn-save" style="flex:1;">💾 Salvează</button>
+                <button onclick="clearHeroImageMobile()" style="background:none;border:1px solid var(--border-soft);color:var(--muted);border-radius:6px;padding:0 14px;font-size:.8rem;cursor:pointer;white-space:nowrap;height:36px;">✕ Șterge</button>
+              </div>
+              <div style="font-size:.72rem;color:var(--muted);margin-top:6px;">Dacă nu e setată, se folosește imaginea desktop.</div>
+            </div>
+          </div>
+
+          <div id="hero-img-status" style="font-size:.75rem;color:var(--teal);margin-top:10px;min-height:16px;"></div>
               <!-- Gradient + Text toggles -->
               <!-- Înălțime + Poziție + Size imagine -->
               <div style="margin-top:14px;margin-bottom:6px;">
@@ -1913,6 +1938,10 @@
         document.getElementById('hero-img-url').value = d.heroImage;
         applyHeroPreview(d.heroImage);
       }
+      if (d.heroImageMobile) {
+        document.getElementById('hero-mob-url').value = d.heroImageMobile;
+        applyHeroMobilePreview(d.heroImageMobile);
+      }
       document.getElementById('hero-gradient-toggle').checked = d.heroGradient !== false;
       document.getElementById('hero-text-toggle').checked     = d.heroText     !== false;
       if (d.heroPosition) document.getElementById('hero-position-sel').value = d.heroPosition;
@@ -1921,6 +1950,50 @@
       var hhEl = document.getElementById('hh-' + hh);
       if (hhEl) hhEl.checked = true;
     } catch {}
+  }
+
+  function applyHeroMobilePreview(url) {
+    var prev = document.getElementById('hero-mob-preview');
+    var ph   = document.getElementById('hero-mob-placeholder');
+    if (prev) prev.style.backgroundImage = url ? "url('"+url+"')" : '';
+    if (ph)   ph.style.display = url ? 'none' : 'flex';
+  }
+
+  function uploadHeroImageMobile() {
+    var inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'image/*';
+    inp.onchange = function() {
+      var file = inp.files[0]; if (!file) return;
+      document.getElementById('hero-img-status').textContent = 'Se încarcă...';
+      uploadMedia(file, function(url) {
+        document.getElementById('hero-mob-url').value = url;
+        applyHeroMobilePreview(url);
+        document.getElementById('hero-img-status').textContent = '✓ Încărcat — apasă Salvează';
+      }, function(err) {
+        document.getElementById('hero-img-status').textContent = '✕ ' + err;
+      });
+    };
+    inp.click();
+  }
+
+  async function saveHeroImageMobile() {
+    var url = document.getElementById('hero-mob-url').value.trim();
+    var statusEl = document.getElementById('hero-img-status');
+    try {
+      await fetch('/api/site-settings?token=' + encodeURIComponent(adminToken), {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ heroImageMobile: url })
+      });
+      applyHeroMobilePreview(url);
+      statusEl.textContent = url ? '✓ Imagine mobil salvată!' : '✓ Imagine mobil ștearsă.';
+      setTimeout(function(){ statusEl.textContent = ''; }, 2500);
+    } catch { statusEl.textContent = '✕ Eroare la salvare'; }
+  }
+
+  async function clearHeroImageMobile() {
+    document.getElementById('hero-mob-url').value = '';
+    applyHeroMobilePreview('');
+    await saveHeroImageMobile();
   }
 
   async function saveHeroOptions() {
