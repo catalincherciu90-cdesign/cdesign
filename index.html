@@ -139,7 +139,11 @@
     .btn-nav:hover{background:var(--teal-lt);box-shadow:0 0 20px rgba(0,168,168,.4);transform:translateY(-1px);}
     .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:6px;}
     .hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;}
+    /* Hero height — default full screen, override cu clase */
     .hero{min-height:calc(100svh - 68px);display:flex;align-items:center;position:relative;padding:80px 0;overflow:hidden;}
+    .hero.h-large  {min-height:75vh;}
+    .hero.h-medium {min-height:55vh;}
+    .hero.h-auto   {min-height:0;height:auto;padding:100px 0 80px;}
     .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
     /* Hero background photo layers */
     .hero-bg-photo{position:absolute;inset:0;z-index:0;background-image:url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=1800&q=80');background-size:cover;background-position:center center;background-repeat:no-repeat;transition:background-image .4s,background-position .4s,background-size .4s;}
@@ -328,6 +332,9 @@
     @keyframes glitch-2{0%,96%{transform:none;opacity:0}97%{transform:translate(2px,1px);opacity:.6}98%{transform:translate(-2px,-1px);opacity:.6}99%,100%{transform:none;opacity:0}}
     /* ── TABLET landscape / small desktop (≤1024px) ── */
     @media(max-width:1024px){
+      .hero{min-height:70vh;}
+      .hero.h-large{min-height:60vh;}
+      .hero.h-medium,.hero.h-auto{min-height:0;height:auto;padding:90px 0 60px;}
       .hero-grid{grid-template-columns:1fr;gap:40px}
       .hero-visual{max-width:560px;margin:0 auto;}
       .hero-proof-card{padding:20px 22px;}
@@ -340,8 +347,8 @@
     /* ── TABLET portrait (≤768px) ── */
     @media(max-width:768px){
       nav .nav-links,.nav-phone,.btn-nav{display:none}.hamburger{display:flex}
-      /* Hero — full viewport height, centered, bg adapts */
-      .hero{min-height:100svh;padding:100px 0 60px;align-items:center;}
+      /* Hero — se adaptează conținutului pe mobil */
+      .hero,.hero.h-large,.hero.h-medium,.hero.h-auto{min-height:0;height:auto;padding:100px 0 60px;align-items:center;}
       .hero-bg-photo{background-position:center center;}
       .hero-bg-photo::after{background:linear-gradient(180deg,rgba(6,15,15,.82) 0%,rgba(6,15,15,.75) 50%,rgba(6,15,15,.92) 100%);}
       .hero-grid{gap:32px;}
@@ -393,6 +400,7 @@
 
     /* ── MOBILE mic (≤380px) ── */
     @media(max-width:380px){
+      .hero,.hero.h-large,.hero.h-medium,.hero.h-auto{padding:80px 0 48px;}
       .hero h1{font-size:1.9rem;}
       .hero-visual{display:none;}
     }
@@ -1512,6 +1520,8 @@ document.getElementById('bookingForm').addEventListener('submit', async function
       if(hero) {
         hero.classList.toggle('no-gradient', d.heroGradient === false);
         hero.classList.toggle('no-text',     d.heroText     === false);
+        hero.classList.remove('h-large','h-medium','h-auto');
+        if(d.heroHeight && d.heroHeight !== 'full') hero.classList.add('h-'+d.heroHeight);
       }
     }).catch(function(){});
 })();

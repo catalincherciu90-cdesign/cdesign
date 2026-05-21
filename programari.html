@@ -1070,8 +1070,26 @@
               </div>
               <div id="hero-img-status" style="font-size:.75rem;color:var(--teal);margin-top:6px;min-height:16px;"></div>
               <!-- Gradient + Text toggles -->
+              <!-- Înălțime + Poziție + Size imagine -->
+              <div style="margin-top:14px;margin-bottom:6px;">
+                <div class="f-label" style="margin-bottom:5px;font-size:.7rem;">// înălțime hero</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                  <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.8rem;color:var(--soft);">
+                    <input type="radio" name="hero-height" value="full"   id="hh-full"   onchange="saveHeroOptions()" style="accent-color:var(--teal);" checked> Ecran complet
+                  </label>
+                  <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.8rem;color:var(--soft);">
+                    <input type="radio" name="hero-height" value="large"  id="hh-large"  onchange="saveHeroOptions()" style="accent-color:var(--teal);"> Mare (75vh)
+                  </label>
+                  <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.8rem;color:var(--soft);">
+                    <input type="radio" name="hero-height" value="medium" id="hh-medium" onchange="saveHeroOptions()" style="accent-color:var(--teal);"> Mediu (55vh)
+                  </label>
+                  <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.8rem;color:var(--soft);">
+                    <input type="radio" name="hero-height" value="auto"   id="hh-auto"   onchange="saveHeroOptions()" style="accent-color:var(--teal);"> Auto (după conținut)
+                  </label>
+                </div>
+              </div>
               <!-- Poziție + Size imagine -->
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
                 <div>
                   <div class="f-label" style="margin-bottom:5px;font-size:.7rem;">// poziție imagine</div>
                   <select id="hero-position-sel" onchange="saveHeroOptions()" style="background:var(--bg2);border:1px solid var(--border-soft);color:var(--text);border-radius:5px;padding:6px 10px;font-size:.8rem;width:100%;">
@@ -1899,6 +1917,9 @@
       document.getElementById('hero-text-toggle').checked     = d.heroText     !== false;
       if (d.heroPosition) document.getElementById('hero-position-sel').value = d.heroPosition;
       if (d.heroSize)     document.getElementById('hero-size-sel').value     = d.heroSize;
+      var hh = d.heroHeight || 'full';
+      var hhEl = document.getElementById('hh-' + hh);
+      if (hhEl) hhEl.checked = true;
     } catch {}
   }
 
@@ -1908,6 +1929,7 @@
       heroText:     document.getElementById('hero-text-toggle').checked,
       heroPosition: document.getElementById('hero-position-sel').value,
       heroSize:     document.getElementById('hero-size-sel').value,
+      heroHeight:   (document.querySelector('input[name="hero-height"]:checked') || {}).value || 'full',
     };
     try {
       await fetch('/api/site-settings?token=' + encodeURIComponent(adminToken), {
