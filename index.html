@@ -1514,20 +1514,21 @@ document.getElementById('bookingForm').addEventListener('submit', async function
       var hero = document.querySelector('.hero');
       var bg   = document.querySelector('.hero-bg-photo');
       if(bg) {
-        var isMobile = window.innerWidth <= 768;
-        var imgUrl = (isMobile && d.heroImageMobile) ? d.heroImageMobile : d.heroImage;
-        if(imgUrl)         bg.style.backgroundImage    = "url('"+imgUrl+"')";
-        if(d.heroPosition) bg.style.backgroundPosition = d.heroPosition;
-        if(d.heroSize)     bg.style.backgroundSize     = d.heroSize;
-        // La resize, schimbă imaginea dacă trece de breakpoint
-        var lastMobile = isMobile;
+        function applyHeroBg() {
+          var mob = window.innerWidth <= 768;
+          var imgUrl = (mob && d.heroImageMobile) ? d.heroImageMobile : (d.heroImage || '');
+          var size   = (mob && d.heroSizeMobile)  ? d.heroSizeMobile  : (d.heroSize     || '');
+          var pos    = (mob && d.heroPosMobile)   ? d.heroPosMobile   : (d.heroPosition || '');
+          if(imgUrl) bg.style.backgroundImage    = "url('"+imgUrl+"')";
+          if(size)   bg.style.backgroundSize     = size;
+          if(pos)    bg.style.backgroundPosition = pos;
+        }
+        applyHeroBg();
+        var lastW = window.innerWidth;
         window.addEventListener('resize', function() {
-          var nowMobile = window.innerWidth <= 768;
-          if(nowMobile !== lastMobile) {
-            lastMobile = nowMobile;
-            var newImg = (nowMobile && d.heroImageMobile) ? d.heroImageMobile : (d.heroImage || '');
-            if(newImg) bg.style.backgroundImage = "url('"+newImg+"')";
-          }
+          var nowW = window.innerWidth;
+          if((lastW > 768) !== (nowW > 768)) applyHeroBg();
+          lastW = nowW;
         }, { passive: true });
       }
       if(hero) {

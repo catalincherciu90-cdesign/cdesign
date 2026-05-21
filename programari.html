@@ -1137,6 +1137,34 @@
                   </select>
                 </div>
               </div>
+              <!-- Mobil: size + poziție separate -->
+              <div style="margin-top:14px;padding:12px;background:rgba(0,168,168,.05);border:1px solid var(--border-soft);border-radius:8px;">
+                <div style="font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--teal);margin-bottom:10px;">📱 Overrides mobil (≤768px)</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                  <div>
+                    <div class="f-label" style="margin-bottom:5px;font-size:.7rem;">// dimensiune mobil</div>
+                    <select id="hero-mob-size-sel" onchange="saveHeroOptions()" style="background:var(--bg2);border:1px solid var(--border-soft);color:var(--text);border-radius:5px;padding:6px 10px;font-size:.8rem;width:100%;">
+                      <option value="">Același ca desktop</option>
+                      <option value="100% auto">Lățime 100% (recomandat)</option>
+                      <option value="cover">Cover</option>
+                      <option value="contain">Contain</option>
+                      <option value="auto 100%">Înălțime 100%</option>
+                    </select>
+                  </div>
+                  <div>
+                    <div class="f-label" style="margin-bottom:5px;font-size:.7rem;">// poziție mobil</div>
+                    <select id="hero-mob-pos-sel" onchange="saveHeroOptions()" style="background:var(--bg2);border:1px solid var(--border-soft);color:var(--text);border-radius:5px;padding:6px 10px;font-size:.8rem;width:100%;">
+                      <option value="">Același ca desktop</option>
+                      <option value="center center">Centru</option>
+                      <option value="center top">Sus</option>
+                      <option value="center bottom">Jos</option>
+                      <option value="left center">Stânga</option>
+                      <option value="right center">Dreapta</option>
+                      <option value="left top">Stânga sus</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
               <!-- Gradient + Text toggles -->
               <div style="display:flex;gap:24px;margin-top:14px;flex-wrap:wrap;">
                 <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
@@ -1944,8 +1972,10 @@
       }
       document.getElementById('hero-gradient-toggle').checked = d.heroGradient !== false;
       document.getElementById('hero-text-toggle').checked     = d.heroText     !== false;
-      if (d.heroPosition) document.getElementById('hero-position-sel').value = d.heroPosition;
-      if (d.heroSize)     document.getElementById('hero-size-sel').value     = d.heroSize;
+      if (d.heroPosition)    document.getElementById('hero-position-sel').value    = d.heroPosition    || '';
+      if (d.heroSize)        document.getElementById('hero-size-sel').value        = d.heroSize        || 'cover';
+      document.getElementById('hero-mob-size-sel').value = d.heroSizeMobile || '';
+      document.getElementById('hero-mob-pos-sel').value  = d.heroPosMobile  || '';
       var hh = d.heroHeight || 'full';
       var hhEl = document.getElementById('hh-' + hh);
       if (hhEl) hhEl.checked = true;
@@ -2000,9 +2030,11 @@
     const body = {
       heroGradient: document.getElementById('hero-gradient-toggle').checked,
       heroText:     document.getElementById('hero-text-toggle').checked,
-      heroPosition: document.getElementById('hero-position-sel').value,
-      heroSize:     document.getElementById('hero-size-sel').value,
-      heroHeight:   (document.querySelector('input[name="hero-height"]:checked') || {}).value || 'full',
+      heroPosition:    document.getElementById('hero-position-sel').value,
+      heroSize:        document.getElementById('hero-size-sel').value,
+      heroHeight:      (document.querySelector('input[name="hero-height"]:checked') || {}).value || 'full',
+      heroSizeMobile:  document.getElementById('hero-mob-size-sel').value,
+      heroPosMobile:   document.getElementById('hero-mob-pos-sel').value,
     };
     try {
       await fetch('/api/site-settings?token=' + encodeURIComponent(adminToken), {
