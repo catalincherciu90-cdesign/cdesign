@@ -563,12 +563,67 @@ function isAdmin(url, env) {
   return url.searchParams.get('token') === (env.ADMIN_TOKEN || ADMIN_TOKEN);
 }
 
+function buildMaintenancePage(m) {
+  const title   = m.title   || 'Site în construcție';
+  const message = m.message || 'Revenim în curând cu ceva nou!';
+  const date    = m.date    ? '<p class="date">🗓 ' + m.date + '</p>' : '';
+  return `<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#060f0f;color:#e8edf2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;position:relative;overflow:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 800px 600px at 70% 40%,rgba(0,168,168,.07),transparent);pointer-events:none}
+.wrap{position:relative;z-index:1;max-width:560px}
+.gear{font-size:4rem;margin-bottom:24px;display:block;animation:spin 8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3rem);font-weight:800;color:#fff;margin-bottom:16px;line-height:1.1}
+h1 span{color:#00a8a8}
+p{color:#8bbaba;font-size:1.05rem;line-height:1.75;margin-bottom:12px}
+.date{font-size:.9rem;color:rgba(139,186,186,.6);margin-top:8px}
+.divider{width:48px;height:3px;background:#00a8a8;margin:28px auto}
+.logo{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:rgba(255,255,255,.2);letter-spacing:4px;margin-top:48px;text-transform:uppercase}
+.dots{display:flex;gap:8px;justify-content:center;margin-top:32px}
+.dot{width:8px;height:8px;border-radius:50%;background:#00a8a8;animation:pulse 1.4s ease-in-out infinite}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes pulse{0%,100%{opacity:.2;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+</style></head><body>
+<div class="wrap">
+  <span class="gear">⚙️</span>
+  <h1>C <span>Design</span></h1>
+  <div class="divider"></div>
+  <p><strong style="color:#fff">${title}</strong></p>
+  <p>${message}</p>
+  ${date}
+  <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+  <div class="logo">c-design.ro</div>
+</div>
+</body></html>`;
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const path = url.pathname;
 
     if (request.method === 'OPTIONS') return new Response(null, { headers: CORS });
+
+    // ── MAINTENANCE MODE ──────────────────────────────────────
+    // Skip maintenance check for: admin API, admin page, static assets, token bypass
+    const isAdminReq = path === '/programari' || path === '/programari.html' || path.startsWith('/api/');
+    const hasToken = url.searchParams.get('token') === (env.ADMIN_TOKEN || ADMIN_TOKEN);
+    if (!isAdminReq && !hasToken) {
+      try {
+        const mRaw = await env.PROGRAMARI.get('__maintenance__');
+        const mData = mRaw ? JSON.parse(mRaw) : { enabled: false };
+        if (mData.enabled) {
+          return new Response(buildMaintenancePage(mData), {
+            status: 503,
+            headers: { 'Content-Type': 'text/html;charset=utf-8', 'Retry-After': '3600', 'Cache-Control': 'no-store' }
+          });
+        }
+      } catch {}
+    }
 
     // ── BLOG PUBLIC PAGES ─────────────────────────────────────
 
@@ -1304,6 +1359,28 @@ export default {
         }));
         return json({ success: true });
       } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    // ── MAINTENANCE API ───────────────────────────────────────
+    if (path === '/api/maintenance' && request.method === 'GET') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const raw = await env.PROGRAMARI.get('__maintenance__');
+        return json(raw ? JSON.parse(raw) : { enabled: false, title: '', message: '', date: '' });
+      } catch { return json({ error: 'Eroare' }, 500); }
+    }
+    if (path === '/api/maintenance' && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const body = await request.json();
+        await env.PROGRAMARI.put('__maintenance__', JSON.stringify({
+          enabled: !!body.enabled,
+          title:   String(body.title   || 'Site în construcție').slice(0, 120),
+          message: String(body.message || 'Revenim în curând cu ceva nou!').slice(0, 400),
+          date:    String(body.date    || '').slice(0, 60),
+        }));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare' }, 500); }
     }
 
     // Media upload

@@ -1052,6 +1052,38 @@
           <div id="blockedDatesList" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
         </div>
 
+        <!-- MAINTENANCE MODE -->
+        <div style="margin-top:36px;padding-top:28px;border-top:1px solid var(--border);">
+          <div class="f-label" style="margin-bottom:16px;">// under_construction_mode</div>
+          <div id="maintenanceBanner" style="display:none;background:rgba(255,95,87,.08);border:1px solid rgba(255,95,87,.35);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-family:'Share Tech Mono',monospace;font-size:.78rem;color:#f87171;">
+            ⚠ Site-ul este în modul <b>Under Construction</b>. Vizitatorii văd pagina de mentenanță.
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+            <label class="calc-toggle" style="width:44px;height:24px;" title="Activează / dezactivează Under Construction">
+              <input type="checkbox" id="maintenance-toggle" onchange="toggleMaintenance(this.checked)">
+              <span class="calc-toggle-slider"></span>
+            </label>
+            <span style="font-size:.85rem;color:var(--muted);" id="maintenance-status-label">dezactivat</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr;gap:12px;max-width:560px;">
+            <div>
+              <div class="f-label" style="margin-bottom:6px;">// titlu_pagina</div>
+              <input class="f-input" id="maintenance-title" placeholder="Site în construcție" value="">
+            </div>
+            <div>
+              <div class="f-label" style="margin-bottom:6px;">// mesaj_vizitatori</div>
+              <textarea class="f-input" id="maintenance-message" rows="3" placeholder="Revenim în curând cu ceva nou!"></textarea>
+            </div>
+            <div>
+              <div class="f-label" style="margin-bottom:6px;">// data_revenire (opțional)</div>
+              <input class="f-input" id="maintenance-date" placeholder="Ex: 1 Iunie 2025" value="">
+            </div>
+            <div>
+              <button class="btn-save" onclick="saveMaintenance()">💾 Salvează setări maintenance</button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -1788,6 +1820,47 @@
       settingsData = await res.json();
       renderSettings();
     } catch {}
+    fetchMaintenance();
+  }
+
+  async function fetchMaintenance() {
+    try {
+      const res = await fetch(`/api/maintenance?token=${encodeURIComponent(adminToken)}`);
+      const d = await res.json();
+      document.getElementById('maintenance-toggle').checked = !!d.enabled;
+      document.getElementById('maintenance-title').value   = d.title   || '';
+      document.getElementById('maintenance-message').value = d.message || '';
+      document.getElementById('maintenance-date').value    = d.date    || '';
+      updateMaintenanceUI(!!d.enabled);
+    } catch {}
+  }
+
+  function updateMaintenanceUI(enabled) {
+    document.getElementById('maintenance-status-label').textContent = enabled ? '⚠ ACTIV — site-ul afișează pagina de mentenanță!' : 'dezactivat';
+    document.getElementById('maintenance-status-label').style.color = enabled ? '#f87171' : 'var(--muted)';
+    document.getElementById('maintenanceBanner').style.display = enabled ? 'block' : 'none';
+  }
+
+  async function toggleMaintenance(enabled) {
+    updateMaintenanceUI(enabled);
+    await saveMaintenance();
+  }
+
+  async function saveMaintenance() {
+    const body = {
+      enabled: document.getElementById('maintenance-toggle').checked,
+      title:   document.getElementById('maintenance-title').value,
+      message: document.getElementById('maintenance-message').value,
+      date:    document.getElementById('maintenance-date').value,
+    };
+    try {
+      await fetch(`/api/maintenance?token=${encodeURIComponent(adminToken)}`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+      });
+      updateMaintenanceUI(body.enabled);
+      const btn = document.querySelector('#panel-settings .btn-save[onclick="saveMaintenance()"]');
+      if (btn) { const orig = btn.textContent; btn.textContent = body.enabled ? '⚠ Activat!' : '✓ Salvat!'; setTimeout(() => { btn.textContent = orig; }, 2000); }
+    } catch { alert('Eroare la salvare maintenance.'); }
   }
 
   function renderSettings() {
