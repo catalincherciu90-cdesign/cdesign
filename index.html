@@ -1312,6 +1312,7 @@ document.getElementById('bookingForm').addEventListener('submit', async function
       case 'cta': return renderCta(id, block);
       case 'stats': return renderStats(id, block);
       case 'text': return renderTextBlock(id, block);
+      case 'columns': return renderColumns(id, block);
       default: return '';
     }
   }
@@ -1355,6 +1356,24 @@ document.getElementById('bookingForm').addEventListener('submit', async function
       +'<div class="container" style="max-width:760px;">'
       +'<h2 style="font-family:\'Syne\',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:#fff;margin-bottom:20px;">'+escHtml(b.title||'')+'</h2>'
       +'<div style="color:var(--soft);font-size:1rem;line-height:1.8;">'+escHtml(b.content||'').replace(/\n/g,'<br>')+'</div>'
+      +'</div></section>';
+  }
+
+  function renderColumns(id, b) {
+    var cols = (b.columns||[]).map(function(col){
+      var btn = col.btnText ? '<a href="'+escHtml(col.btnUrl||'#')+'" style="display:inline-block;background:var(--teal);color:#060f0f;font-weight:700;font-size:.82rem;padding:9px 20px;border-radius:7px;text-decoration:none;margin-top:14px;">'+escHtml(col.btnText)+'</a>' : '';
+      return '<div style="background:var(--bg2);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:28px 24px;">'
+        +(col.icon?'<div style="font-size:2rem;margin-bottom:14px;">'+escHtml(col.icon)+'</div>':'')
+        +'<h3 style="font-family:\'Syne\',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:10px;">'+escHtml(col.title||'')+'</h3>'
+        +'<p style="color:var(--soft);font-size:.92rem;line-height:1.7;">'+escHtml(col.text||'')+'</p>'
+        +btn+'</div>';
+    }).join('');
+    var minW = (b.columns||[]).length <= 2 ? '260px' : '200px';
+    return '<section data-section="'+id+'" style="padding:64px 0;">'
+      +'<div class="container">'
+      +(b.title?'<h2 style="font-family:\'Syne\',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:#fff;margin-bottom:12px;text-align:center;">'+escHtml(b.title)+'</h2>':'')
+      +(b.subtitle?'<p style="color:var(--soft);text-align:center;font-size:1rem;max-width:580px;margin:0 auto 40px;">'+escHtml(b.subtitle)+'</p>':'<div style="margin-bottom:'+(b.title?'40px':'0')+'"></div>')
+      +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax('+minW+',1fr));gap:20px;">'+cols+'</div>'
       +'</div></section>';
   }
 

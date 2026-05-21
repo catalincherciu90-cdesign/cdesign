@@ -341,6 +341,9 @@
     .block-faq-item textarea{width:100%;background:var(--bg2);border:1px solid var(--border-soft);border-radius:5px;color:var(--text);font-size:.82rem;padding:6px 10px;outline:none;resize:none;height:60px;}
     .block-stats-items{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;}
     .block-stats-item{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+    .block-col-item{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;}
+    .block-col-item input,.block-col-item textarea{width:100%;background:var(--bg2);border:1px solid var(--border-soft);border-radius:5px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.82rem;padding:6px 10px;outline:none;}
+    .block-col-item textarea{resize:none;}
     .block-stats-item input{background:var(--bg2);border:1px solid var(--border-soft);border-radius:5px;color:var(--text);font-size:.82rem;padding:6px 10px;outline:none;width:100%;}
     .block-del-item{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.9rem;padding:4px 6px;border-radius:4px;}
     .block-del-item:hover{color:#ff5f57;}
@@ -2527,6 +2530,12 @@
       default:{ title:'De ce ne aleg clienții', items:[{number:'50+',label:'Proiecte livrate'},{number:'3 ani',label:'Experiență'},{number:'98%',label:'Clienți mulțumiți'},{number:'24h',label:'Răspuns rapid'}] }},
     { type:'text',  icon:'📝', label:'Bloc text', desc:'Secțiune cu titlu și paragraf',
       default:{ title:'Titlu secțiune', content:'Adaugă conținutul tău aici. Poți edita din admin.' }},
+    { type:'columns', icon:'⬛', label:'Coloane / Cards', desc:'Grid cu 2-4 coloane editabile (icon, titlu, text, buton)',
+      default:{ title:'', subtitle:'', columns:[
+        { icon:'✅', title:'Primul avantaj', text:'Descriere scurtă a primului avantaj al serviciului tău.', btnText:'', btnUrl:'' },
+        { icon:'⚡', title:'Al doilea avantaj', text:'Descriere scurtă a celui de-al doilea avantaj.', btnText:'', btnUrl:'' },
+        { icon:'🎯', title:'Al treilea avantaj', text:'Descriere scurtă a celui de-al treilea avantaj.', btnText:'', btnUrl:'' },
+      ]}},
   ];
 
   let layoutData = null;
@@ -2742,6 +2751,28 @@
         return '<div class="block-field"><label>Titlu</label><input value="' + esc(block.title||'') + '" oninput="updateEditingBlock(\'title\',this.value)"></div>'
           + '<div class="block-field"><label>Conținut</label><textarea rows="6" oninput="updateEditingBlock(\'content\',this.value)">' + esc(block.content||'') + '</textarea></div>';
 
+      case 'columns':
+        var citems = (block.columns||[]).map(function(col, i) {
+          return '<div class="block-col-item" id="col-item-'+i+'">'
+            + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'
+            + '<span style="font-family:\'Share Tech Mono\',monospace;font-size:.7rem;color:var(--soft);">Coloana '+(i+1)+'</span>'
+            + '<button class="block-del-item" onclick="deleteColumn('+i+')">✕ șterge</button></div>'
+            + '<div style="display:grid;grid-template-columns:56px 1fr;gap:8px;margin-bottom:8px;">'
+            + '<input placeholder="Icon 🎯" value="'+esc(col.icon||'')+'" oninput="updateColumn('+i+',\'icon\',this.value)" style="text-align:center;font-size:1.2rem;">'
+            + '<input placeholder="Titlu coloană" value="'+esc(col.title||'')+'" oninput="updateColumn('+i+',\'title\',this.value)">'
+            + '</div>'
+            + '<textarea rows="2" placeholder="Text / descriere" oninput="updateColumn('+i+',\'text\',this.value)" style="margin-bottom:8px;">'+esc(col.text||'')+'</textarea>'
+            + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">'
+            + '<input placeholder="Text buton (opțional)" value="'+esc(col.btnText||'')+'" oninput="updateColumn('+i+',\'btnText\',this.value)">'
+            + '<input placeholder="URL buton" value="'+esc(col.btnUrl||'')+'" oninput="updateColumn('+i+',\'btnUrl\',this.value)">'
+            + '</div></div>';
+        }).join('');
+        return '<div class="block-field"><label>Titlu secțiune (opțional)</label><input value="'+esc(block.title||'')+'" oninput="updateEditingBlock(\'title\',this.value)"></div>'
+          + '<div class="block-field"><label>Subtitlu (opțional)</label><input value="'+esc(block.subtitle||'')+'" oninput="updateEditingBlock(\'subtitle\',this.value)"></div>'
+          + '<div class="block-field"><label>Coloane</label>'
+          + '<div id="colItems">'+citems+'</div>'
+          + '<button class="gib-btn" style="font-size:.78rem;padding:6px 14px;margin-top:4px;" onclick="addColumn()">+ Adaugă coloană</button></div>';
+
       default: return '<p style="color:var(--muted);">Tip de bloc necunoscut.</p>';
     }
   }
@@ -2831,6 +2862,63 @@
         + '<input placeholder="Etichetă" oninput="updateStatItem(' + i + ',\'label\',this.value)">'
         + '<button class="block-del-item" onclick="deleteStatItem(' + i + ')">✕</button>'
         + '</div>';
+      container.appendChild(div.firstElementChild);
+    }
+  }
+
+  function updateColumn(i, key, value) {
+    if (!editingBlockId || !layoutData) return;
+    var block = layoutData.blocks[editingBlockId];
+    if (!block || !block.columns || !block.columns[i]) return;
+    block.columns[i][key] = value;
+  }
+
+  function deleteColumn(i) {
+    if (!editingBlockId || !layoutData) return;
+    var block = layoutData.blocks[editingBlockId];
+    if (!block || !block.columns) return;
+    block.columns.splice(i, 1);
+    var container = document.getElementById('colItems');
+    if (container) container.innerHTML = (block.columns||[]).map(function(col, idx) {
+      return '<div class="block-col-item" id="col-item-'+idx+'">'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'
+        + '<span style="font-family:\'Share Tech Mono\',monospace;font-size:.7rem;color:var(--soft);">Coloana '+(idx+1)+'</span>'
+        + '<button class="block-del-item" onclick="deleteColumn('+idx+')">✕ șterge</button></div>'
+        + '<div style="display:grid;grid-template-columns:56px 1fr;gap:8px;margin-bottom:8px;">'
+        + '<input placeholder="Icon 🎯" value="'+esc(col.icon||'')+'" oninput="updateColumn('+idx+',\'icon\',this.value)" style="text-align:center;font-size:1.2rem;">'
+        + '<input placeholder="Titlu coloană" value="'+esc(col.title||'')+'" oninput="updateColumn('+idx+',\'title\',this.value)">'
+        + '</div>'
+        + '<textarea rows="2" placeholder="Text / descriere" oninput="updateColumn('+idx+',\'text\',this.value)" style="margin-bottom:8px;">'+esc(col.text||'')+'</textarea>'
+        + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">'
+        + '<input placeholder="Text buton (opțional)" value="'+esc(col.btnText||'')+'" oninput="updateColumn('+idx+',\'btnText\',this.value)">'
+        + '<input placeholder="URL buton" value="'+esc(col.btnUrl||'')+'" oninput="updateColumn('+idx+',\'btnUrl\',this.value)">'
+        + '</div></div>';
+    }).join('');
+  }
+
+  function addColumn() {
+    if (!editingBlockId || !layoutData) return;
+    var block = layoutData.blocks[editingBlockId];
+    if (!block) return;
+    if (!block.columns) block.columns = [];
+    block.columns.push({ icon:'📌', title:'Coloană nouă', text:'', btnText:'', btnUrl:'' });
+    var i = block.columns.length - 1;
+    var container = document.getElementById('colItems');
+    if (container) {
+      var div = document.createElement('div');
+      div.innerHTML = '<div class="block-col-item" id="col-item-'+i+'">'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'
+        + '<span style="font-family:\'Share Tech Mono\',monospace;font-size:.7rem;color:var(--soft);">Coloana '+(i+1)+'</span>'
+        + '<button class="block-del-item" onclick="deleteColumn('+i+')">✕ șterge</button></div>'
+        + '<div style="display:grid;grid-template-columns:56px 1fr;gap:8px;margin-bottom:8px;">'
+        + '<input placeholder="Icon 🎯" value="📌" oninput="updateColumn('+i+',\'icon\',this.value)" style="text-align:center;font-size:1.2rem;">'
+        + '<input placeholder="Titlu coloană" oninput="updateColumn('+i+',\'title\',this.value)">'
+        + '</div>'
+        + '<textarea rows="2" placeholder="Text / descriere" oninput="updateColumn('+i+',\'text\',this.value)" style="margin-bottom:8px;"></textarea>'
+        + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">'
+        + '<input placeholder="Text buton (opțional)" oninput="updateColumn('+i+',\'btnText\',this.value)">'
+        + '<input placeholder="URL buton" oninput="updateColumn('+i+',\'btnUrl\',this.value)">'
+        + '</div></div>';
       container.appendChild(div.firstElementChild);
     }
   }
