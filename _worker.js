@@ -1307,7 +1307,7 @@ export default {
         const raw  = await env.PROGRAMARI.get('__theme__');
         const t    = raw ? JSON.parse(raw) : THEME_DEFAULT;
         const css  = buildThemeCss(t);
-        return new Response(css, { headers: { 'Content-Type': 'text/css;charset=utf-8', 'Cache-Control': 'no-cache' } });
+        return new Response(css, { headers: { 'Content-Type': 'text/css;charset=utf-8', 'Cache-Control': 'public, max-age=300, stale-while-revalidate=3600' } });
       } catch { return new Response('', { headers: { 'Content-Type': 'text/css' } }); }
     }
 

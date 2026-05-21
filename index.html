@@ -10,9 +10,6 @@
 
   gtag('config', 'G-K3VR7JC1QW');
 </script>
-  <!-- Meta Pixel -->
-<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','893560673744618');fbq('track','PageView');</script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=893560673744618&ev=PageView&noscript=1"/></noscript>
   <!-- End Meta Pixel -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -106,7 +103,11 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="preload" as="image" href="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=1800&q=80" fetchpriority="high">
+  <link rel="stylesheet" href="/theme.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="/theme.css"></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -542,7 +543,6 @@
     @media(max-width:1024px){.dss-grid{grid-template-columns:1fr;gap:48px;}.dss-devices{justify-content:center;max-width:480px;margin:0 auto;}}
     @media(max-width:640px){.dss{padding:56px 0;}.dss-phone{display:none;}}
   </style>
-<link rel="stylesheet" href="/theme.css">
 </head>
 <body>
 
@@ -1588,5 +1588,13 @@ document.getElementById('bookingForm').addEventListener('submit', async function
     }).catch(function(){});
 })();
 </script>
+<!-- Meta Pixel — încărcat după pagină -->
+<script>
+window.addEventListener('load', function() {
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init','893560673744618');fbq('track','PageView');
+}, {once:true});
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=893560673744618&ev=PageView&noscript=1"/></noscript>
 </body>
 </html>
