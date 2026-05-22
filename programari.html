@@ -1282,6 +1282,57 @@
         <div class="settings-card" style="margin-top:24px;">
           <div class="f-label" style="margin-bottom:16px;font-size:.75rem;letter-spacing:.1em;">// EDITEAZĂ TEXTE SECȚIUNI</div>
 
+          <!-- Headings Editor -->
+          <div style="margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border-soft);">
+            <div style="font-size:.8rem;font-weight:600;color:var(--soft);margin-bottom:12px;">✏️ Titluri & subtitluri secțiuni</div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div>
+                <div class="f-label" style="font-size:.7rem;">Hero — Titlu principal (H1)</div>
+                <input class="f-input" id="h-heroTitle" placeholder="Site-ul care îți aduce clienți noi">
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">Hero — Descriere</div>
+                <textarea class="f-input" id="h-heroDesc" rows="2" placeholder="De la prima ta afacere până la un brand consacrat..."></textarea>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <div>
+                  <div class="f-label" style="font-size:.7rem;">Servicii — Titlu H2</div>
+                  <input class="f-input" id="h-servicesTitle" placeholder="Indiferent unde ești, avem soluția">
+                </div>
+                <div>
+                  <div class="f-label" style="font-size:.7rem;">Servicii — Subtitlu</div>
+                  <input class="f-input" id="h-servicesSub" placeholder="Pornești de la zero sau...">
+                </div>
+                <div>
+                  <div class="f-label" style="font-size:.7rem;">Industrii — Titlu H2</div>
+                  <input class="f-input" id="h-indTitle" placeholder="Lucrăm cu orice domeniu">
+                </div>
+                <div>
+                  <div class="f-label" style="font-size:.7rem;">Industrii — Subtitlu</div>
+                  <input class="f-input" id="h-indSub" placeholder="De la service auto la cabinet...">
+                </div>
+                <div>
+                  <div class="f-label" style="font-size:.7rem;">Proces — Titlu H2</div>
+                  <input class="f-input" id="h-procesTitle" placeholder="Simplu de la început până la final">
+                </div>
+                <div>
+                  <div class="f-label" style="font-size:.7rem;">Proces — Subtitlu</div>
+                  <input class="f-input" id="h-procesSub" placeholder="Nu trebuie să știi nimic tehnic...">
+                </div>
+                <div>
+                  <div class="f-label" style="font-size:.7rem;">Portofoliu — Titlu H2</div>
+                  <input class="f-input" id="h-portTitle" placeholder="Afaceri ca a ta, rezultate reale">
+                </div>
+                <div>
+                  <div class="f-label" style="font-size:.7rem;">Portofoliu — Subtitlu</div>
+                  <input class="f-input" id="h-portSub" placeholder="Iată câteva dintre proiectele...">
+                </div>
+              </div>
+            </div>
+            <button class="btn-save" style="margin-top:10px;" onclick="saveHeadings()">💾 Salvează titlurile</button>
+            <span id="headings-status" style="font-size:.75rem;color:var(--teal);margin-left:10px;"></span>
+          </div>
+
           <!-- DSS Section -->
           <div style="margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border-soft);">
             <div style="font-size:.8rem;font-weight:600;color:var(--soft);margin-bottom:10px;">📱 Secțiunea „Site-uri care funcționează"</div>
@@ -2081,6 +2132,7 @@
     } catch {}
     fetchMaintenance();
     fetchHeroImage();
+    fetchHeadings();
     fetchDssSection();
   }
 
@@ -2106,6 +2158,39 @@
       var hhEl = document.getElementById('hh-' + hh);
       if (hhEl) hhEl.checked = true;
     } catch {}
+  }
+
+  const HEADING_FIELDS = [
+    {key:'heroTitle',    id:'h-heroTitle'},
+    {key:'heroDesc',     id:'h-heroDesc'},
+    {key:'servicesTitle',id:'h-servicesTitle'},
+    {key:'servicesSub',  id:'h-servicesSub'},
+    {key:'indTitle',     id:'h-indTitle'},
+    {key:'indSub',       id:'h-indSub'},
+    {key:'procesTitle',  id:'h-procesTitle'},
+    {key:'procesSub',    id:'h-procesSub'},
+    {key:'portTitle',    id:'h-portTitle'},
+    {key:'portSub',      id:'h-portSub'},
+  ];
+
+  async function fetchHeadings() {
+    try {
+      const d = await fetch('/api/site-settings').then(r=>r.json());
+      HEADING_FIELDS.forEach(function(f){ var el=document.getElementById(f.id); if(el&&d[f.key]) el.value=d[f.key]; });
+    } catch {}
+  }
+
+  async function saveHeadings() {
+    var body = {};
+    HEADING_FIELDS.forEach(function(f){ var el=document.getElementById(f.id); if(el) body[f.key]=el.value.trim(); });
+    var st = document.getElementById('headings-status');
+    try {
+      await fetch('/api/site-settings?token='+encodeURIComponent(adminToken),{
+        method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)
+      });
+      st.textContent = '✓ Salvat!';
+      setTimeout(function(){ st.textContent=''; }, 2500);
+    } catch { st.textContent = '✕ Eroare'; }
   }
 
   async function fetchDssSection() {

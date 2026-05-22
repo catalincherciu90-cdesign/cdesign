@@ -588,12 +588,12 @@
     <div class="hero-grid">
       <div class="hero-content">
         <div class="hero-eyebrow">PENTRU ORICE TIP DE AFACERE · CONSULTANȚĂ GRATUITĂ</div>
-        <h1 id="hero-heading">
+        <h1 id="hero-h1-el">
           Site-ul care<br>
           îți aduce<br>
           <span class="hl">clienți noi</span>
         </h1>
-        <p class="hero-desc">De la prima ta afacere până la un brand consacrat — construim site-uri clare, rapide și găsite pe Google. Fără termeni tehnici, fără surprize la factură.</p>
+        <p class="hero-desc" id="hero-desc-el">De la prima ta afacere până la un brand consacrat — construim site-uri clare, rapide și găsite pe Google. Fără termeni tehnici, fără surprize la factură.</p>
         <div class="hero-actions">
           <a href="#contact" class="btn-primary">Hai să vorbim gratuit →</a>
           <a href="#portofoliu" class="btn-ghost">Vezi lucrările →</a>
@@ -821,7 +821,7 @@
   <div class="container">
     <div class="sec-label reveal">CE PUTEM FACE PENTRU TINE</div>
     <h2 class="sec-title reveal" id="servicii-heading">Indiferent unde ești,<br>avem soluția potrivită</h2>
-    <p class="sec-sub reveal">Pornești de la zero sau ai deja un site care nu mai ține pasul? Avem servicii clare pentru fiecare etapă a afacerii tale.</p>
+    <p class="sec-sub reveal" id="servicii-sub-el">Pornești de la zero sau ai deja un site care nu mai ține pasul? Avem servicii clare pentru fiecare etapă a afacerii tale.</p>
     <div class="services-grid">
       <article class="svc-card reveal">
         <span class="svc-icon">🌐</span>
@@ -909,7 +909,7 @@
       <div>
         <div class="sec-label reveal">ORICE INDUSTRIE</div>
         <h2 class="sec-title reveal" id="ind-heading">Lucrăm cu orice domeniu de activitate</h2>
-        <p class="sec-sub reveal" style="margin-bottom:24px;">De la service auto la cabinet medical — știm să construim prezența online potrivită pentru ce faci tu.</p>
+        <p class="sec-sub reveal" id="ind-sub-el" style="margin-bottom:24px;">De la service auto la cabinet medical — știm să construim prezența online potrivită pentru ce faci tu.</p>
         <div class="ind-grid reveal">
           <div class="ind-pill"><span class="ind-pill-icon">🚗</span><span class="ind-pill-label">Auto &amp; Service</span></div>
           <div class="ind-pill"><span class="ind-pill-icon">🍽️</span><span class="ind-pill-label">Restaurante &amp; HoReCa</span></div>
@@ -965,7 +965,7 @@
   <div class="container">
     <div class="sec-label reveal">CUM LUCRĂM</div>
     <h2 class="sec-title reveal" id="proces-heading">Simplu de la început până la final</h2>
-    <p class="sec-sub reveal">Nu trebuie să știi nimic tehnic. Noi îți explicăm fiecare pas pe înțelesul tău — fără jargon, fără surprize.</p>
+    <p class="sec-sub reveal" id="proces-sub-el">Nu trebuie să știi nimic tehnic. Noi îți explicăm fiecare pas pe înțelesul tău — fără jargon, fără surprize.</p>
     <div class="process-grid">
       <div class="process-step reveal"><div class="p-num" aria-hidden="true">01</div><h3>Vorbim gratuit, 30 min</h3><p>Înțelegem ce vrei, ce ai nevoie și cât îți permiți. Fără obligații, fără presiune.</p></div>
       <div class="process-step reveal reveal-delay-1"><div class="p-num" aria-hidden="true">02</div><h3>Ofertă clară, preț fix</h3><p>Primești în scris: ce facem, când livrăm și cât costă. Fără surprize la factură.</p></div>
@@ -979,7 +979,7 @@
   <div class="container">
     <div class="sec-label reveal">PORTOFOLIU</div>
     <h2 class="sec-title reveal" id="portofoliu-heading">Afaceri ca a ta, rezultate reale</h2>
-    <p class="sec-sub reveal">Iată câteva dintre proiectele pe care le-am livrat — mici afaceri de familie, freelanceri, restaurante, firme de construcții. Oameni reali, site-uri care funcționează.</p>
+    <p class="sec-sub reveal" id="portofoliu-sub-el">Iată câteva dintre proiectele pe care le-am livrat — mici afaceri de familie, freelanceri, restaurante, firme de construcții. Oameni reali, site-uri care funcționează.</p>
     <div class="portfolio-grid" id="portfolioGrid" style="min-height:280px"></div>
   </div>
 </section>
@@ -1497,6 +1497,22 @@ document.getElementById('bookingForm').addEventListener('submit', async function
         if(d.heroHeight && d.heroHeight !== 'full') hero.classList.add('h-'+d.heroHeight);
       }
       // NOTE: nu mai modificăm înălțimea hero din JS — previne CLS
+      // Headings
+      var hMap = {
+        'heroTitle':     'hero-h1-el',
+        'heroDesc':      'hero-desc-el',
+        'servicesTitle': 'servicii-heading',
+        'servicesSub':   'servicii-sub-el',
+        'indTitle':      'ind-heading',
+        'indSub':        'ind-sub-el',
+        'procesTitle':   'proces-heading',
+        'procesSub':     'proces-sub-el',
+        'portTitle':     'portofoliu-heading',
+        'portSub':       'portofoliu-sub-el'
+      };
+      Object.keys(hMap).forEach(function(key) {
+        if(d[key]) { var el = document.getElementById(hMap[key]); if(el) el.textContent = d[key]; }
+      });
       // DSS Section
       if(d.dssTitle)    { var t=document.getElementById('dss-title-el'); if(t) t.textContent=d.dssTitle; }
       if(d.dssSubtitle) { var s=document.getElementById('dss-sub-el');   if(s) s.textContent=d.dssSubtitle; }
