@@ -113,7 +113,7 @@
       --teal-dim:rgba(201,169,110,.10);--teal-glow:rgba(201,169,110,.25);--teal-border:rgba(201,169,110,.35);
       --bg:#ffffff;--bg2:#f7f7f7;--bg3:#eeeeee;--bg4:#e5e5e5;
       --text:#111111;--soft:#444444;--muted:#777777;
-      --border:rgba(0,0,0,.10);--border-soft:rgba(0,0,0,.16);--heading:#111111;--nav-text:#111111;
+      --border:rgba(0,0,0,.10);--border-soft:rgba(0,0,0,.16);--heading:#111111;--nav-text:#111111;--nav-phone:#111111;
       --nav-bg:rgba(255,255,255,.92);--nav-bg-solid:rgba(255,255,255,.97);
       --hero-grad:linear-gradient(105deg,rgba(255,255,255,.97) 0%,rgba(255,255,255,.90) 35%,rgba(255,255,255,.72) 60%,rgba(255,255,255,.45) 100%);
       --hero-grad-mob:linear-gradient(180deg,rgba(255,255,255,.82) 0%,rgba(255,255,255,.75) 50%,rgba(255,255,255,.92) 100%);
@@ -141,7 +141,7 @@
     .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--teal);transform:scaleX(0);transition:transform .2s;}
     .nav-links a:hover{color:var(--teal)}
     .nav-links a:hover::after{transform:scaleX(1)}
-    .nav-phone{display:inline-flex;align-items:center;gap:5px;font-family:'Share Tech Mono',monospace;font-size:.9rem;font-weight:600;color:var(--text);padding:2px 0;transition:color .2s;}
+    .nav-phone{display:inline-flex;align-items:center;gap:5px;font-family:'Share Tech Mono',monospace;font-size:.9rem;font-weight:600;color:var(--nav-phone);padding:2px 0;transition:color .2s;}
     .nav-phone::before{content:'📞';font-size:.8rem;}
     .nav-phone:hover{color:var(--teal);}
     @keyframes btn-glow{0%,100%{box-shadow:0 0 18px rgba(255,255,255,.5),0 4px 16px rgba(255,255,255,.2)}50%{box-shadow:0 0 38px rgba(255,255,255,.95),0 4px 32px rgba(255,255,255,.4)}}

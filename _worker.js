@@ -1286,6 +1286,7 @@ export default {
       const borderSoft = isLight ? 'rgba(0,0,0,.16)'  : 'rgba(255,255,255,.11)';
       const navColor = t.navColor || bg;
       const navText  = t.navText  || (isLight ? '#111111' : '#e8edf2');
+      const navPhone = t.navPhone || text;
       const navR = parseInt(navColor.slice(1,3),16);
       const navG = parseInt(navColor.slice(3,5),16);
       const navB = parseInt(navColor.slice(5,7),16);
@@ -1303,7 +1304,7 @@ export default {
         `--bg:${bg};--bg2:${bg2};--bg3:${bg3};--bg4:${bg4};` +
         `--text:${text};--soft:${soft};--muted:${muted};--heading:${heading};` +
         `--border:${border};--border-soft:${borderSoft};` +
-        `--nav-bg:${navBg};--nav-bg-solid:${navBgSolid};--nav-text:${navText};` +
+        `--nav-bg:${navBg};--nav-bg-solid:${navBgSolid};--nav-text:${navText};--nav-phone:${navPhone};` +
         `--hero-grad:${heroGrad};--hero-grad-mob:${heroGradMob};--hero-grad-xs:${heroGradXs};` +
         `--font-heading:'${fh}',sans-serif;--font-body:'${fb}',sans-serif}` +
         `body{font-family:'${fb}',sans-serif!important}` +
