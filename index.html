@@ -1436,9 +1436,13 @@ document.getElementById('bookingForm').addEventListener('submit', async function
   function renderColumns(id, b) {
     var cols = (b.columns||[]).map(function(col){
       var inner;
+      var colVisClass = '';
       if (col.items && col.items.length) {
-        // Format nou cu elemente nested
         inner = col.items.map(renderColElement).join('');
+        var allDesk = col.items.every(function(it){ return it.visibility === 'desktop'; });
+        var allMob  = col.items.every(function(it){ return it.visibility === 'mobile'; });
+        if (allDesk) colVisClass = ' col-desk-only';
+        else if (allMob) colVisClass = ' col-mob-only';
       } else {
         // Backward compat: format vechi cu icon/title/text/btnText
         inner = (col.icon?'<div style="font-size:2rem;margin-bottom:14px;">'+escHtml(col.icon)+'</div>':'')
@@ -1446,7 +1450,7 @@ document.getElementById('bookingForm').addEventListener('submit', async function
           +(col.text?'<p style="color:var(--soft);font-size:.92rem;line-height:1.7;">'+escHtml(col.text)+'</p>':'')
           +(col.btnText?'<a href="'+escHtml(col.btnUrl||'#')+'" style="display:inline-block;background:var(--teal);color:#060f0f;font-weight:700;font-size:.82rem;padding:9px 20px;border-radius:7px;text-decoration:none;margin-top:14px;">'+escHtml(col.btnText)+'</a>':'');
       }
-      return '<div style="background:var(--bg2);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:28px 24px;">'+inner+'</div>';
+      return '<div class="'+colVisClass.trim()+'" style="background:var(--bg2);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:28px 24px;">'+inner+'</div>';
     }).join('');
     var minW = (b.columns||[]).length <= 2 ? '260px' : '200px';
     return '<section data-section="'+id+'" style="padding:64px 0;">'
