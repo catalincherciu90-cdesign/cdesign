@@ -1224,6 +1224,7 @@ export default {
       bg4:         '#e5e5e5',
       text:        '#111111',
       soft:        '#444444',
+      heading:     '#111111',
       fontHeading: 'Space Grotesk',
       fontBody:    'DM Sans'
     };
@@ -1280,6 +1281,7 @@ export default {
       const bgB = parseInt(bg.slice(5,7),16);
       const lum = 0.2126*bgR/255 + 0.7152*bgG/255 + 0.0722*bgB/255;
       const isLight = lum > 0.5;
+      const heading = t.heading || (isLight ? '#111111' : '#f0f4f8');
       const border     = isLight ? 'rgba(0,0,0,.10)'  : 'rgba(255,255,255,.07)';
       const borderSoft = isLight ? 'rgba(0,0,0,.16)'  : 'rgba(255,255,255,.11)';
       const navBg      = `rgba(${bgR},${bgG},${bgB},.92)`;
@@ -1294,7 +1296,7 @@ export default {
         `--teal:${teal};--teal-dk:${tealDk};--teal-lt:${tealLt};` +
         `--teal-dim:${hexToRgba(teal,.08)};--teal-glow:${hexToRgba(teal,.18)};--teal-border:${hexToRgba(teal,.30)};` +
         `--bg:${bg};--bg2:${bg2};--bg3:${bg3};--bg4:${bg4};` +
-        `--text:${text};--soft:${soft};--muted:${muted};` +
+        `--text:${text};--soft:${soft};--muted:${muted};--heading:${heading};` +
         `--border:${border};--border-soft:${borderSoft};` +
         `--nav-bg:${navBg};--nav-bg-solid:${navBgSolid};` +
         `--hero-grad:${heroGrad};--hero-grad-mob:${heroGradMob};--hero-grad-xs:${heroGradXs};` +

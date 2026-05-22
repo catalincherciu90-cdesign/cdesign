@@ -12,7 +12,7 @@
       --teal:#00a8a8;--teal-dim:rgba(0,168,168,.08);--teal-border:rgba(0,168,168,.28);
       --bg:#060f0f;--bg2:#0a1818;--bg3:#0f2020;
       --text:#e8edf2;--soft:#8bbaba;--muted:#4d6b8a;
-      --border:rgba(255,255,255,.07);--border-soft:rgba(255,255,255,.11);
+      --border:rgba(255,255,255,.07);--border-soft:rgba(255,255,255,.11);--heading:#f0f4f8;
       --green:#28c840;--yellow:#febc2e;--red:#ff5f57;
     }
     body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
@@ -1025,6 +1025,13 @@
             <div class="theme-color-wrap">
               <label class="theme-color-swatch"><input type="color" id="tc-soft" value="#8bbaba" oninput="onThemeColor('soft',this.value)"></label>
               <input class="theme-hex-input" id="th-soft" value="#8BBABA" maxlength="7" oninput="onThemeHex('soft',this.value)">
+            </div>
+          </div>
+          <div class="theme-row">
+            <span class="theme-label">Culoare H1 / H2 / H3</span>
+            <div class="theme-color-wrap">
+              <label class="theme-color-swatch"><input type="color" id="tc-heading" value="#f0f4f8" oninput="onThemeColor('heading',this.value)"></label>
+              <input class="theme-hex-input" id="th-heading" value="#F0F4F8" maxlength="7" oninput="onThemeHex('heading',this.value)">
             </div>
           </div>
         </div>
@@ -3776,7 +3783,7 @@
 
   const THEME_DEFAULT_VALS = {
     teal:'#00a8a8', bg:'#060f0f', bg2:'#0a1818', bg3:'#0f2020',
-    text:'#e8edf2', soft:'#8bbaba', fontHeading:'Syne', fontBody:'DM Sans'
+    text:'#e8edf2', soft:'#8bbaba', heading:'#f0f4f8', fontHeading:'Space Grotesk', fontBody:'DM Sans'
   };
 
   let themeData = Object.assign({}, THEME_DEFAULT_VALS);
@@ -3805,7 +3812,7 @@
   }
 
   function applyThemeToEditor(t) {
-    const colors = ['teal','bg','bg2','bg3','text','soft'];
+    const colors = ['teal','bg','bg2','bg3','text','soft','heading'];
     colors.forEach(k => {
       const v = t[k] || THEME_DEFAULT_VALS[k];
       const cp = document.getElementById('tc-' + k);
