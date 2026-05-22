@@ -805,14 +805,14 @@
   <div class="container">
     <div class="dss-text" style="max-width:680px;">
       <div class="sec-label">SITE-URI CARE FUNCȚIONEAZĂ</div>
-      <h2 class="sec-title">Clientul tău te caută pe telefon. Ești acolo?</h2>
-      <p class="sec-sub">7 din 10 oameni caută pe Google de pe mobil. Fiecare site pe care îl livrăm arată și funcționează perfect pe orice dispozitiv — fără compromisuri.</p>
-      <div class="dss-feats">
+      <h2 class="sec-title" id="dss-title-el">Clientul tău te caută pe telefon. Ești acolo?</h2>
+      <p class="sec-sub" id="dss-sub-el">7 din 10 oameni caută pe Google de pe mobil. Fiecare site pe care îl livrăm arată și funcționează perfect pe orice dispozitiv — fără compromisuri.</p>
+      <div class="dss-feats" id="dss-feats-el">
         <div class="dss-feat"><span>📱</span><div><strong>Telefon, tabletă, laptop — oricare</strong><small>Testat pe zeci de dispozitive înainte de lansare</small></div></div>
         <div class="dss-feat"><span>⚡</span><div><strong>Se încarcă în mai puțin de 2 secunde</strong><small>Clienții nu mai așteaptă — nici Google nu mai iartă</small></div></div>
         <div class="dss-feat"><span>🔍</span><div><strong>Vizibil când cineva caută ce oferi tu</strong><small>SEO local inclus în fiecare proiect, de la prima zi</small></div></div>
       </div>
-      <a href="#contact" class="btn-primary" style="margin-top:28px;display:inline-flex;">Vorbim gratuit despre site-ul tău →</a>
+      <a href="#contact" class="btn-primary" id="dss-cta-el" style="margin-top:28px;display:inline-flex;">Vorbim gratuit despre site-ul tău →</a>
     </div>
   </div>
 </section>
@@ -1497,7 +1497,16 @@ document.getElementById('bookingForm').addEventListener('submit', async function
         if(d.heroHeight && d.heroHeight !== 'full') hero.classList.add('h-'+d.heroHeight);
       }
       // NOTE: nu mai modificăm înălțimea hero din JS — previne CLS
-      // Imaginea se va afișa cu contain în cadrul CSS al hero-ului
+      // DSS Section
+      if(d.dssTitle)    { var t=document.getElementById('dss-title-el'); if(t) t.textContent=d.dssTitle; }
+      if(d.dssSubtitle) { var s=document.getElementById('dss-sub-el');   if(s) s.textContent=d.dssSubtitle; }
+      if(d.dssCta)      { var c=document.getElementById('dss-cta-el');   if(c) c.textContent=d.dssCta; }
+      if(d.dssFeatures && d.dssFeatures.length) {
+        var featsEl = document.getElementById('dss-feats-el');
+        if(featsEl) featsEl.innerHTML = d.dssFeatures.map(function(f){
+          return '<div class="dss-feat"><span>'+f.icon+'</span><div><strong>'+f.title+'</strong><small>'+f.sub+'</small></div></div>';
+        }).join('');
+      }
     }).catch(function(){});
 })();
 </script>

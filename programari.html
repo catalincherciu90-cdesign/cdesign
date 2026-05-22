@@ -1278,6 +1278,52 @@
           </div>
         </div>
 
+        <!-- EDITOR SECȚIUNI TEXT -->
+        <div class="settings-card" style="margin-top:24px;">
+          <div class="f-label" style="margin-bottom:16px;font-size:.75rem;letter-spacing:.1em;">// EDITEAZĂ TEXTE SECȚIUNI</div>
+
+          <!-- DSS Section -->
+          <div style="margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border-soft);">
+            <div style="font-size:.8rem;font-weight:600;color:var(--soft);margin-bottom:10px;">📱 Secțiunea „Site-uri care funcționează"</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div>
+                <div class="f-label" style="font-size:.7rem;">Titlu</div>
+                <input class="f-input" id="dss-title" placeholder="Clientul tău te caută pe telefon. Ești acolo?" value="">
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">Subtitlu</div>
+                <textarea class="f-input" id="dss-subtitle" rows="2" placeholder="7 din 10 oameni caută pe Google de pe mobil..."></textarea>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+                <div>
+                  <div class="f-label" style="font-size:.7rem;">Feature 1 (icon + titlu + sub)</div>
+                  <input class="f-input" id="dss-f1-icon" placeholder="📱" style="margin-bottom:4px;">
+                  <input class="f-input" id="dss-f1-title" placeholder="Titlu feature 1" style="margin-bottom:4px;">
+                  <input class="f-input" id="dss-f1-sub" placeholder="Descriere scurtă">
+                </div>
+                <div>
+                  <div class="f-label" style="font-size:.7rem;">Feature 2</div>
+                  <input class="f-input" id="dss-f2-icon" placeholder="⚡" style="margin-bottom:4px;">
+                  <input class="f-input" id="dss-f2-title" placeholder="Titlu feature 2" style="margin-bottom:4px;">
+                  <input class="f-input" id="dss-f2-sub" placeholder="Descriere scurtă">
+                </div>
+                <div>
+                  <div class="f-label" style="font-size:.7rem;">Feature 3</div>
+                  <input class="f-input" id="dss-f3-icon" placeholder="🔍" style="margin-bottom:4px;">
+                  <input class="f-input" id="dss-f3-title" placeholder="Titlu feature 3" style="margin-bottom:4px;">
+                  <input class="f-input" id="dss-f3-sub" placeholder="Descriere scurtă">
+                </div>
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">Text buton CTA</div>
+                <input class="f-input" id="dss-cta" placeholder="Vorbim gratuit despre site-ul tău →">
+              </div>
+            </div>
+            <button class="btn-save" style="margin-top:10px;" onclick="saveDssSection()">💾 Salvează secțiunea</button>
+            <span id="dss-status" style="font-size:.75rem;color:var(--teal);margin-left:10px;"></span>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -2035,6 +2081,7 @@
     } catch {}
     fetchMaintenance();
     fetchHeroImage();
+    fetchDssSection();
   }
 
   async function fetchHeroImage() {
@@ -2059,6 +2106,47 @@
       var hhEl = document.getElementById('hh-' + hh);
       if (hhEl) hhEl.checked = true;
     } catch {}
+  }
+
+  async function fetchDssSection() {
+    try {
+      const res = await fetch('/api/site-settings');
+      const d = await res.json();
+      if (d.dssTitle)    document.getElementById('dss-title').value    = d.dssTitle;
+      if (d.dssSubtitle) document.getElementById('dss-subtitle').value = d.dssSubtitle;
+      const feats = d.dssFeatures || [];
+      [1,2,3].forEach(function(i) {
+        const f = feats[i-1] || {};
+        document.getElementById('dss-f'+i+'-icon').value  = f.icon  || '';
+        document.getElementById('dss-f'+i+'-title').value = f.title || '';
+        document.getElementById('dss-f'+i+'-sub').value   = f.sub   || '';
+      });
+      if (d.dssCta) document.getElementById('dss-cta').value = d.dssCta;
+    } catch {}
+  }
+
+  async function saveDssSection() {
+    const feats = [1,2,3].map(function(i) {
+      return {
+        icon:  document.getElementById('dss-f'+i+'-icon').value.trim(),
+        title: document.getElementById('dss-f'+i+'-title').value.trim(),
+        sub:   document.getElementById('dss-f'+i+'-sub').value.trim()
+      };
+    });
+    const body = {
+      dssTitle:    document.getElementById('dss-title').value.trim(),
+      dssSubtitle: document.getElementById('dss-subtitle').value.trim(),
+      dssFeatures: feats,
+      dssCta:      document.getElementById('dss-cta').value.trim()
+    };
+    const st = document.getElementById('dss-status');
+    try {
+      await fetch('/api/site-settings?token=' + encodeURIComponent(adminToken), {
+        method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body)
+      });
+      st.textContent = '✓ Salvat!';
+      setTimeout(function(){ st.textContent = ''; }, 2500);
+    } catch { st.textContent = '✕ Eroare'; }
   }
 
   function applyHeroMobilePreview(url) {
