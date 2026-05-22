@@ -70,11 +70,11 @@
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --teal:#00a8a8;--teal-dk:#007878;--teal-lt:#00c8c8;
-      --teal-dim:rgba(0,168,168,.08);--teal-glow:rgba(0,168,168,.18);--teal-border:rgba(0,168,168,.30);
-      --bg:#060f0f;--bg2:#0a1818;--bg3:#0f2020;--bg4:#122424;
-      --text:#e8edf2;--soft:#8bbaba;--muted:#4d6b8a;
-      --border:rgba(255,255,255,.07);--nav-bg:rgba(6,15,15,.92);--nav-bg-solid:rgba(6,15,15,.97);--border-soft:rgba(255,255,255,.11);
+      --teal:#c9a96e;--teal-dk:#a8843d;--teal-lt:#dfc080;
+      --teal-dim:rgba(201,169,110,.10);--teal-glow:rgba(201,169,110,.25);--teal-border:rgba(201,169,110,.35);
+      --bg:#ffffff;--bg2:#f7f7f7;--bg3:#eeeeee;--bg4:#e5e5e5;
+      --text:#111111;--soft:#444444;--muted:#777777;
+      --border:rgba(0,0,0,.10);--nav-bg:rgba(255,255,255,.92);--nav-bg-solid:rgba(255,255,255,.97);--border-soft:rgba(0,0,0,.16);
       --green:#28c840;--yellow:#febc2e;--red:#ff5f57;
     }
     @keyframes btn-glow{0%,100%{box-shadow:0 0 18px rgba(255,255,255,.5),0 4px 16px rgba(255,255,255,.2)}50%{box-shadow:0 0 38px rgba(255,255,255,.95),0 4px 32px rgba(255,255,255,.4)}}
@@ -100,7 +100,7 @@ html{scroll-behavior:smooth}
 
     /* HERO */
     .hero{padding:80px 0 60px;position:relative;overflow:hidden;}
-    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 0%,rgba(0,168,168,.08) 0%,transparent 60%);pointer-events:none;}
+    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 0%,rgba(201,169,110,.10) 0%,transparent 60%);pointer-events:none;}
     .hero-badge{display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--teal);background:var(--teal-dim);border:1px solid var(--teal-border);padding:5px 14px;border-radius:4px;margin-bottom:20px;letter-spacing:.08em;}
     .hero-badge::before{content:'';width:6px;height:6px;background:var(--teal);border-radius:50%;animation:blink 1.2s step-end infinite;}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
@@ -148,7 +148,7 @@ html{scroll-behavior:smooth}
     .step-desc{font-size:.82rem;color:var(--muted);line-height:1.6;}
 
     /* CTA */
-    .cta{background:linear-gradient(135deg,rgba(0,168,168,.08),rgba(0,168,168,.03));border:1px solid var(--teal-border);border-radius:20px;padding:60px 48px;text-align:center;}
+    .cta{background:linear-gradient(135deg,rgba(201,169,110,.10),rgba(0,168,168,.03));border:1px solid var(--teal-border);border-radius:20px;padding:60px 48px;text-align:center;}
     .cta h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;color:#fff;margin-bottom:12px;letter-spacing:-.02em;}
     .cta p{color:var(--soft);font-size:1rem;margin-bottom:32px;line-height:1.75;}
     .cta-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
@@ -221,21 +221,21 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 .mobile-menu a{font-size:1rem;font-weight:500;color:var(--soft);padding:13px 0;border-bottom:1px solid var(--border);transition:color .2s}
 .mobile-menu a:hover{color:var(--teal)}.mobile-menu .btn-nav{margin-top:12px;text-align:center;width:100%}
 .floating-bar{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:2px;}
-.floating-bar a{position:relative;display:flex;align-items:center;justify-content:center;width:44px;height:44px;background:var(--bg3);border:1px solid rgba(255,255,255,.11);border-right:none;border-radius:10px 0 0 10px;color:var(--muted);transition:background .2s,color .2s,border-color .2s;overflow:hidden;text-decoration:none;}
+.floating-bar a{position:relative;display:flex;align-items:center;justify-content:center;width:44px;height:44px;background:var(--bg3);border:1px solid rgba(0,0,0,.16);border-right:none;border-radius:10px 0 0 10px;color:var(--muted);transition:background .2s,color .2s,border-color .2s;overflow:hidden;text-decoration:none;}
 .floating-bar a svg{flex-shrink:0;width:18px;height:18px;}
-.floating-bar a .fb-label{position:absolute;right:44px;background:var(--bg3);border:1px solid rgba(255,255,255,.11);border-right:none;padding:0 10px;height:100%;display:flex;align-items:center;font-size:.75rem;font-weight:500;white-space:nowrap;color:var(--teal);border-radius:8px 0 0 8px;opacity:0;transform:translateX(8px);transition:opacity .2s,transform .2s;pointer-events:none;}
-.floating-bar a:hover{background:var(--bg4,#122424);border-color:rgba(0,168,168,.30);color:var(--teal);}
+.floating-bar a .fb-label{position:absolute;right:44px;background:var(--bg3);border:1px solid rgba(0,0,0,.16);border-right:none;padding:0 10px;height:100%;display:flex;align-items:center;font-size:.75rem;font-weight:500;white-space:nowrap;color:var(--teal);border-radius:8px 0 0 8px;opacity:0;transform:translateX(8px);transition:opacity .2s,transform .2s;pointer-events:none;}
+.floating-bar a:hover{background:var(--bg4,#122424);border-color:rgba(201,169,110,.35);color:var(--teal);}
 .floating-bar a:hover .fb-label{opacity:1;transform:translateX(0);}
 .floating-bar .fb-phone{color:#28c840;}.floating-bar .fb-phone:hover{border-color:#28c840;background:rgba(40,200,64,.08);color:#28c840;}.floating-bar .fb-phone .fb-label{color:#28c840;}
 .floating-bar .fb-wa{color:#25d366;}.floating-bar .fb-wa:hover{border-color:#25d366;background:rgba(37,211,102,.08);color:#25d366;}.floating-bar .fb-wa .fb-label{color:#25d366;}
 .floating-bar .fb-mail{color:var(--teal);}
-@media(max-width:640px){.floating-bar{top:auto;bottom:16px;transform:none;gap:6px;flex-direction:row;right:12px;}.floating-bar a{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.11);}.floating-bar a .fb-label{display:none;}}
+@media(max-width:640px){.floating-bar{top:auto;bottom:16px;transform:none;gap:6px;flex-direction:row;right:12px;}.floating-bar a{width:42px;height:42px;border-radius:50%;border:1px solid rgba(0,0,0,.16);}.floating-bar a .fb-label{display:none;}}
 .footer-grid-full{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;gap:24px;margin-bottom:40px;}
 .footer-logo-wrap{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.25rem;color:#fff;display:flex;align-items:center;gap:5px;margin-bottom:12px;}
 .footer-about-text{font-size:.9rem;color:var(--muted);line-height:1.8;margin-bottom:20px;}
 .footer-social-wrap{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
-.footer-social-wrap a{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,.11);color:var(--muted);font-size:1rem;transition:border-color .2s,color .2s,background .2s;}
-.footer-social-wrap a:hover{border-color:rgba(0,168,168,.30);color:var(--teal);background:rgba(0,168,168,.08);}
+.footer-social-wrap a{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;border:1px solid rgba(0,0,0,.16);color:var(--muted);font-size:1rem;transition:border-color .2s,color .2s,background .2s;}
+.footer-social-wrap a:hover{border-color:rgba(201,169,110,.35);color:var(--teal);background:rgba(201,169,110,.10);}
 .footer-col-full h4{font-family:'Space Grotesk',sans-serif;font-size:.825rem;font-weight:700;color:var(--text);margin-bottom:14px;letter-spacing:.04em;text-transform:uppercase;}
 .footer-col-full ul{list-style:none;display:flex;flex-direction:column;gap:8px;}
 .footer-col-full a{font-size:.875rem;color:var(--muted);transition:color .2s}.footer-col-full a:hover{color:var(--teal)}
@@ -309,7 +309,7 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
   <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80"
        alt="Laptop profesional pe birou — web design" loading="lazy"
        style="width:100%;height:100%;object-fit:cover;opacity:.38;display:block;">
-  <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(6,15,15,.92) 35%,rgba(6,15,15,.5) 70%,rgba(0,168,168,.08) 100%);"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(6,15,15,.92) 35%,rgba(6,15,15,.5) 70%,rgba(201,169,110,.10) 100%);"></div>
   <div style="position:absolute;inset:0;display:flex;align-items:center;padding:0 5%;">
     <div style="max-width:520px;">
       <div style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:#00a8a8;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px;">PACHET COMPLET LANSAT ÎN 21 ZILE</div>

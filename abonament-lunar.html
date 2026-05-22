@@ -61,11 +61,11 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --teal:#00a8a8;--teal-dk:#007878;--teal-lt:#00c8c8;
-  --teal-dim:rgba(0,168,168,.08);--teal-glow:rgba(0,168,168,.18);--teal-border:rgba(0,168,168,.30);
-  --bg:#060f0f;--bg2:#0a1818;--bg3:#0f2020;--bg4:#122424;
-  --text:#e8edf2;--soft:#8bbaba;--muted:#4d6b8a;
-  --border:rgba(255,255,255,.07);--nav-bg:rgba(6,15,15,.92);--nav-bg-solid:rgba(6,15,15,.97);--border-soft:rgba(255,255,255,.11);
+  --teal:#c9a96e;--teal-dk:#a8843d;--teal-lt:#dfc080;
+  --teal-dim:rgba(201,169,110,.10);--teal-glow:rgba(201,169,110,.25);--teal-border:rgba(201,169,110,.35);
+  --bg:#ffffff;--bg2:#f7f7f7;--bg3:#eeeeee;--bg4:#e5e5e5;
+  --text:#111111;--soft:#444444;--muted:#777777;
+  --border:rgba(0,0,0,.10);--nav-bg:rgba(255,255,255,.92);--nav-bg-solid:rgba(255,255,255,.97);--border-soft:rgba(0,0,0,.16);
 }
 @keyframes btn-glow{0%,100%{box-shadow:0 0 18px rgba(255,255,255,.5),0 4px 16px rgba(255,255,255,.2)}50%{box-shadow:0 0 38px rgba(255,255,255,.95),0 4px 32px rgba(255,255,255,.4)}}
 html{scroll-behavior:smooth}
@@ -129,7 +129,7 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 @media(max-width:480px){.footer-grid{grid-template-columns:1fr;}}
 
 .hero{padding:80px 0 64px;position:relative;overflow:hidden;text-align:center;}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(0,168,168,.08) 0%,transparent 60%);pointer-events:none;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(201,169,110,.10) 0%,transparent 60%);pointer-events:none;}
 .hero-badge{display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--teal);background:var(--teal-dim);border:1px solid var(--teal-border);padding:5px 14px;border-radius:4px;margin-bottom:20px;letter-spacing:.08em;}
 .hero-badge::before{content:'';width:6px;height:6px;background:var(--teal);border-radius:50%;animation:blink 1.2s step-end infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
