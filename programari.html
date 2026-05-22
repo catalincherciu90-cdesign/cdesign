@@ -2254,9 +2254,13 @@
   async function fetchHeadings() {
     try {
       const d = await fetch('/api/site-settings').then(r=>r.json());
+      const defaultColor = (getComputedStyle(document.documentElement).getPropertyValue('--heading')||'').trim() || '#111111';
       HEADING_FIELDS.forEach(function(f){
         var el=document.getElementById(f.id); if(el&&d[f.key]) el.value=d[f.key];
-        if(f.colorId){ var ce=document.getElementById(f.colorId); if(ce&&d[f.colorKey]) ce.value=d[f.colorKey]; }
+        if(f.colorId){
+          var ce=document.getElementById(f.colorId);
+          if(ce) ce.value = d[f.colorKey] || defaultColor;
+        }
       });
     } catch {}
   }
