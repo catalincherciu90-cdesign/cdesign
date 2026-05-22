@@ -1284,8 +1284,12 @@ export default {
       const heading = t.heading || (isLight ? '#111111' : '#f0f4f8');
       const border     = isLight ? 'rgba(0,0,0,.10)'  : 'rgba(255,255,255,.07)';
       const borderSoft = isLight ? 'rgba(0,0,0,.16)'  : 'rgba(255,255,255,.11)';
-      const navBg      = `rgba(${bgR},${bgG},${bgB},.92)`;
-      const navBgSolid = `rgba(${bgR},${bgG},${bgB},.97)`;
+      const navColor = t.navColor ? t.navColor : bg;
+      const navR = parseInt(navColor.slice(1,3),16);
+      const navG = parseInt(navColor.slice(3,5),16);
+      const navB = parseInt(navColor.slice(5,7),16);
+      const navBg      = `rgba(${navR},${navG},${navB},.92)`;
+      const navBgSolid = `rgba(${navR},${navG},${navB},.97)`;
       const hG = (a) => `rgba(${bgR},${bgG},${bgB},${a})`;
       const heroGrad    = `linear-gradient(105deg,${hG(.97)} 0%,${hG(.90)} 35%,${hG(.72)} 60%,${hG(.45)} 100%)`;
       const heroGradMob = `linear-gradient(180deg,${hG(.82)} 0%,${hG(.75)} 50%,${hG(.92)} 100%)`;
