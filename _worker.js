@@ -1285,12 +1285,14 @@ export default {
       const border     = isLight ? 'rgba(0,0,0,.10)'  : 'rgba(255,255,255,.07)';
       const borderSoft = isLight ? 'rgba(0,0,0,.16)'  : 'rgba(255,255,255,.11)';
       const navColor = t.navColor || bg;
-      const navText  = t.navText  || (isLight ? '#111111' : '#e8edf2');
-      const navPhone = t.navPhone || text;
-      const navBurger = t.navBurger || text;
       const navR = parseInt(navColor.slice(1,3),16);
       const navG = parseInt(navColor.slice(3,5),16);
       const navB = parseInt(navColor.slice(5,7),16);
+      const navLum = 0.2126*navR/255 + 0.7152*navG/255 + 0.0722*navB/255;
+      const navIsLight = navLum > 0.5;
+      const navText  = t.navText  || (navIsLight ? '#111111' : '#ffffff');
+      const navPhone = t.navPhone || (navIsLight ? '#111111' : '#ffffff');
+      const navBurger = t.navBurger || (navIsLight ? '#111111' : '#ffffff');
       const navBg      = `rgba(${navR},${navG},${navB},.92)`;
       const navBgSolid = `rgba(${navR},${navG},${navB},.97)`;
       const hG = (a) => `rgba(${bgR},${bgG},${bgB},${a})`;
