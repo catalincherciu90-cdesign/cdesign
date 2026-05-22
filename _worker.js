@@ -43,7 +43,7 @@ function renderArticle(post) {
 <script type="application/ld+json">${schema}<\/script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--teal:#00c8b4;--teal-dk:#00a898;--teal-lt:#33d4c3;--teal-dim:rgba(0,200,180,.08);--teal-border:rgba(0,200,180,.28);--bg:#080b0e;--bg2:#0d1117;--bg3:#111820;--text:#e8edf2;--soft:#9aa5b4;--muted:#6a7585;--border:rgba(255,255,255,.07);--border-soft:rgba(255,255,255,.11)}
@@ -53,7 +53,7 @@ a{color:inherit;text-decoration:none}
 .wide{max-width:1180px;margin:0 auto;padding:0 24px}
 nav{position:sticky;top:0;z-index:100;background:rgba(8,11,14,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.35rem;color:#fff;display:flex;align-items:center;gap:6px}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.35rem;color:#fff;display:flex;align-items:center;gap:6px}
 .logo-c{color:var(--teal);font-size:1.6rem;line-height:1;text-shadow:0 0 12px rgba(0,200,180,.6);animation:logo-pulse 3s ease-in-out infinite}
 @keyframes logo-pulse{0%,100%{text-shadow:0 0 12px rgba(0,200,180,.6)}50%{text-shadow:0 0 24px rgba(0,200,180,1),0 0 48px rgba(0,200,180,.4)}}
 .nav-links{display:flex;align-items:center;gap:28px;list-style:none}
@@ -69,12 +69,12 @@ nav{position:sticky;top:0;z-index:100;background:rgba(8,11,14,.92);backdrop-filt
 article{padding:72px 0 100px}
 .art-back{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:.85rem;margin-bottom:40px;transition:color .2s}.art-back:hover{color:var(--teal)}
 .art-tag{display:inline-block;background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-border);padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:18px}
-.art-title{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,5vw,2.8rem);font-weight:800;line-height:1.2;margin-bottom:20px;color:#fff}
+.art-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,5vw,2.8rem);font-weight:800;line-height:1.2;margin-bottom:20px;color:#fff}
 .art-meta{color:var(--muted);font-size:.85rem;padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:40px}
 .art-content{color:#c8d4e0;font-size:1.05rem;line-height:1.85}
 .art-content p{margin-bottom:1.4em}
-.art-content h2{font-family:'Syne',sans-serif;font-size:1.45rem;font-weight:700;color:#fff;margin:2em 0 .8em}
-.art-content h3{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;color:#fff;margin:1.6em 0 .6em}
+.art-content h2{font-family:'Space Grotesk',sans-serif;font-size:1.45rem;font-weight:700;color:#fff;margin:2em 0 .8em}
+.art-content h3{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:700;color:#fff;margin:1.6em 0 .6em}
 .art-content ul,.art-content ol{padding-left:1.5em;margin-bottom:1.4em}
 .art-content li{margin-bottom:.5em}
 .art-content strong{color:#fff;font-weight:600}
@@ -85,7 +85,7 @@ article{padding:72px 0 100px}
 .art-content code{background:rgba(0,200,180,.1);color:var(--teal);padding:2px 6px;border-radius:4px;font-size:.9em}
 .art-content pre code{background:none;color:var(--soft);padding:0}
 .cta-box{margin-top:64px;padding:32px;background:linear-gradient(135deg,rgba(0,200,180,.08),rgba(0,200,180,.04));border:1px solid rgba(0,200,180,.2);border-radius:14px;text-align:center}
-.cta-box h3{font-family:'Syne',sans-serif;font-size:1.3rem;margin-bottom:10px;color:#fff}
+.cta-box h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;margin-bottom:10px;color:#fff}
 .cta-box p{color:var(--soft);margin-bottom:20px;font-size:.95rem}
 .btn{display:inline-block;background:var(--teal);color:#000;padding:12px 28px;border-radius:8px;font-weight:700;font-size:.9rem;transition:transform .15s,box-shadow .15s}
 .btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,200,180,.35)}
@@ -577,12 +577,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .wrap{position:relative;z-index:1;max-width:560px}
 .gear{font-size:4rem;margin-bottom:24px;display:block;animation:spin 8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,5vw,3rem);font-weight:800;color:#fff;margin-bottom:16px;line-height:1.1}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,5vw,3rem);font-weight:800;color:#fff;margin-bottom:16px;line-height:1.1}
 h1 span{color:#00a8a8}
 p{color:#8bbaba;font-size:1.05rem;line-height:1.75;margin-bottom:12px}
 .date{font-size:.9rem;color:rgba(139,186,186,.6);margin-top:8px}
 .divider{width:48px;height:3px;background:#00a8a8;margin:28px auto}
-.logo{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:rgba(255,255,255,.2);letter-spacing:4px;margin-top:48px;text-transform:uppercase}
+.logo{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:rgba(255,255,255,.2);letter-spacing:4px;margin-top:48px;text-transform:uppercase}
 .dots{display:flex;gap:8px;justify-content:center;margin-top:32px}
 .dot{width:8px;height:8px;border-radius:50%;background:#00a8a8;animation:pulse 1.4s ease-in-out infinite}
 .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
@@ -1217,13 +1217,14 @@ export default {
     // ── THEME ─────────────────────────────────────────────────
 
     const THEME_DEFAULT = {
-      teal:        '#00a8a8',
-      bg:          '#060f0f',
-      bg2:         '#0a1818',
-      bg3:         '#0f2020',
-      text:        '#e8edf2',
-      soft:        '#8bbaba',
-      fontHeading: 'Syne',
+      teal:        '#c9a96e',
+      bg:          '#ffffff',
+      bg2:         '#f7f7f7',
+      bg3:         '#eeeeee',
+      bg4:         '#e5e5e5',
+      text:        '#111111',
+      soft:        '#444444',
+      fontHeading: 'Space Grotesk',
       fontBody:    'DM Sans'
     };
 

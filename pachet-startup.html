@@ -65,7 +65,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=DM+Sans:wght@400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -104,13 +104,13 @@ html{scroll-behavior:smooth}
     .hero-badge{display:inline-flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--teal);background:var(--teal-dim);border:1px solid var(--teal-border);padding:5px 14px;border-radius:4px;margin-bottom:20px;letter-spacing:.08em;}
     .hero-badge::before{content:'';width:6px;height:6px;background:var(--teal);border-radius:50%;animation:blink 1.2s step-end infinite;}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-    .hero h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,4.5vw,3.4rem);font-weight:800;line-height:1.1;letter-spacing:-.03em;color:#fff;margin-bottom:16px;}
+    .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4.5vw,3.4rem);font-weight:800;line-height:1.1;letter-spacing:-.03em;color:#fff;margin-bottom:16px;}
     .hero h1 .hl{background:linear-gradient(135deg,var(--teal-lt),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
     .hero-sub{font-size:1.1rem;color:var(--soft);line-height:1.75;max-width:560px;margin-bottom:36px;}
     .price-tag{display:inline-flex;align-items:baseline;gap:6px;margin-bottom:36px;}
     .price-from{font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--muted);}
-    .price-num{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--teal);text-shadow:0 0 30px rgba(0,168,168,.4);line-height:1;}
-    .price-cur{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;color:var(--teal);}
+    .price-num{font-family:'Space Grotesk',sans-serif;font-size:3rem;font-weight:800;color:var(--teal);text-shadow:0 0 30px rgba(0,168,168,.4);line-height:1;}
+    .price-cur{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;color:var(--teal);}
     .hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
     .btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#060f0f;font-weight:600;font-size:1rem;padding:14px 28px;border-radius:8px;border:none;cursor:pointer;transition:background .2s,box-shadow .2s,transform .15s;text-decoration:none;font-family:'DM Sans',sans-serif;}
     .btn-primary:hover{background:var(--teal-lt);box-shadow:0 0 28px rgba(0,168,168,.45);transform:translateY(-2px);}
@@ -120,14 +120,14 @@ html{scroll-behavior:smooth}
     /* WHAT'S INCLUDED */
     .section{padding:72px 0;}
     .sec-label{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--teal);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;}
-    .sec-title{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:16px;}
+    .sec-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:16px;}
     .sec-sub{color:var(--soft);font-size:1rem;line-height:1.75;max-width:560px;margin-bottom:48px;}
 
     .includes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
     .include-card{background:var(--bg2);border:1px solid var(--border-soft);border-radius:14px;padding:28px;transition:border-color .2s,transform .2s;}
     .include-card:hover{border-color:var(--teal-border);transform:translateY(-3px);}
     .include-icon{font-size:2rem;margin-bottom:14px;}
-    .include-title{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:8px;}
+    .include-title{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:8px;}
     .include-desc{font-size:.88rem;color:var(--soft);line-height:1.65;}
     .include-check{display:flex;gap:8px;align-items:flex-start;margin-top:12px;}
     .include-check span{font-size:.82rem;color:var(--muted);}
@@ -144,12 +144,12 @@ html{scroll-behavior:smooth}
     .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:40px;}
     .step{text-align:center;padding:24px 16px;}
     .step-num{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--teal);margin-bottom:8px;letter-spacing:.1em;}
-    .step-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:#fff;margin-bottom:6px;}
+    .step-title{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;color:#fff;margin-bottom:6px;}
     .step-desc{font-size:.82rem;color:var(--muted);line-height:1.6;}
 
     /* CTA */
     .cta{background:linear-gradient(135deg,rgba(0,168,168,.08),rgba(0,168,168,.03));border:1px solid var(--teal-border);border-radius:20px;padding:60px 48px;text-align:center;}
-    .cta h2{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;color:#fff;margin-bottom:12px;letter-spacing:-.02em;}
+    .cta h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;color:#fff;margin-bottom:12px;letter-spacing:-.02em;}
     .cta p{color:var(--soft);font-size:1rem;margin-bottom:32px;line-height:1.75;}
     .cta-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
 
@@ -157,7 +157,7 @@ html{scroll-behavior:smooth}
     .faq-list{display:flex;flex-direction:column;gap:12px;margin-top:40px;}
     .faq-item{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:24px;cursor:pointer;transition:border-color .2s;}
     .faq-item:hover{border-color:var(--teal-border);}
-    .faq-q{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+    .faq-q{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px;}
     .faq-q::after{content:'+';color:var(--teal);font-size:1.2rem;flex-shrink:0;}
     .faq-a{font-size:.88rem;color:var(--soft);line-height:1.7;margin-top:12px;display:none;}
     .faq-item.open .faq-a{display:block;}
@@ -231,12 +231,12 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 .floating-bar .fb-mail{color:var(--teal);}
 @media(max-width:640px){.floating-bar{top:auto;bottom:16px;transform:none;gap:6px;flex-direction:row;right:12px;}.floating-bar a{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.11);}.floating-bar a .fb-label{display:none;}}
 .footer-grid-full{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;gap:24px;margin-bottom:40px;}
-.footer-logo-wrap{font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;color:#fff;display:flex;align-items:center;gap:5px;margin-bottom:12px;}
+.footer-logo-wrap{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.25rem;color:#fff;display:flex;align-items:center;gap:5px;margin-bottom:12px;}
 .footer-about-text{font-size:.9rem;color:var(--muted);line-height:1.8;margin-bottom:20px;}
 .footer-social-wrap{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
 .footer-social-wrap a{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,.11);color:var(--muted);font-size:1rem;transition:border-color .2s,color .2s,background .2s;}
 .footer-social-wrap a:hover{border-color:rgba(0,168,168,.30);color:var(--teal);background:rgba(0,168,168,.08);}
-.footer-col-full h4{font-family:'Syne',sans-serif;font-size:.825rem;font-weight:700;color:var(--text);margin-bottom:14px;letter-spacing:.04em;text-transform:uppercase;}
+.footer-col-full h4{font-family:'Space Grotesk',sans-serif;font-size:.825rem;font-weight:700;color:var(--text);margin-bottom:14px;letter-spacing:.04em;text-transform:uppercase;}
 .footer-col-full ul{list-style:none;display:flex;flex-direction:column;gap:8px;}
 .footer-col-full a{font-size:.875rem;color:var(--muted);transition:color .2s}.footer-col-full a:hover{color:var(--teal)}
 .footer-bottom-bar{border-top:1px solid var(--border);padding-top:24px;display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--muted);flex-wrap:wrap;gap:10px;}
@@ -313,7 +313,7 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
   <div style="position:absolute;inset:0;display:flex;align-items:center;padding:0 5%;">
     <div style="max-width:520px;">
       <div style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:#00a8a8;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px;">PACHET COMPLET LANSAT ÎN 21 ZILE</div>
-      <h2 style="font-family:'Syne',sans-serif;font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;color:#fff;line-height:1.15;margin-bottom:12px;">Site + Logo + Social Media<br>totul gata de prima zi</h2>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;color:#fff;line-height:1.15;margin-bottom:12px;">Site + Logo + Social Media<br>totul gata de prima zi</h2>
       <p style="color:#9ad4d4;font-size:.95rem;line-height:1.7;">De la 300€, fără costuri ascunse, cu domeniu .ro și găzduire incluse.</p>
     </div>
   </div>
