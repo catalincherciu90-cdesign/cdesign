@@ -142,8 +142,9 @@
     .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--teal);transform:scaleX(0);transition:transform .2s;}
     .nav-links a:hover{color:var(--teal)}
     .nav-links a:hover::after{transform:scaleX(1)}
-    .nav-phone{font-family:'Share Tech Mono',monospace;font-size:.875rem;color:var(--teal);border:1px solid var(--teal-border);padding:6px 14px;border-radius:6px;transition:background .2s,box-shadow .2s;}
-    .nav-phone:hover{background:var(--teal-dim);box-shadow:0 0 12px var(--teal-glow);}
+    .nav-phone{display:inline-flex;align-items:center;gap:5px;font-family:'Share Tech Mono',monospace;font-size:.9rem;font-weight:600;color:var(--text);padding:2px 0;transition:color .2s;}
+    .nav-phone::before{content:'📞';font-size:.8rem;}
+    .nav-phone:hover{color:var(--teal);}
     @keyframes btn-glow{0%,100%{box-shadow:0 0 18px rgba(255,255,255,.5),0 4px 16px rgba(255,255,255,.2)}50%{box-shadow:0 0 38px rgba(255,255,255,.95),0 4px 32px rgba(255,255,255,.4)}}
     .col-btn-glow{animation:btn-glow 2.8s ease-in-out infinite;}
     .btn-nav{background:#fff;color:#111;font-weight:600;font-size:.875rem;font-family:'DM Sans',sans-serif;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:transform .15s;text-decoration:none;animation:btn-glow 2.8s ease-in-out infinite;}
