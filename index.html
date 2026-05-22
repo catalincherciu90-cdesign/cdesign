@@ -1297,39 +1297,8 @@ document.getElementById('bookingForm').addEventListener('submit', async function
 })();
 </script>
 
-<!-- Sticky CTA mobil -->
-<a href="#contact" class="sticky-cta" id="stickyCta" aria-label="Programează consultanță gratuită">
-  Programează 30 min gratuit →
-</a>
-<style>
-.sticky-cta{display:none;position:fixed;top:0;left:0;right:0;z-index:300;background:#fff;color:#111;font-weight:600;font-size:.82rem;text-align:center;padding:7px 16px;text-decoration:none;letter-spacing:.02em;border-bottom:1px solid rgba(0,0,0,.10);transition:background .2s;animation:btn-glow 2.8s ease-in-out infinite;}
-.sticky-cta:hover{background:#f0f0f0;}
-@media(max-width:768px){.sticky-cta{display:block;}}
-</style>
-<script>
-(function(){
-  const cta = document.getElementById('stickyCta');
-  if (!cta) return;
-  window.addEventListener('scroll', function() {
-    if (window.scrollY > 400) {
-      cta.style.opacity = '1';
-      cta.style.pointerEvents = 'auto';
-    } else {
-      cta.style.opacity = '0';
-      cta.style.pointerEvents = 'none';
-    }
-  }, {passive: true});
-  cta.style.opacity = '0';
-  cta.style.pointerEvents = 'none';
-  // Hide when contact section is visible
-  const contact = document.getElementById('contact');
-  if (contact && 'IntersectionObserver' in window) {
-    new IntersectionObserver(function(entries) {
-      cta.style.display = entries[0].isIntersecting ? 'none' : '';
-    }, {threshold: 0.1}).observe(contact);
-  }
-})();
-</script>
+
+
 <script>
 (function(){
   // Template functions pentru blocuri custom
