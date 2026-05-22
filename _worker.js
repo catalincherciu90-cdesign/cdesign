@@ -1267,29 +1267,20 @@ export default {
       const bg   = t.bg   || THEME_DEFAULT.bg;
       const bg2  = t.bg2  || THEME_DEFAULT.bg2;
       const bg3  = t.bg3  || THEME_DEFAULT.bg3;
+      const text = t.text || THEME_DEFAULT.text;
+      const soft = t.soft || THEME_DEFAULT.soft;
       const fh   = t.fontHeading || THEME_DEFAULT.fontHeading;
       const fb   = t.fontBody    || THEME_DEFAULT.fontBody;
       const tealDk  = darkenHex(teal, 30);
       const tealLt  = lightenHex(teal, 30);
       const bg4     = lightenHex(bg3, 8);
+      const muted   = darkenHex(soft, 40);
       // Adaptive vars based on bg luminance
       const bgR = parseInt(bg.slice(1,3),16);
       const bgG = parseInt(bg.slice(3,5),16);
       const bgB = parseInt(bg.slice(5,7),16);
       const lum = 0.2126*bgR/255 + 0.7152*bgG/255 + 0.0722*bgB/255;
       const isLight = lum > 0.5;
-      // Auto-correct text/soft if contrast is bad (e.g. light text saved from dark theme but bg is now light)
-      const rawText = t.text || THEME_DEFAULT.text;
-      const tR = parseInt(rawText.slice(1,3),16), tG = parseInt(rawText.slice(3,5),16), tB = parseInt(rawText.slice(5,7),16);
-      const textLum = 0.2126*tR/255 + 0.7152*tG/255 + 0.0722*tB/255;
-      const contrastBad = (isLight && textLum > 0.5) || (!isLight && textLum < 0.5);
-      const text = contrastBad ? (isLight ? '#111111' : '#e8edf2') : rawText;
-      const rawSoft = t.soft || THEME_DEFAULT.soft;
-      const sR = parseInt(rawSoft.slice(1,3),16), sG = parseInt(rawSoft.slice(3,5),16), sB = parseInt(rawSoft.slice(5,7),16);
-      const softLum = 0.2126*sR/255 + 0.7152*sG/255 + 0.0722*sB/255;
-      const softBad = (isLight && softLum > 0.6) || (!isLight && softLum < 0.4);
-      const soft = softBad ? (isLight ? '#444444' : '#9aabb8') : rawSoft;
-      const muted   = darkenHex(soft, 40);
       const heading = t.heading || (isLight ? '#111111' : '#f0f4f8');
       const border     = isLight ? 'rgba(0,0,0,.10)'  : 'rgba(255,255,255,.07)';
       const borderSoft = isLight ? 'rgba(0,0,0,.16)'  : 'rgba(255,255,255,.11)';
