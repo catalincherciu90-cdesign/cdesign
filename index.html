@@ -502,11 +502,12 @@
 
     /* ── INDUSTRIES SECTION ─────────────────────────────────── */
     .ind-bg{background:var(--bg);border-top:1px solid var(--border);}
-    .ind-layout{display:grid;grid-template-columns:1fr 1.8fr;gap:72px;align-items:start;}
-    .ind-pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:32px;}
-    .ind-pill{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;background:var(--bg2);border:1px solid var(--border-soft);border-radius:8px;font-size:.88rem;color:var(--soft);transition:border-color .2s,color .2s,background .2s;}
-    .ind-pill:hover,.ind-pill.featured{border-color:var(--teal-border);color:var(--text);background:var(--bg3);}
-    .ind-pill span{font-size:1.1rem;}
+    .ind-layout{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;}
+    .ind-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:28px;}
+    .ind-pill{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg2);border:1px solid var(--border-soft);border-radius:10px;font-size:.86rem;color:var(--soft);transition:border-color .2s,color .2s,background .2s;cursor:default;}
+    .ind-pill:hover{border-color:var(--teal-border);color:var(--text);background:var(--bg3);}
+    .ind-pill-icon{font-size:1.2rem;flex-shrink:0;width:28px;text-align:center;}
+    .ind-pill-label{font-weight:500;line-height:1.2;}
     .ind-links{display:flex;flex-direction:column;gap:10px;}
     .ind-link{display:flex;align-items:center;gap:14px;padding:16px 20px;background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;text-decoration:none;color:var(--text);transition:border-color .2s,background .2s,transform .15s;}
     .ind-link:hover{border-color:var(--teal-border);background:var(--bg3);transform:translateX(5px);}
@@ -516,6 +517,7 @@
     .ind-link-arrow{color:var(--teal);font-size:1rem;margin-left:auto;opacity:.5;flex-shrink:0;transition:opacity .2s,transform .2s;}
     .ind-link:hover .ind-link-arrow{opacity:1;transform:translateX(3px);}
     @media(max-width:1024px){.ind-layout{grid-template-columns:1fr;gap:40px;}}
+    @media(max-width:480px){.ind-grid{grid-template-columns:1fr;}}
 
     /* ── DEVICE SHOWCASE ────────────────────────────────────── */
     .dss{padding:80px 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
@@ -927,23 +929,23 @@
     <div class="ind-layout">
       <div>
         <div class="sec-label reveal">ORICE INDUSTRIE</div>
-        <h2 class="sec-title reveal" id="ind-heading">Site-uri și aplicații pentru orice domeniu de activitate</h2>
-        <p class="sec-sub reveal" style="margin-bottom:28px;">Nu contează dacă ești service auto, restaurant, cabinet medical sau firmă de construcții — știm să construim prezența online potrivită pentru ce faci tu.</p>
-        <div class="ind-pills reveal">
-          <div class="ind-pill"><span>🚗</span> Auto &amp; Service</div>
-          <div class="ind-pill"><span>🍽️</span> Restaurante &amp; HoReCa</div>
-          <div class="ind-pill"><span>🏗️</span> Construcții</div>
-          <div class="ind-pill"><span>💈</span> Beauty &amp; Salon</div>
-          <div class="ind-pill"><span>🏥</span> Medical &amp; Clinici</div>
-          <div class="ind-pill"><span>⚖️</span> Avocatură &amp; Notariat</div>
-          <div class="ind-pill"><span>🏠</span> Imobiliare</div>
-          <div class="ind-pill"><span>💪</span> Fitness &amp; Sport</div>
-          <div class="ind-pill"><span>🎓</span> Educație &amp; Cursuri</div>
-          <div class="ind-pill"><span>🛒</span> eCommerce</div>
-          <div class="ind-pill"><span>🌿</span> Agricultură</div>
-          <div class="ind-pill"><span>🎨</span> Creativ &amp; Freelance</div>
-          <div class="ind-pill"><span>🏪</span> Afaceri mici &amp; Locale</div>
-          <div class="ind-pill"><span>🔧</span> Servicii &amp; Meseriași</div>
+        <h2 class="sec-title reveal" id="ind-heading">Lucrăm cu orice domeniu de activitate</h2>
+        <p class="sec-sub reveal" style="margin-bottom:24px;">De la service auto la cabinet medical — știm să construim prezența online potrivită pentru ce faci tu.</p>
+        <div class="ind-grid reveal">
+          <div class="ind-pill"><span class="ind-pill-icon">🚗</span><span class="ind-pill-label">Auto &amp; Service</span></div>
+          <div class="ind-pill"><span class="ind-pill-icon">🍽️</span><span class="ind-pill-label">Restaurante &amp; HoReCa</span></div>
+          <div class="ind-pill"><span class="ind-pill-icon">🏥</span><span class="ind-pill-label">Medical &amp; Clinici</span></div>
+          <div class="ind-pill"><span class="ind-pill-icon">💈</span><span class="ind-pill-label">Beauty &amp; Salon</span></div>
+          <div class="ind-pill"><span class="ind-pill-icon">🏗️</span><span class="ind-pill-label">Construcții</span></div>
+          <div class="ind-pill"><span class="ind-pill-icon">🏠</span><span class="ind-pill-label">Imobiliare</span></div>
+          <div class="ind-pill"><span class="ind-pill-icon">🛒</span><span class="ind-pill-label">eCommerce</span></div>
+          <div class="ind-pill"><span class="ind-pill-icon">💪</span><span class="ind-pill-label">Fitness &amp; Sport</span></div>
+          <div class="ind-pill"><span class="ind-pill-icon">🎓</span><span class="ind-pill-label">Educație &amp; Cursuri</span></div>
+          <div class="ind-pill"><span class="ind-pill-icon">⚖️</span><span class="ind-pill-label">Avocatură &amp; Notariat</span></div>
+          <div class="ind-pill"><span class="ind-pill-icon">🏪</span><span class="ind-pill-label">Afaceri mici &amp; Locale</span></div>
+          <div class="ind-pill"><span class="ind-pill-icon">🔧</span><span class="ind-pill-label">Servicii &amp; Meseriași</span></div>
+          <div class="ind-pill"><span class="ind-pill-icon">🎨</span><span class="ind-pill-label">Creativ &amp; Freelance</span></div>
+          <div class="ind-pill"><span class="ind-pill-icon">🌿</span><span class="ind-pill-label">Agricultură</span></div>
         </div>
         <a href="#contact" class="btn-primary reveal" style="display:inline-flex;">Nu găsești domeniul tău? Vorbim →</a>
       </div>
