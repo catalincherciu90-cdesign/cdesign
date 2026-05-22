@@ -1306,9 +1306,15 @@ export default {
     if (path === '/theme.css') {
       try {
         const raw  = await env.PROGRAMARI.get('__theme__');
-        const t    = raw ? JSON.parse(raw) : THEME_DEFAULT;
+        let t = raw ? JSON.parse(raw) : THEME_DEFAULT;
+        // Migrare automată: dacă tema e cea veche dark, aplică White & Gold
+        const OLD_BG = ['#060f0f','#080b0e','#0a0a0a','#0d1117'];
+        if (!raw || OLD_BG.includes((t.bg||'').toLowerCase())) {
+          t = Object.assign({}, THEME_DEFAULT);
+          await env.PROGRAMARI.put('__theme__', JSON.stringify(t));
+        }
         const css  = buildThemeCss(t);
-        return new Response(css, { headers: { 'Content-Type': 'text/css;charset=utf-8', 'Cache-Control': 'public, max-age=300, stale-while-revalidate=3600' } });
+        return new Response(css, { headers: { 'Content-Type': 'text/css;charset=utf-8', 'Cache-Control': 'public, max-age=60, stale-while-revalidate=300' } });
       } catch { return new Response('', { headers: { 'Content-Type': 'text/css' } }); }
     }
 
