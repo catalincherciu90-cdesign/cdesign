@@ -1334,7 +1334,10 @@
             <div style="display:flex;flex-direction:column;gap:10px;">
               <div>
                 <div class="f-label" style="font-size:.7rem;">Hero — Titlu principal (H1)</div>
-                <input class="f-input" id="h-heroTitle" placeholder="Site-ul care îți aduce clienți noi">
+                <div style="display:flex;gap:6px;align-items:center;">
+                  <input class="f-input" id="h-heroTitle" placeholder="Site-ul care îți aduce clienți noi" style="flex:1;">
+                  <input type="color" id="hc-heroTitle" title="Culoare titlu" style="width:32px;height:32px;border:none;border-radius:6px;cursor:pointer;padding:2px;background:var(--bg3);">
+                </div>
               </div>
               <div>
                 <div class="f-label" style="font-size:.7rem;">Hero — Descriere</div>
@@ -1343,7 +1346,10 @@
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
                 <div>
                   <div class="f-label" style="font-size:.7rem;">Servicii — Titlu H2</div>
-                  <input class="f-input" id="h-servicesTitle" placeholder="Indiferent unde ești, avem soluția">
+                  <div style="display:flex;gap:6px;align-items:center;">
+                    <input class="f-input" id="h-servicesTitle" placeholder="Indiferent unde ești, avem soluția" style="flex:1;">
+                    <input type="color" id="hc-servicesTitle" title="Culoare titlu" style="width:32px;height:32px;border:none;border-radius:6px;cursor:pointer;padding:2px;background:var(--bg3);">
+                  </div>
                 </div>
                 <div>
                   <div class="f-label" style="font-size:.7rem;">Servicii — Subtitlu</div>
@@ -1351,7 +1357,10 @@
                 </div>
                 <div>
                   <div class="f-label" style="font-size:.7rem;">Industrii — Titlu H2</div>
-                  <input class="f-input" id="h-indTitle" placeholder="Lucrăm cu orice domeniu">
+                  <div style="display:flex;gap:6px;align-items:center;">
+                    <input class="f-input" id="h-indTitle" placeholder="Lucrăm cu orice domeniu" style="flex:1;">
+                    <input type="color" id="hc-indTitle" title="Culoare titlu" style="width:32px;height:32px;border:none;border-radius:6px;cursor:pointer;padding:2px;background:var(--bg3);">
+                  </div>
                 </div>
                 <div>
                   <div class="f-label" style="font-size:.7rem;">Industrii — Subtitlu</div>
@@ -1359,7 +1368,10 @@
                 </div>
                 <div>
                   <div class="f-label" style="font-size:.7rem;">Proces — Titlu H2</div>
-                  <input class="f-input" id="h-procesTitle" placeholder="Simplu de la început până la final">
+                  <div style="display:flex;gap:6px;align-items:center;">
+                    <input class="f-input" id="h-procesTitle" placeholder="Simplu de la început până la final" style="flex:1;">
+                    <input type="color" id="hc-procesTitle" title="Culoare titlu" style="width:32px;height:32px;border:none;border-radius:6px;cursor:pointer;padding:2px;background:var(--bg3);">
+                  </div>
                 </div>
                 <div>
                   <div class="f-label" style="font-size:.7rem;">Proces — Subtitlu</div>
@@ -1367,7 +1379,10 @@
                 </div>
                 <div>
                   <div class="f-label" style="font-size:.7rem;">Portofoliu — Titlu H2</div>
-                  <input class="f-input" id="h-portTitle" placeholder="Afaceri ca a ta, rezultate reale">
+                  <div style="display:flex;gap:6px;align-items:center;">
+                    <input class="f-input" id="h-portTitle" placeholder="Afaceri ca a ta, rezultate reale" style="flex:1;">
+                    <input type="color" id="hc-portTitle" title="Culoare titlu" style="width:32px;height:32px;border:none;border-radius:6px;cursor:pointer;padding:2px;background:var(--bg3);">
+                  </div>
                 </div>
                 <div>
                   <div class="f-label" style="font-size:.7rem;">Portofoliu — Subtitlu</div>
@@ -1375,11 +1390,17 @@
                 </div>
                 <div>
                   <div class="f-label" style="font-size:.7rem;">Testimoniale — Titlu H2</div>
-                  <input class="f-input" id="h-testiTitle" placeholder="Ei ne-au ales — și nu au regretat">
+                  <div style="display:flex;gap:6px;align-items:center;">
+                    <input class="f-input" id="h-testiTitle" placeholder="Ei ne-au ales — și nu au regretat" style="flex:1;">
+                    <input type="color" id="hc-testiTitle" title="Culoare titlu" style="width:32px;height:32px;border:none;border-radius:6px;cursor:pointer;padding:2px;background:var(--bg3);">
+                  </div>
                 </div>
                 <div>
                   <div class="f-label" style="font-size:.7rem;">Contact — Titlu H2</div>
-                  <input class="f-input" id="h-contactTitle" placeholder="Povestește-ne despre afacerea ta">
+                  <div style="display:flex;gap:6px;align-items:center;">
+                    <input class="f-input" id="h-contactTitle" placeholder="Povestește-ne despre afacerea ta" style="flex:1;">
+                    <input type="color" id="hc-contactTitle" title="Culoare titlu" style="width:32px;height:32px;border:none;border-radius:6px;cursor:pointer;padding:2px;background:var(--bg3);">
+                  </div>
                 </div>
               </div>
             </div>
@@ -2216,30 +2237,36 @@
   }
 
   const HEADING_FIELDS = [
-    {key:'heroTitle',    id:'h-heroTitle'},
+    {key:'heroTitle',    id:'h-heroTitle',     colorKey:'heroTitleColor',     colorId:'hc-heroTitle'},
     {key:'heroDesc',     id:'h-heroDesc'},
-    {key:'servicesTitle',id:'h-servicesTitle'},
+    {key:'servicesTitle',id:'h-servicesTitle', colorKey:'servicesTitleColor', colorId:'hc-servicesTitle'},
     {key:'servicesSub',  id:'h-servicesSub'},
-    {key:'indTitle',     id:'h-indTitle'},
+    {key:'indTitle',     id:'h-indTitle',      colorKey:'indTitleColor',      colorId:'hc-indTitle'},
     {key:'indSub',       id:'h-indSub'},
-    {key:'procesTitle',  id:'h-procesTitle'},
+    {key:'procesTitle',  id:'h-procesTitle',   colorKey:'processTitleColor',  colorId:'hc-procesTitle'},
     {key:'procesSub',    id:'h-procesSub'},
-    {key:'portTitle',    id:'h-portTitle'},
+    {key:'portTitle',    id:'h-portTitle',     colorKey:'portTitleColor',     colorId:'hc-portTitle'},
     {key:'portSub',      id:'h-portSub'},
-    {key:'testiTitle',   id:'h-testiTitle'},
-    {key:'contactTitle', id:'h-contactTitle'},
+    {key:'testiTitle',   id:'h-testiTitle',    colorKey:'testiTitleColor',    colorId:'hc-testiTitle'},
+    {key:'contactTitle', id:'h-contactTitle',  colorKey:'contactTitleColor',  colorId:'hc-contactTitle'},
   ];
 
   async function fetchHeadings() {
     try {
       const d = await fetch('/api/site-settings').then(r=>r.json());
-      HEADING_FIELDS.forEach(function(f){ var el=document.getElementById(f.id); if(el&&d[f.key]) el.value=d[f.key]; });
+      HEADING_FIELDS.forEach(function(f){
+        var el=document.getElementById(f.id); if(el&&d[f.key]) el.value=d[f.key];
+        if(f.colorId){ var ce=document.getElementById(f.colorId); if(ce&&d[f.colorKey]) ce.value=d[f.colorKey]; }
+      });
     } catch {}
   }
 
   async function saveHeadings() {
     var body = {};
-    HEADING_FIELDS.forEach(function(f){ var el=document.getElementById(f.id); if(el) body[f.key]=el.value.trim(); });
+    HEADING_FIELDS.forEach(function(f){
+      var el=document.getElementById(f.id); if(el) body[f.key]=el.value.trim();
+      if(f.colorId){ var ce=document.getElementById(f.colorId); if(ce) body[f.colorKey]=ce.value; }
+    });
     var st = document.getElementById('headings-status');
     try {
       await fetch('/api/site-settings?token='+encodeURIComponent(adminToken),{

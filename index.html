@@ -1514,6 +1514,18 @@ document.getElementById('bookingForm').addEventListener('submit', async function
       Object.keys(hMap).forEach(function(key) {
         if(d[key]) { var el = document.getElementById(hMap[key]); if(el) el.textContent = d[key]; }
       });
+      var cMap = {
+        'heroTitleColor':     'hero-h1-el',
+        'servicesTitleColor': 'servicii-heading',
+        'indTitleColor':      'ind-heading',
+        'processTitleColor':  'proces-heading',
+        'portTitleColor':     'portofoliu-heading',
+        'testiTitleColor':    'testi-heading',
+        'contactTitleColor':  'contact-heading'
+      };
+      Object.keys(cMap).forEach(function(key) {
+        if(d[key]) { var el = document.getElementById(cMap[key]); if(el) el.style.color = d[key]; }
+      });
       // DSS Section
       if(d.dssTitle)    { var t=document.getElementById('dss-title-el'); if(t) t.textContent=d.dssTitle; }
       if(d.dssSubtitle) { var s=document.getElementById('dss-sub-el');   if(s) s.textContent=d.dssSubtitle; }
