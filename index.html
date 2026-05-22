@@ -1507,7 +1507,9 @@ document.getElementById('bookingForm').addEventListener('submit', async function
         'procesTitle':   'proces-heading',
         'procesSub':     'proces-sub-el',
         'portTitle':     'portofoliu-heading',
-        'portSub':       'portofoliu-sub-el'
+        'portSub':       'portofoliu-sub-el',
+        'testiTitle':    'testi-heading',
+        'contactTitle':  'contact-heading'
       };
       Object.keys(hMap).forEach(function(key) {
         if(d[key]) { var el = document.getElementById(hMap[key]); if(el) el.textContent = d[key]; }

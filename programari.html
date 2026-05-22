@@ -1373,6 +1373,14 @@
                   <div class="f-label" style="font-size:.7rem;">Portofoliu — Subtitlu</div>
                   <input class="f-input" id="h-portSub" placeholder="Iată câteva dintre proiectele...">
                 </div>
+                <div>
+                  <div class="f-label" style="font-size:.7rem;">Testimoniale — Titlu H2</div>
+                  <input class="f-input" id="h-testiTitle" placeholder="Ei ne-au ales — și nu au regretat">
+                </div>
+                <div>
+                  <div class="f-label" style="font-size:.7rem;">Contact — Titlu H2</div>
+                  <input class="f-input" id="h-contactTitle" placeholder="Povestește-ne despre afacerea ta">
+                </div>
               </div>
             </div>
             <button class="btn-save" style="margin-top:10px;" onclick="saveHeadings()">💾 Salvează titlurile</button>
@@ -2218,6 +2226,8 @@
     {key:'procesSub',    id:'h-procesSub'},
     {key:'portTitle',    id:'h-portTitle'},
     {key:'portSub',      id:'h-portSub'},
+    {key:'testiTitle',   id:'h-testiTitle'},
+    {key:'contactTitle', id:'h-contactTitle'},
   ];
 
   async function fetchHeadings() {
