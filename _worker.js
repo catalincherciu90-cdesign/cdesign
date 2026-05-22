@@ -1309,7 +1309,8 @@ export default {
         `--hero-grad:${heroGrad};--hero-grad-mob:${heroGradMob};--hero-grad-xs:${heroGradXs};` +
         `--font-heading:'${fh}',sans-serif;--font-body:'${fb}',sans-serif}` +
         `body{font-family:'${fb}',sans-serif!important}` +
-        `h1,h2,h3,h4,h5,h6,.logo,.hero h1,.section-title,.card-title{font-family:'${fh}',sans-serif!important}`;
+        `h1,h2,h3,h4,h5,h6,.logo,.hero h1,.section-title,.card-title{font-family:'${fh}',sans-serif!important}` +
+        `.nav-phone{color:${navPhone}!important}.hamburger span{background:${navBurger}!important}`;
     }
 
     if (path === '/theme.css') {
