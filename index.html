@@ -237,7 +237,7 @@
     .svc-card{background:var(--bg2);border:1px solid var(--border-soft);border-radius:16px;padding:28px 26px;transition:border-color .25s,box-shadow .25s,transform .25s;}
     .svc-card:hover{border-color:var(--teal-border);box-shadow:0 0 40px rgba(0,168,168,.1),0 8px 32px rgba(0,0,0,.5);transform:translateY(-4px);}
     .svc-icon{font-size:2.2rem;margin-bottom:18px;display:block;line-height:1;}
-    .svc-title{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;color:#f0f4f8;margin-bottom:10px;letter-spacing:-.02em;}
+    .svc-title{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;color:var(--heading);margin-bottom:10px;letter-spacing:-.02em;}
     .svc-features{list-style:none;display:flex;flex-direction:column;gap:9px;margin-top:14px;}
     .svc-features li{font-size:.9rem;color:var(--soft);display:flex;align-items:flex-start;gap:9px;line-height:1.5;}
     .svc-features li::before{content:'✓';color:var(--teal);font-weight:700;flex-shrink:0;font-size:.85rem;margin-top:1px;}
@@ -421,8 +421,7 @@
 
     /* ── READABILITY & GRAPHICAL IMPROVEMENTS ─────────────────── */
 
-    /* 1. Brighter base contrast */
-    :root{--text:#f0f4f8;--soft:#9ad4d4;--muted:#4d8888;}
+    /* 1. Brighter base contrast — handled by theme.css */
 
     /* 2. Bigger, airier body */
     body{font-size:1.06rem;line-height:1.82;}
@@ -525,7 +524,7 @@
     .dss-feats{display:flex;flex-direction:column;gap:16px;margin-top:32px;}
     .dss-feat{display:flex;align-items:center;gap:14px;}
     .dss-feat span{font-size:1.6rem;flex-shrink:0;}
-    .dss-feat strong{display:block;font-size:.95rem;font-weight:600;color:#f0f4f8;}
+    .dss-feat strong{display:block;font-size:.95rem;font-weight:600;color:var(--heading);}
     .dss-feat small{display:block;font-size:.8rem;color:var(--muted);margin-top:2px;}
     /* Laptop mockup */
     .dss-devices{position:relative;display:flex;align-items:flex-end;gap:0;}
@@ -893,7 +892,7 @@
     <div style="display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;">
       <div>
         <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;color:var(--teal);letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase;font-weight:600;">PACHET STARTUP · De la 300€</div>
-        <div style="font-family:'Space Grotesk',sans-serif;font-size:1.25rem;font-weight:700;color:#fff;letter-spacing:-.025em;margin-bottom:6px;">Pornești de la zero? Avem totul pregătit pentru tine, într-un singur pachet.</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:1.25rem;font-weight:700;color:var(--heading);letter-spacing:-.025em;margin-bottom:6px;">Pornești de la zero? Avem totul pregătit pentru tine, într-un singur pachet.</div>
         <div style="font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--soft);line-height:1.7;">Site profesional + logo + domeniu & găzduire + social media — totul la cheie, fără să te complic cu detalii tehnice.</div>
       </div>
       <a href="/pachet-startup" style="display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#060f0f;font-weight:600;font-size:.95rem;padding:12px 24px;border-radius:8px;text-decoration:none;white-space:nowrap;font-family:'DM Sans',sans-serif;flex-shrink:0;transition:background .2s;" onmouseover="this.style.background='#00c8c8'" onmouseout="this.style.background='var(--teal)'">Vezi Pachetul Startup →</a>
