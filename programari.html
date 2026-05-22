@@ -1049,6 +1049,13 @@
             </div>
           </div>
           <div class="theme-row">
+            <span class="theme-label">Culoare burger menu</span>
+            <div class="theme-color-wrap">
+              <label class="theme-color-swatch"><input type="color" id="tc-navBurger" value="#e8edf2" oninput="onThemeColor('navBurger',this.value)"></label>
+              <input class="theme-hex-input" id="th-navBurger" value="#E8EDF2" maxlength="7" oninput="onThemeHex('navBurger',this.value)">
+            </div>
+          </div>
+          <div class="theme-row">
             <span class="theme-label">Culoare H1 / H2 / H3</span>
             <div class="theme-color-wrap">
               <label class="theme-color-swatch"><input type="color" id="tc-heading" value="#f0f4f8" oninput="onThemeColor('heading',this.value)"></label>
@@ -3804,7 +3811,7 @@
 
   const THEME_DEFAULT_VALS = {
     teal:'#00a8a8', bg:'#060f0f', bg2:'#0a1818', bg3:'#0f2020',
-    text:'#e8edf2', soft:'#8bbaba', heading:'#f0f4f8', navColor:'#060f0f', navText:'#e8edf2', navPhone:'#e8edf2', fontHeading:'Space Grotesk', fontBody:'DM Sans'
+    text:'#e8edf2', soft:'#8bbaba', heading:'#f0f4f8', navColor:'#060f0f', navText:'#e8edf2', navPhone:'#e8edf2', navBurger:'#e8edf2', fontHeading:'Space Grotesk', fontBody:'DM Sans'
   };
 
   let themeData = Object.assign({}, THEME_DEFAULT_VALS);
@@ -3833,7 +3840,7 @@
   }
 
   function applyThemeToEditor(t) {
-    const colors = ['teal','bg','bg2','bg3','text','soft','heading','navColor','navText','navPhone'];
+    const colors = ['teal','bg','bg2','bg3','text','soft','heading','navColor','navText','navPhone','navBurger'];
     colors.forEach(k => {
       const v = t[k] || THEME_DEFAULT_VALS[k];
       const cp = document.getElementById('tc-' + k);
