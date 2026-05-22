@@ -1327,7 +1327,7 @@ document.getElementById('bookingForm').addEventListener('submit', async function
   function renderCta(id, b) {
     return '<section data-section="'+id+'" style="padding:60px 0;background:linear-gradient(135deg,rgba(0,168,168,.07),rgba(0,168,168,.03));border-top:1px solid rgba(0,168,168,.2);border-bottom:1px solid rgba(0,168,168,.2);">'
       +'<div class="container" style="text-align:center;">'
-      +'<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:800;color:#fff;margin-bottom:12px;">'+escHtml(b.title||'Pregătit să începem?')+'</h2>'
+      +'<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:800;color:var(--heading);margin-bottom:12px;">'+escHtml(b.title||'Pregătit să începem?')+'</h2>'
       +'<p style="color:var(--soft);font-size:1rem;max-width:500px;margin:0 auto 28px;">'+escHtml(b.subtitle||'')+'</p>'
       +'<a href="'+escHtml(b.btnUrl||'/programari')+'" style="display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#060f0f;font-weight:700;font-size:1rem;padding:14px 32px;border-radius:8px;text-decoration:none;">'+escHtml(b.btnText||'Contactează-ne')+' →</a>'
       +'</div></section>';
@@ -1335,13 +1335,13 @@ document.getElementById('bookingForm').addEventListener('submit', async function
 
   function renderStats(id, b) {
     var items = (b.items||[]).map(function(item){
-      return '<div style="text-align:center;padding:28px 20px;background:var(--bg2);border-radius:12px;border:1px solid rgba(255,255,255,.07);">'
+      return '<div style="text-align:center;padding:28px 20px;background:var(--bg2);border-radius:12px;border:1px solid var(--border);">'
         +'<div style="font-family:\'Space Grotesk\',sans-serif;font-size:2.2rem;font-weight:800;color:var(--teal);">'+escHtml(item.number||'')+'</div>'
         +'<div style="color:var(--soft);font-size:.88rem;margin-top:6px;">'+escHtml(item.label||'')+'</div></div>';
     }).join('');
     return '<section data-section="'+id+'" style="padding:64px 0;">'
       +'<div class="container">'
-      +'<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:#fff;margin-bottom:36px;text-align:center;">'+escHtml(b.title||'Cifre')+'</h2>'
+      +'<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:var(--heading);margin-bottom:36px;text-align:center;">'+escHtml(b.title||'Cifre')+'</h2>'
       +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;">'+items+'</div>'
       +'</div></section>';
   }
@@ -1349,7 +1349,7 @@ document.getElementById('bookingForm').addEventListener('submit', async function
   function renderTextBlock(id, b) {
     return '<section data-section="'+id+'" style="padding:64px 0;">'
       +'<div class="container" style="max-width:760px;">'
-      +'<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:#fff;margin-bottom:20px;">'+escHtml(b.title||'')+'</h2>'
+      +'<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:var(--heading);margin-bottom:20px;">'+escHtml(b.title||'')+'</h2>'
       +'<div style="color:var(--soft);font-size:1rem;line-height:1.8;">'+escHtml(b.content||'').replace(/\n/g,'<br>')+'</div>'
       +'</div></section>';
   }
@@ -1357,7 +1357,7 @@ document.getElementById('bookingForm').addEventListener('submit', async function
   function renderColElement(el) {
     switch(el.type) {
       case 'heading':
-        return '<h3 style="font-family:\'Space Grotesk\',sans-serif;font-size:'+(el.size==='large'?'1.3rem':'1rem')+';font-weight:700;color:#fff;margin:0 0 10px;">'+escHtml(el.content||'')+'</h3>';
+        return '<h3 style="font-family:\'Space Grotesk\',sans-serif;font-size:'+(el.size==='large'?'1.3rem':'1rem')+';font-weight:700;color:var(--heading);margin:0 0 10px;">'+escHtml(el.content||'')+'</h3>';
       case 'text':
         return '<p style="color:var(--soft);font-size:.92rem;line-height:1.75;margin:0 0 10px;">'+escHtml(el.content||'').replace(/\n/g,'<br>')+'</p>';
       case 'badge':
@@ -1414,16 +1414,16 @@ document.getElementById('bookingForm').addEventListener('submit', async function
       } else {
         // Backward compat: format vechi cu icon/title/text/btnText
         inner = (col.icon?'<div style="font-size:2rem;margin-bottom:14px;">'+escHtml(col.icon)+'</div>':'')
-          +(col.title?'<h3 style="font-family:\'Space Grotesk\',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:10px;">'+escHtml(col.title)+'</h3>':'')
+          +(col.title?'<h3 style="font-family:\'Space Grotesk\',sans-serif;font-size:1.1rem;font-weight:700;color:var(--heading);margin-bottom:10px;">'+escHtml(col.title)+'</h3>':'')
           +(col.text?'<p style="color:var(--soft);font-size:.92rem;line-height:1.7;">'+escHtml(col.text)+'</p>':'')
           +(col.btnText?'<a href="'+escHtml(col.btnUrl||'#')+'" style="display:inline-block;background:var(--teal);color:#060f0f;font-weight:700;font-size:.82rem;padding:9px 20px;border-radius:7px;text-decoration:none;margin-top:14px;">'+escHtml(col.btnText)+'</a>':'');
       }
-      return '<div class="'+colVisClass.trim()+'" style="background:var(--bg2);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:28px 24px;">'+inner+'</div>';
+      return '<div class="'+colVisClass.trim()+'" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px 24px;">'+inner+'</div>';
     }).join('');
     var minW = (b.columns||[]).length <= 2 ? '260px' : '200px';
     return '<section data-section="'+id+'" style="padding:64px 0;">'
       +'<div class="container">'
-      +(b.title?'<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:#fff;margin-bottom:12px;text-align:center;">'+escHtml(b.title)+'</h2>':'')
+      +(b.title?'<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:var(--heading);margin-bottom:12px;text-align:center;">'+escHtml(b.title)+'</h2>':'')
       +(b.subtitle?'<p style="color:var(--soft);text-align:center;font-size:1rem;max-width:580px;margin:0 auto 40px;">'+escHtml(b.subtitle)+'</p>':'<div style="margin-bottom:'+(b.title?'40px':'0')+'"></div>')
       +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax('+minW+',1fr));gap:20px;">'+cols+'</div>'
       +'</div></section>';
