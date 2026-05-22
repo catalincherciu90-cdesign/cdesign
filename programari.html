@@ -968,6 +968,17 @@
           <button onclick="applyThemePreset('teal-dark')" style="background:#060f0f;color:#00a8a8;border:1px solid rgba(0,168,168,.3);padding:8px 16px;border-radius:7px;font-family:'Share Tech Mono',monospace;font-size:.75rem;cursor:pointer;display:flex;align-items:center;gap:8px;"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#00a8a8;"></span>Teal (original)</button>
           <button onclick="applyThemePreset('navy')" style="background:#0d1b2a;color:#4fc3f7;border:1px solid rgba(79,195,247,.3);padding:8px 16px;border-radius:7px;font-family:'Share Tech Mono',monospace;font-size:.75rem;cursor:pointer;display:flex;align-items:center;gap:8px;"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#4fc3f7;"></span>Navy Blue</button>
         </div>
+
+        <!-- Palete custom salvate -->
+        <div style="margin-top:14px;">
+          <div style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--muted);margin-bottom:8px;letter-spacing:.06em;">// palete custom salvate</div>
+          <div id="custom-presets-list" style="display:flex;gap:8px;flex-wrap:wrap;min-height:32px;"></div>
+          <div style="display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap;">
+            <input id="custom-preset-name" class="f-input" placeholder="Nume paletă (ex: Brand Roșu)" style="max-width:220px;margin:0;">
+            <button onclick="saveCustomPreset()" style="background:var(--teal);color:#060f0f;border:none;padding:8px 16px;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;">💾 Salvează paleta curentă</button>
+            <span id="custom-preset-status" style="font-size:.75rem;color:var(--teal);"></span>
+          </div>
+        </div>
       </div>
 
       <div class="theme-grid">
@@ -2134,6 +2145,7 @@
     fetchHeroImage();
     fetchHeadings();
     fetchDssSection();
+    loadCustomPresets();
   }
 
   async function fetchHeroImage() {
@@ -3905,6 +3917,71 @@
     themeData = Object.assign({}, p);
     applyThemeToEditor(themeData);
     await saveTheme();
+  }
+
+  // -- PALETE CUSTOM --
+  let customPresets = [];
+
+  async function loadCustomPresets() {
+    try {
+      const d = await fetch('/api/site-settings').then(r=>r.json());
+      customPresets = d.customPresets || [];
+      renderCustomPresets();
+    } catch {}
+  }
+
+  function renderCustomPresets() {
+    const el = document.getElementById('custom-presets-list');
+    if (!el) return;
+    if (!customPresets.length) {
+      el.innerHTML = '<span style="font-size:.75rem;color:var(--muted);font-style:italic;">Nicio paletă salvată încă.</span>';
+      return;
+    }
+    el.innerHTML = customPresets.map(function(p, i) {
+      return '<div style="display:flex;align-items:center;gap:0;border:1px solid var(--border-soft);border-radius:8px;overflow:hidden;">'
+        + '<button onclick="applyCustomPreset('+i+')" style="background:'+p.bg+';color:'+p.text+';border:none;padding:7px 14px;font-size:.75rem;font-family:\'Share Tech Mono\',monospace;cursor:pointer;display:flex;align-items:center;gap:7px;">'
+        + '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+p.teal+';"></span>'
+        + p.name
+        + '</button>'
+        + '<button onclick="deleteCustomPreset('+i+')" title="Șterge" style="background:var(--bg3);border:none;border-left:1px solid var(--border-soft);padding:7px 10px;color:var(--muted);cursor:pointer;font-size:.75rem;">✕</button>'
+        + '</div>';
+    }).join('');
+  }
+
+  async function saveCustomPreset() {
+    const name = document.getElementById('custom-preset-name').value.trim();
+    const st = document.getElementById('custom-preset-status');
+    if (!name) { st.textContent = '✕ Adaugă un nume'; setTimeout(()=>{st.textContent='';},2000); return; }
+    const preset = Object.assign({ name }, themeData);
+    customPresets = customPresets.filter(p => p.name !== name);
+    customPresets.unshift(preset);
+    await fetch('/api/site-settings?token='+encodeURIComponent(adminToken), {
+      method:'PUT', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ customPresets })
+    });
+    document.getElementById('custom-preset-name').value = '';
+    st.textContent = '✓ Salvat!';
+    setTimeout(()=>{st.textContent='';}, 2500);
+    renderCustomPresets();
+  }
+
+  async function applyCustomPreset(i) {
+    const p = customPresets[i];
+    if (!p || !confirm('Aplici paleta "'+p.name+'"?')) return;
+    themeData = Object.assign({}, p);
+    delete themeData.name;
+    applyThemeToEditor(themeData);
+    await saveTheme();
+  }
+
+  async function deleteCustomPreset(i) {
+    if (!confirm('Ștergi paleta "'+customPresets[i].name+'"?')) return;
+    customPresets.splice(i, 1);
+    await fetch('/api/site-settings?token='+encodeURIComponent(adminToken), {
+      method:'PUT', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ customPresets })
+    });
+    renderCustomPresets();
   }
 
   // -- MEDIA LIBRARY --
