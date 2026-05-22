@@ -1313,19 +1313,7 @@ export default {
     if (path === '/theme.css') {
       try {
         const raw = await env.PROGRAMARI.get('__theme__');
-        let t = THEME_DEFAULT;
-        if (raw) {
-          const stored = JSON.parse(raw);
-          // Folosește tema din KV doar dacă e tema light (bg luminanță > 50)
-          const bgR = parseInt((stored.bg||'#000').slice(1,3),16);
-          if (bgR > 50) t = stored;
-          else {
-            // Resetează la White & Gold și salvează
-            await env.PROGRAMARI.put('__theme__', JSON.stringify(THEME_DEFAULT));
-          }
-        } else {
-          await env.PROGRAMARI.put('__theme__', JSON.stringify(THEME_DEFAULT));
-        }
+        const t = raw ? JSON.parse(raw) : THEME_DEFAULT;
         const css = buildThemeCss(t);
         return new Response(css, { headers: { 'Content-Type': 'text/css;charset=utf-8', 'Cache-Control': 'no-cache, no-store, must-revalidate' } });
       } catch { return new Response('', { headers: { 'Content-Type': 'text/css' } }); }
