@@ -891,6 +891,46 @@ export default {
 
     // ── BLOG ──────────────────────────────────────────────────
 
+    if (path === '/api/blog/generate' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401, request);
+      try {
+        const { subject } = await request.json();
+        if (!subject) return json({ error: 'Subiectul este obligatoriu' }, 400, request);
+        if (!env.AI) return json({ error: 'AI binding nedisponibil — verifică wrangler.toml' }, 500, request);
+
+        const prompt = `Ești un copywriter expert în web design și marketing digital pentru afaceri mici din România. Scrie un articol de blog complet pentru agenția "C Design" pe subiectul: "${subject}".
+
+Returnează EXCLUSIV un obiect JSON valid, fără text înainte sau după, cu această structură:
+{
+  "title": "titlu articol max 70 caractere",
+  "excerpt": "rezumat 2-3 propoziții pentru lista de articole",
+  "content": "conținut HTML complet cu <h2>, <p>, <ul>, <li>, <strong>",
+  "metaDescription": "meta description SEO max 160 caractere"
+}
+
+Cerințe articol:
+- Limbă: română
+- Lungime: 600-900 cuvinte
+- Public țintă: antreprenori și proprietari de afaceri mici din România
+- Ton: profesional dar accesibil, fără jargon tehnic
+- Include sfaturi practice și exemple concrete`;
+
+        const ai = await env.AI.run('@cf/meta/llama-3.3-70b-instruct-fp8-fast', {
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 2048,
+        });
+
+        const text = (ai.response || '').trim();
+        const match = text.match(/\{[\s\S]*\}/);
+        if (!match) return json({ error: 'Modelul nu a returnat JSON valid. Încearcă din nou.' }, 500, request);
+        const article = JSON.parse(match[0]);
+        if (!article.title || !article.content) return json({ error: 'Articol incomplet generat. Încearcă din nou.' }, 500, request);
+        return json({ success: true, article }, 200, request);
+      } catch (e) {
+        return json({ error: 'Eroare generare: ' + (e.message || 'necunoscută') }, 500, request);
+      }
+    }
+
     if (path === '/api/blog' && request.method === 'GET') {
       try {
         const raw = await env.PROGRAMARI.get('__blog__');

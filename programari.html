@@ -1535,6 +1535,14 @@
   <div class="modal" style="max-width:600px;">
     <h3 id="blogModalTitle">Articol nou</h3>
     <input type="hidden" id="blogEditId">
+    <div class="f-group" style="background:var(--bg3);border:1px solid var(--teal-border);border-radius:10px;padding:14px 16px;">
+      <label class="f-label" style="color:var(--teal);">// generează cu AI 🤖</label>
+      <div style="display:flex;gap:8px;margin-top:6px;">
+        <input class="f-input" type="text" id="blogAiSubject" placeholder="ex: De ce ai nevoie de un site în 2025" style="margin-bottom:0;flex:1;">
+        <button class="btn-save" id="blogAiBtn" onclick="generateBlogWithAI()" style="white-space:nowrap;padding:10px 16px;flex-shrink:0;">✨ Generează</button>
+      </div>
+      <div id="blogAiStatus" style="font-family:'Share Tech Mono',monospace;font-size:.75rem;margin-top:8px;display:none;"></div>
+    </div>
     <div class="f-group">
       <label class="f-label">// titlu *</label>
       <input class="f-input" type="text" id="blogTitle" placeholder="Titlul articolului" oninput="genSlug()">
@@ -2066,6 +2074,42 @@
       </div>`).join('') + '</div>';
   }
 
+  async function generateBlogWithAI() {
+    const subject = document.getElementById('blogAiSubject').value.trim();
+    if (!subject) { alert('Introdu un subiect pentru articol.'); return; }
+    const btn = document.getElementById('blogAiBtn');
+    const status = document.getElementById('blogAiStatus');
+    btn.disabled = true; btn.textContent = '⏳ Se generează...';
+    status.style.display = 'block'; status.style.color = 'var(--teal)';
+    status.textContent = '// AI scrie articolul... poate dura 15-30 secunde';
+    try {
+      const res = await fetch('/api/blog/generate?token=' + encodeURIComponent(adminToken), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subject })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.article) {
+        status.style.color = '#f87171';
+        status.textContent = '// Eroare: ' + (data.error || 'necunoscută');
+        btn.disabled = false; btn.textContent = '✨ Generează';
+        return;
+      }
+      const a = data.article;
+      document.getElementById('blogTitle').value = a.title || '';
+      document.getElementById('blogExcerpt').value = a.excerpt || '';
+      document.getElementById('blogContent').value = a.content || '';
+      genSlug();
+      status.style.color = '#4ade80';
+      status.textContent = '// ✓ Articol generat! Verifică și modifică înainte de publicare.';
+      btn.disabled = false; btn.textContent = '✨ Regenerează';
+    } catch (e) {
+      status.style.color = '#f87171';
+      status.textContent = '// Eroare rețea: ' + e.message;
+      btn.disabled = false; btn.textContent = '✨ Generează';
+    }
+  }
+
   function openBlogModal(id) {
     const p = id ? allBlog.find(x => x.id === id) : null;
     document.getElementById('blogModalTitle').textContent = p ? 'Editeaz&#259; articol' : 'Articol nou';
@@ -2075,6 +2119,9 @@
     document.getElementById('blogExcerpt').value = p ? p.excerpt : '';
     document.getElementById('blogContent').value = p ? p.content : '';
     document.getElementById('blogPublished').checked = p ? p.published : false;
+    document.getElementById('blogAiSubject').value = '';
+    document.getElementById('blogAiStatus').style.display = 'none';
+    document.getElementById('blogAiBtn').textContent = '✨ Generează';
     document.getElementById('blogModalOverlay').classList.add('open');
     document.getElementById('blogTitle').focus();
   }
