@@ -105,7 +105,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://images.unsplash.com">
   <link rel="preload" as="image" href="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=1800&q=80" fetchpriority="high">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=DM+Sans:wght@400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=DM+Sans:wght@400;500&family=Share+Tech+Mono&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=DM+Sans:wght@400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet"></noscript>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -141,9 +142,11 @@
     .nav-phone{display:inline-flex;align-items:center;gap:5px;font-family:'Share Tech Mono',monospace;font-size:.9rem;font-weight:600;color:var(--nav-phone);padding:2px 0;transition:color .2s;}
     .nav-phone::before{content:'📞';font-size:.8rem;}
     .nav-phone:hover{color:var(--teal);}
-    @keyframes btn-glow{0%,100%{box-shadow:0 0 18px rgba(255,255,255,.5),0 4px 16px rgba(255,255,255,.2)}50%{box-shadow:0 0 38px rgba(255,255,255,.95),0 4px 32px rgba(255,255,255,.4)}}
-    .col-btn-glow{animation:btn-glow 2.8s ease-in-out infinite;}
-    .btn-nav{background:#fff;color:#111;font-weight:600;font-size:.875rem;font-family:'DM Sans',sans-serif;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:transform .15s;text-decoration:none;animation:btn-glow 2.8s ease-in-out infinite;}
+    @keyframes btn-glow{0%,100%{opacity:.5}50%{opacity:1}}
+    .btn-nav,.btn-primary,.btn-ghost,.btn-submit{position:relative;}
+    .btn-nav::after,.btn-primary::after,.btn-ghost::after,.btn-submit::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:0 0 38px rgba(255,255,255,.9),0 4px 32px rgba(255,255,255,.38);animation:btn-glow 2.8s ease-in-out infinite;}
+    .col-btn-glow{position:relative;}.col-btn-glow::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:0 0 38px rgba(255,255,255,.9),0 4px 32px rgba(255,255,255,.38);animation:btn-glow 2.8s ease-in-out infinite;}
+    .btn-nav{background:#fff;color:#111;font-weight:600;font-size:.875rem;font-family:'DM Sans',sans-serif;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:transform .15s;text-decoration:none;}
     .btn-nav:hover{background:#f0f0f0;transform:translateY(-1px);}
     .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:6px;}
     .hamburger span{display:block;width:22px;height:2px;background:var(--nav-burger);border-radius:2px;}
@@ -171,9 +174,9 @@
     .hero h1 .hl{background:linear-gradient(135deg,var(--teal-lt),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 16px rgba(0,168,168,.4));}
     .hero-desc{font-size:1.05rem;color:var(--soft);line-height:1.75;font-weight:300;max-width:480px;margin-bottom:36px;}
     .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;}
-    .btn-primary{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#111;font-weight:700;font-size:1rem;padding:14px 28px;border-radius:8px;border:none;cursor:pointer;transition:transform .15s;text-decoration:none;font-family:'DM Sans',sans-serif;animation:btn-glow 2.8s ease-in-out infinite;}
+    .btn-primary{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#111;font-weight:700;font-size:1rem;padding:14px 28px;border-radius:8px;border:none;cursor:pointer;transition:transform .15s;text-decoration:none;font-family:'DM Sans',sans-serif;}
     .btn-primary:hover{background:#f0f0f0;transform:translateY(-2px);}
-    .btn-ghost{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);color:#fff;font-size:1rem;padding:14px 28px;border-radius:8px;border:1px solid rgba(255,255,255,.35);cursor:pointer;transition:border-color .2s,background .2s;text-decoration:none;font-family:'DM Sans',sans-serif;animation:btn-glow 2.8s ease-in-out infinite;}
+    .btn-ghost{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);color:#fff;font-size:1rem;padding:14px 28px;border-radius:8px;border:1px solid rgba(255,255,255,.35);cursor:pointer;transition:border-color .2s,background .2s;text-decoration:none;font-family:'DM Sans',sans-serif;}
     .btn-ghost:hover{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.15)}
     .hero-visual{position:relative;z-index:2;}
     .hero-proof-card{background:rgba(10,24,24,.88);border:1px solid var(--border-soft);border-radius:16px;padding:28px;box-shadow:0 0 60px rgba(0,168,168,.1),0 20px 60px rgba(0,0,0,.6);backdrop-filter:blur(12px);}
@@ -289,7 +292,7 @@
     .f-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
     .f-select{width:100%;padding:12px 16px;background:var(--bg3);border:1px solid var(--border-soft);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;cursor:pointer;min-height:48px;transition:border-color .2s;}
     .f-select:focus{border-color:var(--teal-border)}
-    .btn-submit{width:100%;background:#fff;color:#111;font-weight:700;font-size:1rem;padding:15px;border-radius:8px;border:none;cursor:pointer;transition:transform .15s;font-family:'DM Sans',sans-serif;letter-spacing:.01em;animation:btn-glow 2.8s ease-in-out infinite;}
+    .btn-submit{width:100%;background:#fff;color:#111;font-weight:700;font-size:1rem;padding:15px;border-radius:8px;border:none;cursor:pointer;transition:transform .15s;font-family:'DM Sans',sans-serif;letter-spacing:.01em;}
     .btn-submit:hover{background:#f0f0f0;transform:translateY(-1px);}
     .btn-submit:disabled{opacity:.7;cursor:not-allowed;animation:none;}
     footer{background:var(--bg2);border-top:1px solid var(--border);padding:52px 0 28px;}
@@ -508,7 +511,7 @@
 <nav aria-label="Navigare principală">
   <div class="container">
     <div class="nav-inner">
-      <a href="/" class="logo" aria-label="C Design – Pagina principală"><img src="/logo-c-design.png" alt="C Design" style="height:42px;width:auto;display:block;"></a>
+      <a href="/" class="logo" aria-label="C Design – Pagina principală"><img src="/logo-c-design.png" alt="C Design" width="168" height="42" style="height:42px;width:auto;display:block;"></a>
       <ul class="nav-links" role="list">
         <li><a href="#servicii">Servicii</a></li>
         <li><a href="#portofoliu">Portofoliu</a></li>
@@ -1019,7 +1022,7 @@
   <div class="container">
     <div class="footer-grid">
       <div>
-        <div class="footer-logo"><img src="/logo-c-design.png" alt="C Design" style="height:36px;width:auto;"></div>
+        <div class="footer-logo"><img src="/logo-c-design.png" alt="C Design" width="144" height="36" style="height:36px;width:auto;"></div>
         <p class="footer-about">Web design profesional pentru afaceri mici din toată România. Construim site-uri care aduc clienți reali.</p>
         <div class="footer-social" id="footerSocial"></div>
       </div>
