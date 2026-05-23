@@ -923,7 +923,24 @@ Cerințe articol:
         const text = (ai.response || '').trim();
         const match = text.match(/\{[\s\S]*\}/);
         if (!match) return json({ error: 'Modelul nu a returnat JSON valid. Încearcă din nou.' }, 500, request);
-        const article = JSON.parse(match[0]);
+
+        // Sanitize control characters inside JSON string values
+        let raw = match[0];
+        let sanitized = '';
+        let inStr = false, esc = false;
+        for (let i = 0; i < raw.length; i++) {
+          const c = raw[i];
+          if (esc) { sanitized += c; esc = false; continue; }
+          if (c === '\\') { sanitized += c; esc = true; continue; }
+          if (c === '"') { inStr = !inStr; sanitized += c; continue; }
+          if (inStr && c.charCodeAt(0) < 0x20) {
+            if (c === '\n') sanitized += '\\n';
+            else if (c === '\r') sanitized += '\\r';
+            else if (c === '\t') sanitized += '\\t';
+          } else { sanitized += c; }
+        }
+
+        const article = JSON.parse(sanitized);
         if (!article.title || !article.content) return json({ error: 'Articol incomplet generat. Încearcă din nou.' }, 500, request);
         return json({ success: true, article }, 200, request);
       } catch (e) {
