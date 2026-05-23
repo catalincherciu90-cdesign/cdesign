@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="ro" prefix="og: https://ogp.me/ns#">
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-K3VR7JC1QW"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-K3VR7JC1QW');
-</script>
-  <!-- End Meta Pixel -->
   <meta charset="UTF-8">
+  <!-- Google Analytics — defer după load -->
+  <script>
+    window.addEventListener('load', function() {
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-K3VR7JC1QW';
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-K3VR7JC1QW');
+    });
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>C Design – Web Design pentru Afacerea ta</title>
   <meta name="description" content="C Design creează site-uri profesionale pentru afaceri mici din toată România. Programează o ședință de consultanță gratuită. Sună: 0753 116 155.">
@@ -103,8 +106,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=DM+Sans:wght@400;500&family=Share+Tech+Mono&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=DM+Sans:wght@400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet"></noscript>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=DM+Sans:wght@400;500&family=Share+Tech+Mono&display=optional" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=DM+Sans:wght@400;500&family=Share+Tech+Mono&display=optional" rel="stylesheet"></noscript>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
