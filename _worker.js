@@ -1319,13 +1319,11 @@ export default {
       try {
         const raw = await env.PROGRAMARI.get('__theme__');
         let t = raw ? JSON.parse(raw) : THEME_DEFAULT;
-        // One-time migration: fix dark-theme text colors saved against light backgrounds
-        const bgLum = (parseInt(t.bg?.slice(1,3)||'ff',16)*0.2126 + parseInt(t.bg?.slice(3,5)||'ff',16)*0.7152 + parseInt(t.bg?.slice(5,7)||'ff',16)*0.0722) / 255;
-        const txLum = (parseInt(t.text?.slice(1,3)||'11',16)*0.2126 + parseInt(t.text?.slice(3,5)||'11',16)*0.7152 + parseInt(t.text?.slice(5,7)||'11',16)*0.0722) / 255;
-        if (t.bg && t.text && bgLum > 0.5 && txLum > 0.5) {
-          t.text = '#111111'; t.soft = '#444444';
-          await env.PROGRAMARI.put('__theme__', JSON.stringify(t));
-        }
+        // Ensure missing keys get defaults
+        if (!t.text)    t.text    = THEME_DEFAULT.text;
+        if (!t.soft)    t.soft    = THEME_DEFAULT.soft;
+        if (!t.heading) t.heading = THEME_DEFAULT.heading;
+        if (!raw) await env.PROGRAMARI.put('__theme__', JSON.stringify(t));
         const css = buildThemeCss(t);
         return new Response(css, { headers: { 'Content-Type': 'text/css;charset=utf-8', 'Cache-Control': 'no-cache, no-store, must-revalidate' } });
       } catch { return new Response('', { headers: { 'Content-Type': 'text/css' } }); }
