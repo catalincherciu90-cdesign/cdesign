@@ -382,17 +382,44 @@ async function checkCrmDeadlines(env) {
   }
 }
 
-const CORS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
+const ALLOWED_ORIGINS = ['https://www.c-design.ro', 'https://c-design.ro'];
+
+function getCors(request) {
+  const origin = request ? request.headers.get('Origin') : null;
+  const allowed = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowed,
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Vary': 'Origin',
+  };
+}
+
+const SEC_HEADERS = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'SAMEORIGIN',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+  'X-XSS-Protection': '1; mode=block',
 };
 
-function json(data, status = 200) {
+function json(data, status = 200, req) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { ...CORS, 'Content-Type': 'application/json' },
+    headers: { ...getCors(req), 'Content-Type': 'application/json' },
   });
+}
+
+async function checkRateLimit(env, key, maxAttempts, windowSeconds) {
+  try {
+    const raw = await env.PROGRAMARI.get('__rl_' + key);
+    const now = Date.now();
+    const data = raw ? JSON.parse(raw) : { count: 0, start: now };
+    if (now - data.start > windowSeconds * 1000) { data.count = 0; data.start = now; }
+    data.count++;
+    await env.PROGRAMARI.put('__rl_' + key, JSON.stringify(data), { expirationTtl: windowSeconds });
+    return data.count <= maxAttempts;
+  } catch { return true; }
 }
 
 const ADMIN_TOKEN = 'Anaare3mere#';
@@ -606,7 +633,7 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    if (request.method === 'OPTIONS') return new Response(null, { headers: CORS });
+    if (request.method === 'OPTIONS') return new Response(null, { headers: getCors(request) });
 
     // ── MAINTENANCE MODE ──────────────────────────────────────
     // Skip maintenance check for: admin API, admin page, static assets, token bypass
@@ -619,7 +646,7 @@ export default {
         if (mData.enabled) {
           return new Response(buildMaintenancePage(mData), {
             status: 503,
-            headers: { 'Content-Type': 'text/html;charset=utf-8', 'Retry-After': '3600', 'Cache-Control': 'no-store' }
+            headers: { ...SEC_HEADERS, 'Content-Type': 'text/html;charset=utf-8', 'Retry-After': '3600', 'Cache-Control': 'no-store' }
           });
         }
       } catch {}
@@ -702,19 +729,25 @@ export default {
     // ── AUTH ──────────────────────────────────────────────────
 
     if (path === '/api/login' && request.method === 'POST') {
+      const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+      const allowed = await checkRateLimit(env, 'login_' + ip, 10, 900);
+      if (!allowed) return json({ error: 'Prea multe încercări. Reîncearcă în 15 minute.' }, 429, request);
       try {
         const { username, password } = await request.json();
         const validUser  = env.ADMIN_USER  || ADMIN_USER;
         const validToken = env.ADMIN_TOKEN || ADMIN_TOKEN;
         if (username === validUser && password === validToken)
-          return json({ success: true });
-        return json({ error: 'Credențiale incorecte' }, 401);
-      } catch { return json({ error: 'Eroare server' }, 500); }
+          return json({ success: true }, 200, request);
+        return json({ error: 'Credențiale incorecte' }, 401, request);
+      } catch { return json({ error: 'Eroare server' }, 500, request); }
     }
 
     // ── BOOKINGS ──────────────────────────────────────────────
 
     if (path === '/api/booking' && request.method === 'POST') {
+      const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+      const allowed = await checkRateLimit(env, 'booking_' + ip, 5, 3600);
+      if (!allowed) return json({ error: 'Prea multe cereri. Reîncearcă mai târziu.' }, 429, request);
       try {
         const { name, phone, email, service, date, time, message } = await request.json();
         if (!name || !phone || !email || !date || !time)
@@ -1466,12 +1499,19 @@ export default {
         html = injectText(html, 'portofoliu-sub-el',  'p',  settings.portSub);
         html = injectText(html, 'testi-heading',      'h2', settings.testiTitle);
         html = injectText(html, 'contact-heading',    'h2', settings.contactTitle);
-        return new Response(html, { headers: { 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'no-cache, no-store, must-revalidate' } });
+        return new Response(html, { headers: { ...SEC_HEADERS, 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'no-cache, no-store, must-revalidate' } });
       } catch { return env.ASSETS.fetch(request); }
     }
 
-    // Fallthrough — servește fișierele statice
-    return env.ASSETS.fetch(request);
+    // Fallthrough — servește fișierele statice cu security headers
+    const assetResp = await env.ASSETS.fetch(request);
+    const ct = assetResp.headers.get('Content-Type') || '';
+    if (ct.includes('text/html')) {
+      const newHeaders = new Headers(assetResp.headers);
+      Object.entries(SEC_HEADERS).forEach(([k, v]) => newHeaders.set(k, v));
+      return new Response(assetResp.body, { status: assetResp.status, headers: newHeaders });
+    }
+    return assetResp;
   },
 
   async scheduled(event, env, ctx) {
