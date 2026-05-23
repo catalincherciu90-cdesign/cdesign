@@ -1489,6 +1489,37 @@ export default {
       } catch { return json({ error: 'Eroare' }, 500); }
     }
 
+    // SSR: injectează setările salvate în index.html pentru a evita flash-ul de conținut hardcodat
+    if (path === '/' || path === '/index.html') {
+      try {
+        const [htmlResp, settingsRaw] = await Promise.all([
+          env.ASSETS.fetch(new Request(new URL('/index.html', request.url).toString())),
+          env.PROGRAMARI.get('__site_settings__')
+        ]);
+        if (!settingsRaw) return htmlResp;
+        const settings = JSON.parse(settingsRaw);
+        let html = await htmlResp.text();
+        function injectText(h, id, tag, value) {
+          if (!value) return h;
+          const esc = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+          return h.replace(new RegExp(`(id="${id}"[^>]*>)[\\s\\S]*?(<\\/${tag}>)`), `$1${esc}$2`);
+        }
+        html = injectText(html, 'hero-h1-el',        'h1', settings.heroTitle);
+        html = injectText(html, 'hero-desc-el',       'p',  settings.heroDesc);
+        html = injectText(html, 'servicii-heading',   'h2', settings.servicesTitle);
+        html = injectText(html, 'servicii-sub-el',    'p',  settings.servicesSub);
+        html = injectText(html, 'ind-heading',        'h2', settings.indTitle);
+        html = injectText(html, 'ind-sub-el',         'p',  settings.indSub);
+        html = injectText(html, 'proces-heading',     'h2', settings.procesTitle);
+        html = injectText(html, 'proces-sub-el',      'p',  settings.procesSub);
+        html = injectText(html, 'portofoliu-heading', 'h2', settings.portTitle);
+        html = injectText(html, 'portofoliu-sub-el',  'p',  settings.portSub);
+        html = injectText(html, 'testi-heading',      'h2', settings.testiTitle);
+        html = injectText(html, 'contact-heading',    'h2', settings.contactTitle);
+        return new Response(html, { headers: { 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'no-cache, no-store, must-revalidate' } });
+      } catch { return env.ASSETS.fetch(request); }
+    }
+
     // Fallthrough — servește fișierele statice
     return env.ASSETS.fetch(request);
   },
