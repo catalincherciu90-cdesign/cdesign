@@ -121,8 +121,8 @@
       --hero-grad-mob:linear-gradient(180deg,rgba(255,255,255,.82) 0%,rgba(255,255,255,.75) 50%,rgba(255,255,255,.92) 100%);
       --hero-grad-xs:linear-gradient(180deg,rgba(255,255,255,.88) 0%,rgba(255,255,255,.72) 55%,rgba(255,255,255,.95) 100%);
     }
-    .col-desk-only{display:block;}
-    .col-mob-only{display:none;}
+    .col-desk-only{display:block!important;}
+    .col-mob-only{display:none!important;}
     @media(max-width:768px){.col-desk-only{display:none!important;}.col-mob-only{display:block!important;}}
     html{scroll-behavior:smooth}
     body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.65;overflow-x:hidden;}
@@ -1360,11 +1360,22 @@ document.getElementById('bookingForm').addEventListener('submit', async function
       var inner;
       var colVisClass = '';
       if (col.items && col.items.length) {
-        inner = col.items.map(renderColElement).join('');
+        // Detectăm vizibilitatea la nivel de coloană
         var allDesk = col.items.every(function(it){ return it.visibility === 'desktop'; });
         var allMob  = col.items.every(function(it){ return it.visibility === 'mobile'; });
         if (allDesk) colVisClass = ' col-desk-only';
         else if (allMob) colVisClass = ' col-mob-only';
+        // Dacă coloana are deja class de vizibilitate, randăm elementele fără class propriu
+        // (evităm dubla învelire col-desk-only care poate cauza conflicte în grid)
+        if (colVisClass) {
+          inner = col.items.map(function(el) {
+            var elCopy = Object.assign({}, el);
+            elCopy.visibility = 'all'; // coloana wrapper se ocupă de vizibilitate
+            return renderColElement(elCopy);
+          }).join('');
+        } else {
+          inner = col.items.map(renderColElement).join('');
+        }
       } else {
         // Backward compat: format vechi cu icon/title/text/btnText
         inner = (col.icon?'<div style="font-size:2rem;margin-bottom:14px;">'+escHtml(col.icon)+'</div>':'')
