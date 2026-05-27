@@ -1500,7 +1500,7 @@ Cerințe articol:
         if (!obj.value) return new Response('Not found', { status: 404 });
         const ct = (obj.metadata && obj.metadata.ct) || 'image/jpeg';
         return new Response(obj.value, {
-          headers: { 'Content-Type': ct, 'Cache-Control': 'public, max-age=31536000', ...CORS }
+          headers: { 'Content-Type': ct, 'Cache-Control': 'public, max-age=31536000', ...getCors(request) }
         });
       } catch { return new Response('Eroare', { status: 500 }); }
     }
