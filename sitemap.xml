@@ -90,4 +90,12 @@
     <xhtml:link rel="alternate" hreflang="ro" href="https://www.c-design.ro/abonament-lunar"/>
   </url>
 
+  <url>
+    <loc>https://www.c-design.ro/politica-confidentialitate</loc>
+    <lastmod>2026-05-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://www.c-design.ro/politica-confidentialitate"/>
+  </url>
+
 </urlset>
