@@ -2,6 +2,17 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+function sanitizeHtml(html) {
+  if (!html) return '';
+  // Allow basic formatting tags only
+  const allowed = /<\/?(b|i|em|strong|p|br|ul|ol|li|h2|h3|h4|blockquote|a)[^>]*>/gi;
+  return String(html)
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/on\w+\s*=/gi, 'data-blocked=')
+    .replace(/javascript:/gi, '');
+}
+
 function renderArticle(post) {
   const date = new Date(post.createdAt).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
   const plain = post.content.replace(/<[^>]*>/g, '');
@@ -122,7 +133,7 @@ footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--teal
   <span class="art-tag">Blog</span>
   <h1 class="art-title">${escHtml(post.title)}</h1>
   <div class="art-meta">${date}</div>
-  <div class="art-content">${post.content}</div>
+  <div class="art-content">${sanitizeHtml(post.content)}</div>
   <div class="cta-box">
     <h3>Vrei un site profesional pentru afacerea ta?</h3>
     <p>Programează o şedinţă de consultanţă gratuită — fără obligaţii.</p>
@@ -401,6 +412,7 @@ const SEC_HEADERS = {
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
   'X-XSS-Protection': '1; mode=block',
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.resend.com https://www.google-analytics.com;",
 };
 
 function json(data, status = 200, req) {
@@ -726,6 +738,14 @@ export default {
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
 
+    // ── LEGAL ─────────────────────────────────────────────────
+
+    if (path === '/politica-confidentialitate') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/politica-confidentialitate.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
     // ── AUTH ──────────────────────────────────────────────────
 
     if (path === '/api/login' && request.method === 'POST') {
@@ -754,6 +774,11 @@ export default {
           return json({ error: 'Câmpuri obligatorii lipsă' }, 400);
         const id = `booking_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
         const booking = { id, name, phone, email, service: service || 'Nespecificat', date, time, message: message || '', status: 'nou', createdAt: new Date().toISOString() };
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^[\d\s\+\-\(\)]{7,20}$/;
+        if (!emailRegex.test(booking.email)) return json({error:'Email invalid'}, 400);
+        if (!phoneRegex.test(booking.phone)) return json({error:'Telefon invalid'}, 400);
+        if (!booking.name || booking.name.length < 2) return json({error:'Nume invalid'}, 400);
         await env.PROGRAMARI.put(id, JSON.stringify(booking));
         const raw = await env.PROGRAMARI.get('__index__');
         const index = raw ? JSON.parse(raw) : [];
