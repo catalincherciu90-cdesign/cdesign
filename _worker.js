@@ -142,7 +142,7 @@ ham.addEventListener('click',()=>{const o=mob.classList.toggle('open');ham.setAt
 </html>`;
 }
 
-async function sendDeadlineNotification(entry) {
+async function sendDeadlineNotification(entry, env) {
   const termen = entry.termen || 'N/A';
   const html = `
 <!DOCTYPE html><html><head><meta charset="UTF-8"></head>
@@ -196,10 +196,10 @@ async function sendDeadlineNotification(entry) {
 
   await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY || RESEND_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       from: 'C Design <office@c-design.ro>',
-      to: [NOTIFY_EMAIL],
+      to: [env.NOTIFY_EMAIL || NOTIFY_EMAIL],
       subject: `⏰ Deadline în 3 zile: ${entry.client || 'Client'} – ${entry.proiect || 'Proiect'}`,
       html,
     }),
@@ -378,7 +378,7 @@ async function checkCrmDeadlines(env) {
     e.status !== 'anulat'
   );
   for (const e of due) {
-    await sendDeadlineNotification(e);
+    await sendDeadlineNotification(e, env);
   }
 }
 
@@ -422,12 +422,12 @@ async function checkRateLimit(env, key, maxAttempts, windowSeconds) {
   } catch { return true; }
 }
 
-const ADMIN_TOKEN = 'Anaare3mere#';
-const ADMIN_USER  = 'cdesign';
-const RESEND_API_KEY = 're_TRkWJxHP_EfZSi8vzbUT3Pu9J3zSsaeAv';
+const ADMIN_TOKEN = '';  // set via: wrangler secret put ADMIN_TOKEN
+const ADMIN_USER  = '';  // set via: wrangler secret put ADMIN_USER
+const RESEND_API_KEY = '';  // set via: wrangler secret put RESEND_API_KEY
 const NOTIFY_EMAIL  = 'office@c-design.ro';
 
-async function sendBookingNotification(booking) {
+async function sendBookingNotification(booking, env) {
   const html = `
 <!DOCTYPE html><html><head><meta charset="UTF-8"></head>
 <body style="margin:0;padding:0;background:#f4f4f4;font-family:'Segoe UI',Arial,sans-serif;">
@@ -494,10 +494,10 @@ async function sendBookingNotification(booking) {
   try {
     await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY || RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         from: 'C Design <notificari@c-design.ro>',
-        to: [NOTIFY_EMAIL],
+        to: [env.NOTIFY_EMAIL || NOTIFY_EMAIL],
         subject: `📅 Programare nouă — ${booking.name} · ${booking.date} ${booking.time}`,
         html,
       }),
@@ -566,7 +566,7 @@ async function sendBookingNotification(booking) {
   try {
     await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY || RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         from: 'C Design <notificari@c-design.ro>',
         to: [booking.email],
@@ -759,7 +759,7 @@ export default {
         const index = raw ? JSON.parse(raw) : [];
         index.unshift({ id, date, time, name });
         await env.PROGRAMARI.put('__index__', JSON.stringify(index));
-        await sendBookingNotification(booking);
+        await sendBookingNotification(booking, env);
         return json({ success: true, id });
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
