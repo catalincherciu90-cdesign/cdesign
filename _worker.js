@@ -647,6 +647,12 @@ export default {
 
     if (request.method === 'OPTIONS') return new Response(null, { headers: getCors(request) });
 
+    // Redirect non-www → www (301 permanent) pentru canonical corect
+    if (url.hostname === 'c-design.ro') {
+      url.hostname = 'www.c-design.ro';
+      return Response.redirect(url.toString(), 301);
+    }
+
     // ── MAINTENANCE MODE ──────────────────────────────────────
     // Skip maintenance check for: admin API, admin page, static assets, token bypass
     const isAdminReq = path === '/programari' || path === '/programari.html' || path.startsWith('/api/');
