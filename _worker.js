@@ -1022,7 +1022,8 @@ Cerințe titluri:
           max_tokens: 2048,
         });
 
-        const text = (ai.response || '').trim();
+        const rawAi = ai.response ?? ai.text ?? ai ?? '';
+        const text = (typeof rawAi === 'string' ? rawAi : JSON.stringify(rawAi)).trim();
         const match = text.match(/\[[\s\S]*\]/);
         if (!match) return json({ error: 'Modelul nu a returnat JSON valid. Încearcă din nou.' }, 500, request);
 
