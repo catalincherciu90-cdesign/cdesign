@@ -979,6 +979,76 @@ Cerințe articol:
       }
     }
 
+    if (path === '/api/blog/research-titles' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401, request);
+      try {
+        const { focus, audience, existing } = await request.json();
+        if (!env.AI) return json({ error: 'AI binding nedisponibil — verifică wrangler.toml' }, 500, request);
+
+        const existingList = Array.isArray(existing) && existing.length
+          ? `\nEvită titluri similare cu cele deja publicate:\n${existing.slice(0, 10).map(t => `- ${t}`).join('\n')}`
+          : '';
+
+        const focusCtx = focus ? `Focalizare: ${focus}` : 'Servicii generale de web design pentru afaceri mici';
+        const audienceCtx = audience ? `Public țintă: ${audience}` : 'Antreprenori și proprietari de afaceri mici din România';
+
+        const prompt = `Ești un expert SEO și content strategist pentru piața din România. Analizezi ce articole de blog ar trebui să scrie agenția "C Design" (web design din Ilfov/București, servicii pentru afaceri mici) pentru a-și îmbunătăți poziționarea pe Google și a atrage clienți potențiali.
+
+${focusCtx}
+${audienceCtx}${existingList}
+
+Generează exact 8 idei de titluri de blog SEO-optimizate. Returnează EXCLUSIV un array JSON valid, fără text înainte sau după:
+
+[
+  {
+    "title": "Titlul articolului (max 65 caractere, include cuvinte cheie)",
+    "keywords": ["cuvant cheie 1", "cuvant cheie 2", "cuvant cheie 3"],
+    "intent": "informational|commercial|navigational",
+    "hook": "De ce funcționează acest titlu SEO (1-2 propoziții)",
+    "difficulty": "ușor|mediu|dificil",
+    "angle": "Unghiul editorial: tutorial|lista|ghid|comparatie|studiu-de-caz|sfaturi"
+  }
+]
+
+Cerințe titluri:
+- Limbă română, naturală, fără traduceri rigide
+- Mixează intenții: 4 informational (sfaturi, ghiduri), 2 commercial (comparații, prețuri), 2 orientate spre conversie
+- Dificultate variată: 3 ușor, 3 mediu, 2 dificil
+- Relevante pentru afaceri mici din România care caută servicii web design
+- Include termeni de căutare reali pe care proprietarii de afaceri îi folosesc`;
+
+        const ai = await env.AI.run('@cf/meta/llama-3.3-70b-instruct-fp8-fast', {
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 2048,
+        });
+
+        const text = (ai.response || '').trim();
+        const match = text.match(/\[[\s\S]*\]/);
+        if (!match) return json({ error: 'Modelul nu a returnat JSON valid. Încearcă din nou.' }, 500, request);
+
+        let raw = match[0];
+        let sanitized = '';
+        let inStr = false, esc2 = false;
+        for (let i = 0; i < raw.length; i++) {
+          const c = raw[i];
+          if (esc2) { sanitized += c; esc2 = false; continue; }
+          if (c === '\\') { sanitized += c; esc2 = true; continue; }
+          if (c === '"') { inStr = !inStr; sanitized += c; continue; }
+          if (inStr && c.charCodeAt(0) < 0x20) {
+            if (c === '\n') sanitized += '\\n';
+            else if (c === '\r') sanitized += '\\r';
+            else if (c === '\t') sanitized += '\\t';
+          } else { sanitized += c; }
+        }
+
+        const titles = JSON.parse(sanitized);
+        if (!Array.isArray(titles) || !titles.length) return json({ error: 'Niciun rezultat generat. Încearcă din nou.' }, 500, request);
+        return json({ success: true, titles }, 200, request);
+      } catch (e) {
+        return json({ error: 'Eroare cercetare: ' + (e.message || 'necunoscută') }, 500, request);
+      }
+    }
+
     if (path === '/api/blog' && request.method === 'GET') {
       try {
         const raw = await env.PROGRAMARI.get('__blog__');
