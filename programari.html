@@ -828,8 +828,38 @@
     <div class="main">
       <div class="proj-toolbar">
         <h3>// articole_blog</h3>
-        <button class="btn-add" onclick="openBlogModal(null)">+ Articol nou</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn-add" onclick="toggleTitleResearch()" id="btnResearch" style="background:var(--teal-dim);border:1px solid var(--teal-border);color:var(--teal);">🔍 Cercetare Titluri SEO</button>
+          <button class="btn-add" onclick="openBlogModal(null)">+ Articol nou</button>
+        </div>
       </div>
+
+      <!-- PANOUL DE CERCETARE TITLURI -->
+      <div id="titleResearchPanel" style="display:none;background:var(--bg3);border:1px solid var(--teal-border);border-radius:12px;padding:20px 22px;margin-bottom:24px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <span style="font-family:'Share Tech Mono',monospace;font-size:.8rem;color:var(--teal);">// studiu_titluri_seo</span>
+          <span style="font-size:.75rem;color:var(--muted);">— AI analizează ce subiecte aduc trafic și clienți</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+          <div>
+            <label class="f-label" style="margin-bottom:5px;display:block;">// focalizare (opțional)</label>
+            <input class="f-input" type="text" id="researchFocus" placeholder="ex: web design restaurante, site-uri auto..." style="margin-bottom:0;">
+          </div>
+          <div>
+            <label class="f-label" style="margin-bottom:5px;display:block;">// public țintă (opțional)</label>
+            <input class="f-input" type="text" id="researchAudience" placeholder="ex: proprietari salon, mecanici auto..." style="margin-bottom:0;">
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <button class="btn-save" id="btnResearchGo" onclick="runTitleResearch()" style="padding:10px 20px;">🔍 Analizează acum</button>
+          <span id="researchStatus" style="font-family:'Share Tech Mono',monospace;font-size:.75rem;display:none;"></span>
+        </div>
+        <div id="researchResults" style="margin-top:20px;display:none;">
+          <div style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);margin-bottom:14px;">// rezultate — apasă „Crează articol" pentru a deschide editorul cu titlul pre-completat</div>
+          <div id="researchGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;"></div>
+        </div>
+      </div>
+
       <div id="blogList"><div class="loading">Se &icirc;ncarc&#259;...</div></div>
     </div>
   </div>
@@ -2072,6 +2102,89 @@
           </div>
         </div>
       </div>`).join('') + '</div>';
+  }
+
+  function toggleTitleResearch() {
+    const panel = document.getElementById('titleResearchPanel');
+    const btn = document.getElementById('btnResearch');
+    const visible = panel.style.display !== 'none';
+    panel.style.display = visible ? 'none' : 'block';
+    btn.style.background = visible ? 'var(--teal-dim)' : 'var(--teal)';
+    btn.style.color = visible ? 'var(--teal)' : '#060f0f';
+  }
+
+  async function runTitleResearch() {
+    const focus = document.getElementById('researchFocus').value.trim();
+    const audience = document.getElementById('researchAudience').value.trim();
+    const btn = document.getElementById('btnResearchGo');
+    const status = document.getElementById('researchStatus');
+    const resultsWrap = document.getElementById('researchResults');
+    const grid = document.getElementById('researchGrid');
+
+    btn.disabled = true; btn.textContent = '⏳ Analizez...';
+    status.style.display = 'inline'; status.style.color = 'var(--teal)';
+    status.textContent = '// AI analizează piața și generează titluri... 15-30 sec';
+    resultsWrap.style.display = 'none';
+
+    try {
+      const existing = allBlog.map(p => p.title);
+      const res = await fetch('/api/blog/research-titles?token=' + encodeURIComponent(adminToken), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ focus, audience, existing })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.titles) {
+        status.style.color = '#f87171';
+        status.textContent = '// Eroare: ' + (data.error || 'necunoscută');
+        btn.disabled = false; btn.textContent = '🔍 Analizează acum';
+        return;
+      }
+
+      const diffColor = { 'ușor': '#4ade80', 'mediu': '#fbbf24', 'dificil': '#f87171' };
+      const intentLabel = { 'informational': 'ℹ️ Informațional', 'commercial': '🛒 Comercial', 'navigational': '🧭 Navigational' };
+      const angleIcon = { 'tutorial': '📖', 'lista': '📋', 'ghid': '🗺️', 'comparatie': '⚖️', 'studiu-de-caz': '🔬', 'sfaturi': '💡' };
+
+      grid.innerHTML = data.titles.map((t, i) => `
+        <div style="background:var(--bg2);border:1px solid var(--border-soft);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:10px;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--teal-border)'" onmouseout="this.style.borderColor='var(--border-soft)'">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+            <span style="font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;color:var(--heading);line-height:1.4;flex:1;">${esc(t.title)}</span>
+            <span style="font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:20px;background:${diffColor[t.difficulty] || '#9ca3af'}22;color:${diffColor[t.difficulty] || '#9ca3af'};border:1px solid ${diffColor[t.difficulty] || '#9ca3af'}44;white-space:nowrap;flex-shrink:0;">${esc(t.difficulty || '?')}</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;">
+            ${(t.keywords || []).map(k => `<span style="font-size:.68rem;background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-border);padding:2px 8px;border-radius:12px;font-family:'Share Tech Mono',monospace;">${esc(k)}</span>`).join('')}
+          </div>
+          <div style="font-size:.78rem;color:var(--soft);line-height:1.55;">${esc(t.hook || '')}</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:2px;">
+            <div style="display:flex;gap:6px;">
+              <span style="font-size:.7rem;color:var(--muted);">${intentLabel[t.intent] || t.intent || ''}</span>
+              <span style="font-size:.7rem;color:var(--muted);">· ${angleIcon[t.angle] || ''} ${esc(t.angle || '')}</span>
+            </div>
+            <button class="btn-edit" style="font-size:.75rem;padding:5px 12px;flex-shrink:0;" onclick="useResearchTitle(${i})">✏️ Crează articol</button>
+          </div>
+        </div>
+      `).join('');
+
+      window._researchTitles = data.titles;
+      resultsWrap.style.display = 'block';
+      status.style.color = '#4ade80';
+      status.textContent = '// ✓ ' + data.titles.length + ' titluri generate';
+    } catch (e) {
+      status.style.color = '#f87171';
+      status.textContent = '// Eroare rețea: ' + e.message;
+    }
+    btn.disabled = false; btn.textContent = '🔍 Analizează din nou';
+  }
+
+  function useResearchTitle(idx) {
+    const t = (window._researchTitles || [])[idx];
+    if (!t) return;
+    openBlogModal(null);
+    document.getElementById('blogTitle').value = t.title || '';
+    document.getElementById('blogAiSubject').value = t.title || '';
+    genSlug();
+    // Scroll modal în view
+    document.getElementById('blogModalOverlay').scrollTop = 0;
   }
 
   async function generateBlogWithAI() {

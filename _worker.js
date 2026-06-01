@@ -2,6 +2,17 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+function sanitizeHtml(html) {
+  if (!html) return '';
+  // Allow basic formatting tags only
+  const allowed = /<\/?(b|i|em|strong|p|br|ul|ol|li|h2|h3|h4|blockquote|a)[^>]*>/gi;
+  return String(html)
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/on\w+\s*=/gi, 'data-blocked=')
+    .replace(/javascript:/gi, '');
+}
+
 function renderArticle(post) {
   const date = new Date(post.createdAt).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
   const plain = post.content.replace(/<[^>]*>/g, '');
@@ -122,7 +133,7 @@ footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--teal
   <span class="art-tag">Blog</span>
   <h1 class="art-title">${escHtml(post.title)}</h1>
   <div class="art-meta">${date}</div>
-  <div class="art-content">${post.content}</div>
+  <div class="art-content">${sanitizeHtml(post.content)}</div>
   <div class="cta-box">
     <h3>Vrei un site profesional pentru afacerea ta?</h3>
     <p>Programează o şedinţă de consultanţă gratuită — fără obligaţii.</p>
@@ -142,7 +153,7 @@ ham.addEventListener('click',()=>{const o=mob.classList.toggle('open');ham.setAt
 </html>`;
 }
 
-async function sendDeadlineNotification(entry) {
+async function sendDeadlineNotification(entry, env) {
   const termen = entry.termen || 'N/A';
   const html = `
 <!DOCTYPE html><html><head><meta charset="UTF-8"></head>
@@ -196,10 +207,10 @@ async function sendDeadlineNotification(entry) {
 
   await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY || RESEND_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       from: 'C Design <office@c-design.ro>',
-      to: [NOTIFY_EMAIL],
+      to: [env.NOTIFY_EMAIL || NOTIFY_EMAIL],
       subject: `⏰ Deadline în 3 zile: ${entry.client || 'Client'} – ${entry.proiect || 'Proiect'}`,
       html,
     }),
@@ -378,7 +389,7 @@ async function checkCrmDeadlines(env) {
     e.status !== 'anulat'
   );
   for (const e of due) {
-    await sendDeadlineNotification(e);
+    await sendDeadlineNotification(e, env);
   }
 }
 
@@ -401,6 +412,7 @@ const SEC_HEADERS = {
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
   'X-XSS-Protection': '1; mode=block',
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.resend.com https://www.google-analytics.com;",
 };
 
 function json(data, status = 200, req) {
@@ -422,12 +434,12 @@ async function checkRateLimit(env, key, maxAttempts, windowSeconds) {
   } catch { return true; }
 }
 
-const ADMIN_TOKEN = 'Anaare3mere#';
-const ADMIN_USER  = 'cdesign';
-const RESEND_API_KEY = 're_TRkWJxHP_EfZSi8vzbUT3Pu9J3zSsaeAv';
+const ADMIN_TOKEN = '';  // set via: wrangler secret put ADMIN_TOKEN
+const ADMIN_USER  = '';  // set via: wrangler secret put ADMIN_USER
+const RESEND_API_KEY = '';  // set via: wrangler secret put RESEND_API_KEY
 const NOTIFY_EMAIL  = 'office@c-design.ro';
 
-async function sendBookingNotification(booking) {
+async function sendBookingNotification(booking, env) {
   const html = `
 <!DOCTYPE html><html><head><meta charset="UTF-8"></head>
 <body style="margin:0;padding:0;background:#f4f4f4;font-family:'Segoe UI',Arial,sans-serif;">
@@ -494,10 +506,10 @@ async function sendBookingNotification(booking) {
   try {
     await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY || RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         from: 'C Design <notificari@c-design.ro>',
-        to: [NOTIFY_EMAIL],
+        to: [env.NOTIFY_EMAIL || NOTIFY_EMAIL],
         subject: `📅 Programare nouă — ${booking.name} · ${booking.date} ${booking.time}`,
         html,
       }),
@@ -566,7 +578,7 @@ async function sendBookingNotification(booking) {
   try {
     await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY || RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         from: 'C Design <notificari@c-design.ro>',
         to: [booking.email],
@@ -634,6 +646,12 @@ export default {
     const path = url.pathname;
 
     if (request.method === 'OPTIONS') return new Response(null, { headers: getCors(request) });
+
+    // Redirect non-www → www (301 permanent) pentru canonical corect
+    if (url.hostname === 'c-design.ro') {
+      url.hostname = 'www.c-design.ro';
+      return Response.redirect(url.toString(), 301);
+    }
 
     // ── MAINTENANCE MODE ──────────────────────────────────────
     // Skip maintenance check for: admin API, admin page, static assets, token bypass
@@ -726,6 +744,14 @@ export default {
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
 
+    // ── LEGAL ─────────────────────────────────────────────────
+
+    if (path === '/politica-confidentialitate') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/politica-confidentialitate.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
     // ── AUTH ──────────────────────────────────────────────────
 
     if (path === '/api/login' && request.method === 'POST') {
@@ -754,12 +780,17 @@ export default {
           return json({ error: 'Câmpuri obligatorii lipsă' }, 400);
         const id = `booking_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
         const booking = { id, name, phone, email, service: service || 'Nespecificat', date, time, message: message || '', status: 'nou', createdAt: new Date().toISOString() };
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^[\d\s\+\-\(\)]{7,20}$/;
+        if (!emailRegex.test(booking.email)) return json({error:'Email invalid'}, 400);
+        if (!phoneRegex.test(booking.phone)) return json({error:'Telefon invalid'}, 400);
+        if (!booking.name || booking.name.length < 2) return json({error:'Nume invalid'}, 400);
         await env.PROGRAMARI.put(id, JSON.stringify(booking));
         const raw = await env.PROGRAMARI.get('__index__');
         const index = raw ? JSON.parse(raw) : [];
         index.unshift({ id, date, time, name });
         await env.PROGRAMARI.put('__index__', JSON.stringify(index));
-        await sendBookingNotification(booking);
+        await sendBookingNotification(booking, env);
         return json({ success: true, id });
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
@@ -945,6 +976,76 @@ Cerințe articol:
         return json({ success: true, article }, 200, request);
       } catch (e) {
         return json({ error: 'Eroare generare: ' + (e.message || 'necunoscută') }, 500, request);
+      }
+    }
+
+    if (path === '/api/blog/research-titles' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401, request);
+      try {
+        const { focus, audience, existing } = await request.json();
+        if (!env.AI) return json({ error: 'AI binding nedisponibil — verifică wrangler.toml' }, 500, request);
+
+        const existingList = Array.isArray(existing) && existing.length
+          ? `\nEvită titluri similare cu cele deja publicate:\n${existing.slice(0, 10).map(t => `- ${t}`).join('\n')}`
+          : '';
+
+        const focusCtx = focus ? `Focalizare: ${focus}` : 'Servicii generale de web design pentru afaceri mici';
+        const audienceCtx = audience ? `Public țintă: ${audience}` : 'Antreprenori și proprietari de afaceri mici din România';
+
+        const prompt = `Ești un expert SEO și content strategist pentru piața din România. Analizezi ce articole de blog ar trebui să scrie agenția "C Design" (web design din Ilfov/București, servicii pentru afaceri mici) pentru a-și îmbunătăți poziționarea pe Google și a atrage clienți potențiali.
+
+${focusCtx}
+${audienceCtx}${existingList}
+
+Generează exact 8 idei de titluri de blog SEO-optimizate. Returnează EXCLUSIV un array JSON valid, fără text înainte sau după:
+
+[
+  {
+    "title": "Titlul articolului (max 65 caractere, include cuvinte cheie)",
+    "keywords": ["cuvant cheie 1", "cuvant cheie 2", "cuvant cheie 3"],
+    "intent": "informational|commercial|navigational",
+    "hook": "De ce funcționează acest titlu SEO (1-2 propoziții)",
+    "difficulty": "ușor|mediu|dificil",
+    "angle": "Unghiul editorial: tutorial|lista|ghid|comparatie|studiu-de-caz|sfaturi"
+  }
+]
+
+Cerințe titluri:
+- Limbă română, naturală, fără traduceri rigide
+- Mixează intenții: 4 informational (sfaturi, ghiduri), 2 commercial (comparații, prețuri), 2 orientate spre conversie
+- Dificultate variată: 3 ușor, 3 mediu, 2 dificil
+- Relevante pentru afaceri mici din România care caută servicii web design
+- Include termeni de căutare reali pe care proprietarii de afaceri îi folosesc`;
+
+        const ai = await env.AI.run('@cf/meta/llama-3.3-70b-instruct-fp8-fast', {
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 2048,
+        });
+
+        const text = (ai.response || '').trim();
+        const match = text.match(/\[[\s\S]*\]/);
+        if (!match) return json({ error: 'Modelul nu a returnat JSON valid. Încearcă din nou.' }, 500, request);
+
+        let raw = match[0];
+        let sanitized = '';
+        let inStr = false, esc2 = false;
+        for (let i = 0; i < raw.length; i++) {
+          const c = raw[i];
+          if (esc2) { sanitized += c; esc2 = false; continue; }
+          if (c === '\\') { sanitized += c; esc2 = true; continue; }
+          if (c === '"') { inStr = !inStr; sanitized += c; continue; }
+          if (inStr && c.charCodeAt(0) < 0x20) {
+            if (c === '\n') sanitized += '\\n';
+            else if (c === '\r') sanitized += '\\r';
+            else if (c === '\t') sanitized += '\\t';
+          } else { sanitized += c; }
+        }
+
+        const titles = JSON.parse(sanitized);
+        if (!Array.isArray(titles) || !titles.length) return json({ error: 'Niciun rezultat generat. Încearcă din nou.' }, 500, request);
+        return json({ success: true, titles }, 200, request);
+      } catch (e) {
+        return json({ error: 'Eroare cercetare: ' + (e.message || 'necunoscută') }, 500, request);
       }
     }
 
