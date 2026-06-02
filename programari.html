@@ -602,6 +602,18 @@
             <div class="gib-section-title">&#x26A0; DEADLINE-URI <span style="font-size:.72rem;font-weight:400;color:var(--muted);">(azi + 3 zile)</span></div>
             <div id="gib-deadlines-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
           </div>
+
+          <!-- Programări -->
+          <div class="gib-section">
+            <div class="gib-section-title">&#x1F4C5; PROGRAM&#x102;RI <span style="font-size:.72rem;font-weight:400;color:var(--muted);">(urm&#x103;toarele 7 zile)</span></div>
+            <div id="gib-bookings-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
+          </div>
+
+          <!-- Cheltuieli luna -->
+          <div class="gib-section">
+            <div class="gib-section-title">&#x1F4B8; CHELTUIELI <span style="font-size:.72rem;font-weight:400;color:var(--muted);">(luna aceasta)</span></div>
+            <div id="gib-cheltuieli-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
+          </div>
         </div>
       </div>
     </div>
@@ -1771,7 +1783,7 @@
       adminToken = saved;
       const ok = await fetchBookings(true);
       if (!ok) { adminToken = ''; localStorage.removeItem('cdAdmin'); }
-      else { fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); fetchTheme(); }
+      else { fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); fetchTheme(); fetchCheltuieli(); }
     }
   })();
 
@@ -1793,7 +1805,7 @@
       if (!ok) { err.textContent = '✗ Eroare de autentificare'; adminToken = ''; }
       else {
         localStorage.setItem('cdAdmin', password);
-        fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); fetchTheme();
+        fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); fetchTheme(); fetchCheltuieli();
       }
     } catch { err.textContent = '✗ Eroare de rețea'; }
   }
@@ -3021,6 +3033,8 @@
       renderGibilanMeetings();
       renderGibilanTodos();
       renderGibilanDeadlines();
+      renderGibilanBookings();
+      renderGibilanCheltuieli();
       renderGibilanSidebar();
       rotateGibMessage();
       if (selectedClientId) renderClientDetail(selectedClientId);
@@ -3117,6 +3131,61 @@
         <button class="gib-del" onclick="deleteGibilanItem('deadline','${esc(d.id)}')" title="&#x15C;terge">&#x1F5D1;</button>
       </div>`;
     }).join('');
+  }
+
+  function renderGibilanBookings() {
+    const wrap = document.getElementById('gib-bookings-list');
+    if (!wrap) return;
+    const today = new Date().toISOString().split('T')[0];
+    const in7 = new Date(); in7.setDate(in7.getDate() + 7);
+    const in7Str = in7.toISOString().split('T')[0];
+    const list = (allBookings || [])
+      .filter(b => b.date >= today && b.date <= in7Str)
+      .sort((a, b) => (a.date + (a.time || '')).localeCompare(b.date + (b.time || '')));
+    if (!list.length) { wrap.innerHTML = '<div class="gib-empty">Nicio programare &icirc;n urm&#x103;toarele 7 zile.</div>'; return; }
+    wrap.innerHTML = list.map(b => {
+      const isAzi = b.date === today;
+      const statusColor = { nou: '#fbbf24', confirmat: '#4ade80', anulat: '#f87171' }[b.status] || 'var(--muted)';
+      return `<div class="gib-item">
+        <span style="font-family:monospace;font-size:.82rem;color:var(--teal);flex-shrink:0;">${esc(b.time || '--:--')}</span>
+        <span class="gib-title">
+          ${esc(b.name)}
+          ${isAzi ? '<span style="font-size:.7rem;color:#febc2e;font-weight:700;">AZI</span>' : `<span style="font-size:.72rem;color:var(--muted);">${formatDate(b.date)}</span>`}
+          ${b.service && b.service !== 'Nespecificat' ? `<span style="font-size:.72rem;color:var(--muted);"> · ${esc(b.service)}</span>` : ''}
+        </span>
+        <span style="font-size:.7rem;font-weight:700;padding:2px 7px;border-radius:10px;background:${statusColor}22;color:${statusColor};flex-shrink:0;">${esc(b.status || 'nou')}</span>
+      </div>`;
+    }).join('');
+  }
+
+  function renderGibilanCheltuieli() {
+    const wrap = document.getElementById('gib-cheltuieli-list');
+    if (!wrap) return;
+    const acum = new Date();
+    const lunaAc = `${acum.getFullYear()}-${String(acum.getMonth() + 1).padStart(2, '0')}`;
+    const lista = (allCheltuieli || [])
+      .filter(c => (c.data || '').startsWith(lunaAc))
+      .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
+      .slice(0, 6);
+    const totalLuna = (allCheltuieli || [])
+      .filter(c => (c.data || '').startsWith(lunaAc))
+      .reduce((s, c) => s + (parseFloat(c.suma) || 0), 0);
+
+    if (!lista.length) {
+      wrap.innerHTML = '<div class="gib-empty">Nicio cheltuial&#x103; &icirc;nregistrat&#x103; luna aceasta.</div>';
+      return;
+    }
+    const catIcon = { hosting: '🌐', publicitate: '📢', tools: '🛠', echipamente: '💻', birou: '📋', taxe: '📜', transport: '🚗', altele: '📦' };
+    wrap.innerHTML = lista.map(c => `
+      <div class="gib-item">
+        <span style="flex-shrink:0;font-size:.9rem;">${catIcon[c.categorie] || '📦'}</span>
+        <span class="gib-title">${esc(c.descriere)}${c.recurent ? ' <span style="font-size:.68rem;color:var(--muted);">↻</span>' : ''}</span>
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;color:var(--teal);flex-shrink:0;">${parseFloat(c.suma || 0).toFixed(2)} <span style="font-size:.68rem;font-weight:400;color:var(--muted);">${esc(c.moneda || 'RON')}</span></span>
+      </div>`).join('') +
+      `<div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px;display:flex;justify-content:space-between;font-size:.78rem;">
+        <span style="color:var(--muted);font-family:'Share Tech Mono',monospace;">// total luna</span>
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--teal);">${totalLuna.toFixed(2)} RON</span>
+      </div>`;
   }
 
   function renderGibilanSidebar() {
