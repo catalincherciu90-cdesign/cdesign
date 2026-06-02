@@ -1100,6 +1100,55 @@ Cerințe titluri:
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
 
+    // ── CHELTUIELI ───────────────────────────────────────────
+    if (path === '/api/cheltuieli' && request.method === 'GET') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const raw = await env.PROGRAMARI.get('__cheltuieli__');
+        return json(raw ? JSON.parse(raw) : []);
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path === '/api/cheltuieli' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const { descriere, categorie, suma, moneda, data, metodaPlatii, recurent, note } = await request.json();
+        if (!descriere || !suma || !data) return json({ error: 'Câmpuri obligatorii lipsă' }, 400);
+        const raw = await env.PROGRAMARI.get('__cheltuieli__');
+        const lista = raw ? JSON.parse(raw) : [];
+        const id = `chelt_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+        lista.unshift({ id, descriere, categorie: categorie || 'altele', suma: parseFloat(suma), moneda: moneda || 'RON', data, metodaPlatii: metodaPlatii || 'card', recurent: !!recurent, note: note || '', createdAt: new Date().toISOString() });
+        await env.PROGRAMARI.put('__cheltuieli__', JSON.stringify(lista));
+        return json({ success: true, id });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path.startsWith('/api/cheltuieli/') && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/cheltuieli/', '');
+        const updates = await request.json();
+        const raw = await env.PROGRAMARI.get('__cheltuieli__');
+        const lista = raw ? JSON.parse(raw) : [];
+        const idx = lista.findIndex(c => c.id === id);
+        if (idx === -1) return json({ error: 'Cheltuiala negăsită' }, 404);
+        lista[idx] = { ...lista[idx], ...updates, suma: parseFloat(updates.suma || lista[idx].suma), updatedAt: new Date().toISOString() };
+        await env.PROGRAMARI.put('__cheltuieli__', JSON.stringify(lista));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path.startsWith('/api/cheltuieli/') && request.method === 'DELETE') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/cheltuieli/', '');
+        const raw = await env.PROGRAMARI.get('__cheltuieli__');
+        const lista = raw ? JSON.parse(raw) : [];
+        await env.PROGRAMARI.put('__cheltuieli__', JSON.stringify(lista.filter(c => c.id !== id)));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
     // ── SETTINGS ─────────────────────────────────────────────
 
     const DEFAULT_SETTINGS = { workingDays:[1,2,3,4,5], startTime:'09:00', endTime:'18:00', slotInterval:60, blockedDates:[] };

@@ -466,6 +466,7 @@
     <button class="tab" onclick="switchTab('media',this)">&#x1F5BC; Media</button>
     <button class="tab" onclick="switchTab('tema',this)">&#x1F3A8; Tem&#x103;</button>
     <button class="tab" onclick="switchTab('settings',this)">&#x2699; Set&#x103;ri</button>
+    <button class="tab" onclick="switchTab('cheltuieli',this)">&#x1F4B8; Cheltuieli</button>
   </div>
 
   <!-- TAB: GIBILAN -->
@@ -1449,6 +1450,110 @@
     </div>
   </div>
 
+  <!-- TAB: CHELTUIELI -->
+  <div class="tab-panel" id="panel-cheltuieli">
+    <div class="main">
+      <div class="proj-toolbar">
+        <h3>// cheltuieli_afacere</h3>
+        <button class="btn-add" onclick="openCheltModal(null)">+ Cheltuial&#x103; nou&#x103;</button>
+      </div>
+
+      <!-- SUMAR LUNAR -->
+      <div id="cheltSumar" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:24px;"></div>
+
+      <!-- FILTRE -->
+      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;">
+        <select class="f-select" id="cheltFiltruLuna" onchange="renderCheltuieli()" style="width:auto;min-width:140px;padding:8px 12px;font-size:.82rem;">
+          <option value="">Toate lunile</option>
+        </select>
+        <select class="f-select" id="cheltFiltruCat" onchange="renderCheltuieli()" style="width:auto;min-width:150px;padding:8px 12px;font-size:.82rem;">
+          <option value="">Toate categoriile</option>
+          <option value="hosting">&#x1F310; Hosting &amp; Domeniu</option>
+          <option value="publicitate">&#x1F4E2; Publicitate</option>
+          <option value="tools">&#x1F6E0; Tools &amp; Software</option>
+          <option value="echipamente">&#x1F4BB; Echipamente</option>
+          <option value="birou">&#x1F4CB; Birou &amp; Admin</option>
+          <option value="taxe">&#x1F4DC; Taxe &amp; Contabilitate</option>
+          <option value="transport">&#x1F697; Transport</option>
+          <option value="altele">&#x1F4E6; Altele</option>
+        </select>
+        <span id="cheltFiltruInfo" style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--muted);"></span>
+      </div>
+
+      <div id="cheltList"><div class="loading">Se &icirc;ncarc&#259;...</div></div>
+    </div>
+  </div>
+
+  <!-- MODAL: CHELTUIALA -->
+  <div class="modal-overlay" id="cheltModalOverlay">
+    <div class="modal" style="max-width:520px;">
+      <h3 id="cheltModalTitle">Cheltuial&#x103; nou&#x103;</h3>
+      <input type="hidden" id="cheltEditId">
+      <div class="f-row">
+        <div class="f-group">
+          <label class="f-label">// descriere *</label>
+          <input class="f-input" type="text" id="cheltDescriere" placeholder="ex: Hosting Cloudflare">
+        </div>
+        <div class="f-group">
+          <label class="f-label">// categorie *</label>
+          <select class="f-select" id="cheltCategorie">
+            <option value="hosting">&#x1F310; Hosting &amp; Domeniu</option>
+            <option value="publicitate">&#x1F4E2; Publicitate</option>
+            <option value="tools">&#x1F6E0; Tools &amp; Software</option>
+            <option value="echipamente">&#x1F4BB; Echipamente</option>
+            <option value="birou">&#x1F4CB; Birou &amp; Admin</option>
+            <option value="taxe">&#x1F4DC; Taxe &amp; Contabilitate</option>
+            <option value="transport">&#x1F697; Transport</option>
+            <option value="altele">&#x1F4E6; Altele</option>
+          </select>
+        </div>
+      </div>
+      <div class="f-row">
+        <div class="f-group">
+          <label class="f-label">// sum&#x103; *</label>
+          <input class="f-input" type="number" id="cheltSuma" placeholder="0.00" min="0" step="0.01">
+        </div>
+        <div class="f-group">
+          <label class="f-label">// moned&#x103;</label>
+          <select class="f-select" id="cheltMoneda">
+            <option value="RON">RON</option>
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+          </select>
+        </div>
+      </div>
+      <div class="f-row">
+        <div class="f-group">
+          <label class="f-label">// dat&#x103; *</label>
+          <input class="f-input" type="date" id="cheltData">
+        </div>
+        <div class="f-group">
+          <label class="f-label">// metod&#x103; plat&#x103;</label>
+          <select class="f-select" id="cheltMetoda">
+            <option value="card">Card</option>
+            <option value="transfer">Transfer bancar</option>
+            <option value="cash">Cash</option>
+            <option value="crypto">Crypto</option>
+          </select>
+        </div>
+      </div>
+      <div class="f-group" style="margin-bottom:10px;">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.9rem;color:var(--soft);">
+          <input type="checkbox" id="cheltRecurent" style="width:16px;height:16px;accent-color:var(--teal);">
+          Cheltuial&#x103; recurent&#x103; (lunar&#x103;)
+        </label>
+      </div>
+      <div class="f-group">
+        <label class="f-label">// note (op&#x21B;ional)</label>
+        <textarea class="f-input" id="cheltNote" placeholder="Detalii suplimentare..." style="min-height:60px;"></textarea>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:8px;">
+        <button class="btn-cancel" onclick="closeCheltModal()">Anuleaz&#x103;</button>
+        <button class="btn-save" onclick="saveChelt()">Salveaz&#x103; &#x2192;</button>
+      </div>
+    </div>
+  </div>
+
   <!-- BLOCK PICKER MODAL -->
   <div class="block-picker-overlay" id="blockPickerOverlay" style="display:none;" onclick="if(event.target===this)closeBlockPicker()">
     <div class="block-picker-box">
@@ -1705,6 +1810,7 @@
     if (tab === 'pagini') { var sel = document.getElementById('layout-page-sel'); loadLayoutPage(sel ? sel.value : 'index'); }
     if (tab === 'tema') fetchTheme();
     if (tab === 'media') fetchMedia();
+    if (tab === 'cheltuieli') fetchCheltuieli();
   }
 
   function refreshCurrent() {
@@ -1715,6 +1821,7 @@
     else if (currentTab === 'blog') fetchBlog();
     else if (currentTab === 'social') fetchSocial();
     else if (currentTab === 'settings') fetchSettings();
+    else if (currentTab === 'cheltuieli') fetchCheltuieli();
     else if (currentTab === 'pagini') { var sel = document.getElementById('layout-page-sel'); loadLayoutPage(sel ? sel.value : 'index'); }
     else if (currentTab === 'tema') fetchTheme();
     else if (currentTab === 'media') fetchMedia();
@@ -4290,6 +4397,160 @@
     document.getElementById('passInput').value = '';
     document.getElementById('loginErr').textContent = '';
   }
+
+  // ── CHELTUIELI ────────────────────────────────────────────────
+  let allCheltuieli = [];
+
+  const CHELT_CAT_LABEL = {
+    hosting: '🌐 Hosting & Domeniu', publicitate: '📢 Publicitate',
+    tools: '🛠 Tools & Software', echipamente: '💻 Echipamente',
+    birou: '📋 Birou & Admin', taxe: '📜 Taxe & Contabilitate',
+    transport: '🚗 Transport', altele: '📦 Altele'
+  };
+
+  async function fetchCheltuieli() {
+    try {
+      const res = await fetch('/api/cheltuieli?token=' + encodeURIComponent(adminToken));
+      allCheltuieli = await res.json();
+      populateCheltFiltruLuna();
+      renderCheltuieli();
+    } catch {
+      document.getElementById('cheltList').innerHTML = '<div class="empty-state"><p>// Eroare la încărcare.</p></div>';
+    }
+  }
+
+  function populateCheltFiltruLuna() {
+    const sel = document.getElementById('cheltFiltruLuna');
+    const luni = [...new Set(allCheltuieli.map(c => c.data ? c.data.slice(0, 7) : ''))].filter(Boolean).sort().reverse();
+    sel.innerHTML = '<option value="">Toate lunile</option>' +
+      luni.map(l => {
+        const [y, m] = l.split('-');
+        const numeL = new Date(y, m - 1, 1).toLocaleDateString('ro-RO', { month: 'long', year: 'numeric' });
+        return `<option value="${l}">${numeL}</option>`;
+      }).join('');
+  }
+
+  function renderCheltuieli() {
+    const wrap = document.getElementById('cheltList');
+    const filtruLuna = document.getElementById('cheltFiltruLuna').value;
+    const filtruCat = document.getElementById('cheltFiltruCat').value;
+
+    let lista = [...allCheltuieli].sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+    if (filtruLuna) lista = lista.filter(c => (c.data || '').startsWith(filtruLuna));
+    if (filtruCat) lista = lista.filter(c => c.categorie === filtruCat);
+
+    // Sumar
+    const sumarWrap = document.getElementById('cheltSumar');
+    const acum = new Date();
+    const lunaAc = `${acum.getFullYear()}-${String(acum.getMonth() + 1).padStart(2, '0')}`;
+    const anAc = String(acum.getFullYear());
+    const totalLuna = allCheltuieli.filter(c => (c.data || '').startsWith(lunaAc)).reduce((s, c) => s + (parseFloat(c.suma) || 0), 0);
+    const totalAn = allCheltuieli.filter(c => (c.data || '').startsWith(anAc)).reduce((s, c) => s + (parseFloat(c.suma) || 0), 0);
+    const recurente = allCheltuieli.filter(c => c.recurent).length;
+    sumarWrap.innerHTML = [
+      ['Luna aceasta', totalLuna.toFixed(2) + ' RON', '#4ade80'],
+      ['Anul ' + anAc, totalAn.toFixed(2) + ' RON', 'var(--teal)'],
+      ['Recurente', recurente + ' cheltuieli', '#fbbf24'],
+      ['Total înregistrate', allCheltuieli.length + ' intrări', 'var(--soft)'],
+    ].map(([label, val, color]) => `
+      <div style="background:var(--bg3);border:1px solid var(--border-soft);border-radius:10px;padding:16px 18px;">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--muted);margin-bottom:6px;">${label}</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:700;color:${color};">${val}</div>
+      </div>`).join('');
+
+    // Info filtru
+    document.getElementById('cheltFiltruInfo').textContent = lista.length
+      ? `// ${lista.length} înregistrări · total: ${lista.reduce((s, c) => s + (parseFloat(c.suma) || 0), 0).toFixed(2)} RON`
+      : '';
+
+    if (!lista.length) {
+      wrap.innerHTML = '<div class="empty-state"><p>// Nicio cheltuială găsită. Apasă "+ Cheltuială nouă".</p></div>';
+      return;
+    }
+
+    wrap.innerHTML = '<div class="table-wrap"><table style="width:100%;border-collapse:collapse;">' +
+      '<thead><tr style="font-family:\'Share Tech Mono\',monospace;font-size:.72rem;color:var(--muted);border-bottom:1px solid var(--border);">' +
+      '<th style="text-align:left;padding:8px 12px;">Descriere</th>' +
+      '<th style="text-align:left;padding:8px 12px;">Categorie</th>' +
+      '<th style="text-align:right;padding:8px 12px;">Sumă</th>' +
+      '<th style="text-align:left;padding:8px 12px;">Dată</th>' +
+      '<th style="text-align:left;padding:8px 12px;">Metodă</th>' +
+      '<th style="text-align:center;padding:8px 12px;">Recurent</th>' +
+      '<th style="padding:8px 12px;"></th>' +
+      '</tr></thead><tbody>' +
+      lista.map(c => `
+        <tr style="border-bottom:1px solid var(--border);transition:background .15s;" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''">
+          <td style="padding:10px 12px;font-size:.88rem;color:var(--text);">${esc(c.descriere || '')}${c.note ? `<div style="font-size:.72rem;color:var(--muted);margin-top:2px;">${esc(c.note)}</div>` : ''}</td>
+          <td style="padding:10px 12px;font-size:.8rem;color:var(--soft);">${CHELT_CAT_LABEL[c.categorie] || esc(c.categorie || '')}</td>
+          <td style="padding:10px 12px;text-align:right;font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--teal);">${parseFloat(c.suma || 0).toFixed(2)} <span style="font-size:.72rem;font-weight:400;color:var(--muted);">${esc(c.moneda || 'RON')}</span></td>
+          <td style="padding:10px 12px;font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--muted);">${formatDate(c.data || '')}</td>
+          <td style="padding:10px 12px;font-size:.78rem;color:var(--soft);">${esc(c.metodaPlatii || '')}</td>
+          <td style="padding:10px 12px;text-align:center;">${c.recurent ? '<span style="color:#4ade80;font-size:.8rem;">↻ DA</span>' : '<span style="color:var(--muted);font-size:.78rem;">—</span>'}</td>
+          <td style="padding:10px 12px;white-space:nowrap;">
+            <button class="btn-edit" onclick="openCheltModal('${esc(c.id)}')">✎</button>
+            <button class="btn-del" onclick="deleteChelt('${esc(c.id)}','${esc(c.descriere || '')}')" style="margin-left:4px;">✕</button>
+          </td>
+        </tr>`).join('') +
+      '</tbody></table></div>';
+  }
+
+  function openCheltModal(id) {
+    const c = id ? allCheltuieli.find(x => x.id === id) : null;
+    document.getElementById('cheltModalTitle').textContent = c ? 'Editează cheltuială' : 'Cheltuială nouă';
+    document.getElementById('cheltEditId').value = c ? c.id : '';
+    document.getElementById('cheltDescriere').value = c ? c.descriere : '';
+    document.getElementById('cheltCategorie').value = c ? c.categorie : 'hosting';
+    document.getElementById('cheltSuma').value = c ? c.suma : '';
+    document.getElementById('cheltMoneda').value = c ? c.moneda : 'RON';
+    document.getElementById('cheltData').value = c ? c.data : new Date().toISOString().slice(0, 10);
+    document.getElementById('cheltMetoda').value = c ? c.metodaPlatii : 'card';
+    document.getElementById('cheltRecurent').checked = c ? !!c.recurent : false;
+    document.getElementById('cheltNote').value = c ? (c.note || '') : '';
+    document.getElementById('cheltModalOverlay').classList.add('open');
+    document.getElementById('cheltDescriere').focus();
+  }
+
+  function closeCheltModal() { document.getElementById('cheltModalOverlay').classList.remove('open'); }
+
+  async function saveChelt() {
+    const id = document.getElementById('cheltEditId').value;
+    const descriere = document.getElementById('cheltDescriere').value.trim();
+    const suma = parseFloat(document.getElementById('cheltSuma').value);
+    const data = document.getElementById('cheltData').value;
+    if (!descriere || isNaN(suma) || !data) { alert('Completează descrierea, suma și data.'); return; }
+
+    const payload = {
+      descriere,
+      categorie: document.getElementById('cheltCategorie').value,
+      suma,
+      moneda: document.getElementById('cheltMoneda').value,
+      data,
+      metodaPlatii: document.getElementById('cheltMetoda').value,
+      recurent: document.getElementById('cheltRecurent').checked,
+      note: document.getElementById('cheltNote').value.trim(),
+    };
+
+    const url = id
+      ? `/api/cheltuieli/${id}?token=${encodeURIComponent(adminToken)}`
+      : `/api/cheltuieli?token=${encodeURIComponent(adminToken)}`;
+    const method = id ? 'PUT' : 'POST';
+
+    try {
+      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (!res.ok) { alert('Eroare la salvare.'); return; }
+      closeCheltModal();
+      fetchCheltuieli();
+    } catch { alert('Eroare de rețea.'); }
+  }
+
+  async function deleteChelt(id, desc) {
+    if (!confirm(`Ștergi cheltuiala "${desc}"?`)) return;
+    try {
+      await fetch(`/api/cheltuieli/${id}?token=${encodeURIComponent(adminToken)}`, { method: 'DELETE' });
+      fetchCheltuieli();
+    } catch { alert('Eroare la ștergere.'); }
+  }
+
 </script>
 </body>
 </html>
