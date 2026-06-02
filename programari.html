@@ -3167,24 +3167,41 @@
     if (!wrap) return;
     const acum = new Date();
     const lunaAc = `${acum.getFullYear()}-${String(acum.getMonth() + 1).padStart(2, '0')}`;
-    const lista = (allCheltuieli || [])
-      .filter(c => (c.data || '').startsWith(lunaAc))
-      .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
-      .slice(0, 6);
-    const totalLuna = (allCheltuieli || [])
-      .filter(c => (c.data || '').startsWith(lunaAc))
-      .reduce((s, c) => s + (parseFloat(c.suma) || 0), 0);
+    const toateLuna = (allCheltuieli || []).filter(c => (c.data || '').startsWith(lunaAc));
+
+    // Neachitate primele (sortate după dată), apoi achitate
+    const neachitate = toateLuna.filter(c => !c.achitat).sort((a, b) => (a.data || '').localeCompare(b.data || ''));
+    const achitate  = toateLuna.filter(c =>  c.achitat).sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+    const lista = [...neachitate, ...achitate].slice(0, 7);
+
+    const totalLuna    = toateLuna.reduce((s, c) => s + (parseFloat(c.suma) || 0), 0);
+    const totalNeachit = neachitate.reduce((s, c) => s + (parseFloat(c.suma) || 0), 0);
 
     if (!lista.length) {
       wrap.innerHTML = '<div class="gib-empty">Nicio cheltuial&#x103; &icirc;nregistrat&#x103; luna aceasta.</div>';
       return;
     }
+
     const catIcon = { hosting: '🌐', publicitate: '📢', tools: '🛠', echipamente: '💻', birou: '📋', taxe: '📜', transport: '🚗', altele: '📦' };
-    wrap.innerHTML = lista.map(c => `
-      <div class="gib-item">
+
+    // Banner de alertă dacă există neachitate
+    const alertBanner = neachitate.length
+      ? `<div style="background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.35);border-radius:8px;padding:7px 12px;margin-bottom:8px;display:flex;align-items:center;gap:8px;">
+          <span style="font-size:.85rem;">⚠️</span>
+          <span style="font-size:.78rem;color:#f87171;font-family:'Share Tech Mono',monospace;">${neachitate.length} neachitat${neachitate.length > 1 ? 'e' : 'ă'} · <strong>${totalNeachit.toFixed(2)} RON</strong></span>
+         </div>`
+      : '';
+
+    wrap.innerHTML = alertBanner + lista.map(c => `
+      <div class="gib-item" style="${!c.achitat ? 'border-left:2px solid #f87171;padding-left:8px;' : 'opacity:.65;'}">
         <span style="flex-shrink:0;font-size:.9rem;">${catIcon[c.categorie] || '📦'}</span>
-        <span class="gib-title">${esc(c.descriere)}${c.recurent ? ' <span style="font-size:.68rem;color:var(--muted);">↻</span>' : ''}</span>
-        <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;color:var(--teal);flex-shrink:0;">${parseFloat(c.suma || 0).toFixed(2)} <span style="font-size:.68rem;font-weight:400;color:var(--muted);">${esc(c.moneda || 'RON')}</span></span>
+        <span class="gib-title" style="${!c.achitat ? '' : 'text-decoration:line-through;'}">
+          ${esc(c.descriere)}${c.recurent ? ' <span style="font-size:.68rem;color:var(--muted);">↻</span>' : ''}
+        </span>
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;color:${c.achitat ? '#4ade80' : '#f87171'};flex-shrink:0;">
+          ${parseFloat(c.suma || 0).toFixed(2)} <span style="font-size:.68rem;font-weight:400;color:var(--muted);">${esc(c.moneda || 'RON')}</span>
+        </span>
+        <input type="checkbox" ${c.achitat ? 'checked' : ''} style="width:14px;height:14px;accent-color:#4ade80;cursor:pointer;flex-shrink:0;" title="${c.achitat ? 'Achitat — apasă pentru a anula' : 'Marchează ca achitat'}" onchange="toggleCheltAchitat('${esc(c.id)}',this.checked)">
       </div>`).join('') +
       `<div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px;display:flex;justify-content:space-between;font-size:.78rem;">
         <span style="color:var(--muted);font-family:'Share Tech Mono',monospace;">// total luna</span>
