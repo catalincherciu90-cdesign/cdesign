@@ -1549,10 +1549,14 @@
           </select>
         </div>
       </div>
-      <div class="f-group" style="margin-bottom:10px;">
+      <div style="display:flex;gap:24px;margin-bottom:10px;flex-wrap:wrap;">
         <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.9rem;color:var(--soft);">
           <input type="checkbox" id="cheltRecurent" style="width:16px;height:16px;accent-color:var(--teal);">
           Cheltuial&#x103; recurent&#x103; (lunar&#x103;)
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.9rem;color:var(--soft);">
+          <input type="checkbox" id="cheltAchitat" style="width:16px;height:16px;accent-color:#4ade80;">
+          <span>Achitat&#x103; <span style="font-size:.78rem;color:#4ade80;">✓</span></span>
         </label>
       </div>
       <div class="f-group">
@@ -4545,6 +4549,7 @@
       '<th style="text-align:left;padding:8px 12px;">Dată</th>' +
       '<th style="text-align:left;padding:8px 12px;">Metodă</th>' +
       '<th style="text-align:center;padding:8px 12px;">Recurent</th>' +
+      '<th style="text-align:center;padding:8px 12px;">Achitat</th>' +
       '<th style="padding:8px 12px;"></th>' +
       '</tr></thead><tbody>' +
       lista.map(c => `
@@ -4555,6 +4560,9 @@
           <td style="padding:10px 12px;font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--muted);">${formatDate(c.data || '')}</td>
           <td style="padding:10px 12px;font-size:.78rem;color:var(--soft);">${esc(c.metodaPlatii || '')}</td>
           <td style="padding:10px 12px;text-align:center;">${c.recurent ? '<span style="color:#4ade80;font-size:.8rem;">↻ DA</span>' : '<span style="color:var(--muted);font-size:.78rem;">—</span>'}</td>
+          <td style="padding:10px 12px;text-align:center;">
+            <input type="checkbox" ${c.achitat ? 'checked' : ''} style="width:16px;height:16px;accent-color:#4ade80;cursor:pointer;" title="${c.achitat ? 'Achitat' : 'Neachitat — apasă pentru a marca'}" onchange="toggleCheltAchitat('${esc(c.id)}',this.checked)">
+          </td>
           <td style="padding:10px 12px;white-space:nowrap;">
             <button class="btn-edit" onclick="openCheltModal('${esc(c.id)}')">✎</button>
             <button class="btn-del" onclick="deleteChelt('${esc(c.id)}','${esc(c.descriere || '')}')" style="margin-left:4px;">✕</button>
@@ -4574,6 +4582,7 @@
     document.getElementById('cheltData').value = c ? c.data : new Date().toISOString().slice(0, 10);
     document.getElementById('cheltMetoda').value = c ? c.metodaPlatii : 'card';
     document.getElementById('cheltRecurent').checked = c ? !!c.recurent : false;
+    document.getElementById('cheltAchitat').checked = c ? !!c.achitat : false;
     document.getElementById('cheltNote').value = c ? (c.note || '') : '';
     document.getElementById('cheltModalOverlay').classList.add('open');
     document.getElementById('cheltDescriere').focus();
@@ -4596,6 +4605,7 @@
       data,
       metodaPlatii: document.getElementById('cheltMetoda').value,
       recurent: document.getElementById('cheltRecurent').checked,
+      achitat: document.getElementById('cheltAchitat').checked,
       note: document.getElementById('cheltNote').value.trim(),
     };
 
@@ -4610,6 +4620,18 @@
       closeCheltModal();
       fetchCheltuieli();
     } catch { alert('Eroare de rețea.'); }
+  }
+
+  async function toggleCheltAchitat(id, achitat) {
+    try {
+      await fetch(`/api/cheltuieli/${id}?token=${encodeURIComponent(adminToken)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ achitat })
+      });
+      const c = allCheltuieli.find(x => x.id === id);
+      if (c) { c.achitat = achitat; renderGibilanCheltuieli(); }
+    } catch { alert('Eroare la actualizare.'); }
   }
 
   async function deleteChelt(id, desc) {
