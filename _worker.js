@@ -2015,6 +2015,300 @@ Cerințe titluri:
       } catch { return new Response('Eroare la generare', { status: 500 }); }
     }
 
+    // ── CONTRACTE ────────────────────────────────────────────
+
+    if (path === '/api/contracte' && request.method === 'GET') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const raw = await env.PROGRAMARI.get('__contracte__');
+        return json(raw ? JSON.parse(raw) : []);
+      } catch { return json([]); }
+    }
+
+    if (path === '/api/contracte' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const body = await request.json();
+        if (!body.client?.name || !body.obiect) return json({ error: 'Date incomplete' }, 400);
+        const raw = await env.PROGRAMARI.get('__contracte__');
+        const lista = raw ? JSON.parse(raw) : [];
+        const yr = new Date().getFullYear();
+        const nrSeq = String(lista.filter(c => (c.createdAt||'').startsWith(String(yr))).length + 1).padStart(3, '0');
+        const contract = {
+          id: 'cnt_' + Date.now(),
+          numar: `CNT-${yr}-${nrSeq}`,
+          createdAt: new Date().toISOString(),
+          dataSemnare: String(body.dataSemnare || new Date().toISOString().slice(0,10)),
+          client: {
+            name: String(body.client.name||'').slice(0,120),
+            cui: String(body.client.cui||'').slice(0,40),
+            adresa: String(body.client.adresa||'').slice(0,200),
+            email: String(body.client.email||'').slice(0,120),
+          },
+          obiect: String(body.obiect||'').slice(0,500),
+          serviciiText: String(body.serviciiText||'').slice(0,2000),
+          total: parseFloat(body.total)||0,
+          moneda: ['EUR','RON'].includes(body.moneda) ? body.moneda : 'EUR',
+          avansPct: Math.min(100, Math.max(0, parseFloat(body.avansPct)||50)),
+          termen: String(body.termen||'30'),
+          termenUnit: String(body.termenUnit||'zile lucrătoare').slice(0,40),
+          clauze: {
+            confidentialitate: !!body.clauze?.confidentialitate,
+            penalitati: !!body.clauze?.penalitati,
+            ip: !!body.clauze?.ip,
+          },
+          ofertaId: body.ofertaId || null,
+        };
+        lista.push(contract);
+        await env.PROGRAMARI.put('__contracte__', JSON.stringify(lista));
+        return json(contract);
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    // ── CONTRACT PREVIEW (print as PDF) ──────────────────────
+
+    if (path.startsWith('/contract-preview/') && request.method === 'GET') {
+      if (!isAdmin(url, env)) return new Response('Acces neautorizat', { status: 401 });
+      const id = path.replace('/contract-preview/', '');
+      try {
+        const raw = await env.PROGRAMARI.get('__contracte__');
+        const lista = raw ? JSON.parse(raw) : [];
+        const c = lista.find(x => x.id === id);
+        if (!c) return new Response('Contract negăsit', { status: 404 });
+
+        function e(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+        function fmtDate(d) {
+          if (!d) return '___________';
+          const dt = new Date(d);
+          return dt.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+        const avansVal = (c.total * c.avansPct / 100).toFixed(2);
+        const restVal = (c.total - parseFloat(avansVal)).toFixed(2);
+        const nrArt = (() => { let n = 0; return () => ++n; })();
+
+        const serviciiRows = c.serviciiText
+          ? c.serviciiText.split('\n').filter(Boolean).map(l => `<div style="padding:4px 0;border-bottom:1px solid #f0f0f0;font-size:.9rem;">${e(l)}</div>`).join('')
+          : `<div style="padding:4px 0;">${e(c.obiect)}</div>`;
+
+        const html = `<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contract ${e(c.numar)} – C Design</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Times New Roman',Times,serif;background:#fff;color:#111;font-size:13px;line-height:1.6;}
+  .page{max-width:800px;margin:0 auto;padding:50px 48px;}
+  .header{text-align:center;margin-bottom:36px;padding-bottom:20px;border-bottom:2px solid #111;}
+  .logo{font-family:Arial,sans-serif;font-size:1.3rem;font-weight:800;letter-spacing:.05em;}
+  .logo span{color:#007070;}
+  .logo-sub{font-size:.75rem;color:#555;margin-top:2px;}
+  .contract-title{font-size:1.3rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin:20px 0 6px;}
+  .contract-nr{font-size:.95rem;color:#333;}
+  .art{margin-bottom:20px;}
+  .art-title{font-weight:700;font-size:.95rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;padding:6px 0;border-bottom:1px solid #ddd;}
+  .art-body{font-size:.9rem;color:#222;line-height:1.7;}
+  .art-body p{margin-bottom:6px;}
+  .art-body ul{margin:6px 0 6px 20px;}
+  .art-body li{margin-bottom:4px;}
+  .parties-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:12px 0;}
+  .party-box{background:#f8f8f8;border:1px solid #ddd;border-radius:4px;padding:14px 16px;}
+  .party-label{font-weight:700;font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:#555;margin-bottom:8px;}
+  .party-name{font-weight:700;font-size:1rem;color:#111;}
+  .party-detail{font-size:.85rem;color:#444;margin-top:3px;}
+  .highlight{background:#f0fafa;border-left:3px solid #007070;padding:10px 14px;margin:10px 0;border-radius:0 4px 4px 0;}
+  .svc-box{background:#f8f8f8;border:1px solid #e0e0e0;border-radius:4px;padding:12px 16px;margin:10px 0;}
+  .total-box{background:#e8f5f5;border:1px solid #007070;border-radius:4px;padding:12px 16px;margin:10px 0;display:flex;justify-content:space-between;align-items:center;}
+  .total-label{font-weight:700;}
+  .total-val{font-size:1.1rem;font-weight:700;color:#007070;}
+  .signatures{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:48px;}
+  .sig-block{text-align:center;}
+  .sig-label{font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
+  .sig-name{font-size:.85rem;color:#333;margin-bottom:40px;}
+  .sig-line{border-top:1px solid #333;padding-top:6px;font-size:.75rem;color:#888;}
+  .print-btn{position:fixed;bottom:28px;right:28px;background:#007070;color:#fff;font-weight:700;font-size:.9rem;padding:11px 22px;border-radius:8px;border:none;cursor:pointer;font-family:Arial,sans-serif;box-shadow:0 4px 14px rgba(0,112,112,.4);}
+  @media print{
+    .print-btn{display:none;}
+    body{font-size:11px;}
+    .page{padding:0;}
+    @page{margin:2cm;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">C<span>Design</span></div>
+    <div class="logo-sub">Agenție Web & Digital | www.c-design.ro | office@c-design.ro</div>
+    <div class="contract-title">Contract de Prestări Servicii</div>
+    <div class="contract-nr">Nr. <strong>${e(c.numar)}</strong> / Data: <strong>${fmtDate(c.dataSemnare)}</strong></div>
+  </div>
+
+  <!-- ART. 1 — PĂRȚILE -->
+  <div class="art">
+    <div class="art-title">Art. ${nrArt()} — Părțile contractante</div>
+    <div class="art-body">
+      <div class="parties-grid">
+        <div class="party-box">
+          <div class="party-label">Prestator</div>
+          <div class="party-name">C Design</div>
+          <div class="party-detail">Agenție Web & Digital</div>
+          <div class="party-detail">www.c-design.ro</div>
+          <div class="party-detail">office@c-design.ro</div>
+        </div>
+        <div class="party-box">
+          <div class="party-label">Beneficiar</div>
+          <div class="party-name">${e(c.client.name)}</div>
+          ${c.client.cui ? `<div class="party-detail">CUI/CNP: ${e(c.client.cui)}</div>` : ''}
+          ${c.client.adresa ? `<div class="party-detail">${e(c.client.adresa)}</div>` : ''}
+          ${c.client.email ? `<div class="party-detail">${e(c.client.email)}</div>` : ''}
+        </div>
+      </div>
+      <p>Au convenit să încheie prezentul contract de prestări servicii în condițiile următoare:</p>
+    </div>
+  </div>
+
+  <!-- ART. 2 — OBIECTUL -->
+  <div class="art">
+    <div class="art-title">Art. ${nrArt()} — Obiectul contractului</div>
+    <div class="art-body">
+      <p>Prestatorul se obligă să execute în beneficiul Beneficiarului următoarele servicii:</p>
+      <div class="highlight"><strong>${e(c.obiect)}</strong></div>
+      ${c.serviciiText ? `<div class="svc-box">${serviciiRows}</div>` : ''}
+    </div>
+  </div>
+
+  <!-- ART. 3 — DURATA -->
+  <div class="art">
+    <div class="art-title">Art. ${nrArt()} — Durata contractului și termene de livrare</div>
+    <div class="art-body">
+      <p>Prezentul contract intră în vigoare la data semnării de către ambele părți și este valabil până la finalizarea și recepția tuturor serviciilor prevăzute la Art. 2.</p>
+      <p>Termenul de realizare și livrare a serviciilor este de <strong>${e(c.termen)} ${e(c.termenUnit)}</strong>, calculat de la data achitării avansului prevăzut la Art. 4.</p>
+      <p>Termenul poate fi prelungit cu acordul scris al ambelor părți sau în situații de forță majoră.</p>
+    </div>
+  </div>
+
+  <!-- ART. 4 — PREȚUL -->
+  <div class="art">
+    <div class="art-title">Art. ${nrArt()} — Prețul și modalitatea de plată</div>
+    <div class="art-body">
+      <div class="total-box">
+        <span class="total-label">Valoare totală contract:</span>
+        <span class="total-val">${c.total.toLocaleString('ro-RO')} ${e(c.moneda)}</span>
+      </div>
+      <ul>
+        <li>Avans (<strong>${c.avansPct}%</strong>): <strong>${parseFloat(avansVal).toLocaleString('ro-RO')} ${e(c.moneda)}</strong> — plătibil la semnarea contractului, condiție pentru demararea lucrărilor.</li>
+        <li>Rest de plată (<strong>${(100 - c.avansPct)}%</strong>): <strong>${parseFloat(restVal).toLocaleString('ro-RO')} ${e(c.moneda)}</strong> — plătibil la recepția și acceptarea finală a lucrărilor.</li>
+      </ul>
+      <p style="margin-top:8px;">Plata se efectuează prin transfer bancar sau în modalitatea agreată în scris de ambele părți. Prețurile nu includ TVA dacă nu se specifică altfel.</p>
+      ${c.clauze.penalitati ? `<p>În cazul întârzierii plăților, Beneficiarul datorează penalități de <strong>0,1% pe zi</strong> din suma restantă, calculate de la data scadenței.</p>` : ''}
+    </div>
+  </div>
+
+  <!-- ART. 5 — OBLIGAȚII PRESTATOR -->
+  <div class="art">
+    <div class="art-title">Art. ${nrArt()} — Obligațiile Prestatorului</div>
+    <div class="art-body">
+      <ul>
+        <li>Să execute serviciile prevăzute la Art. 2 cu profesionalism și în termenul stabilit;</li>
+        <li>Să informeze Beneficiarul cu privire la stadiul lucrărilor la solicitarea acestuia;</li>
+        <li>Să solicite Beneficiarului materialele și informațiile necesare (texte, imagini, date de acces) în timp util;</li>
+        <li>Să corecteze orice deficiențe constatate în perioada de garanție de <strong>30 de zile</strong> de la recepția finală, care nu sunt imputabile Beneficiarului;</li>
+        <li>Să păstreze confidențialitatea informațiilor comunicate de Beneficiar pe durata contractului.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ART. 6 — OBLIGAȚII BENEFICIAR -->
+  <div class="art">
+    <div class="art-title">Art. ${nrArt()} — Obligațiile Beneficiarului</div>
+    <div class="art-body">
+      <ul>
+        <li>Să achite avansul la semnarea contractului și restul la recepția finală;</li>
+        <li>Să furnizeze Prestatorului toate materialele necesare (texte, imagini, logo, date de acces) în termen de <strong>5 zile lucrătoare</strong> de la solicitare;</li>
+        <li>Să verifice și să aprobe livrabilele în termen de <strong>5 zile lucrătoare</strong> de la primire; lipsa unui răspuns se consideră acceptare tacită;</li>
+        <li>Să nu utilizeze lucrările livrate înainte de achitarea integrală a prețului contractului.</li>
+      </ul>
+    </div>
+  </div>
+
+  ${c.clauze.ip ? `
+  <!-- ART. IP -->
+  <div class="art">
+    <div class="art-title">Art. ${nrArt()} — Drepturi de proprietate intelectuală</div>
+    <div class="art-body">
+      <p>Drepturile de proprietate intelectuală asupra tuturor lucrărilor livrate (design, cod sursă, grafică) se transferă integral Beneficiarului după achitarea integrală a prețului contractului.</p>
+      <p>Până la achitarea integrală, Prestatorul poate utiliza lucrările realizate în scopuri de portofoliu și promovare, cu excepția cazului în care Beneficiarul solicită expres confidențialitate.</p>
+      <p>Prestatorul își rezervă dreptul de a menționa în portofoliu proiectele realizate, dacă nu există acorduri de confidențialitate exprese.</p>
+    </div>
+  </div>` : ''}
+
+  ${c.clauze.confidentialitate ? `
+  <!-- ART. CONFIDENTIALITATE -->
+  <div class="art">
+    <div class="art-title">Art. ${nrArt()} — Confidențialitate</div>
+    <div class="art-body">
+      <p>Ambele părți se obligă să păstreze confidențialitatea informațiilor dobândite în executarea prezentului contract, care nu sunt publice și pe care cealaltă parte le-a desemnat ca fiind confidențiale.</p>
+      <p>Această obligație rămâne în vigoare pe durata contractului și timp de <strong>2 ani</strong> după încetarea acestuia.</p>
+      <p>Sunt excluse de la obligația de confidențialitate informațiile care sunt sau devin publice fără culpa părții care le divulgă.</p>
+    </div>
+  </div>` : ''}
+
+  <!-- ART. REZILIERE -->
+  <div class="art">
+    <div class="art-title">Art. ${nrArt()} — Reziliere</div>
+    <div class="art-body">
+      <p>Oricare dintre părți poate rezilia prezentul contract cu un preaviz de <strong>15 zile</strong>, în cazul în care cealaltă parte nu își îndeplinește obligațiile contractuale și nu remediază situația în termenul de preaviz.</p>
+      <p>În cazul rezilierii din culpa Beneficiarului, avansul achitat nu se restituie; în cazul rezilierii din culpa Prestatorului, acesta va restitui avansul și va preda lucrările efectuate până la data rezilierii.</p>
+    </div>
+  </div>
+
+  <!-- ART. FORȚĂ MAJORĂ -->
+  <div class="art">
+    <div class="art-title">Art. ${nrArt()} — Forță majoră</div>
+    <div class="art-body">
+      <p>Niciuna dintre părți nu va fi răspunzătoare pentru neexecutarea obligațiilor contractuale cauzate de evenimente de forță majoră (calamități naturale, acte de autoritate publică, pandemii, etc.).</p>
+      <p>Partea afectată are obligația de a notifica cealaltă parte în termen de <strong>5 zile</strong> de la apariția evenimentului. Dacă forța majoră depășește <strong>30 de zile</strong>, oricare parte poate rezilia contractul fără daune-interese.</p>
+    </div>
+  </div>
+
+  <!-- ART. DISPOZIȚII FINALE -->
+  <div class="art">
+    <div class="art-title">Art. ${nrArt()} — Dispoziții finale</div>
+    <div class="art-body">
+      <p>Prezentul contract este guvernat de legea română. Orice litigiu se va soluționa pe cale amiabilă; în caz contrar, competența revine instanțelor judecătorești de la sediul Prestatorului.</p>
+      <p>Orice modificare a prezentului contract se face prin act adițional semnat de ambele părți.</p>
+      <p>Contractul a fost încheiat în <strong>2 (două) exemplare originale</strong>, câte unul pentru fiecare parte.</p>
+    </div>
+  </div>
+
+  <!-- SEMNĂTURI -->
+  <div class="signatures">
+    <div class="sig-block">
+      <div class="sig-label">Prestator</div>
+      <div class="sig-name">C Design</div>
+      <div class="sig-line">Semnătură și ștampilă</div>
+    </div>
+    <div class="sig-block">
+      <div class="sig-label">Beneficiar</div>
+      <div class="sig-name">${e(c.client.name)}</div>
+      <div class="sig-line">Semnătură și ștampilă</div>
+    </div>
+  </div>
+
+</div>
+<button class="print-btn" onclick="window.print()">&#x1F5A8; Printează / Salvează PDF</button>
+</body>
+</html>`;
+        return new Response(html, {
+          headers: { 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'no-store' }
+        });
+      } catch { return new Response('Eroare la generare contract', { status: 500 }); }
+    }
+
     // SSR: injectează setările salvate în index.html pentru a evita flash-ul de conținut hardcodat
     if (path === '/' || path === '/index.html') {
       try {
