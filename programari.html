@@ -1463,6 +1463,44 @@
           </div>
         </div>
 
+        <!-- PACHETE & PREȚURI -->
+        <div style="margin-top:36px;padding-top:28px;border-top:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+            <div class="f-label" style="font-size:.75rem;letter-spacing:.1em;">// PACHETE &amp; PRE&#x21A2;URI — afișate pe site</div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <button class="btn-save" onclick="savePachete()">&#x1F4BE; Salveaz&#x103; pre&#x21A2;urile</button>
+              <span id="pachete-status" style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--teal);display:none;"></span>
+            </div>
+          </div>
+
+          <!-- Pachet Startup -->
+          <div style="background:var(--bg3);border:1px solid var(--border-soft);border-radius:10px;padding:18px 20px;margin-bottom:16px;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--teal);margin-bottom:14px;">&#x1F680; pachet-startup.html — /pachet-startup</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// Pre&#x21A2; minim (€)</div>
+                <input class="f-input" type="number" id="pkg-startup-min" placeholder="300" min="0" step="1" style="margin-top:4px;">
+                <div style="font-size:.68rem;color:var(--muted);margin-top:4px;">afișat ca „<strong>de la</strong> X €"</div>
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// Pre&#x21A2; maxim (€)</div>
+                <input class="f-input" type="number" id="pkg-startup-max" placeholder="450" min="0" step="1" style="margin-top:4px;">
+                <div style="font-size:.68rem;color:var(--muted);margin-top:4px;">afișat ca „– Y €"</div>
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// Valoare separat&#x103; (€)</div>
+                <input class="f-input" type="number" id="pkg-startup-sep" placeholder="590" min="0" step="1" style="margin-top:4px;">
+                <div style="font-size:.68rem;color:var(--muted);margin-top:4px;">afișat t&#x103;iat: „~Z€"</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Info notă -->
+          <div style="font-size:.78rem;color:var(--muted);font-style:italic;">
+            &#8627; Pre&#x21A2;urile se actualizez&#x103; instant pe pagina public&#x103; dup&#x103; salvare (f&#x103;r&#x103; redeploy).
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -2616,6 +2654,44 @@
     fetchHeadings();
     fetchDssSection();
     loadCustomPresets();
+    fetchPachete();
+  }
+
+  async function fetchPachete() {
+    try {
+      const d = await fetch('/api/site-settings').then(r => r.json());
+      if (d.startupPretMin !== undefined) document.getElementById('pkg-startup-min').value = d.startupPretMin;
+      if (d.startupPretMax !== undefined) document.getElementById('pkg-startup-max').value = d.startupPretMax;
+      if (d.startupValoareSep !== undefined) document.getElementById('pkg-startup-sep').value = d.startupValoareSep;
+    } catch {}
+  }
+
+  async function savePachete() {
+    const min = parseInt(document.getElementById('pkg-startup-min').value);
+    const max = parseInt(document.getElementById('pkg-startup-max').value);
+    const sep = parseInt(document.getElementById('pkg-startup-sep').value);
+    const payload = {};
+    if (!isNaN(min)) payload.startupPretMin = min;
+    if (!isNaN(max)) payload.startupPretMax = max;
+    if (!isNaN(sep)) payload.startupValoareSep = sep;
+    if (!Object.keys(payload).length) return;
+    const st = document.getElementById('pachete-status');
+    st.textContent = 'Se salvează...'; st.style.display = '';
+    try {
+      const res = await fetch(`/api/site-settings?token=${encodeURIComponent(adminToken)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        st.textContent = '✓ Salvat!'; st.style.color = 'var(--green)';
+      } else {
+        st.textContent = '✕ Eroare'; st.style.color = 'var(--red)';
+      }
+    } catch {
+      st.textContent = '✕ Eroare rețea'; st.style.color = 'var(--red)';
+    }
+    setTimeout(() => { st.style.display = 'none'; }, 3000);
   }
 
   async function fetchHeroImage() {

@@ -694,9 +694,30 @@ export default {
     // ── PACHET STARTUP ────────────────────────────────────────
 
     if (path === '/pachet-startup') {
-      const assetUrl = new URL(request.url);
-      assetUrl.pathname = '/pachet-startup.html';
-      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      try {
+        const assetUrl = new URL(request.url);
+        assetUrl.pathname = '/pachet-startup.html';
+        const [htmlResp, settingsRaw] = await Promise.all([
+          env.ASSETS.fetch(new Request(assetUrl.toString(), request)),
+          env.PROGRAMARI.get('__site_settings__')
+        ]);
+        if (!settingsRaw) return htmlResp;
+        const s = JSON.parse(settingsRaw);
+        let html = await htmlResp.text();
+        function injectInner(h, id, val) {
+          if (!val && val !== 0) return h;
+          const esc = String(val).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+          return h.replace(new RegExp(`(id="${id}"[^>]*>)[\\s\\S]*?(<\\/span>|<\\/div>)`), `$1${esc}$2`);
+        }
+        if (s.startupPretMin !== undefined) html = injectInner(html, 'startup-pret-min', s.startupPretMin);
+        if (s.startupPretMax !== undefined) html = injectInner(html, 'startup-pret-max', '– ' + s.startupPretMax);
+        if (s.startupValoareSep !== undefined) html = injectInner(html, 'startup-valoare-sep', `\n      Valoare separată: ~${s.startupValoareSep}€\n    `);
+        return new Response(html, { headers: { ...SEC_HEADERS, 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'no-cache, no-store, must-revalidate' } });
+      } catch {
+        const assetUrl = new URL(request.url);
+        assetUrl.pathname = '/pachet-startup.html';
+        return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      }
     }
 
     // ── CITY LANDING PAGES ───────────────────────────────────
