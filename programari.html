@@ -1501,6 +1501,99 @@
           </div>
         </div>
 
+        <!-- TEMPLATE CONTRACT -->
+        <div style="margin-top:36px;padding-top:28px;border-top:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+            <div class="f-label" style="font-size:.75rem;letter-spacing:.1em;">// TEMPLATE CONTRACT — date firm&#x103; &amp; clauze</div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <button class="btn-save" onclick="saveContractTemplate()">&#x1F4BE; Salveaz&#x103; template</button>
+              <span id="cnt-tmpl-status" style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--teal);display:none;"></span>
+            </div>
+          </div>
+
+          <!-- Date firmă (Prestator) -->
+          <div style="background:var(--bg3);border:1px solid var(--border-soft);border-radius:10px;padding:18px 20px;margin-bottom:14px;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--teal);margin-bottom:14px;">&#x1F3E2; date_prestator — apar &#xEE;n fiecare contract</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// denumire firm&#x103; *</div>
+                <input class="f-input" id="tmpl-prest-nume" placeholder="ex: C Design SRL" style="margin-top:4px;">
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// CUI</div>
+                <input class="f-input" id="tmpl-prest-cui" placeholder="ex: RO12345678" style="margin-top:4px;">
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// Reg. Com.</div>
+                <input class="f-input" id="tmpl-prest-regcom" placeholder="ex: J40/1234/2020" style="margin-top:4px;">
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// adres&#x103; sediu</div>
+                <input class="f-input" id="tmpl-prest-adresa" placeholder="ex: Str. Exemplu nr. 1, Bucure&#x219;ti" style="margin-top:4px;">
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// email</div>
+                <input class="f-input" id="tmpl-prest-email" placeholder="office@c-design.ro" style="margin-top:4px;">
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// telefon</div>
+                <input class="f-input" id="tmpl-prest-tel" placeholder="+40753 116 155" style="margin-top:4px;">
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// website</div>
+                <input class="f-input" id="tmpl-prest-web" placeholder="www.c-design.ro" style="margin-top:4px;">
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// IBAN</div>
+                <input class="f-input" id="tmpl-prest-iban" placeholder="RO49AAAA1B31007593840000" style="margin-top:4px;">
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// banc&#x103;</div>
+                <input class="f-input" id="tmpl-prest-banca" placeholder="ex: ING Bank" style="margin-top:4px;">
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// reprezentant legal</div>
+                <input class="f-input" id="tmpl-prest-repr" placeholder="ex: Popescu Ion, Administrator" style="margin-top:4px;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Termeni standard -->
+          <div style="background:var(--bg3);border:1px solid var(--border-soft);border-radius:10px;padding:18px 20px;">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--teal);margin-bottom:14px;">&#x2696; termeni_standard — valori implicite pentru contracte noi</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// garan&#x21B;ie post-livrare (zile)</div>
+                <input class="f-input" type="number" id="tmpl-garantie" placeholder="30" min="0" style="margin-top:4px;">
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// preaviz reziliere (zile)</div>
+                <input class="f-input" type="number" id="tmpl-preaviz" placeholder="15" min="1" style="margin-top:4px;">
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// NDA — durat&#x103; (ani)</div>
+                <input class="f-input" type="number" id="tmpl-nda-ani" placeholder="2" min="1" style="margin-top:4px;">
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// avans implicit (%)</div>
+                <input class="f-input" type="number" id="tmpl-avans-pct" placeholder="50" min="0" max="100" style="margin-top:4px;">
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// termen implicit (zile lucr.)</div>
+                <input class="f-input" type="number" id="tmpl-termen" placeholder="30" min="1" style="margin-top:4px;">
+              </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">// penaliz&#x103;ri (%/zi)</div>
+                <input class="f-input" type="number" id="tmpl-penalitati-pct" placeholder="0.1" min="0" step="0.01" style="margin-top:4px;">
+              </div>
+            </div>
+          </div>
+
+          <div style="font-size:.78rem;color:var(--muted);font-style:italic;margin-top:8px;">
+            &#8627; Datele firmei apar automat &#xEE;n fiecare contract generat. Termenele implicite pre-completeaz&#x103; formularul la deschidere.
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -2785,6 +2878,44 @@
     fetchDssSection();
     loadCustomPresets();
     fetchPachete();
+    fetchContractTemplate();
+  }
+
+  const TMPL_FIELDS = [
+    ['tmpl-prest-nume','prestNume'], ['tmpl-prest-cui','prestCui'], ['tmpl-prest-regcom','prestRegcom'],
+    ['tmpl-prest-adresa','prestAdresa'], ['tmpl-prest-email','prestEmail'], ['tmpl-prest-tel','prestTel'],
+    ['tmpl-prest-web','prestWeb'], ['tmpl-prest-iban','prestIban'], ['tmpl-prest-banca','prestBanca'],
+    ['tmpl-prest-repr','prestRepr'], ['tmpl-garantie','garantie'], ['tmpl-preaviz','preaviz'],
+    ['tmpl-nda-ani','ndaAni'], ['tmpl-avans-pct','avansPct'], ['tmpl-termen','termen'],
+    ['tmpl-penalitati-pct','penalitatiPct'],
+  ];
+
+  async function fetchContractTemplate() {
+    try {
+      const d = await fetch('/api/contract-template?token=' + encodeURIComponent(adminToken)).then(r => r.json());
+      TMPL_FIELDS.forEach(([id, key]) => {
+        const el = document.getElementById(id);
+        if (el && d[key] !== undefined) el.value = d[key];
+      });
+    } catch {}
+  }
+
+  async function saveContractTemplate() {
+    const payload = {};
+    TMPL_FIELDS.forEach(([id, key]) => {
+      const el = document.getElementById(id);
+      if (el) payload[key] = el.value.trim();
+    });
+    const st = document.getElementById('cnt-tmpl-status');
+    st.textContent = 'Se salvează...'; st.style.display = ''; st.style.color = 'var(--teal)';
+    try {
+      const res = await fetch(`/api/contract-template?token=${encodeURIComponent(adminToken)}`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+      });
+      st.textContent = res.ok ? '✓ Salvat!' : '✕ Eroare';
+      st.style.color = res.ok ? 'var(--green)' : 'var(--red)';
+    } catch { st.textContent = '✕ Eroare rețea'; st.style.color = 'var(--red)'; }
+    setTimeout(() => { st.style.display = 'none'; }, 3000);
   }
 
   async function fetchPachete() {
@@ -5066,7 +5197,11 @@
     );
     if (view === 'servicii') renderServicii();
     if (view === 'istoric') renderOfertaIstoric();
-    if (view === 'contracte') { renderContracteIstoric(); populateCntOfertaSel(); document.getElementById('cnt-data').value = new Date().toISOString().slice(0,10); }
+    if (view === 'contracte') {
+      renderContracteIstoric(); populateCntOfertaSel();
+      document.getElementById('cnt-data').value = new Date().toISOString().slice(0,10);
+      prefillContractDefaults();
+    }
   }
 
   async function fetchServicii() {
@@ -5316,6 +5451,15 @@
   // ── CONTRACTE ─────────────────────────────────────────────
 
   let allContracte = [];
+
+  async function prefillContractDefaults() {
+    try {
+      const d = await fetch('/api/contract-template?token=' + encodeURIComponent(adminToken)).then(r => r.json());
+      if (d.avansPct) document.getElementById('cnt-avans-pct').value = d.avansPct;
+      if (d.termen) document.getElementById('cnt-termen').value = d.termen;
+      updateCntAvans();
+    } catch {}
+  }
 
   function updateCntAvans() {
     const total = parseFloat(document.getElementById('cnt-total').value) || 0;

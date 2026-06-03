@@ -2015,6 +2015,31 @@ Cerințe titluri:
       } catch { return new Response('Eroare la generare', { status: 500 }); }
     }
 
+    // ── CONTRACT TEMPLATE ────────────────────────────────────
+
+    if (path === '/api/contract-template' && request.method === 'GET') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const raw = await env.PROGRAMARI.get('__contract_template__');
+        return json(raw ? JSON.parse(raw) : {});
+      } catch { return json({}); }
+    }
+
+    if (path === '/api/contract-template' && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const raw = await env.PROGRAMARI.get('__contract_template__');
+        const existing = raw ? JSON.parse(raw) : {};
+        const body = await request.json();
+        const allowed = ['prestNume','prestCui','prestRegcom','prestAdresa','prestEmail','prestTel',
+          'prestWeb','prestIban','prestBanca','prestRepr','garantie','preaviz','ndaAni',
+          'avansPct','termen','penalitatiPct'];
+        allowed.forEach(k => { if (body[k] !== undefined) existing[k] = String(body[k]).slice(0,200); });
+        await env.PROGRAMARI.put('__contract_template__', JSON.stringify(existing));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
     // ── CONTRACTE ────────────────────────────────────────────
 
     if (path === '/api/contracte' && request.method === 'GET') {
@@ -2071,10 +2096,32 @@ Cerințe titluri:
       if (!isAdmin(url, env)) return new Response('Acces neautorizat', { status: 401 });
       const id = path.replace('/contract-preview/', '');
       try {
-        const raw = await env.PROGRAMARI.get('__contracte__');
+        const [raw, tmplRaw] = await Promise.all([
+          env.PROGRAMARI.get('__contracte__'),
+          env.PROGRAMARI.get('__contract_template__'),
+        ]);
         const lista = raw ? JSON.parse(raw) : [];
         const c = lista.find(x => x.id === id);
         if (!c) return new Response('Contract negăsit', { status: 404 });
+        const t = tmplRaw ? JSON.parse(tmplRaw) : {};
+
+        // Merge template defaults with per-contract values
+        const prest = {
+          nume:    t.prestNume   || 'C Design',
+          cui:     t.prestCui    || '',
+          regcom:  t.prestRegcom || '',
+          adresa:  t.prestAdresa || '',
+          email:   t.prestEmail  || 'office@c-design.ro',
+          tel:     t.prestTel    || '',
+          web:     t.prestWeb    || 'www.c-design.ro',
+          iban:    t.prestIban   || '',
+          banca:   t.prestBanca  || '',
+          repr:    t.prestRepr   || '',
+        };
+        const garantie      = parseInt(t.garantie)      || 30;
+        const preaviz       = parseInt(t.preaviz)       || 15;
+        const ndaAni        = parseInt(t.ndaAni)        || 2;
+        const penalitatiPct = parseFloat(t.penalitatiPct) || 0.1;
 
         function e(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
         function fmtDate(d) {
@@ -2141,8 +2188,8 @@ Cerințe titluri:
 
   <!-- HEADER -->
   <div class="header">
-    <div class="logo">C<span>Design</span></div>
-    <div class="logo-sub">Agenție Web & Digital | www.c-design.ro | office@c-design.ro</div>
+    <div class="logo">${e(prest.nume)}</div>
+    <div class="logo-sub">${prest.web ? e(prest.web) + ' | ' : ''}${prest.email ? e(prest.email) : ''}${prest.tel ? ' | ' + e(prest.tel) : ''}</div>
     <div class="contract-title">Contract de Prestări Servicii</div>
     <div class="contract-nr">Nr. <strong>${e(c.numar)}</strong> / Data: <strong>${fmtDate(c.dataSemnare)}</strong></div>
   </div>
@@ -2154,10 +2201,15 @@ Cerințe titluri:
       <div class="parties-grid">
         <div class="party-box">
           <div class="party-label">Prestator</div>
-          <div class="party-name">C Design</div>
-          <div class="party-detail">Agenție Web & Digital</div>
-          <div class="party-detail">www.c-design.ro</div>
-          <div class="party-detail">office@c-design.ro</div>
+          <div class="party-name">${e(prest.nume)}</div>
+          ${prest.cui ? `<div class="party-detail">CUI: ${e(prest.cui)}</div>` : ''}
+          ${prest.regcom ? `<div class="party-detail">Reg.Com.: ${e(prest.regcom)}</div>` : ''}
+          ${prest.adresa ? `<div class="party-detail">${e(prest.adresa)}</div>` : ''}
+          ${prest.email ? `<div class="party-detail">${e(prest.email)}</div>` : ''}
+          ${prest.tel ? `<div class="party-detail">${e(prest.tel)}</div>` : ''}
+          ${prest.web ? `<div class="party-detail">${e(prest.web)}</div>` : ''}
+          ${prest.iban ? `<div class="party-detail">IBAN: ${e(prest.iban)}${prest.banca ? ' · ' + e(prest.banca) : ''}</div>` : ''}
+          ${prest.repr ? `<div class="party-detail">Reprezentant: ${e(prest.repr)}</div>` : ''}
         </div>
         <div class="party-box">
           <div class="party-label">Beneficiar</div>
@@ -2204,7 +2256,7 @@ Cerințe titluri:
         <li>Rest de plată (<strong>${(100 - c.avansPct)}%</strong>): <strong>${parseFloat(restVal).toLocaleString('ro-RO')} ${e(c.moneda)}</strong> — plătibil la recepția și acceptarea finală a lucrărilor.</li>
       </ul>
       <p style="margin-top:8px;">Plata se efectuează prin transfer bancar sau în modalitatea agreată în scris de ambele părți. Prețurile nu includ TVA dacă nu se specifică altfel.</p>
-      ${c.clauze.penalitati ? `<p>În cazul întârzierii plăților, Beneficiarul datorează penalități de <strong>0,1% pe zi</strong> din suma restantă, calculate de la data scadenței.</p>` : ''}
+      ${c.clauze.penalitati ? `<p>În cazul întârzierii plăților, Beneficiarul datorează penalități de <strong>${penalitatiPct}% pe zi</strong> din suma restantă, calculate de la data scadenței.</p>` : ''}
     </div>
   </div>
 
@@ -2216,7 +2268,7 @@ Cerințe titluri:
         <li>Să execute serviciile prevăzute la Art. 2 cu profesionalism și în termenul stabilit;</li>
         <li>Să informeze Beneficiarul cu privire la stadiul lucrărilor la solicitarea acestuia;</li>
         <li>Să solicite Beneficiarului materialele și informațiile necesare (texte, imagini, date de acces) în timp util;</li>
-        <li>Să corecteze orice deficiențe constatate în perioada de garanție de <strong>30 de zile</strong> de la recepția finală, care nu sunt imputabile Beneficiarului;</li>
+        <li>Să corecteze orice deficiențe constatate în perioada de garanție de <strong>${garantie} de zile</strong> de la recepția finală, care nu sunt imputabile Beneficiarului;</li>
         <li>Să păstreze confidențialitatea informațiilor comunicate de Beneficiar pe durata contractului.</li>
       </ul>
     </div>
@@ -2252,7 +2304,7 @@ Cerințe titluri:
     <div class="art-title">Art. ${nrArt()} — Confidențialitate</div>
     <div class="art-body">
       <p>Ambele părți se obligă să păstreze confidențialitatea informațiilor dobândite în executarea prezentului contract, care nu sunt publice și pe care cealaltă parte le-a desemnat ca fiind confidențiale.</p>
-      <p>Această obligație rămâne în vigoare pe durata contractului și timp de <strong>2 ani</strong> după încetarea acestuia.</p>
+      <p>Această obligație rămâne în vigoare pe durata contractului și timp de <strong>${ndaAni} ${ndaAni === 1 ? 'an' : 'ani'}</strong> după încetarea acestuia.</p>
       <p>Sunt excluse de la obligația de confidențialitate informațiile care sunt sau devin publice fără culpa părții care le divulgă.</p>
     </div>
   </div>` : ''}
@@ -2261,7 +2313,7 @@ Cerințe titluri:
   <div class="art">
     <div class="art-title">Art. ${nrArt()} — Reziliere</div>
     <div class="art-body">
-      <p>Oricare dintre părți poate rezilia prezentul contract cu un preaviz de <strong>15 zile</strong>, în cazul în care cealaltă parte nu își îndeplinește obligațiile contractuale și nu remediază situația în termenul de preaviz.</p>
+      <p>Oricare dintre părți poate rezilia prezentul contract cu un preaviz de <strong>${preaviz} zile</strong>, în cazul în care cealaltă parte nu își îndeplinește obligațiile contractuale și nu remediază situația în termenul de preaviz.</p>
       <p>În cazul rezilierii din culpa Beneficiarului, avansul achitat nu se restituie; în cazul rezilierii din culpa Prestatorului, acesta va restitui avansul și va preda lucrările efectuate până la data rezilierii.</p>
     </div>
   </div>
@@ -2289,7 +2341,7 @@ Cerințe titluri:
   <div class="signatures">
     <div class="sig-block">
       <div class="sig-label">Prestator</div>
-      <div class="sig-name">C Design</div>
+      <div class="sig-name">${e(prest.nume)}${prest.repr ? '<div style="font-size:.8rem;color:#555;margin-top:2px;">' + e(prest.repr) + '</div>' : ''}</div>
       <div class="sig-line">Semnătură și ștampilă</div>
     </div>
     <div class="sig-block">
