@@ -1883,10 +1883,23 @@ Cerințe titluri:
       if (!isAdmin(url, env)) return new Response('Acces neautorizat', { status: 401 });
       const id = path.replace('/oferta-preview/', '');
       try {
-        const raw = await env.PROGRAMARI.get('__oferte__');
+        const [raw, tmplRaw] = await Promise.all([
+          env.PROGRAMARI.get('__oferte__'),
+          env.PROGRAMARI.get('__contract_template__'),
+        ]);
         const lista = raw ? JSON.parse(raw) : [];
         const o = lista.find(x => x.id === id);
         if (!o) return new Response('Ofertă negăsită', { status: 404 });
+        const t = tmplRaw ? JSON.parse(tmplRaw) : {};
+        const prest = {
+          nume:  t.prestNume  || 'C Design',
+          email: t.prestEmail || 'office@c-design.ro',
+          tel:   t.prestTel   || '',
+          web:   t.prestWeb   || 'www.c-design.ro',
+          cui:   t.prestCui   || '',
+          adresa:t.prestAdresa|| '',
+        };
+
         const total = (o.servicii || []).reduce((s, sv) => s + parseFloat(sv.pret || 0), 0);
         const dataDoc = new Date(o.createdAt).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
         const dataExpira = (() => {
@@ -1896,117 +1909,206 @@ Cerințe titluri:
           return d.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
         })();
         function e(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
         const html = `<!DOCTYPE html>
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ofertă ${e(o.numar)} – C Design</title>
+<title>Ofertă ${e(o.numar)} – ${e(prest.nume)}</title>
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1a1a2e;font-size:14px;line-height:1.5;}
-  .page{max-width:800px;margin:0 auto;padding:48px 40px;}
-  .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:40px;padding-bottom:24px;border-bottom:2px solid #00a8a8;}
-  .logo{font-size:1.8rem;font-weight:800;color:#1a1a2e;letter-spacing:-.02em;}
-  .logo span{color:#00a8a8;}
-  .logo-sub{font-size:.75rem;color:#666;margin-top:2px;}
-  .oferta-meta{text-align:right;}
-  .oferta-nr{font-size:1.4rem;font-weight:700;color:#00a8a8;}
-  .oferta-data{font-size:.82rem;color:#666;margin-top:4px;}
-  .section-title{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:8px;}
-  .client-box{background:#f8f9fa;border-radius:8px;padding:18px 20px;margin-bottom:32px;}
-  .client-name{font-size:1.1rem;font-weight:700;color:#1a1a2e;}
-  .client-info{font-size:.85rem;color:#555;margin-top:4px;}
-  table{width:100%;border-collapse:collapse;margin-bottom:24px;}
-  th{text-align:left;padding:10px 14px;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:#888;border-bottom:2px solid #e5e7eb;}
-  td{padding:12px 14px;border-bottom:1px solid #f0f0f0;vertical-align:top;}
-  tr:last-child td{border-bottom:none;}
-  .svc-name{font-weight:600;color:#1a1a2e;}
-  .svc-desc{font-size:.8rem;color:#666;margin-top:3px;}
-  .svc-unit{font-size:.78rem;color:#999;}
-  .svc-pret{font-weight:700;color:#00a8a8;white-space:nowrap;text-align:right;}
-  .total-row{background:#f0fafa;border-top:2px solid #00a8a8 !important;}
-  .total-label{font-weight:700;font-size:1rem;}
-  .total-val{font-size:1.3rem;font-weight:800;color:#00a8a8;text-align:right;}
-  .footer-section{margin-top:32px;padding-top:24px;border-top:1px solid #e5e7eb;display:flex;justify-content:space-between;gap:24px;}
-  .footer-block{flex:1;}
-  .footer-block p{font-size:.82rem;color:#555;margin-top:4px;}
-  .note-box{background:#fffbf0;border-left:3px solid #f59e0b;padding:14px 18px;border-radius:0 8px 8px 0;margin-top:24px;font-size:.85rem;color:#555;}
-  .print-btn{position:fixed;bottom:32px;right:32px;background:#00a8a8;color:#fff;font-weight:700;font-size:.9rem;padding:12px 24px;border-radius:8px;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,168,168,.4);}
-  .print-btn:hover{background:#008f8f;}
+  body{font-family:'Segoe UI',system-ui,Arial,sans-serif;background:#f0f4f8;color:#1e293b;font-size:14px;line-height:1.6;min-height:100vh;padding:32px 16px 80px;}
+
+  /* A4 sheet */
+  .page{
+    background:#fff;
+    max-width:794px;
+    margin:0 auto;
+    border-radius:4px;
+    box-shadow:0 4px 32px rgba(0,0,0,.13);
+    overflow:hidden;
+  }
+
+  /* Accent bar top */
+  .accent-bar{height:6px;background:linear-gradient(90deg,#00a8a8 0%,#00d4d4 100%);}
+
+  .inner{padding:48px 52px 52px;}
+
+  /* HEADER */
+  .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:44px;}
+  .brand-name{font-size:1.9rem;font-weight:800;color:#0f172a;letter-spacing:-.03em;line-height:1;}
+  .brand-name span{color:#00a8a8;}
+  .brand-details{margin-top:6px;}
+  .brand-details div{font-size:.75rem;color:#64748b;line-height:1.7;}
+  .doc-block{text-align:right;}
+  .doc-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#94a3b8;margin-bottom:4px;}
+  .doc-nr{font-size:1.5rem;font-weight:800;color:#00a8a8;letter-spacing:-.02em;}
+  .doc-date{font-size:.78rem;color:#64748b;margin-top:4px;line-height:1.7;}
+
+  /* DIVIDER */
+  .divider{height:1px;background:#e2e8f0;margin:0 0 36px;}
+
+  /* TOWARDS */
+  .towards{display:flex;gap:40px;margin-bottom:36px;}
+  .towards-block{flex:1;}
+  .block-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#94a3b8;margin-bottom:10px;}
+  .client-name{font-size:1.1rem;font-weight:700;color:#0f172a;}
+  .client-detail{font-size:.82rem;color:#475569;margin-top:3px;}
+  .validity-badge{display:inline-flex;align-items:center;gap:6px;background:#f0fdf9;border:1px solid #99f6e4;border-radius:6px;padding:6px 12px;font-size:.78rem;color:#0f766e;font-weight:600;margin-top:8px;}
+
+  /* TABLE */
+  .tbl-wrap{margin-bottom:28px;}
+  .tbl-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#94a3b8;margin-bottom:10px;}
+  table{width:100%;border-collapse:collapse;}
+  thead tr{border-bottom:2px solid #e2e8f0;}
+  th{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;padding:0 14px 10px;text-align:left;}
+  th.right{text-align:right;}
+  tbody tr{border-bottom:1px solid #f1f5f9;transition:background .1s;}
+  tbody tr:last-child{border-bottom:none;}
+  td{padding:13px 14px;vertical-align:top;}
+  .svc-name{font-weight:600;color:#0f172a;font-size:.92rem;}
+  .svc-desc{font-size:.77rem;color:#64748b;margin-top:3px;line-height:1.5;}
+  .svc-unit{font-size:.78rem;color:#94a3b8;white-space:nowrap;}
+  .svc-pret{font-size:.95rem;font-weight:700;color:#0f172a;text-align:right;white-space:nowrap;}
+
+  /* TOTAL */
+  .total-section{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;}
+  .total-left{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#64748b;}
+  .total-right{font-size:1.6rem;font-weight:800;color:#00a8a8;letter-spacing:-.02em;}
+  .total-moneda{font-size:.9rem;font-weight:600;color:#94a3b8;margin-left:4px;}
+
+  /* NOTES */
+  .note-box{background:#fffbeb;border-left:3px solid #f59e0b;border-radius:0 8px 8px 0;padding:14px 18px;margin-bottom:28px;}
+  .note-box strong{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:#92400e;display:block;margin-bottom:4px;}
+  .note-box p{font-size:.85rem;color:#78350f;line-height:1.6;white-space:pre-wrap;}
+
+  /* FOOTER */
+  .footer{display:flex;justify-content:space-between;align-items:flex-end;padding-top:28px;border-top:1px solid #e2e8f0;margin-top:4px;}
+  .footer-left{font-size:.78rem;color:#94a3b8;line-height:1.7;}
+  .sig-block{text-align:center;}
+  .sig-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#94a3b8;margin-bottom:28px;}
+  .sig-line{border-top:1.5px solid #cbd5e1;padding-top:8px;font-size:.8rem;font-weight:600;color:#475569;min-width:180px;}
+
+  /* PRINT BUTTON */
+  .print-btn{position:fixed;bottom:28px;right:28px;background:#00a8a8;color:#fff;font-weight:700;font-size:.88rem;padding:11px 22px;border-radius:8px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(0,168,168,.45);display:flex;align-items:center;gap:8px;font-family:inherit;}
+  .print-btn:hover{background:#009090;transform:translateY(-1px);}
+
   @media print{
+    body{background:#fff;padding:0;}
+    .page{box-shadow:none;border-radius:0;}
     .print-btn{display:none;}
-    body{font-size:12px;}
-    .page{padding:20px;}
-    @page{margin:1.5cm;}
+    .inner{padding:30px 36px 36px;}
+    @page{margin:1.2cm;size:A4;}
+  }
+  @media(max-width:600px){
+    body{padding:12px 8px 72px;}
+    .inner{padding:28px 22px 32px;}
+    .towards{flex-direction:column;gap:20px;}
+    .footer{flex-direction:column;gap:24px;align-items:flex-start;}
   }
 </style>
 </head>
 <body>
 <div class="page">
-  <div class="header">
-    <div>
-      <div class="logo">C<span>Design</span></div>
-      <div class="logo-sub">Agenție Web & Digital</div>
-      <div style="font-size:.78rem;color:#999;margin-top:12px;">www.c-design.ro<br>office@c-design.ro</div>
-    </div>
-    <div class="oferta-meta">
-      <div class="oferta-nr">${e(o.numar)}</div>
-      <div class="oferta-data">Data: ${dataDoc}</div>
-      ${o.valabilitate !== 'la cerere' ? `<div class="oferta-data">Valabilă până: ${dataExpira}</div>` : '<div class="oferta-data">Valabilitate: la cerere</div>'}
-    </div>
-  </div>
+  <div class="accent-bar"></div>
+  <div class="inner">
 
-  <div class="section-title">Client</div>
-  <div class="client-box">
-    <div class="client-name">${e(o.client?.name)}</div>
-    <div class="client-info">
-      ${o.client?.email ? `📧 ${e(o.client.email)}` : ''}
-      ${o.client?.email && o.client?.phone ? ' &nbsp;·&nbsp; ' : ''}
-      ${o.client?.phone ? `📞 ${e(o.client.phone)}` : ''}
+    <!-- HEADER -->
+    <div class="header">
+      <div>
+        <div class="brand-name">${e(prest.nume.split(' ')[0])}<span>${prest.nume.includes(' ') ? e(prest.nume.slice(prest.nume.indexOf(' '))) : ''}</span></div>
+        <div class="brand-details">
+          ${prest.web ? `<div>${e(prest.web)}</div>` : ''}
+          ${prest.email ? `<div>${e(prest.email)}</div>` : ''}
+          ${prest.tel ? `<div>${e(prest.tel)}</div>` : ''}
+          ${prest.cui ? `<div>CUI: ${e(prest.cui)}</div>` : ''}
+        </div>
+      </div>
+      <div class="doc-block">
+        <div class="doc-label">Ofertă comercială</div>
+        <div class="doc-nr">${e(o.numar)}</div>
+        <div class="doc-date">
+          Emisă: ${dataDoc}<br>
+          ${o.valabilitate !== 'la cerere' ? `Valabilă până: <strong>${dataExpira}</strong>` : 'Valabilitate: la cerere'}
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="section-title">Servicii oferite</div>
-  <table>
-    <thead>
-      <tr>
-        <th style="width:55%;">Serviciu</th>
-        <th>Unitate</th>
-        <th style="text-align:right;">Preț</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${(o.servicii || []).map(s => `
-      <tr>
-        <td>
-          <div class="svc-name">${e(s.nume)}</div>
-          ${s.descriere ? `<div class="svc-desc">${e(s.descriere)}</div>` : ''}
-        </td>
-        <td class="svc-unit">/ ${e(s.unitate || 'proiect')}</td>
-        <td class="svc-pret">${parseFloat(s.pret||0).toLocaleString('ro-RO')} ${e(s.moneda||'EUR')}</td>
-      </tr>`).join('')}
-      <tr class="total-row">
-        <td colspan="2" class="total-label">TOTAL ESTIMAT</td>
-        <td class="total-val">${total.toLocaleString('ro-RO')} ${e(o.moneda)}</td>
-      </tr>
-    </tbody>
-  </table>
+    <div class="divider"></div>
 
-  ${o.note ? `<div class="note-box"><strong>Note & condiții:</strong><br>${e(o.note)}</div>` : ''}
-
-  <div class="footer-section">
-    <div class="footer-block">
-      <div class="section-title">Valabilitate ofertă</div>
-      <p>${o.valabilitate === 'la cerere' ? 'La cerere' : `${e(o.valabilitate)} de la data emiterii`}</p>
+    <!-- TOWARDS -->
+    <div class="towards">
+      <div class="towards-block">
+        <div class="block-label">Către</div>
+        <div class="client-name">${e(o.client?.name || '—')}</div>
+        ${o.client?.email ? `<div class="client-detail">✉ ${e(o.client.email)}</div>` : ''}
+        ${o.client?.phone ? `<div class="client-detail">✆ ${e(o.client.phone)}</div>` : ''}
+      </div>
+      <div class="towards-block">
+        <div class="block-label">Detalii</div>
+        <div class="validity-badge">⏱ Valabilitate: ${e(o.valabilitate)}</div>
+        ${prest.adresa ? `<div class="client-detail" style="margin-top:8px;">📍 ${e(prest.adresa)}</div>` : ''}
+      </div>
     </div>
-    <div class="footer-block" style="text-align:right;">
-      <div class="section-title">Semnătură</div>
-      <p style="margin-top:32px;border-top:1px solid #ddd;padding-top:6px;display:inline-block;min-width:180px;">C Design</p>
+
+    <!-- SERVICII -->
+    <div class="tbl-wrap">
+      <div class="tbl-label">Servicii incluse</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:52%">Serviciu / Descriere</th>
+            <th>Unitate</th>
+            <th class="right">Preț</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${(o.servicii || []).map((s, i) => `
+          <tr style="${i % 2 === 1 ? 'background:#fafbfc;' : ''}">
+            <td>
+              <div class="svc-name">${e(s.nume)}</div>
+              ${s.descriere ? `<div class="svc-desc">${e(s.descriere)}</div>` : ''}
+            </td>
+            <td class="svc-unit">/ ${e(s.unitate || 'proiect')}</td>
+            <td class="svc-pret">${parseFloat(s.pret||0).toLocaleString('ro-RO')} <span style="font-size:.75rem;font-weight:400;color:#94a3b8;">${e(s.moneda||o.moneda)}</span></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
     </div>
+
+    <!-- TOTAL -->
+    <div class="total-section">
+      <div class="total-left">Total estimat</div>
+      <div class="total-right">${total.toLocaleString('ro-RO')}<span class="total-moneda">${e(o.moneda)}</span></div>
+    </div>
+
+    ${o.note ? `
+    <div class="note-box">
+      <strong>Note &amp; condiții</strong>
+      <p>${e(o.note)}</p>
+    </div>` : ''}
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div class="footer-left">
+        <div style="font-weight:600;color:#475569;margin-bottom:4px;">${e(prest.nume)}</div>
+        ${prest.email ? `<div>${e(prest.email)}</div>` : ''}
+        ${prest.tel ? `<div>${e(prest.tel)}</div>` : ''}
+        ${prest.web ? `<div>${e(prest.web)}</div>` : ''}
+      </div>
+      <div class="sig-block">
+        <div class="sig-label">Reprezentant autorizat</div>
+        <div class="sig-line">${e(prest.nume)}</div>
+      </div>
+    </div>
+
   </div>
 </div>
-<button class="print-btn" onclick="window.print()">&#x1F5A8; Printează / Salvează PDF</button>
+<button class="print-btn" onclick="window.print()">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+  Printează / Salvează PDF
+</button>
 </body>
 </html>`;
         return new Response(html, {
