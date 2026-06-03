@@ -1153,6 +1153,34 @@ Cerințe titluri:
 
     const DEFAULT_SETTINGS = { workingDays:[1,2,3,4,5], startTime:'09:00', endTime:'18:00', slotInterval:60, blockedDates:[] };
 
+    if (path === '/api/test-email' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401, request);
+      const apiKey = env.RESEND_API_KEY || RESEND_API_KEY;
+      if (!apiKey) return json({ error: 'RESEND_API_KEY nu este configurat în Cloudflare Secrets.' }, 400, request);
+      const toEmail = env.NOTIFY_EMAIL || NOTIFY_EMAIL;
+      try {
+        const res = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            from: 'C Design <office@c-design.ro>',
+            to: [toEmail],
+            subject: '✅ Test notificare C Design',
+            html: `<div style="font-family:Arial,sans-serif;padding:32px;max-width:480px;">
+              <h2 style="color:#00a8a8;">✅ Notificările funcționează!</h2>
+              <p>Acest email a fost trimis din adminul <strong>C Design</strong> pentru a verifica că integrarea Resend este configurată corect.</p>
+              <p style="color:#777;font-size:.85rem;">Trimis la: ${new Date().toLocaleString('ro-RO')}</p>
+            </div>`
+          })
+        });
+        const data = await res.json();
+        if (!res.ok) return json({ error: data.message || data.name || 'Eroare Resend', detail: data }, 500, request);
+        return json({ success: true, id: data.id, to: toEmail }, 200, request);
+      } catch (e) {
+        return json({ error: 'Eroare rețea: ' + e.message }, 500, request);
+      }
+    }
+
     if (path === '/api/settings' && request.method === 'GET') {
       try {
         const raw = await env.PROGRAMARI.get('__settings__');

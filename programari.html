@@ -1118,7 +1118,11 @@
     <div class="main">
       <div class="proj-toolbar">
         <h3>// set&#x103;ri — program &amp; disponibilitate</h3>
-        <button class="btn-add" onclick="saveSettings()">&#x2713; Salveaz&#259;</button>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <button class="btn-add" onclick="saveSettings()">&#x2713; Salveaz&#259;</button>
+          <button class="btn-add" id="btnTestEmail" onclick="testEmail()" style="background:var(--teal-dim);border:1px solid var(--teal-border);color:var(--teal);">&#x1F4E7; Test email</button>
+          <span id="testEmailStatus" style="font-family:'Share Tech Mono',monospace;font-size:.75rem;display:none;"></span>
+        </div>
       </div>
       <div class="table-wrap" style="padding:24px;">
 
@@ -2755,6 +2759,29 @@
   function removeBlockedDate(d) {
     settingsData.blockedDates = (settingsData.blockedDates || []).filter(x => x !== d);
     renderBlockedDates();
+  }
+
+  async function testEmail() {
+    const btn = document.getElementById('btnTestEmail');
+    const status = document.getElementById('testEmailStatus');
+    btn.disabled = true; btn.textContent = '⏳ Se trimite...';
+    status.style.display = 'inline'; status.style.color = 'var(--teal)';
+    status.textContent = '// trimit email de test...';
+    try {
+      const res = await fetch('/api/test-email?token=' + encodeURIComponent(adminToken), { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        status.style.color = '#f87171';
+        status.textContent = '// ✗ Eroare: ' + (data.error || 'necunoscută');
+      } else {
+        status.style.color = '#4ade80';
+        status.textContent = '// ✓ Email trimis către ' + (data.to || 'office@c-design.ro') + ' · ID: ' + (data.id || '—');
+      }
+    } catch (e) {
+      status.style.color = '#f87171';
+      status.textContent = '// ✗ Eroare rețea: ' + e.message;
+    }
+    btn.disabled = false; btn.textContent = '📧 Test email';
   }
 
   async function saveSettings() {
