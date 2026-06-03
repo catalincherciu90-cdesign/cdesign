@@ -467,6 +467,7 @@
     <button class="tab" onclick="switchTab('tema',this)">&#x1F3A8; Tem&#x103;</button>
     <button class="tab" onclick="switchTab('settings',this)">&#x2699; Set&#x103;ri</button>
     <button class="tab" onclick="switchTab('cheltuieli',this)">&#x1F4B8; Cheltuieli</button>
+    <button class="tab" onclick="switchTab('oferte',this)">&#x1F4CB; Oferte</button>
   </div>
 
   <!-- TAB: GIBILAN -->
@@ -1574,6 +1575,158 @@
     </div>
   </div>
 
+  <!-- TAB: OFERTE -->
+  <div class="tab-panel" id="panel-oferte">
+    <div class="main">
+      <!-- Sub-nav -->
+      <div class="proj-toolbar" style="margin-bottom:20px;">
+        <h3>// sistem_ofertare</h3>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button class="gib-btn oferta-subnav active" id="subnav-generator" onclick="showOfertaView('generator',this)" style="font-size:.78rem;padding:7px 14px;">&#x1F4C4; Ofert&#x103; nou&#x103;</button>
+          <button class="gib-btn oferta-subnav" id="subnav-servicii" onclick="showOfertaView('servicii',this)" style="font-size:.78rem;padding:7px 14px;">&#x1F4E6; Catalog servicii</button>
+          <button class="gib-btn oferta-subnav" id="subnav-istoric" onclick="showOfertaView('istoric',this)" style="font-size:.78rem;padding:7px 14px;">&#x1F5C2; Istoric oferte</button>
+        </div>
+      </div>
+
+      <!-- VIEW: GENERATOR -->
+      <div id="oferta-view-generator">
+        <div style="display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;" class="oferta-grid">
+
+          <!-- Stânga: servicii -->
+          <div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);margin-bottom:12px;">// selecteaz&#x103; serviciile</div>
+            <div id="oferta-servicii-lista" style="display:flex;flex-direction:column;gap:8px;">
+              <div class="loading">Se &icirc;ncarc&#259;...</div>
+            </div>
+          </div>
+
+          <!-- Dreapta: detalii ofertă -->
+          <div style="position:sticky;top:80px;">
+            <div style="background:var(--bg3);border:1px solid var(--border-soft);border-radius:12px;padding:20px;">
+              <div style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);margin-bottom:14px;">// detalii ofert&#x103;</div>
+
+              <div class="f-group">
+                <label class="f-label">// client</label>
+                <select class="f-select" id="oferta-client-sel" onchange="onOfertaClientChange(this.value)" style="margin-bottom:6px;">
+                  <option value="">— alege din list&#x103; —</option>
+                </select>
+                <input class="f-input" type="text" id="oferta-client-name" placeholder="Nume client *" style="margin-bottom:6px;">
+                <input class="f-input" type="email" id="oferta-client-email" placeholder="Email">
+                <input class="f-input" type="text" id="oferta-client-phone" placeholder="Telefon" style="margin-top:6px;">
+              </div>
+
+              <div class="f-group">
+                <label class="f-label">// valabilitate</label>
+                <select class="f-select" id="oferta-valabilitate">
+                  <option value="15 zile">15 zile</option>
+                  <option value="30 zile" selected>30 zile</option>
+                  <option value="60 zile">60 zile</option>
+                  <option value="la cerere">La cerere</option>
+                </select>
+              </div>
+
+              <div class="f-group">
+                <label class="f-label">// monedă</label>
+                <select class="f-select" id="oferta-moneda" onchange="renderOfertaTotal()">
+                  <option value="EUR">EUR</option>
+                  <option value="RON">RON</option>
+                </select>
+              </div>
+
+              <div class="f-group">
+                <label class="f-label">// note / condi&#x21B;ii</label>
+                <textarea class="f-input" id="oferta-note" placeholder="Ex: Pre&#x21B;urile nu includ TVA. Plata 50% avans." style="min-height:70px;font-size:.85rem;"></textarea>
+              </div>
+
+              <!-- Total -->
+              <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:4px;">
+                <div id="oferta-sumar-items" style="font-size:.8rem;color:var(--soft);margin-bottom:8px;max-height:120px;overflow-y:auto;"></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);">// total</span>
+                  <span id="oferta-total" style="font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:800;color:var(--teal);">0 EUR</span>
+                </div>
+              </div>
+
+              <button id="oferta-gen-btn" onclick="genereazaOferta()" style="width:100%;margin-top:14px;background:var(--teal);color:#060f0f;font-weight:700;font-size:.9rem;padding:12px;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;">
+                &#x1F4C4; Genereaz&#x103; PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: CATALOG SERVICII -->
+      <div id="oferta-view-servicii" style="display:none;">
+        <div class="proj-toolbar" style="margin-bottom:16px;">
+          <span style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);">// catalog_servicii — defini&#x21B;i pre&#x21B;urile tale</span>
+          <button class="btn-add" onclick="openSvcModal(null)">+ Serviciu nou</button>
+        </div>
+        <div id="svc-lista"><div class="loading">Se &icirc;ncarc&#259;...</div></div>
+      </div>
+
+      <!-- VIEW: ISTORIC -->
+      <div id="oferta-view-istoric" style="display:none;">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);margin-bottom:16px;">// oferte_generate — istoric</div>
+        <div id="oferte-istoric-lista"><div class="loading">Se &icirc;ncarc&#259;...</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: SERVICIU -->
+  <div class="modal-overlay" id="svcModalOverlay">
+    <div class="modal" style="max-width:500px;">
+      <h3 id="svcModalTitle">Serviciu nou</h3>
+      <input type="hidden" id="svcEditId">
+      <div class="f-group">
+        <label class="f-label">// denumire *</label>
+        <input class="f-input" type="text" id="svcNume" placeholder="ex: Site de Prezentare">
+      </div>
+      <div class="f-group">
+        <label class="f-label">// descriere scurt&#x103;</label>
+        <textarea class="f-input" id="svcDescriere" placeholder="ex: 5 pagini, responsive, SEO de baz&#x103;..." style="min-height:60px;"></textarea>
+      </div>
+      <div class="f-row">
+        <div class="f-group">
+          <label class="f-label">// pre&#x21B; *</label>
+          <input class="f-input" type="number" id="svcPret" placeholder="0" min="0" step="0.01">
+        </div>
+        <div class="f-group">
+          <label class="f-label">// moned&#x103;</label>
+          <select class="f-select" id="svcMoneda">
+            <option value="EUR">EUR</option>
+            <option value="RON">RON</option>
+          </select>
+        </div>
+      </div>
+      <div class="f-row">
+        <div class="f-group">
+          <label class="f-label">// unitate</label>
+          <select class="f-select" id="svcUnitate">
+            <option value="proiect">/ proiect</option>
+            <option value="lun&#x103;">/ lun&#x103;</option>
+            <option value="or&#x103;">/ or&#x103;</option>
+            <option value="pagin&#x103;">/ pagin&#x103;</option>
+          </select>
+        </div>
+        <div class="f-group">
+          <label class="f-label">// categorie</label>
+          <select class="f-select" id="svcCategorie">
+            <option value="web-design">Web Design</option>
+            <option value="seo">SEO</option>
+            <option value="mentenanta">Mentenan&#x21B;&#x103;</option>
+            <option value="grafic">Design Grafic</option>
+            <option value="marketing">Marketing</option>
+            <option value="altele">Altele</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:8px;">
+        <button class="btn-cancel" onclick="closeSvcModal()">Anuleaz&#x103;</button>
+        <button class="btn-save" onclick="saveSvc()">Salveaz&#x103; &#x2192;</button>
+      </div>
+    </div>
+  </div>
+
   <!-- BLOCK PICKER MODAL -->
   <div class="block-picker-overlay" id="blockPickerOverlay" style="display:none;" onclick="if(event.target===this)closeBlockPicker()">
     <div class="block-picker-box">
@@ -1831,6 +1984,7 @@
     if (tab === 'tema') fetchTheme();
     if (tab === 'media') fetchMedia();
     if (tab === 'cheltuieli') fetchCheltuieli();
+    if (tab === 'oferte') { fetchServicii(); fetchOferte(); populateOfertaClientSel(); }
   }
 
   function refreshCurrent() {
@@ -1842,6 +1996,7 @@
     else if (currentTab === 'social') fetchSocial();
     else if (currentTab === 'settings') fetchSettings();
     else if (currentTab === 'cheltuieli') fetchCheltuieli();
+    else if (currentTab === 'oferte') { fetchServicii(); fetchOferte(); }
     else if (currentTab === 'pagini') { var sel = document.getElementById('layout-page-sel'); loadLayoutPage(sel ? sel.value : 'index'); }
     else if (currentTab === 'tema') fetchTheme();
     else if (currentTab === 'media') fetchMedia();
@@ -4683,6 +4838,270 @@
     try {
       await fetch(`/api/cheltuieli/${id}?token=${encodeURIComponent(adminToken)}`, { method: 'DELETE' });
       fetchCheltuieli();
+    } catch { alert('Eroare la ștergere.'); }
+  }
+
+  // ── OFERTE SYSTEM ─────────────────────────────────────────────
+
+  let allServicii = [];
+  let allOferte = [];
+
+  const SVC_CAT_LABEL = {
+    'web-design': 'Web Design', 'seo': 'SEO', 'mentenanta': 'Mentenanță',
+    'grafic': 'Design Grafic', 'marketing': 'Marketing', 'altele': 'Altele'
+  };
+
+  function showOfertaView(view, btn) {
+    document.querySelectorAll('.oferta-subnav').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    ['generator', 'servicii', 'istoric'].forEach(v =>
+      document.getElementById('oferta-view-' + v).style.display = v === view ? '' : 'none'
+    );
+    if (view === 'servicii') renderServicii();
+    if (view === 'istoric') renderOfertaIstoric();
+  }
+
+  async function fetchServicii() {
+    try {
+      const res = await fetch('/api/servicii?token=' + encodeURIComponent(adminToken));
+      allServicii = await res.json();
+      renderServiciiLista();
+      if (document.getElementById('oferta-view-servicii').style.display !== 'none') renderServicii();
+    } catch {
+      document.getElementById('oferta-servicii-lista').innerHTML = '<div class="empty-state"><p>// Eroare la încărcare.</p></div>';
+    }
+  }
+
+  function renderServiciiLista() {
+    const wrap = document.getElementById('oferta-servicii-lista');
+    if (!allServicii.length) {
+      wrap.innerHTML = '<div class="empty-state" style="text-align:center;padding:24px;"><p style="color:var(--muted);">// Niciun serviciu definit. Mergi la <strong style="color:var(--teal);cursor:pointer;" onclick="showOfertaView(\'servicii\',document.getElementById(\'subnav-servicii\'))">Catalog servicii</strong> pentru a adăuga.</p></div>';
+      return;
+    }
+    const byCat = {};
+    allServicii.forEach(s => {
+      const cat = s.categorie || 'altele';
+      if (!byCat[cat]) byCat[cat] = [];
+      byCat[cat].push(s);
+    });
+    wrap.innerHTML = Object.entries(byCat).map(([cat, svcs]) => `
+      <div style="margin-bottom:16px;">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em;">// ${SVC_CAT_LABEL[cat] || esc(cat)}</div>
+        ${svcs.map(s => `
+          <label style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--bg3);border:1px solid var(--border-soft);border-radius:8px;cursor:pointer;margin-bottom:6px;transition:border-color .2s;"
+                 onmouseover="this.style.borderColor='var(--teal-border)'"
+                 onmouseout="this.style.borderColor='var(--border-soft)'">
+            <input type="checkbox" value="${esc(s.id)}" data-pret="${s.pret}" data-moneda="${esc(s.moneda)}"
+                   style="width:16px;height:16px;accent-color:var(--teal);cursor:pointer;margin-top:3px;flex-shrink:0;"
+                   onchange="renderOfertaTotal()">
+            <div style="flex:1;">
+              <div style="font-size:.9rem;font-weight:500;color:var(--text);">${esc(s.nume)}</div>
+              ${s.descriere ? `<div style="font-size:.78rem;color:var(--soft);margin-top:2px;">${esc(s.descriere)}</div>` : ''}
+            </div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.92rem;color:var(--teal);white-space:nowrap;text-align:right;">
+              ${parseFloat(s.pret || 0).toLocaleString('ro-RO')} ${esc(s.moneda || 'EUR')}
+              <div style="font-size:.68rem;font-weight:400;color:var(--muted);">/ ${esc(s.unitate || 'proiect')}</div>
+            </div>
+          </label>`).join('')}
+      </div>`).join('');
+  }
+
+  function renderOfertaTotal() {
+    const moneda = document.getElementById('oferta-moneda').value;
+    const checkboxes = document.querySelectorAll('#oferta-servicii-lista input[type=checkbox]:checked');
+    let total = 0;
+    const items = [];
+    checkboxes.forEach(cb => {
+      const svc = allServicii.find(s => s.id === cb.value);
+      if (!svc) return;
+      const pret = parseFloat(svc.pret || 0);
+      total += pret;
+      items.push({ name: svc.nume, pret, moneda: svc.moneda || 'EUR', unitate: svc.unitate || 'proiect' });
+    });
+    document.getElementById('oferta-sumar-items').innerHTML = items.map(i =>
+      `<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);">
+        <span style="color:var(--text);font-size:.8rem;">${esc(i.name)}</span>
+        <span style="color:var(--teal);font-family:'Space Grotesk',sans-serif;font-size:.8rem;">${i.pret.toLocaleString('ro-RO')} ${esc(i.moneda)}</span>
+      </div>`).join('') || '<span style="color:var(--muted);font-size:.78rem;">// nicio selecție</span>';
+    document.getElementById('oferta-total').textContent = total.toLocaleString('ro-RO') + ' ' + moneda;
+  }
+
+  function populateOfertaClientSel() {
+    const sel = document.getElementById('oferta-client-sel');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">— alege din listă —</option>' +
+      (clientsData || []).map(c => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');
+  }
+
+  function onOfertaClientChange(id) {
+    if (!id) return;
+    const c = (clientsData || []).find(x => x.id === id);
+    if (!c) return;
+    document.getElementById('oferta-client-name').value = c.name || '';
+    document.getElementById('oferta-client-email').value = c.email || '';
+    document.getElementById('oferta-client-phone').value = c.phone || '';
+  }
+
+  async function genereazaOferta() {
+    const clientName = document.getElementById('oferta-client-name').value.trim();
+    if (!clientName) { alert('Completează numele clientului.'); return; }
+    const checkboxes = [...document.querySelectorAll('#oferta-servicii-lista input[type=checkbox]:checked')];
+    if (!checkboxes.length) { alert('Selectează cel puțin un serviciu.'); return; }
+    const serviciiSelectate = checkboxes.map(cb => allServicii.find(s => s.id === cb.value)).filter(Boolean);
+    const btn = document.getElementById('oferta-gen-btn');
+    btn.disabled = true;
+    btn.textContent = 'Se generează...';
+    try {
+      const payload = {
+        client: {
+          id: document.getElementById('oferta-client-sel').value || null,
+          name: clientName,
+          email: document.getElementById('oferta-client-email').value.trim(),
+          phone: document.getElementById('oferta-client-phone').value.trim(),
+        },
+        servicii: serviciiSelectate,
+        moneda: document.getElementById('oferta-moneda').value,
+        valabilitate: document.getElementById('oferta-valabilitate').value,
+        note: document.getElementById('oferta-note').value.trim(),
+      };
+      const res = await fetch('/api/oferte?token=' + encodeURIComponent(adminToken), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) { alert('Eroare la generare.'); return; }
+      const data = await res.json();
+      window.open('/oferta-preview/' + data.id + '?token=' + encodeURIComponent(adminToken), '_blank');
+      fetchOferte();
+      showOfertaView('istoric', document.getElementById('subnav-istoric'));
+    } catch { alert('Eroare de rețea.'); }
+    finally {
+      btn.disabled = false;
+      btn.innerHTML = '&#x1F4C4; Genereaz&#x103; PDF';
+    }
+  }
+
+  async function fetchOferte() {
+    try {
+      const res = await fetch('/api/oferte?token=' + encodeURIComponent(adminToken));
+      allOferte = await res.json();
+      renderOfertaIstoric();
+    } catch {}
+  }
+
+  function renderOfertaIstoric() {
+    const wrap = document.getElementById('oferte-istoric-lista');
+    if (!wrap) return;
+    if (!allOferte.length) {
+      wrap.innerHTML = '<div class="empty-state"><p>// Nicio ofertă generată încă.</p></div>';
+      return;
+    }
+    const sorted = [...allOferte].sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+    wrap.innerHTML = '<div class="table-wrap"><table style="width:100%;border-collapse:collapse;">' +
+      '<thead><tr style="font-family:\'Share Tech Mono\',monospace;font-size:.72rem;color:var(--muted);border-bottom:1px solid var(--border);">' +
+      '<th style="text-align:left;padding:8px 12px;">Nr. ofertă</th>' +
+      '<th style="text-align:left;padding:8px 12px;">Client</th>' +
+      '<th style="text-align:left;padding:8px 12px;">Data</th>' +
+      '<th style="text-align:right;padding:8px 12px;">Total</th>' +
+      '<th style="padding:8px 12px;"></th>' +
+      '</tr></thead><tbody>' +
+      sorted.map(o => {
+        const total = (o.servicii || []).reduce((s, sv) => s + parseFloat(sv.pret || 0), 0);
+        return `
+          <tr style="border-bottom:1px solid var(--border);transition:background .15s;"
+              onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''">
+            <td style="padding:10px 12px;font-family:'Share Tech Mono',monospace;font-size:.82rem;color:var(--teal);">${esc(o.numar || '')}</td>
+            <td style="padding:10px 12px;font-size:.88rem;color:var(--text);">${esc(o.client?.name || '')}
+              ${o.client?.email ? `<div style="font-size:.72rem;color:var(--muted);">${esc(o.client.email)}</div>` : ''}
+            </td>
+            <td style="padding:10px 12px;font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--muted);">${o.createdAt ? new Date(o.createdAt).toLocaleDateString('ro-RO') : '–'}</td>
+            <td style="padding:10px 12px;text-align:right;font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--teal);">${total.toLocaleString('ro-RO')} <span style="font-size:.72rem;color:var(--muted);">${esc(o.moneda || 'EUR')}</span></td>
+            <td style="padding:10px 12px;white-space:nowrap;">
+              <button class="btn-edit" onclick="window.open('/oferta-preview/${esc(o.id)}?token=${encodeURIComponent(adminToken)}','_blank')" title="Previzualizare / Print PDF" style="font-size:.8rem;">&#x1F5A8;</button>
+            </td>
+          </tr>`;
+      }).join('') +
+      '</tbody></table></div>';
+  }
+
+  function renderServicii() {
+    const wrap = document.getElementById('svc-lista');
+    if (!wrap) return;
+    if (!allServicii.length) {
+      wrap.innerHTML = '<div class="empty-state"><p>// Niciun serviciu definit. Apasă &ldquo;+ Serviciu nou&rdquo;.</p></div>';
+      return;
+    }
+    wrap.innerHTML = '<div class="table-wrap"><table style="width:100%;border-collapse:collapse;">' +
+      '<thead><tr style="font-family:\'Share Tech Mono\',monospace;font-size:.72rem;color:var(--muted);border-bottom:1px solid var(--border);">' +
+      '<th style="text-align:left;padding:8px 12px;">Denumire</th>' +
+      '<th style="text-align:left;padding:8px 12px;">Categorie</th>' +
+      '<th style="text-align:right;padding:8px 12px;">Preț</th>' +
+      '<th style="text-align:left;padding:8px 12px;">Unitate</th>' +
+      '<th style="padding:8px 12px;"></th>' +
+      '</tr></thead><tbody>' +
+      allServicii.map(s => `
+        <tr style="border-bottom:1px solid var(--border);transition:background .15s;"
+            onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''">
+          <td style="padding:10px 12px;font-size:.88rem;font-weight:500;color:var(--text);">${esc(s.nume)}
+            ${s.descriere ? `<div style="font-size:.72rem;color:var(--muted);">${esc(s.descriere)}</div>` : ''}
+          </td>
+          <td style="padding:10px 12px;font-size:.8rem;color:var(--soft);">${SVC_CAT_LABEL[s.categorie] || esc(s.categorie || '')}</td>
+          <td style="padding:10px 12px;text-align:right;font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--teal);">${parseFloat(s.pret || 0).toLocaleString('ro-RO')} <span style="font-size:.72rem;font-weight:400;color:var(--muted);">${esc(s.moneda || 'EUR')}</span></td>
+          <td style="padding:10px 12px;font-size:.78rem;color:var(--muted);">/ ${esc(s.unitate || 'proiect')}</td>
+          <td style="padding:10px 12px;white-space:nowrap;">
+            <button class="btn-edit" onclick="openSvcModal('${esc(s.id)}')">&#x270E;</button>
+            <button class="btn-del" onclick="deleteSvc('${esc(s.id)}','${esc(s.nume)}')" style="margin-left:4px;">&#x2715;</button>
+          </td>
+        </tr>`).join('') +
+      '</tbody></table></div>';
+  }
+
+  function openSvcModal(id) {
+    const s = id ? allServicii.find(x => x.id === id) : null;
+    document.getElementById('svcModalTitle').textContent = s ? 'Editează serviciu' : 'Serviciu nou';
+    document.getElementById('svcEditId').value = s ? s.id : '';
+    document.getElementById('svcNume').value = s ? s.nume : '';
+    document.getElementById('svcDescriere').value = s ? (s.descriere || '') : '';
+    document.getElementById('svcPret').value = s ? s.pret : '';
+    document.getElementById('svcMoneda').value = s ? (s.moneda || 'EUR') : 'EUR';
+    document.getElementById('svcUnitate').value = s ? (s.unitate || 'proiect') : 'proiect';
+    document.getElementById('svcCategorie').value = s ? (s.categorie || 'web-design') : 'web-design';
+    document.getElementById('svcModalOverlay').classList.add('open');
+    document.getElementById('svcNume').focus();
+  }
+
+  function closeSvcModal() { document.getElementById('svcModalOverlay').classList.remove('open'); }
+
+  async function saveSvc() {
+    const id = document.getElementById('svcEditId').value;
+    const nume = document.getElementById('svcNume').value.trim();
+    const pret = parseFloat(document.getElementById('svcPret').value);
+    if (!nume || isNaN(pret)) { alert('Completează denumirea și prețul.'); return; }
+    const payload = {
+      nume,
+      descriere: document.getElementById('svcDescriere').value.trim(),
+      pret,
+      moneda: document.getElementById('svcMoneda').value,
+      unitate: document.getElementById('svcUnitate').value,
+      categorie: document.getElementById('svcCategorie').value,
+    };
+    const url = id
+      ? `/api/servicii/${id}?token=${encodeURIComponent(adminToken)}`
+      : `/api/servicii?token=${encodeURIComponent(adminToken)}`;
+    const method = id ? 'PUT' : 'POST';
+    try {
+      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (!res.ok) { alert('Eroare la salvare.'); return; }
+      closeSvcModal();
+      fetchServicii();
+    } catch { alert('Eroare de rețea.'); }
+  }
+
+  async function deleteSvc(id, name) {
+    if (!confirm(`Ștergi serviciul "${name}"?`)) return;
+    try {
+      await fetch(`/api/servicii/${id}?token=${encodeURIComponent(adminToken)}`, { method: 'DELETE' });
+      fetchServicii();
     } catch { alert('Eroare la ștergere.'); }
   }
 

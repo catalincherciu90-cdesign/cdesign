@@ -1708,6 +1708,256 @@ Cerințe titluri:
       } catch { return json({ error: 'Eroare' }, 500); }
     }
 
+    // ── SERVICII (catalog pentru oferte) ─────────────────────
+
+    if (path === '/api/servicii' && request.method === 'GET') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const raw = await env.PROGRAMARI.get('__servicii__');
+        return json(raw ? JSON.parse(raw) : []);
+      } catch { return json([]); }
+    }
+
+    if (path === '/api/servicii' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const body = await request.json();
+        if (!body.nume || body.pret === undefined) return json({ error: 'Câmpuri obligatorii lipsă' }, 400);
+        const raw = await env.PROGRAMARI.get('__servicii__');
+        const lista = raw ? JSON.parse(raw) : [];
+        const svc = {
+          id: 'svc_' + Date.now(),
+          nume: String(body.nume).slice(0, 120),
+          descriere: String(body.descriere || '').slice(0, 300),
+          pret: parseFloat(body.pret) || 0,
+          moneda: ['EUR', 'RON'].includes(body.moneda) ? body.moneda : 'EUR',
+          unitate: ['proiect', 'lună', 'oră', 'pagină'].includes(body.unitate) ? body.unitate : 'proiect',
+          categorie: ['web-design', 'seo', 'mentenanta', 'grafic', 'marketing', 'altele'].includes(body.categorie) ? body.categorie : 'altele',
+        };
+        lista.push(svc);
+        await env.PROGRAMARI.put('__servicii__', JSON.stringify(lista));
+        return json(svc);
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path.startsWith('/api/servicii/') && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      const id = path.replace('/api/servicii/', '');
+      try {
+        const body = await request.json();
+        const raw = await env.PROGRAMARI.get('__servicii__');
+        const lista = raw ? JSON.parse(raw) : [];
+        const idx = lista.findIndex(s => s.id === id);
+        if (idx === -1) return json({ error: 'Serviciu negăsit' }, 404);
+        lista[idx] = {
+          ...lista[idx],
+          ...(body.nume !== undefined && { nume: String(body.nume).slice(0, 120) }),
+          ...(body.descriere !== undefined && { descriere: String(body.descriere).slice(0, 300) }),
+          ...(body.pret !== undefined && { pret: parseFloat(body.pret) || 0 }),
+          ...(body.moneda && ['EUR', 'RON'].includes(body.moneda) && { moneda: body.moneda }),
+          ...(body.unitate && { unitate: body.unitate }),
+          ...(body.categorie && { categorie: body.categorie }),
+        };
+        await env.PROGRAMARI.put('__servicii__', JSON.stringify(lista));
+        return json(lista[idx]);
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path.startsWith('/api/servicii/') && request.method === 'DELETE') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      const id = path.replace('/api/servicii/', '');
+      try {
+        const raw = await env.PROGRAMARI.get('__servicii__');
+        const lista = raw ? JSON.parse(raw) : [];
+        const filtered = lista.filter(s => s.id !== id);
+        await env.PROGRAMARI.put('__servicii__', JSON.stringify(filtered));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    // ── OFERTE ───────────────────────────────────────────────
+
+    if (path === '/api/oferte' && request.method === 'GET') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const raw = await env.PROGRAMARI.get('__oferte__');
+        return json(raw ? JSON.parse(raw) : []);
+      } catch { return json([]); }
+    }
+
+    if (path === '/api/oferte' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const body = await request.json();
+        if (!body.client?.name || !body.servicii?.length) return json({ error: 'Date incomplete' }, 400);
+        const raw = await env.PROGRAMARI.get('__oferte__');
+        const lista = raw ? JSON.parse(raw) : [];
+        const yr = new Date().getFullYear();
+        const nrSeq = String(lista.filter(o => (o.createdAt || '').startsWith(String(yr))).length + 1).padStart(3, '0');
+        const oferta = {
+          id: 'off_' + Date.now(),
+          numar: `OFF-${yr}-${nrSeq}`,
+          createdAt: new Date().toISOString(),
+          client: {
+            id: body.client.id || null,
+            name: String(body.client.name).slice(0, 120),
+            email: String(body.client.email || '').slice(0, 120),
+            phone: String(body.client.phone || '').slice(0, 40),
+          },
+          servicii: (body.servicii || []).map(s => ({
+            id: s.id, nume: String(s.nume || '').slice(0, 120),
+            descriere: String(s.descriere || '').slice(0, 300),
+            pret: parseFloat(s.pret) || 0, moneda: s.moneda || 'EUR', unitate: s.unitate || 'proiect',
+          })),
+          moneda: ['EUR', 'RON'].includes(body.moneda) ? body.moneda : 'EUR',
+          valabilitate: String(body.valabilitate || '30 zile').slice(0, 30),
+          note: String(body.note || '').slice(0, 500),
+          status: 'trimisă',
+        };
+        lista.push(oferta);
+        await env.PROGRAMARI.put('__oferte__', JSON.stringify(lista));
+        return json(oferta);
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    // ── OFERTĂ PREVIEW (print as PDF) ────────────────────────
+
+    if (path.startsWith('/oferta-preview/') && request.method === 'GET') {
+      if (!isAdmin(url, env)) return new Response('Acces neautorizat', { status: 401 });
+      const id = path.replace('/oferta-preview/', '');
+      try {
+        const raw = await env.PROGRAMARI.get('__oferte__');
+        const lista = raw ? JSON.parse(raw) : [];
+        const o = lista.find(x => x.id === id);
+        if (!o) return new Response('Ofertă negăsită', { status: 404 });
+        const total = (o.servicii || []).reduce((s, sv) => s + parseFloat(sv.pret || 0), 0);
+        const dataDoc = new Date(o.createdAt).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
+        const dataExpira = (() => {
+          const d = new Date(o.createdAt);
+          const zile = parseInt(o.valabilitate) || 30;
+          d.setDate(d.getDate() + zile);
+          return d.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
+        })();
+        function e(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+        const html = `<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ofertă ${e(o.numar)} – C Design</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#1a1a2e;font-size:14px;line-height:1.5;}
+  .page{max-width:800px;margin:0 auto;padding:48px 40px;}
+  .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:40px;padding-bottom:24px;border-bottom:2px solid #00a8a8;}
+  .logo{font-size:1.8rem;font-weight:800;color:#1a1a2e;letter-spacing:-.02em;}
+  .logo span{color:#00a8a8;}
+  .logo-sub{font-size:.75rem;color:#666;margin-top:2px;}
+  .oferta-meta{text-align:right;}
+  .oferta-nr{font-size:1.4rem;font-weight:700;color:#00a8a8;}
+  .oferta-data{font-size:.82rem;color:#666;margin-top:4px;}
+  .section-title{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#888;margin-bottom:8px;}
+  .client-box{background:#f8f9fa;border-radius:8px;padding:18px 20px;margin-bottom:32px;}
+  .client-name{font-size:1.1rem;font-weight:700;color:#1a1a2e;}
+  .client-info{font-size:.85rem;color:#555;margin-top:4px;}
+  table{width:100%;border-collapse:collapse;margin-bottom:24px;}
+  th{text-align:left;padding:10px 14px;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:#888;border-bottom:2px solid #e5e7eb;}
+  td{padding:12px 14px;border-bottom:1px solid #f0f0f0;vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  .svc-name{font-weight:600;color:#1a1a2e;}
+  .svc-desc{font-size:.8rem;color:#666;margin-top:3px;}
+  .svc-unit{font-size:.78rem;color:#999;}
+  .svc-pret{font-weight:700;color:#00a8a8;white-space:nowrap;text-align:right;}
+  .total-row{background:#f0fafa;border-top:2px solid #00a8a8 !important;}
+  .total-label{font-weight:700;font-size:1rem;}
+  .total-val{font-size:1.3rem;font-weight:800;color:#00a8a8;text-align:right;}
+  .footer-section{margin-top:32px;padding-top:24px;border-top:1px solid #e5e7eb;display:flex;justify-content:space-between;gap:24px;}
+  .footer-block{flex:1;}
+  .footer-block p{font-size:.82rem;color:#555;margin-top:4px;}
+  .note-box{background:#fffbf0;border-left:3px solid #f59e0b;padding:14px 18px;border-radius:0 8px 8px 0;margin-top:24px;font-size:.85rem;color:#555;}
+  .print-btn{position:fixed;bottom:32px;right:32px;background:#00a8a8;color:#fff;font-weight:700;font-size:.9rem;padding:12px 24px;border-radius:8px;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,168,168,.4);}
+  .print-btn:hover{background:#008f8f;}
+  @media print{
+    .print-btn{display:none;}
+    body{font-size:12px;}
+    .page{padding:20px;}
+    @page{margin:1.5cm;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div>
+      <div class="logo">C<span>Design</span></div>
+      <div class="logo-sub">Agenție Web & Digital</div>
+      <div style="font-size:.78rem;color:#999;margin-top:12px;">www.c-design.ro<br>office@c-design.ro</div>
+    </div>
+    <div class="oferta-meta">
+      <div class="oferta-nr">${e(o.numar)}</div>
+      <div class="oferta-data">Data: ${dataDoc}</div>
+      ${o.valabilitate !== 'la cerere' ? `<div class="oferta-data">Valabilă până: ${dataExpira}</div>` : '<div class="oferta-data">Valabilitate: la cerere</div>'}
+    </div>
+  </div>
+
+  <div class="section-title">Client</div>
+  <div class="client-box">
+    <div class="client-name">${e(o.client?.name)}</div>
+    <div class="client-info">
+      ${o.client?.email ? `📧 ${e(o.client.email)}` : ''}
+      ${o.client?.email && o.client?.phone ? ' &nbsp;·&nbsp; ' : ''}
+      ${o.client?.phone ? `📞 ${e(o.client.phone)}` : ''}
+    </div>
+  </div>
+
+  <div class="section-title">Servicii oferite</div>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:55%;">Serviciu</th>
+        <th>Unitate</th>
+        <th style="text-align:right;">Preț</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${(o.servicii || []).map(s => `
+      <tr>
+        <td>
+          <div class="svc-name">${e(s.nume)}</div>
+          ${s.descriere ? `<div class="svc-desc">${e(s.descriere)}</div>` : ''}
+        </td>
+        <td class="svc-unit">/ ${e(s.unitate || 'proiect')}</td>
+        <td class="svc-pret">${parseFloat(s.pret||0).toLocaleString('ro-RO')} ${e(s.moneda||'EUR')}</td>
+      </tr>`).join('')}
+      <tr class="total-row">
+        <td colspan="2" class="total-label">TOTAL ESTIMAT</td>
+        <td class="total-val">${total.toLocaleString('ro-RO')} ${e(o.moneda)}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  ${o.note ? `<div class="note-box"><strong>Note & condiții:</strong><br>${e(o.note)}</div>` : ''}
+
+  <div class="footer-section">
+    <div class="footer-block">
+      <div class="section-title">Valabilitate ofertă</div>
+      <p>${o.valabilitate === 'la cerere' ? 'La cerere' : `${e(o.valabilitate)} de la data emiterii`}</p>
+    </div>
+    <div class="footer-block" style="text-align:right;">
+      <div class="section-title">Semnătură</div>
+      <p style="margin-top:32px;border-top:1px solid #ddd;padding-top:6px;display:inline-block;min-width:180px;">C Design</p>
+    </div>
+  </div>
+</div>
+<button class="print-btn" onclick="window.print()">&#x1F5A8; Printează / Salvează PDF</button>
+</body>
+</html>`;
+        return new Response(html, {
+          headers: { 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'no-store' }
+        });
+      } catch { return new Response('Eroare la generare', { status: 500 }); }
+    }
+
     // SSR: injectează setările salvate în index.html pentru a evita flash-ul de conținut hardcodat
     if (path === '/' || path === '/index.html') {
       try {
