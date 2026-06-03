@@ -1735,7 +1735,21 @@ Cerințe titluri:
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
         const raw = await env.PROGRAMARI.get('__servicii__');
-        if (raw !== null) return json(JSON.parse(raw));
+        // Servicii noi adăugate după seed inițial — migrare automată
+        const migrations = [
+          { id:'svc_d17', nume:'Integrare Google Search Console', descriere:'Verificare proprietate, sitemap XML, conectare Google Analytics, raport erori indexare', pret:120, moneda:'EUR', unitate:'proiect', categorie:'seo' },
+        ];
+        if (raw !== null) {
+          const lista = JSON.parse(raw);
+          const ids = new Set(lista.map(s => s.id));
+          const toAdd = migrations.filter(m => !ids.has(m.id));
+          if (toAdd.length) {
+            const updated = [...lista, ...toAdd];
+            await env.PROGRAMARI.put('__servicii__', JSON.stringify(updated));
+            return json(updated);
+          }
+          return json(lista);
+        }
         // Prima accesare — seed cu servicii tipice agenție web design România
         const defaults = [
           { id:'svc_d01', nume:'Site de Prezentare', descriere:'5 pagini, design responsiv, CMS, Google Analytics, SEO de bază', pret:899, moneda:'EUR', unitate:'proiect', categorie:'web-design' },
@@ -1754,6 +1768,7 @@ Cerințe titluri:
           { id:'svc_d14', nume:'Mentenanță Site Avansat', descriere:'Actualizări, backup săptămânal, securitate, 4h modificări/lună, raport', pret:200, moneda:'EUR', unitate:'lună', categorie:'mentenanta' },
           { id:'svc_d15', nume:'Logo Design', descriere:'3 variante de concept, fișiere vectoriale finale (AI, SVG, PNG, PDF)', pret:350, moneda:'EUR', unitate:'proiect', categorie:'grafic' },
           { id:'svc_d16', nume:'Identitate Vizuală Completă', descriere:'Logo + paletă culori + fonturi + business card + antet + ghid brand', pret:800, moneda:'EUR', unitate:'proiect', categorie:'grafic' },
+          ...migrations,
         ];
         await env.PROGRAMARI.put('__servicii__', JSON.stringify(defaults));
         return json(defaults);
