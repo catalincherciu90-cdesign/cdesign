@@ -44,13 +44,37 @@ window.addEventListener('load', function() {
 {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
-  "name": "C Design – Web Design pentru Restaurante și HoReCa",
-  "description": "Servicii web design pentru restaurante, cafenele și catering din România. Site-uri cu meniu online, rezervări și galerie foto, livrate în 14 zile.",
+  "@id": "https://www.c-design.ro/#business-restaurante",
+  "name": "C Design – Web Design Restaurante și HoReCa",
+  "description": "Site cu meniu online, rezervări și livrare pentru restaurante, cafenele, catering. Domeniu inclus, livrat în 14 zile de la 300€.",
   "url": "https://www.c-design.ro/web-design-restaurante",
   "telephone": "+40753116155",
-  "areaServed": [{"@type": "AdministrativeArea", "name": "Ilfov"}, {"@type": "City", "name": "București"}, {"@type": "Country", "name": "România"}],
-  "serviceArea": {"@type": "GeoShape", "description": "Ilfov, București și online în toată România"},
-  "priceRange": "$$"
+  "email": "office@c-design.ro",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "RO"
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "09:00",
+      "closes": "18:00"
+    }
+  ],
+  "areaServed": [
+    {
+      "@type": "Country",
+      "name": "România"
+    }
+  ]
 }
 </script>
 <script type="application/ld+json">
@@ -58,8 +82,8 @@ window.addEventListener('load', function() {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    {"@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://c-design.ro/"},
-    {"@type": "ListItem", "position": 2, "name": "Web Design Restaurante", "item": "https://c-design.ro/web-design-restaurante"}
+    {"@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://www.c-design.ro/"},
+    {"@type": "ListItem", "position": 2, "name": "Web Design Restaurante", "item": "https://www.c-design.ro/web-design-restaurante"}
   ]
 }
 </script>
@@ -191,6 +215,39 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 @media(max-width:480px){.footer-grid-full{grid-template-columns:1fr;}}
 </style>
 <link rel="stylesheet" href="/theme.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Cât costă un site pentru restaurant?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Site-urile pentru restaurante și HoReCa pornesc de la 300€ și includ meniu online, formular de rezervări, domeniu și găzduire."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Ce funcționalități are un site de restaurant?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Includem: meniu digital actualizabil, formular de rezervări online, integrare Google Maps, galerie foto și opțional sistem de comenzi online."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Cât durează realizarea unui site pentru restaurant?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Livrăm în maximum 14 zile de la confirmarea comenzii și primirea materialelor (logo, poze, meniu)."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

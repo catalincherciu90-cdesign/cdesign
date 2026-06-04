@@ -44,13 +44,16 @@ window.addEventListener('load', function() {
 {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
+  "@id": "https://www.c-design.ro/#business-bucuresti",
   "name": "C Design – Web Design București",
-  "description": "Servicii web design pentru afaceri din București și Ilfov. Site-uri profesionale livrate în 14 zile.",
+  "description": "Site profesional pentru afaceri din București și Ilfov. Preț fix de la 300€, domeniu și găzduire incluse. Livrăm în 14 zile.",
   "url": "https://www.c-design.ro/web-design-bucuresti",
   "telephone": "+40753116155",
+  "email": "office@c-design.ro",
+  "priceRange": "$$",
+  "address": {"@type": "PostalAddress", "addressCountry": "RO", "addressRegion": "Ilfov"},
   "areaServed": [{"@type": "City", "name": "București"}, {"@type": "AdministrativeArea", "name": "Ilfov"}, {"@type": "Country", "name": "România"}],
-  "serviceArea": {"@type": "GeoShape", "description": "București, Ilfov și online în toată România"},
-  "priceRange": "$$"
+  "openingHoursSpecification": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "09:00", "closes": "18:00"}]
 }
 </script>
 <script type="application/ld+json">
@@ -58,8 +61,8 @@ window.addEventListener('load', function() {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    {"@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://c-design.ro/"},
-    {"@type": "ListItem", "position": 2, "name": "Web Design București", "item": "https://c-design.ro/web-design-bucuresti"}
+    {"@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://www.c-design.ro/"},
+    {"@type": "ListItem", "position": 2, "name": "Web Design București", "item": "https://www.c-design.ro/web-design-bucuresti"}
   ]
 }
 </script>
@@ -194,6 +197,39 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 @media(max-width:480px){.footer-grid-full{grid-template-columns:1fr;}}
 </style>
 <link rel="stylesheet" href="/theme.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Cât costă un site web în București?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Prețurile noastre pentru web design în București pornesc de la 300€ pentru un site de prezentare complet, cu domeniu și găzduire incluse. Oferim prețuri fixe, fără costuri ascunse."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Cât durează realizarea unui site în București?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Livrăm site-uri complete în maximum 14 zile de la confirmarea comenzii, indiferent că ești din București, Ilfov sau altă zonă."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Lucrați și online cu clienți din București?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Da, lucrăm 100% online. Consultanța, brieful și livrarea se fac prin video call, email și WhatsApp — fără deplasări necesare."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

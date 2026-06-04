@@ -44,13 +44,46 @@ window.addEventListener('load', function() {
 {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
+  "@id": "https://www.c-design.ro/#business-timisoara",
   "name": "C Design – Web Design Timișoara",
-  "description": "Servicii web design pentru afaceri din Timișoara și județul Timiș. Site-uri profesionale livrate în 14 zile.",
+  "description": "Site profesional pentru afaceri din Timișoara. Preț fix, domeniu și găzduire incluse. Pornim imediat, livrăm în 14 zile.",
   "url": "https://www.c-design.ro/web-design-timisoara",
   "telephone": "+40753116155",
-  "areaServed": [{"@type": "City", "name": "Timișoara"}, {"@type": "AdministrativeArea", "name": "Timiș"}, {"@type": "Country", "name": "România"}],
-  "serviceArea": {"@type": "GeoShape", "description": "Timișoara și online în toată România"},
-  "priceRange": "$$"
+  "email": "office@c-design.ro",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "RO",
+    "addressRegion": "Timiș"
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "09:00",
+      "closes": "18:00"
+    }
+  ],
+  "areaServed": [
+    {
+      "@type": "City",
+      "name": "Timișoara"
+    },
+    {
+      "@type": "AdministrativeArea",
+      "name": "Timiș"
+    },
+    {
+      "@type": "Country",
+      "name": "România"
+    }
+  ]
 }
 </script>
 <script type="application/ld+json">
@@ -58,8 +91,8 @@ window.addEventListener('load', function() {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    {"@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://c-design.ro/"},
-    {"@type": "ListItem", "position": 2, "name": "Web Design Timișoara", "item": "https://c-design.ro/web-design-timisoara"}
+    {"@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://www.c-design.ro/"},
+    {"@type": "ListItem", "position": 2, "name": "Web Design Timișoara", "item": "https://www.c-design.ro/web-design-timisoara"}
   ]
 }
 </script>
@@ -191,6 +224,39 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 @media(max-width:480px){.footer-grid-full{grid-template-columns:1fr;}}
 </style>
 <link rel="stylesheet" href="/theme.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Cât costă un site web în Timișoara?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Prețurile pentru web design în Timișoara pornesc de la 300€, cu domeniu și găzduire incluse. Preț fix, fără surprize."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Cum colaborați cu clienți din Timișoara?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Colaborăm 100% online — briefing prin video call, actualizări prin email și WhatsApp, livrare în 14 zile garantat."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Realizați site-uri pentru afaceri locale din Timișoara?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Da, creăm site-uri optimizate local pentru afaceri din Timișoara și județul Timiș, cu SEO local inclus."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

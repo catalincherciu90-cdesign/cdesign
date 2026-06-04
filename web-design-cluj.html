@@ -44,13 +44,46 @@ window.addEventListener('load', function() {
 {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
+  "@id": "https://www.c-design.ro/#business-cluj",
   "name": "C Design – Web Design Cluj-Napoca",
-  "description": "Servicii web design pentru afaceri din Cluj-Napoca și județul Cluj. Site-uri profesionale livrate în 14 zile.",
+  "description": "Site profesional pentru afaceri din Cluj-Napoca. Preț fix, domeniu și găzduire incluse. Pornim imediat, livrăm în 14 zile.",
   "url": "https://www.c-design.ro/web-design-cluj",
   "telephone": "+40753116155",
-  "areaServed": [{"@type": "City", "name": "Cluj-Napoca"}, {"@type": "AdministrativeArea", "name": "Cluj"}, {"@type": "Country", "name": "România"}],
-  "serviceArea": {"@type": "GeoShape", "description": "Cluj-Napoca și online în toată România"},
-  "priceRange": "$$"
+  "email": "office@c-design.ro",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "RO",
+    "addressRegion": "Cluj"
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "09:00",
+      "closes": "18:00"
+    }
+  ],
+  "areaServed": [
+    {
+      "@type": "City",
+      "name": "Cluj-Napoca"
+    },
+    {
+      "@type": "AdministrativeArea",
+      "name": "Cluj"
+    },
+    {
+      "@type": "Country",
+      "name": "România"
+    }
+  ]
 }
 </script>
 <script type="application/ld+json">
@@ -58,8 +91,8 @@ window.addEventListener('load', function() {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    {"@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://c-design.ro/"},
-    {"@type": "ListItem", "position": 2, "name": "Web Design Cluj-Napoca", "item": "https://c-design.ro/web-design-cluj"}
+    {"@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://www.c-design.ro/"},
+    {"@type": "ListItem", "position": 2, "name": "Web Design Cluj-Napoca", "item": "https://www.c-design.ro/web-design-cluj"}
   ]
 }
 </script>
@@ -191,6 +224,39 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 @media(max-width:480px){.footer-grid-full{grid-template-columns:1fr;}}
 </style>
 <link rel="stylesheet" href="/theme.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Cât costă un site web în Cluj-Napoca?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Prețurile pentru web design în Cluj pornesc de la 300€ pentru un site de prezentare profesional cu domeniu și găzduire incluse, preț fix."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Cât durează un site web pentru o firmă din Cluj?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Livrăm în maximum 14 zile de la confirmare. Procesul complet se desfășoară online — briefing, design, livrare."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Oferiți servicii de web design și pentru firme din Cluj-Napoca?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Da, deservim clienți din Cluj-Napoca și județul Cluj. Colaborăm 100% online, cu livrare garantată în 14 zile."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

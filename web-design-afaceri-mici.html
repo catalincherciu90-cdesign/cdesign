@@ -44,13 +44,37 @@ window.addEventListener('load', function() {
 {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
+  "@id": "https://www.c-design.ro/#business-afaceri-mici",
   "name": "C Design – Web Design Afaceri Mici",
-  "description": "Servicii web design pentru afaceri mici și businessuri locale din România. Site-uri profesionale livrate în 14 zile.",
+  "description": "Site profesional pentru florării, saloane, magazine și meșteri. Preț fix, fără surprize. Domeniu inclus, livrat în 14 zile.",
   "url": "https://www.c-design.ro/web-design-afaceri-mici",
   "telephone": "+40753116155",
-  "areaServed": [{"@type": "AdministrativeArea", "name": "Ilfov"}, {"@type": "City", "name": "București"}, {"@type": "Country", "name": "România"}],
-  "serviceArea": {"@type": "GeoShape", "description": "Ilfov, București și online în toată România"},
-  "priceRange": "$$"
+  "email": "office@c-design.ro",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "RO"
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "09:00",
+      "closes": "18:00"
+    }
+  ],
+  "areaServed": [
+    {
+      "@type": "Country",
+      "name": "România"
+    }
+  ]
 }
 </script>
 <script type="application/ld+json">
@@ -58,8 +82,8 @@ window.addEventListener('load', function() {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    {"@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://c-design.ro/"},
-    {"@type": "ListItem", "position": 2, "name": "Web Design Afaceri Mici", "item": "https://c-design.ro/web-design-afaceri-mici"}
+    {"@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://www.c-design.ro/"},
+    {"@type": "ListItem", "position": 2, "name": "Web Design Afaceri Mici", "item": "https://www.c-design.ro/web-design-afaceri-mici"}
   ]
 }
 </script>
@@ -191,6 +215,39 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 @media(max-width:480px){.footer-grid-full{grid-template-columns:1fr;}}
 </style>
 <link rel="stylesheet" href="/theme.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Cât costă un site pentru o afacere mică?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Site-urile pentru afaceri mici pornesc de la 300€ și includ design profesional, domeniu, găzduire și optimizare SEO de bază."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Ce tip de afaceri mici deserviti?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Creăm site-uri pentru florării, saloane de înfrumusețare, magazine locale, meșteri și orice afacere mică sau medie din România."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Este inclus SEO-ul în pachetul pentru afaceri mici?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Da, fiecare site include optimizare SEO de bază: titluri, meta descriptions, viteză optimizată și indexare Google."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

@@ -44,13 +44,37 @@ window.addEventListener('load', function() {
 {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
-  "name": "C Design – Web Design pentru Afaceri Auto",
-  "description": "Servicii web design pentru service auto, dealeri, vulcanizări și ITP-uri din România. Site-uri profesionale livrate în 14 zile.",
+  "@id": "https://www.c-design.ro/#business-auto",
+  "name": "C Design – Web Design Service Auto",
+  "description": "Site pentru service auto, dealeri, vulcanizări și ITP-uri. Preț fix, domeniu și găzduire incluse. Livrat în 14 zile de la 300€.",
   "url": "https://www.c-design.ro/web-design-auto",
   "telephone": "+40753116155",
-  "areaServed": [{"@type": "AdministrativeArea", "name": "Ilfov"}, {"@type": "City", "name": "București"}, {"@type": "Country", "name": "România"}],
-  "serviceArea": {"@type": "GeoShape", "description": "Ilfov, București și online în toată România"},
-  "priceRange": "$$"
+  "email": "office@c-design.ro",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "RO"
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "09:00",
+      "closes": "18:00"
+    }
+  ],
+  "areaServed": [
+    {
+      "@type": "Country",
+      "name": "România"
+    }
+  ]
 }
 </script>
 <script type="application/ld+json">
@@ -58,8 +82,8 @@ window.addEventListener('load', function() {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    {"@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://c-design.ro/"},
-    {"@type": "ListItem", "position": 2, "name": "Web Design Auto", "item": "https://c-design.ro/web-design-auto"}
+    {"@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://www.c-design.ro/"},
+    {"@type": "ListItem", "position": 2, "name": "Web Design Auto", "item": "https://www.c-design.ro/web-design-auto"}
   ]
 }
 </script>
@@ -191,6 +215,39 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 @media(max-width:480px){.footer-grid-full{grid-template-columns:1fr;}}
 </style>
 <link rel="stylesheet" href="/theme.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Cât costă un site pentru service auto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Site-urile pentru service auto și afaceri auto pornesc de la 300€ și includ domeniu, găzduire și optimizare SEO locală."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Ce funcționalități are un site pentru service auto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Includem: prezentare servicii, formular de programare online, galerie foto, integrare Google Maps și recenzii clienți."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Realizați site-uri și pentru dealeri auto sau vulcanizări?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Da, creăm site-uri pentru service auto, dealeri, vulcanizări, ITP-uri și orice afacere din domeniul auto."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
