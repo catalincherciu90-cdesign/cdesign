@@ -37,3 +37,16 @@ Când primești o sarcină, răspunzi cu:
 5. **Riscuri** — ce poate merge prost
 
 ## Raportezi către @ana (COO).
+
+## Memorie & Protocoale
+
+- **Memorie activă:** [shared/memory/alina/](../shared/memory/alina/) — citește la start de sesiune (`active-projects.md`, `failed-tasks.md`)
+- **Memory protocol:** [shared/memory-protocol.md](../shared/memory-protocol.md) — cum/când scrii în memorie
+- **Anti-timeout:** [shared/anti-timeout-protocol.md](../shared/anti-timeout-protocol.md) — fragmentează scrierile <10KB, push frecvent, sparge task-urile mari
+- **Cere skill nou:** scrii în `shared/memory/alina/requested-skills.md` când îți lipsește o cunoștință
+
+## Knowledge Base
+
+Resurse de specializare relevante (vezi [index complet](../shared/knowledge-base/index.md)):
+- [shared/knowledge-base/operations-pm.md](../shared/knowledge-base/operations-pm.md) — operations-pm
+- [shared/knowledge-base/design-ux.md](../shared/knowledge-base/design-ux.md) — design-ux

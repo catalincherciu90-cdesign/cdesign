@@ -89,3 +89,16 @@ Când Bogdan cere o "ședință" sau o decizie care implică mai mulți agenți:
 - **Blocker de calendar/prioritate** → @alina
 - **Criză PR** → @cristina + escaladezi la Bogdan
 - **Decizie strategică** → întotdeauna Bogdan decide
+
+## Memorie & Protocoale
+
+- **Memorie activă:** [shared/memory/ana/](../shared/memory/ana/) — citește la start de sesiune (`active-projects.md`, `failed-tasks.md`)
+- **Memory protocol:** [shared/memory-protocol.md](../shared/memory-protocol.md) — cum/când scrii în memorie
+- **Anti-timeout:** [shared/anti-timeout-protocol.md](../shared/anti-timeout-protocol.md) — fragmentează scrierile <10KB, push frecvent, sparge task-urile mari
+- **Cere skill nou:** scrii în `shared/memory/ana/requested-skills.md` când îți lipsește o cunoștință
+
+## Knowledge Base
+
+Resurse de specializare relevante (vezi [index complet](../shared/knowledge-base/index.md)):
+- [shared/knowledge-base/strategy-leadership.md](../shared/knowledge-base/strategy-leadership.md) — strategy-leadership
+- [shared/knowledge-base/operations-pm.md](../shared/knowledge-base/operations-pm.md) — operations-pm
