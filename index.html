@@ -519,7 +519,16 @@
     .dss-feat strong{display:block;font-size:.95rem;font-weight:600;color:var(--heading);}
     .dss-feat small{display:block;font-size:.8rem;color:var(--muted);margin-top:2px;}
     @media(max-width:640px){.dss{padding:56px 0;}}
-  </style>
+  
+@media(max-width:768px){
+  .about-section > .container > div:first-child { grid-template-columns:1fr !important; gap:40px !important; }
+  .about-section > .container > div:last-child { grid-template-columns:1fr 1fr !important; }
+}
+@media(max-width:480px){
+  .about-section > .container > div:last-child { grid-template-columns:1fr !important; }
+}
+
+</style>
   <link rel="stylesheet" href="/theme.css">
 </head>
 <body>
@@ -953,6 +962,63 @@
   </div>
 </section>
 
+
+
+<section class="about-section" id="despre-noi" aria-labelledby="despre-heading" data-section="about" style="padding:80px 0;background:var(--bg2);">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;">
+
+      <div>
+        <div class="sec-label reveal">DESPRE NOI</div>
+        <h2 class="sec-title reveal" id="despre-heading" style="margin-bottom:16px;">Facem site-uri care aduc clienți, nu premii.</h2>
+        <p style="font-size:1rem;color:var(--soft);margin-bottom:0 0 8px;font-weight:500;" class="reveal">Agenție web design din Ilfov care lucrează cu afaceri mici din toată România — online, rapid, la preț fix.</p>
+        <p style="font-size:.97rem;line-height:1.8;color:var(--soft);margin-top:24px;" class="reveal">C Design există din 2017 cu un singur scop: să dăm afacerilor mici accesul la un site profesionist, fără bătăi de cap și fără surprize la factură. În peste 9 ani am livrat peste 120 de proiecte pentru antreprenori, meșteri, firme de servicii și magazine din toată România. Nu suntem o agenție mare cu zeci de conturi — suntem echipa care îți răspunde direct și știe ce construiește.</p>
+        <p style="font-size:.97rem;line-height:1.8;color:var(--soft);margin-top:16px;" class="reveal">Lucrăm 100% online, deci nu contează dacă ești din București, Cluj sau Constanța. Fiecare proiect vine cu termen garantat de 14 zile, preț stabilit din start și zero costuri ascunse — ce discutăm la început, aia plătești la final. Primești site, branding, SEO local sau setup social media gata de folosit, nu o schiță pe care să o termini tu.</p>
+        <a href="#contact" class="btn-primary reveal" style="display:inline-flex;margin-top:32px;">Hai să vorbim →</a>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;" class="reveal reveal-delay-1">
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:24px;">
+          <div style="font-size:1.6rem;margin-bottom:10px;">⏱️</div>
+          <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:6px;">Termen garantat 14 zile</div>
+          <div style="font-size:.85rem;color:var(--muted);line-height:1.6;">Site-ul tău e live în două săptămâni sau îți explicăm noi de ce nu — nu te lăsăm să aștepți fără răspuns.</div>
+        </div>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:24px;">
+          <div style="font-size:1.6rem;margin-bottom:10px;">💰</div>
+          <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:6px;">Preț fix, fără surprize</div>
+          <div style="font-size:.85rem;color:var(--muted);line-height:1.6;">Stabilim costul înainte să începem și nu se mișcă. Nicio extra-taxă pentru „modificări minore".</div>
+        </div>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:24px;">
+          <div style="font-size:1.6rem;margin-bottom:10px;">🌐</div>
+          <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:6px;">100% online, oricând din România</div>
+          <div style="font-size:.85rem;color:var(--muted);line-height:1.6;">Nu ai nevoie să vii la birou. Brief, design și livrare — totul se face simplu, de la distanță.</div>
+        </div>
+        <div style="background:var(--teal-dim);border:1px solid var(--teal-border);border-radius:16px;padding:24px;">
+          <div style="font-size:1.6rem;margin-bottom:10px;">🤝</div>
+          <div style="font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:6px;">Pentru afaceri mici, nu corporații</div>
+          <div style="font-size:.85rem;color:var(--muted);line-height:1.6;">Știm cum gândește un antreprenor cu buget real — și construim soluții pentru el, nu pentru portofoliul nostru.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:64px;text-align:center;" class="reveal">
+      <div>
+        <div style="font-size:2.4rem;font-weight:800;color:var(--teal);font-family:'Space Grotesk',sans-serif;">120+</div>
+        <div style="font-size:.9rem;color:var(--muted);margin-top:6px;">proiecte livrate</div>
+      </div>
+      <div>
+        <div style="font-size:2.4rem;font-weight:800;color:var(--teal);font-family:'Space Grotesk',sans-serif;">9+</div>
+        <div style="font-size:.9rem;color:var(--muted);margin-top:6px;">ani experiență</div>
+      </div>
+      <div>
+        <div style="font-size:2.4rem;font-weight:800;color:var(--teal);font-family:'Space Grotesk',sans-serif;">14 zile</div>
+        <div style="font-size:.9rem;color:var(--muted);margin-top:6px;">termen garantat</div>
+      </div>
+    </div>
+
+  </div>
+</section>
 
 
 <section class="testi-bg" id="testimoniale" aria-labelledby="testi-heading" data-section="testimonials">
