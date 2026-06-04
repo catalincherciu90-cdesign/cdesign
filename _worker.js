@@ -670,6 +670,15 @@ export default {
       } catch {}
     }
 
+    // ── 301 REDIRECTS pentru URL-uri 404 semnalate în GSC ────────
+    const REDIRECTS_301 = {
+      '/campanie-florarii/tema2': '/',
+      '/campanie-florarii/tema3': '/',
+    };
+    if (REDIRECTS_301[path]) {
+      return Response.redirect('https://www.c-design.ro' + REDIRECTS_301[path], 301);
+    }
+
     // ── BLOG PUBLIC PAGES ─────────────────────────────────────
 
     if (path === '/blog' || path === '/blog/') {
