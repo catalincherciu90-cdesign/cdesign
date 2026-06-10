@@ -111,7 +111,8 @@ footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--teal
     <div class="nav-inner">
       <a href="/" class="logo"><img src="/logo-c-design.png" alt="C Design" style="height:42px;width:auto;display:block;"></a>
       <ul class="nav-links" role="list">
-        <li><a href="/#servicii">Servicii</a></li>
+        <li><a href="/servicii">Servicii</a></li>
+        <li><a href="/despre-noi">Despre noi</a></li>
         <li><a href="/#portofoliu">Portofoliu</a></li>
         <li><a href="/#contact">Contact</a></li>
         <li><a href="/blog">Blog</a></li>
@@ -123,7 +124,7 @@ footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--teal
   </div>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
-  <a href="/#servicii">Servicii</a><a href="/#portofoliu">Portofoliu</a><a href="/#contact">Contact</a><a href="/blog">Blog</a>
+  <a href="/servicii">Servicii</a><a href="/despre-noi">Despre noi</a><a href="/#portofoliu">Portofoliu</a><a href="/#contact">Contact</a><a href="/blog">Blog</a>
   <a href="tel:+40753116155">0753 116 155</a><a href="/#contact" class="btn-nav">Programează acum →</a>
 </div>
 <main>
@@ -865,6 +866,20 @@ export default {
         assetUrl.pathname = '/pachet-startup.html';
         return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
       }
+    }
+
+    // ── PAGINI PRINCIPALE (Despre noi, Servicii) ─────────────
+
+    if (path === '/despre-noi') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/despre-noi.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
+    if (path === '/servicii') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/servicii.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
 
     // ── CITY LANDING PAGES ───────────────────────────────────
@@ -1763,7 +1778,7 @@ Cerințe titluri:
     // ── LAYOUT (section order per page) ──────────────────────
 
     const LAYOUT_DEFAULTS = {
-      index: ['hero','carousel','showcase','services','startup','industries','process','portfolio','testimonials','contact'],
+      index: ['hero','carousel','showcase','services','portfolio','about','testimonials','contact'],
       'web-design-bucuresti': ['hero','trust','services','portfolio','process','contact'],
       'web-design-cluj':      ['hero','trust','services','portfolio','process','contact'],
       'web-design-timisoara': ['hero','trust','services','portfolio','process','contact'],
@@ -1774,9 +1789,9 @@ Cerințe titluri:
 
     const LAYOUT_LABELS = {
       hero:'Hero principal', carousel:'Banner carousel', showcase:'Device showcase',
-      services:'Servicii', startup:'Strip pachet startup', industries:'Industrii',
-      process:'Procesul nostru', portfolio:'Portofoliu', testimonials:'Testimoniale',
-      contact:'Contact', trust:'Trust / statistici',
+      services:'Servicii (teaser)', about:'Strip despre noi', startup:'Strip pachet startup',
+      industries:'Industrii', process:'Procesul nostru', portfolio:'Portofoliu',
+      testimonials:'Testimoniale', contact:'Contact', trust:'Trust / statistici',
     };
 
     if (path.startsWith('/api/layout/') && request.method === 'GET') {

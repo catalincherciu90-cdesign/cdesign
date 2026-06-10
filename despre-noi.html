@@ -17,64 +17,42 @@ window.addEventListener('load', function() {
 });
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Web Design Service Auto – Site Profesional | C Design</title>
-<meta name="description" content="Site pentru service auto, dealeri, vulcanizări și ITP-uri. Preț fix, domeniu și găzduire incluse. Livrat în 14 zile de la 300€.">
+<title>Despre Noi – Agenție Web Design din Ilfov | C Design</title>
+<meta name="description" content="Echipă de web design cu 10+ ani experiență și 120+ proiecte livrate pentru afaceri mici din toată România. Termen garantat 14 zile, preț fix, zero costuri ascunse.">
 <meta name="robots" content="index, follow">
-<meta name="keywords" content="web design auto, site service auto, web design dealeri auto, site vulcanizare, web design ITP, site service auto Ilfov, web design auto Bucuresti, site afaceri auto online">
 <meta name="author" content="C-Design">
-<meta name="geo.region" content="RO-IF">
-<meta name="geo.placename" content="Ilfov">
-<link rel="canonical" href="https://www.c-design.ro/web-design-auto">
+<link rel="canonical" href="https://www.c-design.ro/despre-noi">
 <link rel="icon" type="image/png" href="/logo-c-design.png">
 <link rel="apple-touch-icon" href="/logo-c-design.png">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://www.c-design.ro/web-design-auto">
-<meta property="og:title" content="Web Design Service Auto – Site Profesional | C Design">
-<meta property="og:description" content="Site-uri profesionale pentru service auto, dealeri și vulcanizări. Livrare 14 zile, preț fix.">
+<meta property="og:url" content="https://www.c-design.ro/despre-noi">
+<meta property="og:title" content="Despre Noi – C Design">
+<meta property="og:description" content="Facem site-uri care aduc clienți, nu premii. 10+ ani experiență, 120+ proiecte livrate, termen garantat 14 zile.">
 <meta property="og:image" content="https://www.c-design.ro/cover.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="ro_RO">
 <meta property="og:site_name" content="C Design">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Web Design Service Auto – Site Profesional | C Design">
-<meta name="twitter:description" content="Site-uri profesionale pentru service auto, dealeri și vulcanizări. Livrare 14 zile, preț fix.">
+<meta name="twitter:title" content="Despre Noi – C Design">
+<meta name="twitter:description" content="Facem site-uri care aduc clienți, nu premii. 10+ ani experiență, 120+ proiecte livrate.">
 <meta name="twitter:image" content="https://www.c-design.ro/cover.jpg">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  "@id": "https://www.c-design.ro/#business-auto",
-  "name": "C Design – Web Design Service Auto",
-  "description": "Site pentru service auto, dealeri, vulcanizări și ITP-uri. Preț fix, domeniu și găzduire incluse. Livrat în 14 zile de la 300€.",
-  "url": "https://www.c-design.ro/web-design-auto",
-  "telephone": "+40753116155",
-  "email": "office@c-design.ro",
-  "priceRange": "$$",
-  "address": {
-    "@type": "PostalAddress",
-    "addressCountry": "RO"
-  },
-  "openingHoursSpecification": [
-    {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday"
-      ],
-      "opens": "09:00",
-      "closes": "18:00"
-    }
-  ],
-  "areaServed": [
-    {
-      "@type": "Country",
-      "name": "România"
-    }
-  ]
+  "@type": "AboutPage",
+  "@id": "https://www.c-design.ro/despre-noi",
+  "name": "Despre C Design",
+  "description": "Agenție web design din Ilfov care lucrează cu afaceri mici din toată România — online, rapid, la preț fix.",
+  "url": "https://www.c-design.ro/despre-noi",
+  "mainEntity": {
+    "@type": "ProfessionalService",
+    "name": "C Design",
+    "telephone": "+40753116155",
+    "email": "office@c-design.ro",
+    "address": {"@type": "PostalAddress", "addressCountry": "RO", "addressRegion": "Ilfov"},
+    "areaServed": {"@type": "Country", "name": "România"}
+  }
 }
 </script>
 <script type="application/ld+json">
@@ -83,7 +61,7 @@ window.addEventListener('load', function() {
   "@type": "BreadcrumbList",
   "itemListElement": [
     {"@type": "ListItem", "position": 1, "name": "Acasă", "item": "https://www.c-design.ro/"},
-    {"@type": "ListItem", "position": 2, "name": "Web Design Auto", "item": "https://www.c-design.ro/web-design-auto"}
+    {"@type": "ListItem", "position": 2, "name": "Despre noi", "item": "https://www.c-design.ro/despre-noi"}
   ]
 }
 </script>
@@ -100,15 +78,17 @@ a{color:inherit;text-decoration:none}
 .container{max-width:1100px;margin:0 auto;padding:0 24px}
 nav{position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.35rem;color:#fff;display:flex;align-items:center;gap:6px}
+.logo-c{color:var(--teal);font-size:1.6rem}
 .nav-phone{display:inline-flex;align-items:center;gap:5px;font-family:'Share Tech Mono',monospace;font-size:.9rem;font-weight:600;color:var(--nav-phone);padding:2px 0;transition:color .2s;}.nav-phone::before{content:'📞';font-size:.8rem;}.nav-phone:hover{color:var(--teal);}
 .btn-nav{background:#fff;color:#111;font-weight:600;font-size:.875rem;padding:9px 20px;border-radius:8px;animation:btn-glow 2.8s ease-in-out infinite;}
 .hero{padding:80px 0 64px;text-align:center;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(0,168,168,.12) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;z-index:0;}
-    .hero-content-wrap{position:relative;z-index:1}
-    .hero-tag{display:inline-block;background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-border);padding:5px 16px;border-radius:4px;font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:.08em;margin-bottom:24px}
+.hero-content-wrap{position:relative;z-index:1}
+.hero-tag{display:inline-block;background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-border);padding:5px 16px;border-radius:4px;font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:.08em;margin-bottom:24px}
 .hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1.1;color:var(--heading);margin-bottom:20px}
 .hero h1 span{color:var(--teal)}
-.hero-desc{font-size:1.05rem;color:var(--soft);max-width:600px;margin:0 auto 36px;line-height:1.75}
+.hero-desc{font-size:1.05rem;color:var(--soft);max-width:640px;margin:0 auto 36px;line-height:1.75}
 .btn-primary{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#111;font-weight:700;font-size:1rem;padding:14px 32px;border-radius:8px;text-decoration:none;transition:box-shadow .2s,transform .15s;animation:btn-glow 2.8s ease-in-out infinite}
 .btn-ghost{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);color:#fff;font-weight:600;font-size:1rem;padding:13px 28px;border-radius:8px;border:1px solid rgba(255,255,255,.3);text-decoration:none;transition:background .2s;animation:btn-glow 2.8s ease-in-out infinite;}
 .btn-ghost:hover{background:rgba(255,255,255,.12);}
@@ -122,12 +102,9 @@ section{padding:72px 0}
 .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px;transition:border-color .2s}
 .card:hover{border-color:var(--teal-border)}
+.card-icon{font-size:2rem;margin-bottom:16px}
 .card h3{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:8px}
 .card p{font-size:.88rem;color:var(--soft);line-height:1.65}
-.faq{max-width:720px;margin:0 auto}
-.faq-item{border-bottom:1px solid var(--border);padding:20px 0}
-.faq-q{font-family:'Space Grotesk',sans-serif;font-weight:700;color:#fff;font-size:1rem;margin-bottom:8px}
-.faq-a{color:var(--soft);font-size:.93rem;line-height:1.7}
 .cta-box{background:linear-gradient(135deg,rgba(201,169,110,.10),rgba(0,168,168,.03));border:1px solid rgba(0,168,168,.2);border-radius:16px;padding:56px 40px;text-align:center;margin:0 auto;max-width:700px}
 .cta-box h2{font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:800;color:#fff;margin-bottom:12px}
 .cta-box p{color:var(--soft);margin-bottom:28px}
@@ -135,43 +112,55 @@ footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color
 footer a{color:var(--muted)}footer a:hover{color:var(--teal)}
 @media(max-width:768px){.grid-3{grid-template-columns:1fr}.stats{gap:32px}.hero{padding:56px 0 48px}.cta-box{padding:40px 24px}}
 
-    /* ── READABILITY & GRAPHICAL IMPROVEMENTS ─────────────────── */
-    :root{--text:#f0f4f8;--soft:#9ad4d4;--muted:#4d8888;}
-    body{font-size:1.06rem;line-height:1.82;}
-    .sec-title{font-size:clamp(1.9rem,3.2vw,2.6rem);line-height:1.15;margin-bottom:14px;}
-    .sec-title::after{content:'';display:block;width:44px;height:3px;background:linear-gradient(90deg,var(--teal),var(--teal-lt),transparent);border-radius:2px;margin-top:14px;}
-    .sec-sub{font-size:1.05rem;font-weight:400;line-height:1.88;}
-    .hero h1{font-size:clamp(2rem,5vw,3.4rem);}
-    .hero-desc{font-size:1.1rem;line-height:1.85;}
-    .stat-num{font-size:2.5rem;}
-    .faq-a{font-size:.97rem;line-height:1.85;}
-    .faq-q{font-size:1.05rem;}
-    .card p{font-size:.92rem;line-height:1.72;color:var(--soft);}
-    .card h3{font-size:1.05rem;margin-bottom:10px;}
-    .card{padding:32px;}
-    .btn-primary{background:#fff;color:#111;animation:btn-glow 2.8s ease-in-out infinite;}
-    .btn-primary:hover{background:#f0f0f0;transform:translateY(-2px)}
-    .btn-nav{background:#fff;color:#111;animation:btn-glow 2.8s ease-in-out infinite;}
-    .plan-cta-main{background:#fff;color:#111;animation:btn-glow 2.8s ease-in-out infinite;}
-    .plan-cta-main:hover{background:#f0f0f0;}
-    @media(max-width:768px){body{font-size:1rem;line-height:1.75;}.sec-title{font-size:1.6rem;}.card{padding:24px;}}
+/* ── READABILITY & GRAPHICAL IMPROVEMENTS ─────────────────── */
+:root{--text:#f0f4f8;--soft:#9ad4d4;--muted:#4d8888;}
+body{font-size:1.06rem;line-height:1.82;}
+.sec-title{font-size:clamp(1.9rem,3.2vw,2.6rem);line-height:1.15;margin-bottom:14px;}
+.sec-title::after{content:'';display:block;width:44px;height:3px;background:linear-gradient(90deg,var(--teal),var(--teal-lt),transparent);border-radius:2px;margin-top:14px;}
+.sec-sub{font-size:1.05rem;font-weight:400;line-height:1.88;}
+.hero h1{font-size:clamp(2rem,5vw,3.4rem);}
+.hero-desc{font-size:1.1rem;line-height:1.85;}
+.stat-num{font-size:2.5rem;}
+.card p{font-size:.92rem;line-height:1.72;color:var(--soft);}
+.card h3{font-size:1.05rem;margin-bottom:10px;}
+.card{padding:32px;}
+.btn-primary{background:#fff;color:#111;animation:btn-glow 2.8s ease-in-out infinite;}
+.btn-primary:hover{background:#f0f0f0;transform:translateY(-2px)}
+.btn-nav{background:#fff;color:#111;animation:btn-glow 2.8s ease-in-out infinite;}
+@media(max-width:768px){body{font-size:1rem;line-height:1.75;}.sec-title{font-size:1.6rem;}.card{padding:24px;}}
 
-    /* ── HERO SPLIT WITH PHOTO ──────────────────────────────── */
-    .hero-split{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;text-align:left;}
-    .hero-text{position:relative;z-index:2;}
-    .hero-visual{position:relative;z-index:2;}
-    .hero-photo-wrap{position:relative;border-radius:16px;overflow:hidden;box-shadow:0 0 60px rgba(0,168,168,.15),0 20px 60px rgba(0,0,0,.5);border:1px solid rgba(0,168,168,.2);}
-    .hero-photo{width:100%;height:400px;object-fit:cover;display:block;filter:brightness(.82) saturate(1.15);}
-    .hero-photo-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(6,15,15,.18) 0%,transparent 60%,rgba(6,15,15,.3) 100%);pointer-events:none;}
-    .hero-photo-badge{position:absolute;bottom:16px;left:16px;background:rgba(6,15,15,.88);backdrop-filter:blur(16px);border:1px solid rgba(201,169,110,.35);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:10px;z-index:3;}
-    .hero-photo-badge .pb-icon{font-size:1.5rem;line-height:1;}
-    .hero-photo-badge .pb-text strong{display:block;font-size:.875rem;font-weight:700;color:#f0f4f8;font-family:'Space Grotesk',sans-serif;}
-    .hero-photo-badge .pb-text small{font-size:.7rem;color:#4d8888;}
-    .hero-photo-wrap .hero-photo-pill{position:absolute;top:16px;right:16px;background:rgba(0,168,168,.9);color:#fff;font-family:'Share Tech Mono',monospace;font-size:.7rem;padding:5px 12px;border-radius:20px;letter-spacing:.06em;z-index:3;}
-    .hero-tag,.hero h1,.hero-desc,.hero-actions,.stats{text-align:left;}
-    .stats{justify-content:flex-start;}
-    @media(max-width:900px){.hero-split{grid-template-columns:1fr;}.hero-visual{display:none;}.hero-tag,.hero h1,.hero-desc,.hero-actions,.stats{text-align:center;}.stats{justify-content:center;}}
+/* ── ABOUT LAYOUT ─────────────────────────────────────────── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;}
+.about-grid p{font-size:.97rem;line-height:1.8;color:var(--soft);margin-top:16px;}
+.about-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.about-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:24px;}
+.about-card.hl{background:var(--teal-dim);border-color:var(--teal-border);}
+.about-card .ac-icon{font-size:1.6rem;margin-bottom:10px;}
+.about-card .ac-title{font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:6px;}
+.about-card .ac-text{font-size:.85rem;color:var(--muted);line-height:1.6;}
+@media(max-width:900px){.about-grid{grid-template-columns:1fr;gap:40px;}}
+@media(max-width:480px){.about-cards{grid-template-columns:1fr;}}
 
+/* ── PROCESS STEPS ────────────────────────────────────────── */
+.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
+.process-step{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px 24px;transition:border-color .2s;}
+.process-step:hover{border-color:var(--teal-border);}
+.p-num{font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--teal);margin-bottom:14px;}
+.process-step h3{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;color:var(--heading);margin-bottom:8px;}
+.process-step p{font-size:.88rem;color:var(--soft);line-height:1.65;}
+@media(max-width:900px){.process-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.process-grid{grid-template-columns:1fr;}}
+
+/* ── TESTIMONIALS ─────────────────────────────────────────── */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.testi-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:28px;}
+.testi-stars{color:#fbbf24;font-size:.9rem;letter-spacing:2px;margin-bottom:14px;}
+.testi-text{font-size:.92rem;color:var(--soft);line-height:1.75;margin-bottom:18px;font-style:italic;}
+.testi-author{display:flex;align-items:center;gap:12px;}
+.t-avatar{width:40px;height:40px;border-radius:50%;background:var(--teal-dim);border:1px solid var(--teal-border);color:var(--teal);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;font-family:'Space Grotesk',sans-serif;flex-shrink:0;}
+.t-name{display:block;font-weight:600;font-size:.88rem;color:var(--text);}
+.t-role{display:block;font-size:.76rem;color:var(--muted);margin-top:1px;}
+@media(max-width:900px){.testi-grid{grid-template-columns:1fr;}}
 
 .scroll-bar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--teal),var(--teal-lt));width:0%;z-index:9999;transition:width .1s linear;box-shadow:0 0 8px var(--teal);}
 nav{position:relative;}
@@ -210,44 +199,11 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 .footer-bottom-bar .teal{color:var(--teal)}
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
 .reveal.visible{opacity:1;transform:translateY(0)}
-.reveal-delay-1{transition-delay:80ms}.reveal-delay-2{transition-delay:160ms}
+.reveal-delay-1{transition-delay:80ms}.reveal-delay-2{transition-delay:160ms}.reveal-delay-3{transition-delay:240ms}
 @media(max-width:768px){nav .nav-links,.nav-phone,.btn-nav{display:none!important}.hamburger{display:flex!important}.footer-grid-full{grid-template-columns:1fr 1fr;gap:20px}}
 @media(max-width:480px){.footer-grid-full{grid-template-columns:1fr;}}
 </style>
 <link rel="stylesheet" href="/theme.css">
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Cât costă un site pentru service auto?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Site-urile pentru service auto și afaceri auto pornesc de la 300€ și includ domeniu, găzduire și optimizare SEO locală."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Ce funcționalități are un site pentru service auto?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Includem: prezentare servicii, formular de programare online, galerie foto, integrare Google Maps și recenzii clienți."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Realizați site-uri și pentru dealeri auto sau vulcanizări?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Da, creăm site-uri pentru service auto, dealeri, vulcanizări, ITP-uri și orice afacere din domeniul auto."
-      }
-    }
-  ]
-}
-</script>
 </head>
 <body>
 
@@ -258,9 +214,9 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
     <div class="nav-inner">
       <a href="/" aria-label="C Design – Pagina principală" style="display:flex;align-items:center;"><img src="/logo-c-design.png" alt="C Design" style="height:42px;width:auto;display:block;"></a>
       <ul class="nav-links" role="list">
-        <li><a href="/servicii">Servicii</a></li><li><a href="/despre-noi">Despre noi</a></li>
+        <li><a href="/servicii">Servicii</a></li>
+        <li><a href="/despre-noi" class="active">Despre noi</a></li>
         <li><a href="/#portofoliu">Portofoliu</a></li>
-        <li><a href="/#testimoniale">Recenzii</a></li>
         <li><a href="/blog">Blog</a></li>
         <li><a href="/programare">Contact</a></li>
       </ul>
@@ -275,7 +231,6 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
   <a href="/servicii">Servicii</a>
   <a href="/despre-noi">Despre noi</a>
   <a href="/#portofoliu">Portofoliu</a>
-  <a href="/#testimoniale">Recenzii</a>
   <a href="/blog">Blog</a>
   <a href="/programare">Contact</a>
   <a href="tel:+40753116155">0753 116 155</a>
@@ -283,102 +238,81 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 </div>
 
 <main>
-<section class="hero">
-  <div class="container">
-    <div class="hero-split">
-    <div class="hero-text">
 
-    <div class="hero-tag">WEB DESIGN AFACERI AUTO</div>
-    <h1>Site profesional pentru<br><span>afacerea ta auto</span></h1>
-    <p class="hero-desc">Creăm site-uri care aduc clienți noi pentru service-uri, dealeri, vulcanizări și ITP-uri din toată România. Livrare garantată în 14 zile, preț fix fără surprize.</p>
+<section class="hero">
+  <div class="container hero-content-wrap">
+    <div class="hero-tag">DESPRE NOI</div>
+    <h1>Facem site-uri care aduc <span>clienți</span>, nu premii.</h1>
+    <p class="hero-desc">Agenție web design din Ilfov care lucrează cu afaceri mici din toată România — online, rapid, la preț fix. Fără termeni tehnici, fără surprize la factură.</p>
     <div class="hero-actions">
       <a href="/programare" class="btn-primary">Programează 30 min gratuit →</a>
-      <a href="tel:+40753116155" class="btn-ghost">📞 0753 116 155</a>
+      <a href="/#portofoliu" class="btn-ghost">Vezi lucrările →</a>
     </div>
-      </div>
-
-    <div class="hero-visual">
-      <div class="hero-photo-wrap">
-<div class="hero-photo" style="filter:none;background:linear-gradient(145deg,#060e0e 0%,#0d1a1a 55%,#071212 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
-  <div style="position:absolute;right:-60px;top:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(201,169,110,.08) 0%,transparent 70%);pointer-events:none;"></div>
-  <div style="position:absolute;left:-40px;bottom:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(0,168,168,.05) 0%,transparent 70%);pointer-events:none;"></div>
-  <div style="text-align:center;z-index:1;padding:24px;">
-    <div style="font-size:3.5rem;margin-bottom:14px;">🔧</div>
-    <div style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:#c9a96e;letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px;">Service Auto · ITP · Vulcanizare · Dealer</div>
-    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-      <div style="background:rgba(6,15,15,.85);backdrop-filter:blur(12px);border:1px solid rgba(201,169,110,.3);border-radius:10px;padding:10px 18px;">
-        <div style="font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:800;color:#c9a96e;">+120</div>
-        <div style="font-size:.7rem;color:#9ad4d4;margin-top:2px;">proiecte auto livrate</div>
-      </div>
-      <div style="background:rgba(6,15,15,.85);backdrop-filter:blur(12px);border:1px solid rgba(201,169,110,.3);border-radius:10px;padding:10px 18px;">
-        <div style="font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:800;color:#c9a96e;">14 zile</div>
-        <div style="font-size:.7rem;color:#9ad4d4;margin-top:2px;">livrare garantată</div>
-      </div>
+    <div class="stats">
+      <div><div class="stat-num">120+</div><div class="stat-lbl">proiecte livrate</div></div>
+      <div><div class="stat-num">10+</div><div class="stat-lbl">ani experiență</div></div>
+      <div><div class="stat-num">14 zile</div><div class="stat-lbl">termen garantat</div></div>
     </div>
   </div>
-</div>
-        <div class="hero-photo-pill">C DESIGN</div>
-        <div class="hero-photo-badge">
-          <span class="pb-icon">🔧</span>
-          <div class="pb-text">
-            <strong>Service auto online</strong>
-            <small>livrat în 14 zile</small>
-          </div>
+</section>
+
+<section style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="container">
+    <div class="about-grid">
+      <div>
+        <h2 class="sec-title reveal">Cine suntem</h2>
+        <p class="reveal" style="font-weight:500;margin-top:8px;">O echipă mică, care răspunde direct și știe ce construiește.</p>
+        <p class="reveal">Cu peste 10 ani de experiență în web design, lucrăm atât cu afaceri mici și antreprenori la început de drum, cât și cu companii consacrate care vor să-și modernizeze prezența online. Am livrat peste 120 de proiecte pentru antreprenori, meșteri, firme de servicii, magazine și companii din toată România. Nu suntem o agenție mare cu zeci de conturi — suntem o echipă care răspunde direct și știe ce construiește.</p>
+        <p class="reveal">Colaborăm online sau cu vizită la client — tu alegi cum e mai comod. Indiferent de format, fiecare proiect vine cu termen garantat de 14 zile, preț stabilit din start și zero costuri ascunse — ce stabilim la început, aia plătești la final. Livrăm site, branding, SEO local sau setup social media gata de folosit, nu o schiță pe care să o termini tu.</p>
+        <a href="/programare" class="btn-primary reveal" style="display:inline-flex;margin-top:32px;">Hai să vorbim →</a>
+      </div>
+      <div class="about-cards reveal reveal-delay-1">
+        <div class="about-card">
+          <div class="ac-icon">⏱️</div>
+          <div class="ac-title">Termen garantat 14 zile</div>
+          <div class="ac-text">Site-ul tău e live în două săptămâni sau îți explicăm noi de ce nu — nu te lăsăm să aștepți fără răspuns.</div>
+        </div>
+        <div class="about-card">
+          <div class="ac-icon">💰</div>
+          <div class="ac-title">Preț fix, fără surprize</div>
+          <div class="ac-text">Stabilim costul înainte să începem și nu se mișcă. Nicio extra-taxă pentru „modificări minore".</div>
+        </div>
+        <div class="about-card">
+          <div class="ac-icon">🌐</div>
+          <div class="ac-title">100% online, oriunde în România</div>
+          <div class="ac-text">Nu ai nevoie să vii la birou. Brief, design și livrare — totul se face simplu, de la distanță.</div>
+        </div>
+        <div class="about-card hl">
+          <div class="ac-icon">🤝</div>
+          <div class="ac-title">Pentru afaceri mici, nu corporații</div>
+          <div class="ac-text">Știm cum gândește un antreprenor cu buget real — și construim soluții pentru el, nu pentru portofoliul nostru.</div>
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<section id="proces">
+  <div class="container">
+    <h2 class="sec-title reveal">Simplu de la început până la final</h2>
+    <p class="sec-sub reveal">Nu trebuie să știi nimic tehnic. Noi îți explicăm fiecare pas pe înțelesul tău — fără jargon, fără surprize.</p>
+    <div class="process-grid">
+      <div class="process-step reveal"><div class="p-num" aria-hidden="true">01</div><h3>Vorbim gratuit, 30 min</h3><p>Înțelegem ce vrei, ce ai nevoie și cât îți permiți. Fără obligații, fără presiune.</p></div>
+      <div class="process-step reveal reveal-delay-1"><div class="p-num" aria-hidden="true">02</div><h3>Ofertă clară, preț fix</h3><p>Primești în scris: ce facem, când livrăm și cât costă. Fără surprize la factură.</p></div>
+      <div class="process-step reveal reveal-delay-2"><div class="p-num" aria-hidden="true">03</div><h3>Construim împreună</h3><p>Îți arătăm progresul pe parcurs. Spui ce-ți place, ce schimbi — ești implicat cât vrei.</p></div>
+      <div class="process-step reveal reveal-delay-3"><div class="p-num" aria-hidden="true">04</div><h3>Lansăm și rămânem alături</h3><p>Site-ul tău e live. Te învățăm cum să-l folosești și rămânem disponibili oricând ai nevoie.</p></div>
     </div>
   </div>
 </section>
 
-<section style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+<section id="testimoniale" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
   <div class="container">
-    <h2 class="sec-title">Ce primești cu un site făcut de C Design</h2>
-    <p class="sec-sub">Tot ce are nevoie afacerea ta auto să fie vizibilă și să atragă clienți noi.</p>
-    <div class="grid-3">
-      <div class="card"><div style="font-size:2rem;margin-bottom:16px">🔍</div><h3>Găsit pe Google</h3><p>Site optimizat pentru "service auto [orașul tău]" — clienții te găsesc când au o problemă cu mașina.</p></div>
-      <div class="card"><div style="font-size:2rem;margin-bottom:16px">📱</div><h3>Perfect pe telefon</h3><p>Clienții caută service auto de pe mobil, în stradă. Site-ul funcționează perfect pe orice dispozitiv.</p></div>
-      <div class="card"><div style="font-size:2rem;margin-bottom:16px">⚡</div><h3>Se încarcă rapid</h3><p>Un site lent = clientul merge la concurență. Al tău se încarcă instant.</p></div>
-      <div class="card"><div style="font-size:2rem;margin-bottom:16px">📋</div><h3>Domeniu .ro + găzduire</h3><p>Totul inclus în pachet, fără costuri ascunse.</p></div>
-      <div class="card"><div style="font-size:2rem;margin-bottom:16px">📅</div><h3>Formular de programare</h3><p>Clienții se programează online, tu primești notificări pe email. Zero apeluri ratate.</p></div>
-      <div class="card"><div style="font-size:2rem;margin-bottom:16px">🛡️</div><h3>Suport tehnic inclus</h3><p>Orice problemă, rezolvată rapid. Nu ești singur după lansare.</p></div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="container">
-    <h2 class="sec-title">Servicii web design pentru industria auto</h2>
-    <p class="sec-sub">Soluții complete pentru orice tip de afacere auto din România.</p>
-    <div class="grid-3">
-      <div class="card">
-        <h3 style="font-size:1.1rem;margin-bottom:12px">🔧 Site pentru service auto</h3>
-        <p>Prezintă serviciile (schimb ulei, frâne, geometrie), zona de acoperire și programul de lucru. Clienții se programează direct online.</p>
-        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--teal)">Livrare: max. 14 zile</div>
-      </div>
-      <div class="card">
-        <h3 style="font-size:1.1rem;margin-bottom:12px">🚗 Site pentru dealer / rulotă auto</h3>
-        <p>Galerie de mașini, filtre după marcă/preț, formular de contact și pagini separate per vehicul.</p>
-        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--teal)">Livrare: max. 30 zile</div>
-      </div>
-      <div class="card">
-        <h3 style="font-size:1.1rem;margin-bottom:12px">🔄 Redesign site auto</h3>
-        <p>Site-ul tău arată vechi sau nu se vede pe mobil? Îl modernizăm fără să pierzi clienții existenți.</p>
-        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--teal)">Livrare: max. 14 zile</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
-  <div class="container">
-    <h2 class="sec-title">Întrebări frecvente despre web design pentru auto</h2>
-    <div class="faq">
-      <div class="faq-item"><div class="faq-q">Cât costă un site pentru service auto?</div><div class="faq-a">Depinde de servicii și pagini. Pachetul Startup pornește de la 300€. Programează 30 min gratuit pentru ofertă fixă.</div></div>
-      <div class="faq-item"><div class="faq-q">Pot adăuga programări online?</div><div class="faq-a">Da. Integrăm un formular de programare cu notificări email — clienții se programează 24/7.</div></div>
-      <div class="faq-item"><div class="faq-q">Pot să adaug prețurile serviciilor pe site?</div><div class="faq-a">Absolut. Creăm o pagină de prețuri clară, ușor de actualizat de tine oricând.</div></div>
-      <div class="faq-item"><div class="faq-q">Site-ul va apărea la căutări locale ("service auto + oraș")?</div><div class="faq-a">Da. Optimizăm pentru căutări locale și Google Maps — vizibilitate maximă în zona ta.</div></div>
-      <div class="faq-item"><div class="faq-q">Cât durează să fie gata site-ul?</div><div class="faq-a">Maximum 14 zile de la confirmare — garantat contractual.</div></div>
+    <h2 class="sec-title reveal">Ei ne-au ales — și nu au regretat</h2>
+    <p class="sec-sub reveal">Recenzii reale de la clienți cu afaceri ca a ta.</p>
+    <div class="testi-grid">
+      <div class="testi-card reveal"><div class="testi-stars" aria-label="5 stele"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="testi-text">"A fost simplu de la început până la final. Mi-au explicat fiecare pas, n-am simțit că nu înțeleg ce se întâmplă. Exact ce aveam nevoie."</p><div class="testi-author"><div class="t-avatar" aria-hidden="true">MB</div><div><span class="t-name">Mihai B.</span><span class="t-role">Servicii auto</span></div></div></div>
+      <div class="testi-card reveal reveal-delay-1"><div style="display:inline-block;background:var(--teal);color:#fff;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:12px;letter-spacing:.04em;">⭐ RECOMANDAT</div><div class="testi-stars" aria-label="5 stele"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="testi-text">"De când am noul site, am primit cereri de ofertă direct de pe pagina de contact. Primul client a acoperit toată investiția în prima lună."</p><div class="testi-author"><div class="t-avatar" aria-hidden="true">IA</div><div><span class="t-name">Ioana A.</span><span class="t-role">Consultant financiar</span></div></div></div>
+      <div class="testi-card reveal reveal-delay-2"><div class="testi-stars" aria-label="5 stele"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="testi-text">"Au respectat termenul și bugetul. Exact ce mi-au promis, exact când mi-au promis. Rară calitate în piața asta."</p><div class="testi-author"><div class="t-avatar" aria-hidden="true">CR</div><div><span class="t-name">Cristian R.</span><span class="t-role">Firmă construcții</span></div></div></div>
     </div>
   </div>
 </section>
@@ -386,7 +320,7 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 <section>
   <div class="container" style="text-align:center">
     <div class="cta-box">
-      <h2>Ai o afacere auto și vrei mai mulți clienți online?</h2>
+      <h2>Vrei să lucrăm împreună?</h2>
       <p>Programează o consultanță gratuită de 30 de minute. Îți spunem exact ce ai nevoie și cât costă — fără obligații.</p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
         <a href="/programare" class="btn-primary">Programează 30 min gratuit →</a>
@@ -395,8 +329,8 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
     </div>
   </div>
 </section>
-</main>
 
+</main>
 
 <div class="floating-bar" id="floatingBar">
   <a href="tel:+40753116155" class="fb-phone" aria-label="Sună acum">
@@ -423,7 +357,7 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
       </div>
       <div class="footer-col-full"><h4>Servicii</h4><ul><li><a href="/servicii">Site de prezentare</a></li><li><a href="/pachet-startup">Pachet Start-Up</a></li><li><a href="/servicii">Redesign site</a></li><li><a href="/servicii">Design grafic</a></li><li><a href="/abonament-lunar">Abonament lunar</a></li></ul></div>
       <div class="footer-col-full"><h4>Industrii</h4><ul><li><a href="/web-design-auto">Web Design Auto</a></li><li><a href="/web-design-restaurante">Web Design Restaurante</a></li><li><a href="/web-design-afaceri-mici">Web Design Afaceri Mici</a></li></ul></div>
-      <div class="footer-col-full"><h4>Companie</h4><ul><li><a href="/despre-noi">Despre noi</a></li><li><a href="/#portofoliu">Portofoliu</a></li><li><a href="/#testimoniale">Recenzii</a></li><li><a href="/despre-noi#proces">Cum lucrăm</a></li><li><a href="/blog">Blog</a></li></ul></div>
+      <div class="footer-col-full"><h4>Companie</h4><ul><li><a href="/despre-noi">Despre noi</a></li><li><a href="/#portofoliu">Portofoliu</a></li><li><a href="/despre-noi#testimoniale">Recenzii</a></li><li><a href="/despre-noi#proces">Cum lucrăm</a></li><li><a href="/blog">Blog</a></li></ul></div>
       <div class="footer-col-full"><h4>Contact</h4><ul><li><a href="tel:+40753116155">0753 116 155</a></li><li><a href="mailto:office@c-design.ro">office@c-design.ro</a></li><li><a href="https://wa.me/40753116155" rel="noopener noreferrer">WhatsApp</a></li><li><a href="/programare">Programează gratuit</a></li></ul></div>
     </div>
     <div class="footer-bottom-bar">
