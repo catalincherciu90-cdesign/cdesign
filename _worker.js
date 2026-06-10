@@ -1396,8 +1396,9 @@ Cerințe titluri:
         const today = new Date().toISOString().split('T')[0];
         const meetings = (data.meetings || []).filter(m => m.date >= today);
         const todos = (data.todos || []).filter(t => !t.done);
+        const todosDone = (data.todos || []).filter(t => t.done);
         const deadlines = (data.deadlines || []).filter(d => d.date >= today);
-        return json({ meetings, todos, deadlines });
+        return json({ meetings, todos, todosDone, deadlines });
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
 
