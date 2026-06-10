@@ -422,6 +422,39 @@ function json(data, status = 200, req) {
   });
 }
 
+// Scanează conținutul dinamic din KV (setări site, layout-uri, blog) și
+// returnează { filename: [locații] } pentru fiecare imagine /media/ referențiată.
+async function collectMediaUsage(env, pages) {
+  const usage = {};
+  const scan = (str, loc) => {
+    if (!str || typeof str !== 'string') return;
+    const re = /\/media\/([A-Za-z0-9._-]+)/g;
+    let m;
+    while ((m = re.exec(str))) {
+      const list = usage[m[1]] || (usage[m[1]] = []);
+      if (!list.includes(loc)) list.push(loc);
+    }
+  };
+  try {
+    const raw = await env.PROGRAMARI.get('__site_settings__');
+    scan(raw, 'Setări site (hero / bannere)');
+  } catch {}
+  for (const page of pages) {
+    try {
+      const raw = await env.PROGRAMARI.get('__layout__' + page);
+      scan(raw, 'Blocuri custom: ' + page);
+    } catch {}
+  }
+  try {
+    const raw = await env.PROGRAMARI.get('__blog__');
+    if (raw) {
+      const posts = JSON.parse(raw);
+      for (const p of posts) scan(JSON.stringify(p), 'Blog: ' + (p.title || p.slug || p.id));
+    }
+  } catch {}
+  return usage;
+}
+
 async function checkRateLimit(env, key, maxAttempts, windowSeconds) {
   try {
     const raw = await env.PROGRAMARI.get('__rl_' + key);
@@ -1847,6 +1880,107 @@ Cerințe titluri:
       } catch { return new Response('Eroare', { status: 500 }); }
     }
 
+    // Raport utilizare media: unde e folosită fiecare imagine pe site
+    if (path === '/api/media/usage' && request.method === 'GET') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const usage = await collectMediaUsage(env, Object.keys(LAYOUT_DEFAULTS));
+        return json({ usage });
+      } catch { return json({ error: 'Eroare' }, 500); }
+    }
+
+    // Curățare referințe moarte: elimină din conținut (setări, blocuri, blog)
+    // referințele către imagini /media/ care nu mai există în KV → fix 404
+    if (path === '/api/media/clean-refs' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const list = await env.PROGRAMARI.list({ prefix: '__media__' });
+        const existing = new Set(list.keys.map(k => k.name.replace('__media__', '')));
+        const isDead = (u) => {
+          const m = String(u).match(/\/media\/([A-Za-z0-9._-]+)/);
+          return m ? !existing.has(m[1]) : false;
+        };
+        const report = [];
+
+        // 1. Setări site (hero desktop/mobil etc.)
+        try {
+          const raw = await env.PROGRAMARI.get('__site_settings__');
+          if (raw) {
+            const s = JSON.parse(raw);
+            let changed = false;
+            for (const k of Object.keys(s)) {
+              if (typeof s[k] === 'string' && s[k].includes('/media/') && isDead(s[k])) {
+                report.push('Setări site: golit câmpul "' + k + '" (' + s[k] + ')');
+                delete s[k];
+                changed = true;
+              }
+            }
+            if (changed) await env.PROGRAMARI.put('__site_settings__', JSON.stringify(s));
+          }
+        } catch {}
+
+        // 2. Blocuri custom din layout-uri (imagini, bannere)
+        const cleanNode = (node, loc) => {
+          if (Array.isArray(node)) {
+            for (let i = node.length - 1; i >= 0; i--) {
+              const it = node[i];
+              if (it && typeof it === 'object' && !Array.isArray(it) && it.type === 'image'
+                  && typeof it.src === 'string' && it.src.includes('/media/') && isDead(it.src)) {
+                report.push(loc + ': element imagine eliminat (' + it.src + ')');
+                node.splice(i, 1);
+                continue;
+              }
+              cleanNode(it, loc);
+            }
+          } else if (node && typeof node === 'object') {
+            for (const k of Object.keys(node)) {
+              const v = node[k];
+              if (typeof v === 'string' && v.includes('/media/') && isDead(v)) {
+                report.push(loc + ': golit câmpul "' + k + '" (' + v + ')');
+                delete node[k];
+              } else {
+                cleanNode(v, loc);
+              }
+            }
+          }
+        };
+        for (const page of Object.keys(LAYOUT_DEFAULTS)) {
+          try {
+            const raw = await env.PROGRAMARI.get('__layout__' + page);
+            if (!raw) continue;
+            const layout = JSON.parse(raw);
+            const before = report.length;
+            cleanNode(layout.blocks || layout, 'Blocuri "' + page + '"');
+            if (report.length > before) await env.PROGRAMARI.put('__layout__' + page, JSON.stringify(layout));
+          } catch {}
+        }
+
+        // 3. Articole blog: elimină tag-urile <img> cu src inexistent
+        try {
+          const raw = await env.PROGRAMARI.get('__blog__');
+          if (raw) {
+            const posts = JSON.parse(raw);
+            let changed = false;
+            for (const p of posts) {
+              if (typeof p.content !== 'string') continue;
+              p.content = p.content.replace(/<img\b[^>]*>/gi, (tag) => {
+                const m = tag.match(/src\s*=\s*["']([^"']+)["']/i);
+                if (m && m[1].includes('/media/') && isDead(m[1])) {
+                  report.push('Blog "' + (p.title || p.slug) + '": imagine eliminată (' + m[1] + ')');
+                  changed = true;
+                  return '';
+                }
+                return tag;
+              });
+            }
+            if (changed) await env.PROGRAMARI.put('__blog__', JSON.stringify(posts));
+          }
+        } catch {}
+
+        return json({ success: true, cleaned: report.length, report });
+      } catch { return json({ error: 'Eroare la curățare' }, 500); }
+    }
+
     if (path.startsWith('/api/media') && request.method === 'GET') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
@@ -1866,6 +2000,14 @@ Cerințe titluri:
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       const filename = path.replace('/api/media/', '');
       try {
+        // Blocăm ștergerea imaginilor încă folosite pe site (previne 404-uri).
+        // Ștergerea forțată se face explicit cu ?force=1.
+        if (url.searchParams.get('force') !== '1') {
+          const usage = await collectMediaUsage(env, Object.keys(LAYOUT_DEFAULTS));
+          if (usage[filename] && usage[filename].length) {
+            return json({ error: 'Imaginea este folosită pe site', inUse: true, locations: usage[filename] }, 409);
+          }
+        }
         await env.PROGRAMARI.delete('__media__' + filename);
         return json({ success: true });
       } catch { return json({ error: 'Eroare' }, 500); }

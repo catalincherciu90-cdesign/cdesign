@@ -933,8 +933,9 @@
     <div class="main">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
         <h3 style="font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--soft);">// arhiva_media — imagini încărcate</h3>
-        <div style="display:flex;align-items:center;gap:10px;">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
           <span id="media-count" style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);"></span>
+          <button onclick="mediaCleanRefs()" title="Elimină din site (hero, blocuri, blog) referințele către imagini care nu mai există — repară erorile 404" style="cursor:pointer;padding:8px 16px;font-size:.8rem;background:transparent;color:var(--soft);border:1px solid var(--border);border-radius:8px;font-family:inherit;">🧹 Curăță referințe moarte</button>
           <label class="btn-save" style="cursor:pointer;padding:8px 18px;font-size:.85rem;">
             ⬆ Upload imagine
             <input type="file" accept="image/*" style="display:none" onchange="mediaUploadFile(this)">
@@ -4827,20 +4828,25 @@
 
   let mediaList = [];
   let mediaActiveUrls = new Set();
+  let mediaUsage = {};
 
   async function fetchMedia() {
     const grid = document.getElementById('media-grid');
     try {
-      // Fetch active URLs from site-settings to mark active images
-      const sr = await fetch('/api/site-settings');
-      if (sr.ok) {
-        const ss = await sr.json();
-        mediaActiveUrls = new Set([ss.heroImage, ss.heroImageMobile].filter(Boolean));
-        const banner = document.getElementById('media-active-banner');
-        if (mediaActiveUrls.size > 0 && banner) {
-          banner.style.display = 'block';
-          banner.textContent = 'ℹ Imaginile marcate cu "ACTIV" sunt folosite acum pe site. Ștergerea lor va elimina banner-ul hero.';
+      // Raport complet de utilizare: hero, blocuri custom, articole blog
+      mediaUsage = {};
+      try {
+        const ur = await fetch('/api/media/usage?token=' + encodeURIComponent(adminToken));
+        if (ur.ok) {
+          const ud = await ur.json();
+          mediaUsage = ud.usage || {};
         }
+      } catch {}
+      mediaActiveUrls = new Set(Object.keys(mediaUsage).map(f => '/media/' + f));
+      const banner = document.getElementById('media-active-banner');
+      if (mediaActiveUrls.size > 0 && banner) {
+        banner.style.display = 'block';
+        banner.textContent = 'ℹ Imaginile marcate cu "ACTIV" sunt folosite acum pe site (hero, blocuri custom sau blog) și nu pot fi șterse fără confirmare.';
       }
       const r = await fetch('/api/media?token=' + encodeURIComponent(adminToken));
       if (!r.ok) throw new Error();
@@ -4867,7 +4873,7 @@
       return `<div class="media-card${isActive ? ' active-img' : ''}" id="mcard-${CSS.escape(f.filename)}">
         <img class="media-thumb${isPortrait ? ' portrait' : ''}" src="${f.url}" alt="${f.filename}" loading="lazy" onerror="this.style.background='var(--bg3)';this.style.opacity='.3'">
         <div class="media-info">
-          ${isActive ? '<span class="media-badge">✓ ACTIV</span>' : ''}
+          ${isActive ? '<span class="media-badge" title="' + (mediaUsage[f.filename] || []).join(' • ').replace(/"/g, '&quot;') + '">✓ ACTIV</span>' : ''}
           <div class="media-name" title="${f.filename}">${f.filename}</div>
           <div class="media-actions">
             <button class="media-btn" onclick="mediaCopyUrl('${f.url}')">📋 Copiază</button>
@@ -4906,13 +4912,24 @@
   }
 
   async function mediaDelete(filename) {
-    if (mediaActiveUrls.has('/media/' + filename) || mediaActiveUrls.has(location.origin + '/media/' + filename)) {
-      if (!confirm('⚠️ Această imagine este folosită ca hero banner. O ștergi?')) return;
+    const usedIn = mediaUsage[filename] || [];
+    let force = false;
+    if (usedIn.length) {
+      if (!confirm('⚠️ Această imagine este folosită pe site:\n\n• ' + usedIn.join('\n• ') + '\n\nDacă o ștergi, în acele locuri vor apărea imagini lipsă (erori 404). O ștergi oricum?')) return;
+      force = true;
     } else {
       if (!confirm('Ștergi imaginea "' + filename + '"?')) return;
     }
     try {
-      const r = await fetch('/api/media/' + filename + '?token=' + encodeURIComponent(adminToken), { method: 'DELETE' });
+      const delUrl = '/api/media/' + filename + '?token=' + encodeURIComponent(adminToken) + (force ? '&force=1' : '');
+      let r = await fetch(delUrl, { method: 'DELETE' });
+      if (r.status === 409) {
+        // Serverul a detectat utilizări pe care nu le știam local
+        const d = await r.json().catch(() => ({}));
+        const locs = d.locations || [];
+        if (!confirm('⚠️ Imaginea este folosită pe site:\n\n• ' + locs.join('\n• ') + '\n\nO ștergi oricum?')) return;
+        r = await fetch(delUrl + (force ? '' : '&force=1'), { method: 'DELETE' });
+      }
       if (!r.ok) throw new Error();
       mediaList = mediaList.filter(f => f.filename !== filename);
       const cnt = document.getElementById('media-count');
@@ -4920,6 +4937,22 @@
       renderMediaGrid();
       showToast('Imagine ștearsă.');
     } catch { alert('Eroare la ștergere.'); }
+  }
+
+  async function mediaCleanRefs() {
+    if (!confirm('Scanează conținutul site-ului (hero, blocuri custom, articole blog) și elimină referințele către imagini care nu mai există în Media Library — cauza erorilor 404 din consolă.\n\nContinui?')) return;
+    showToast('Se scanează...');
+    try {
+      const r = await fetch('/api/media/clean-refs?token=' + encodeURIComponent(adminToken), { method: 'POST' });
+      const d = await r.json().catch(() => null);
+      if (!r.ok || !d) throw new Error();
+      if (d.cleaned > 0) {
+        alert('✅ Curățate ' + d.cleaned + ' referințe moarte:\n\n' + d.report.join('\n'));
+      } else {
+        showToast('Nicio referință moartă găsită — totul e în regulă.');
+      }
+      fetchMedia();
+    } catch { alert('Eroare la curățare.'); }
   }
 
   async function mediaUploadFile(input) {
