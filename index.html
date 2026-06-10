@@ -140,6 +140,7 @@
     img{max-width:100%;display:block}
     .scroll-bar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--teal),var(--teal-lt));width:0%;z-index:9999;transition:width .1s linear;box-shadow:0 0 8px var(--teal);}
     .container{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
+    .container.block-fullwide{max-width:none;}
     nav{position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
     @media(max-width:768px){nav{position:fixed;top:0;left:0;right:0;}body{padding-top:68px;}}
     nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--teal-glow-rgb),.6) 40%,rgba(83,148,255,.4) 60%,transparent);pointer-events:none;}
@@ -1055,6 +1056,10 @@ mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mob.classLi
 <script>
 (function(){
   // Template functions pentru blocuri custom
+  function blockContainerClass(b) {
+    return 'container' + (b.fullWidth ? ' block-fullwide' : '');
+  }
+
   function renderBlock(id, block) {
     switch(block.type) {
       case 'faq': return renderFaq(id, block);
@@ -1074,13 +1079,13 @@ mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mob.classLi
         +'<div style="padding:0 20px 18px;color:var(--soft);font-size:.95rem;line-height:1.7;">'+escHtml(item.a||'')+'</div></details>';
     }).join('');
     return '<section data-section="'+id+'" style="padding:64px 0;background:var(--bg2);">'
-      +'<div class="container"><h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:var(--heading);margin-bottom:40px;text-align:center;">'+escHtml(b.title||'Întrebări frecvente')+'</h2>'
-      +'<div style="max-width:700px;margin:0 auto;">'+items+'</div></div></section>';
+      +'<div class="'+blockContainerClass(b)+'"><h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:var(--heading);margin-bottom:40px;text-align:center;">'+escHtml(b.title||'Întrebări frecvente')+'</h2>'
+      +'<div style="max-width:'+(b.fullWidth?'none':'700px')+';margin:0 auto;">'+items+'</div></div></section>';
   }
 
   function renderCta(id, b) {
     return '<section data-section="'+id+'" style="padding:60px 0;background:linear-gradient(135deg,rgba(var(--teal-glow-rgb),.07),rgba(var(--teal-glow-rgb),.03));border-top:1px solid rgba(var(--teal-glow-rgb),.2);border-bottom:1px solid rgba(var(--teal-glow-rgb),.2);">'
-      +'<div class="container" style="text-align:center;">'
+      +'<div class="'+blockContainerClass(b)+'" style="text-align:center;">'
       +'<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:800;color:var(--heading);margin-bottom:12px;">'+escHtml(b.title||'Pregătit să începem?')+'</h2>'
       +'<p style="color:var(--soft);font-size:1rem;max-width:500px;margin:0 auto 28px;">'+escHtml(b.subtitle||'')+'</p>'
       +'<a href="'+escHtml(b.btnUrl||'/programari')+'" style="display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#060f0f;font-weight:700;font-size:1rem;padding:14px 32px;border-radius:8px;text-decoration:none;">'+escHtml(b.btnText||'Contactează-ne')+' →</a>'
@@ -1094,7 +1099,7 @@ mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mob.classLi
         +'<div style="color:var(--soft);font-size:.88rem;margin-top:6px;">'+escHtml(item.label||'')+'</div></div>';
     }).join('');
     return '<section data-section="'+id+'" style="padding:64px 0;">'
-      +'<div class="container">'
+      +'<div class="'+blockContainerClass(b)+'">'
       +'<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:var(--heading);margin-bottom:36px;text-align:center;">'+escHtml(b.title||'Cifre')+'</h2>'
       +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;">'+items+'</div>'
       +'</div></section>';
@@ -1102,7 +1107,7 @@ mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mob.classLi
 
   function renderTextBlock(id, b) {
     return '<section data-section="'+id+'" style="padding:64px 0;">'
-      +'<div class="container" style="max-width:760px;">'
+      +'<div class="'+blockContainerClass(b)+'" style="max-width:'+(b.fullWidth?'none':'760px')+';">'
       +'<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:var(--heading);margin-bottom:20px;">'+escHtml(b.title||'')+'</h2>'
       +'<div style="color:var(--soft);font-size:1rem;line-height:1.8;">'+escHtml(b.content||'').replace(/\n/g,'<br>')+'</div>'
       +'</div></section>';
@@ -1187,7 +1192,7 @@ mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mob.classLi
     }).join('');
     var minW = (b.columns||[]).length <= 2 ? '260px' : '200px';
     return '<section data-section="'+id+'" style="padding:64px 0;">'
-      +'<div class="container">'
+      +'<div class="'+blockContainerClass(b)+'">'
       +(b.title?'<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;color:var(--heading);margin-bottom:12px;text-align:center;">'+escHtml(b.title)+'</h2>':'')
       +(b.subtitle?'<p style="color:var(--soft);text-align:center;font-size:1rem;max-width:580px;margin:0 auto 40px;">'+escHtml(b.subtitle)+'</p>':'<div style="margin-bottom:'+(b.title?'40px':'0')+'"></div>')
       +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax('+minW+',1fr));gap:20px;">'+cols+'</div>'
