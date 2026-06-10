@@ -144,6 +144,7 @@ footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--teal
 </article>
 </main>
 <footer>
+  <a href="/" aria-label="C Design – Pagina principală"><img src="/logo-c-design.png" alt="C Design" style="height:32px;width:auto;display:block;margin:0 auto 12px;"></a>
   <p>© ${yr} C Design · <a href="tel:+40753116155">0753 116 155</a> · <a href="mailto:office@c-design.ro">office@c-design.ro</a> · <a href="/blog">Blog</a></p>
 </footer>
 <script>
