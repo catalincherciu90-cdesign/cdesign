@@ -11,6 +11,22 @@
   </url>
 
   <url>
+    <loc>https://www.c-design.ro/servicii</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://www.c-design.ro/servicii"/>
+  </url>
+
+  <url>
+    <loc>https://www.c-design.ro/despre-noi</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://www.c-design.ro/despre-noi"/>
+  </url>
+
+  <url>
     <loc>https://www.c-design.ro/pachet-startup</loc>
     <lastmod>2026-05-21</lastmod>
     <changefreq>monthly</changefreq>
