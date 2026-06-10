@@ -457,6 +457,77 @@ async function collectMediaUsage(env, pages) {
   return usage;
 }
 
+// ── CONȚINUT EDITABIL (rubrici marcate cu data-edit) ─────────
+// Paginile publice ale căror texte pot fi editate din admin (tab Conținut).
+const CONTENT_PAGES = {
+  'index': '/index.html',
+  'servicii': '/servicii.html',
+  'despre-noi': '/despre-noi.html',
+  'contact': '/contact.html',
+  'pachet-startup': '/pachet-startup.html',
+  'abonament-lunar': '/abonament-lunar.html',
+  'web-design-bucuresti': '/web-design-bucuresti.html',
+  'web-design-cluj': '/web-design-cluj.html',
+  'web-design-timisoara': '/web-design-timisoara.html',
+  'web-design-auto': '/web-design-auto.html',
+  'web-design-restaurante': '/web-design-restaurante.html',
+  'web-design-afaceri-mici': '/web-design-afaceri-mici.html',
+};
+
+// Înlocuiește conținutul elementelor cu data-edit="cheie" cu textul salvat.
+// Pentru ul/ol, fiecare linie devine un <li>.
+function applyContentOverrides(html, overrides) {
+  for (const key of Object.keys(overrides)) {
+    const val = overrides[key];
+    if (!val || typeof val !== 'string') continue;
+    const esc = val.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+    const safeKey = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp('(<([a-zA-Z0-9]+)\\b[^>]*\\bdata-edit="' + safeKey + '"[^>]*>)[\\s\\S]*?(</\\2>)');
+    html = html.replace(re, (mm, open, tag, close) => {
+      let content = esc;
+      if (/^(ul|ol)$/i.test(tag)) {
+        content = esc.split('<br>').map(s => s.trim()).filter(Boolean).map(s => '<li>' + s + '</li>').join('');
+      }
+      return open + content + close;
+    });
+  }
+  return html;
+}
+
+// Extrage rubricile editabile dintr-o pagină: cheie + textul implicit.
+function extractContentFields(html) {
+  const fields = [];
+  const re = /<([a-zA-Z0-9]+)\b[^>]*\bdata-edit="([^"]+)"[^>]*>([\s\S]*?)<\/\1>/g;
+  let m;
+  while ((m = re.exec(html))) {
+    let inner = m[3];
+    if (/^(ul|ol)$/i.test(m[1])) inner = inner.replace(/<\/li>/gi, '\n');
+    const def = inner.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, ' ')
+      .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&nbsp;/g,' ')
+      .split('\n').map(s => s.replace(/\s+/g,' ').trim()).filter(Boolean).join('\n').trim();
+    fields.push({ key: m[2], default: def });
+  }
+  return fields;
+}
+
+// Servește o pagină statică aplicând textele editate din KV (dacă există).
+async function serveContentPage(request, env, page) {
+  const assetUrl = new URL(request.url);
+  assetUrl.pathname = CONTENT_PAGES[page];
+  const [resp, raw] = await Promise.all([
+    env.ASSETS.fetch(new Request(assetUrl.toString(), request)),
+    env.PROGRAMARI.get('__content__' + page).catch(() => null),
+  ]);
+  if (!raw) return resp;
+  let overrides;
+  try { overrides = JSON.parse(raw); } catch { return resp; }
+  if (!overrides || !Object.keys(overrides).length) return resp;
+  const html = applyContentOverrides(await resp.text(), overrides);
+  return new Response(html, {
+    headers: { ...SEC_HEADERS, 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'no-cache, no-store, must-revalidate' }
+  });
+}
+
 async function checkRateLimit(env, key, maxAttempts, windowSeconds) {
   try {
     const raw = await env.PROGRAMARI.get('__rl_' + key);
@@ -888,13 +959,15 @@ export default {
       try {
         const assetUrl = new URL(request.url);
         assetUrl.pathname = '/pachet-startup.html';
-        const [htmlResp, settingsRaw] = await Promise.all([
+        const [htmlResp, settingsRaw, contentRaw] = await Promise.all([
           env.ASSETS.fetch(new Request(assetUrl.toString(), request)),
-          env.PROGRAMARI.get('__site_settings__')
+          env.PROGRAMARI.get('__site_settings__'),
+          env.PROGRAMARI.get('__content__pachet-startup').catch(() => null)
         ]);
-        if (!settingsRaw) return htmlResp;
-        const s = JSON.parse(settingsRaw);
+        if (!settingsRaw && !contentRaw) return htmlResp;
+        const s = settingsRaw ? JSON.parse(settingsRaw) : {};
         let html = await htmlResp.text();
+        if (contentRaw) { try { html = applyContentOverrides(html, JSON.parse(contentRaw)); } catch {} }
         function injectInner(h, id, val) {
           if (!val && val !== 0) return h;
           const esc = String(val).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -914,66 +987,46 @@ export default {
     // ── PAGINI PRINCIPALE (Despre noi, Servicii) ─────────────
 
     if (path === '/despre-noi') {
-      const assetUrl = new URL(request.url);
-      assetUrl.pathname = '/despre-noi.html';
-      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      return serveContentPage(request, env, 'despre-noi');
     }
 
     if (path === '/servicii') {
-      const assetUrl = new URL(request.url);
-      assetUrl.pathname = '/servicii.html';
-      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      return serveContentPage(request, env, 'servicii');
     }
 
     if (path === '/contact') {
-      const assetUrl = new URL(request.url);
-      assetUrl.pathname = '/contact.html';
-      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      return serveContentPage(request, env, 'contact');
     }
 
     // ── CITY LANDING PAGES ───────────────────────────────────
 
     if (path === '/web-design-bucuresti') {
-      const assetUrl = new URL(request.url);
-      assetUrl.pathname = '/web-design-bucuresti.html';
-      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      return serveContentPage(request, env, 'web-design-bucuresti');
     }
 
     if (path === '/web-design-cluj') {
-      const assetUrl = new URL(request.url);
-      assetUrl.pathname = '/web-design-cluj.html';
-      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      return serveContentPage(request, env, 'web-design-cluj');
     }
 
     if (path === '/web-design-timisoara') {
-      const assetUrl = new URL(request.url);
-      assetUrl.pathname = '/web-design-timisoara.html';
-      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      return serveContentPage(request, env, 'web-design-timisoara');
     }
 
     if (path === '/web-design-auto') {
-      const assetUrl = new URL(request.url);
-      assetUrl.pathname = '/web-design-auto.html';
-      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      return serveContentPage(request, env, 'web-design-auto');
     }
 
     if (path === '/web-design-restaurante') {
-      const assetUrl = new URL(request.url);
-      assetUrl.pathname = '/web-design-restaurante.html';
-      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      return serveContentPage(request, env, 'web-design-restaurante');
     }
 
     if (path === '/web-design-afaceri-mici') {
-      const assetUrl = new URL(request.url);
-      assetUrl.pathname = '/web-design-afaceri-mici.html';
-      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      return serveContentPage(request, env, 'web-design-afaceri-mici');
     }
 
 
     if (path === '/abonament-lunar') {
-      const assetUrl = new URL(request.url);
-      assetUrl.pathname = '/abonament-lunar.html';
-      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      return serveContentPage(request, env, 'abonament-lunar');
     }
 
     if (path === '/programare') {
@@ -1873,6 +1926,42 @@ Cerințe titluri:
         }));
         return json({ success: true });
       } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    // ── CONȚINUT EDITABIL (API admin) ─────────────────────────
+
+    if (path.startsWith('/api/content/') && request.method === 'GET') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      const page = path.replace('/api/content/', '');
+      if (!CONTENT_PAGES[page]) return json({ error: 'Pagină necunoscută' }, 404);
+      try {
+        const assetUrl = new URL(request.url);
+        assetUrl.pathname = CONTENT_PAGES[page];
+        const resp = await env.ASSETS.fetch(new Request(assetUrl.toString()));
+        const fields = extractContentFields(await resp.text());
+        const raw = await env.PROGRAMARI.get('__content__' + page);
+        const overrides = raw ? JSON.parse(raw) : {};
+        for (const f of fields) f.value = overrides[f.key] || '';
+        return json({ fields });
+      } catch { return json({ error: 'Eroare' }, 500); }
+    }
+
+    if (path.startsWith('/api/content/') && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      const page = path.replace('/api/content/', '');
+      if (!CONTENT_PAGES[page]) return json({ error: 'Pagină necunoscută' }, 404);
+      try {
+        const body = await request.json();
+        const clean = {};
+        let n = 0;
+        for (const [k, v] of Object.entries(body.overrides || {})) {
+          if (typeof v !== 'string' || !v.trim()) continue;
+          if (++n > 500) break;
+          clean[String(k).slice(0, 100)] = v.trim().slice(0, 4000);
+        }
+        await env.PROGRAMARI.put('__content__' + page, JSON.stringify(clean));
+        return json({ success: true, saved: Object.keys(clean).length });
+      } catch { return json({ error: 'Eroare' }, 500); }
     }
 
     // ── SITE SETTINGS (hero image etc.) ──────────────────────
@@ -2814,13 +2903,15 @@ Cerințe titluri:
     // SSR: injectează setările salvate în index.html pentru a evita flash-ul de conținut hardcodat
     if (path === '/' || path === '/index.html') {
       try {
-        const [htmlResp, settingsRaw] = await Promise.all([
+        const [htmlResp, settingsRaw, contentRaw] = await Promise.all([
           env.ASSETS.fetch(new Request(new URL('/index.html', request.url).toString())),
-          env.PROGRAMARI.get('__site_settings__')
+          env.PROGRAMARI.get('__site_settings__'),
+          env.PROGRAMARI.get('__content__index').catch(() => null)
         ]);
-        if (!settingsRaw) return htmlResp;
-        const settings = JSON.parse(settingsRaw);
+        if (!settingsRaw && !contentRaw) return htmlResp;
+        const settings = settingsRaw ? JSON.parse(settingsRaw) : {};
         let html = await htmlResp.text();
+        if (contentRaw) { try { html = applyContentOverrides(html, JSON.parse(contentRaw)); } catch {} }
         function injectText(h, id, tag, value) {
           if (!value) return h;
           const esc = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
