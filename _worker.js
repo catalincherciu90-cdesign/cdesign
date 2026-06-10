@@ -589,6 +589,111 @@ async function sendBookingNotification(booking, env) {
   } catch {}
 }
 
+async function sendContactNotification(contact, env) {
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:32px 0;">
+  <tr><td align="center">
+    <table width="560" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08);">
+      <tr><td style="background:#080b0e;padding:28px 32px;text-align:center;">
+        <div style="font-family:'Segoe UI',Arial,sans-serif;font-size:1.4rem;font-weight:800;color:#fff;"><span style="color:#00c8b4;">C</span> Design</div>
+        <div style="color:#9aa5b4;font-size:.85rem;margin-top:4px;">Mesaj nou prin formularul de contact</div>
+      </td></tr>
+      <tr><td style="padding:32px;">
+        <div style="background:#f0fffe;border-left:4px solid #00c8b4;border-radius:0 8px 8px 0;padding:16px 20px;margin-bottom:28px;">
+          <div style="font-size:.8rem;color:#6a7585;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">De la</div>
+          <div style="font-size:1.1rem;font-weight:700;color:#080b0e;">${contact.name}</div>
+        </div>
+        <table width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="50%" style="padding:0 8px 16px 0;vertical-align:top;">
+              <div style="font-size:.75rem;color:#6a7585;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Telefon</div>
+              <div style="font-size:.95rem;color:#080b0e;font-weight:600;">${contact.phone}</div>
+            </td>
+            <td width="50%" style="padding:0 0 16px 8px;vertical-align:top;">
+              <div style="font-size:.75rem;color:#6a7585;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Email</div>
+              <div style="font-size:.95rem;color:#080b0e;font-weight:600;">${contact.email}</div>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" style="padding:0 0 16px 0;">
+              <div style="font-size:.75rem;color:#6a7585;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Serviciu</div>
+              <div style="font-size:.95rem;color:#080b0e;font-weight:600;">${contact.service}</div>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" style="padding:0 0 16px 0;">
+              <div style="font-size:.75rem;color:#6a7585;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Mesaj</div>
+              <div style="font-size:.95rem;color:#080b0e;line-height:1.5;">${contact.message}</div>
+            </td>
+          </tr>
+        </table>
+      </td></tr>
+      <tr><td style="background:#f9f9f9;padding:16px 32px;text-align:center;border-top:1px solid #eee;">
+        <div style="font-size:.78rem;color:#9aa5b4;">c-design.ro · 0753 116 155 · office@c-design.ro</div>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body></html>`;
+
+  try {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY || RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: 'C Design <notificari@c-design.ro>',
+        to: [env.NOTIFY_EMAIL || NOTIFY_EMAIL],
+        subject: `✉️ Mesaj nou — ${contact.name} · ${contact.service}`,
+        html,
+      }),
+    });
+  } catch {}
+
+  try {
+    const confirmHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:32px 0;">
+  <tr><td align="center">
+    <table width="560" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08);">
+      <tr><td style="background:#080b0e;padding:28px 32px;text-align:center;">
+        <div style="font-family:'Segoe UI',Arial,sans-serif;font-size:1.4rem;font-weight:800;color:#fff;"><span style="color:#00c8b4;">C</span> Design</div>
+        <div style="color:#9aa5b4;font-size:.85rem;margin-top:4px;">Am primit mesajul tău</div>
+      </td></tr>
+      <tr><td style="padding:32px;">
+        <p style="font-size:1rem;color:#080b0e;margin:0 0 20px;">Bună <strong>${contact.name}</strong>,</p>
+        <p style="font-size:.95rem;color:#444;line-height:1.6;margin:0 0 28px;">Mulțumim că ne-ai contactat! Am primit mesajul tău și te vom contacta în maxim <strong>2 ore</strong> în timpul programului de lucru (Luni–Vineri, 09:00–18:00).</p>
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+          <tr>
+            <td style="padding:0 8px 0 0;">
+              <a href="tel:+40753116155" style="display:block;text-align:center;background:#080b0e;color:#00c8b4;font-weight:600;font-size:.9rem;padding:12px;border-radius:8px;text-decoration:none;">📞 0753 116 155</a>
+            </td>
+            <td style="padding:0 0 0 8px;">
+              <a href="https://wa.me/40753116155" style="display:block;text-align:center;background:#25d366;color:#fff;font-weight:600;font-size:.9rem;padding:12px;border-radius:8px;text-decoration:none;">💬 WhatsApp</a>
+            </td>
+          </tr>
+        </table>
+      </td></tr>
+      <tr><td style="background:#f9f9f9;padding:16px 32px;text-align:center;border-top:1px solid #eee;">
+        <div style="font-size:.78rem;color:#9aa5b4;">© ${new Date().getFullYear()} C Design · <a href="https://www.c-design.ro" style="color:#00c8b4;text-decoration:none;">c-design.ro</a></div>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body></html>`;
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY || RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: 'C Design <notificari@c-design.ro>',
+        to: [contact.email],
+        subject: `✅ Am primit mesajul tău — C Design`,
+        html: confirmHtml,
+      }),
+    });
+  } catch {}
+}
+
 const DEFAULT_PROJECTS = [
   { id: 'p1', emoji: '🚗', tag: 'Auto', title: 'Tractări Auto Teleorman', description: 'Site de prezentare cu zone de acoperire: Dâmbovița, Ilfov, București, Argeș, Giurgiu.', problema: 'Clientul nu era găsit online — toți clienții veneau doar din recomandări.', solutie: 'Site de prezentare rapid cu pagini separate pe județe, optimizat local SEO.', rezultat: 'Prima comandă online în 3 zile de la lansare. Trafic organic +180% în 2 luni.', order: 0 },
   { id: 'p2', emoji: '🏭', tag: 'Dealer Autorizat', title: 'Dealer Autorizat Lindab', description: 'Prezentare profesională cu catalog de produse și date de contact integrate.', problema: 'Site vechi, neoptimizat pentru mobil — 70% din vizitatori plecau în primele 5 secunde.', solutie: 'Redesign complet cu catalog digital și formular de cerere ofertă integrat.', rezultat: 'Rata de abandon scăzută cu 55%. Cereri de ofertă x3 față de înainte.', order: 1 },
@@ -796,6 +901,27 @@ export default {
           return json({ success: true }, 200, request);
         return json({ error: 'Credențiale incorecte' }, 401, request);
       } catch { return json({ error: 'Eroare server' }, 500, request); }
+    }
+
+    // ── CONTACT FORM ──────────────────────────────────────────
+
+    if (path === '/api/contact' && request.method === 'POST') {
+      const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+      const allowed = await checkRateLimit(env, 'contact_' + ip, 5, 3600);
+      if (!allowed) return json({ error: 'Prea multe cereri. Reîncearcă mai târziu.' }, 429, request);
+      try {
+        const { name, phone, email, service, message } = await request.json();
+        if (!name || !phone || !email || !message)
+          return json({ error: 'Câmpuri obligatorii lipsă' }, 400);
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^[\d\s\+\-\(\)]{7,20}$/;
+        if (!emailRegex.test(email)) return json({ error: 'Email invalid' }, 400);
+        if (!phoneRegex.test(phone)) return json({ error: 'Telefon invalid' }, 400);
+        if (name.length < 2) return json({ error: 'Nume invalid' }, 400);
+        const contact = { name, phone, email, service: service || 'Nespecificat', message };
+        await sendContactNotification(contact, env);
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
     }
 
     // ── BOOKINGS ──────────────────────────────────────────────

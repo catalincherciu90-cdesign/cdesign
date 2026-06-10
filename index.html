@@ -1050,21 +1050,12 @@
         </address>
       </div>
       <div class="contact-form reveal">
-        <form id="bookingForm" novalidate aria-label="Formular programare consultanță">
+        <form id="contactForm" novalidate aria-label="Formular de contact">
           <div class="f-row">
             <div class="f-group"><label class="f-label" for="fname">Nume complet *</label><input class="f-input" type="text" id="fname" name="name" placeholder="Ion Popescu" required autocomplete="name" onfocus="if(!this.dataset.started){this.dataset.started=1;if(typeof gtag!=='undefined')gtag('event','form_start',{event_category:'contact'});}"></div>
             <div class="f-group"><label class="f-label" for="fphone">Telefon *</label><input class="f-input" type="tel" id="fphone" name="phone" placeholder="07XX XXX XXX" required autocomplete="tel"></div>
           </div>
           <div class="f-group"><label class="f-label" for="femail">Email *</label><input class="f-input" type="email" id="femail" name="email" placeholder="ion@firma-ta.ro" required autocomplete="email"></div>
-          <div class="f-row">
-            <div class="f-group"><label class="f-label" for="fdate">Data preferată *</label><input class="f-input" type="date" id="fdate" name="date" required></div>
-            <div class="f-group">
-              <label class="f-label" for="ftime">Ora preferată *</label>
-              <select class="f-select" id="ftime" name="time" required>
-                <option value="">Alege ora...</option>
-              </select>
-            </div>
-          </div>
           <div class="f-group">
             <label class="f-label" for="fservice">Ce te interesează?</label>
             <select class="f-select" id="fservice" name="service">
@@ -1078,8 +1069,8 @@
               <option>Altceva</option>
             </select>
           </div>
-          <div class="f-group"><label class="f-label" for="fmsg">Mesaj (opțional)</label><textarea class="f-input" id="fmsg" name="message" placeholder="Spune-ne pe scurt despre afacerea ta..."></textarea></div>
-          <button type="submit" class="btn-submit">Programează consultanța gratuită →</button>
+          <div class="f-group"><label class="f-label" for="fmsg">Mesaj *</label><textarea class="f-input" id="fmsg" name="message" placeholder="Spune-ne pe scurt despre afacerea ta și cum te putem ajuta..." required></textarea></div>
+          <button type="submit" class="btn-submit">Trimite mesajul →</button>
         </form>
       </div>
     </div>
@@ -1202,116 +1193,39 @@ reveals.forEach(el=>revObs.observe(el));
   startTimer();
 })();
 
-// Load booking settings
-(async () => {
-  const DAY_RO = ['Dum','Lun','Mar','Mie','Joi','Vin','Sâm'];
-  const DAY_FULL = ['Duminică','Luni','Marți','Miercuri','Joi','Vineri','Sâmbătă'];
-  const defaults = { workingDays:[1,2,3,4,5], startTime:'09:00', endTime:'18:00', slotInterval:60, blockedDates:[] };
-  let cfg = defaults;
-  try { const r = await fetch('/api/settings'); cfg = await r.json(); } catch {
-    cfg = defaults;
-  }
-  if (!cfg || typeof cfg !== 'object') cfg = defaults;
-
-  // Working hours label
-  const label = document.getElementById('workingHoursLabel');
-  if (label) {
-    const days = cfg.workingDays || defaults.workingDays;
-    const sorted = [...days].sort((a,b)=>a-b);
-    let daysStr;
-    if (sorted.length >= 2 && sorted[sorted.length-1] - sorted[0] === sorted.length - 1) {
-      daysStr = DAY_FULL[sorted[0]] + '–' + DAY_FULL[sorted[sorted.length-1]];
-    } else {
-      daysStr = sorted.map(d => DAY_RO[d]).join(', ');
-    }
-    label.textContent = daysStr + ', ' + cfg.startTime + '–' + cfg.endTime;
-  }
-
-  // Populate time slots
-  const sel = document.getElementById('ftime');
-  if (sel) {
-    const [sh] = (cfg.startTime||'09:00').split(':').map(Number);
-    const [eh, em] = (cfg.endTime||'18:00').split(':').map(Number);
-    const interval = cfg.slotInterval || 60;
-    let cur = sh * 60;
-    const end = eh * 60 + em;
-    sel.innerHTML = '<option value="">Alege ora...</option>';
-    while (cur < end) {
-      const h = String(Math.floor(cur/60)).padStart(2,'0');
-      const m = String(cur%60).padStart(2,'0');
-      const val = h+':'+m;
-      sel.innerHTML += `<option value="${val}">${val}</option>`;
-      cur += interval;
-    }
-    // Fallback static daca API a esuat sau nu a generat nicio ora
-    if (sel.options.length <= 1) {
-      const defaultHours = ['09:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00','18:00'];
-      defaultHours.forEach(function(h) {
-        sel.innerHTML += '<option value="'+h+'">'+h+'</option>';
-      });
-    }
-  }
-
-  // Date picker — disable days outside working schedule
-  const dateInput = document.getElementById('fdate');
-  if (dateInput) {
-    dateInput.min = new Date().toISOString().split('T')[0];
-    const blocked = cfg.blockedDates || [];
-    dateInput.addEventListener('input', function() {
-      const d = new Date(this.value + 'T12:00:00');
-      const dow = d.getDay();
-      if (!(cfg.workingDays||defaults.workingDays).includes(dow) || blocked.includes(this.value)) {
-        this.setCustomValidity('Această zi nu este disponibilă. Alege o zi lucrătoare.');
-        this.reportValidity();
-        this.value = '';
-      } else {
-        this.setCustomValidity('');
-      }
-    });
-  }
-})();
-
 const ham=document.getElementById('hamburger');
 const mob=document.getElementById('mobileMenu');
 ham.addEventListener('click',()=>{const open=mob.classList.toggle('open');ham.setAttribute('aria-expanded',open);});
 mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mob.classList.remove('open');ham.setAttribute('aria-expanded','false');}));
 
-document.getElementById('bookingForm').addEventListener('submit', async function(e) {
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   const btn = this.querySelector('.btn-submit');
-  const name  = this.querySelector('#fname').value.trim();
-  const phone = this.querySelector('#fphone').value.trim();
-  const email = this.querySelector('#femail').value.trim();
-  const date  = this.querySelector('#fdate').value;
-  const time  = this.querySelector('#ftime').value;
-  if (!name || !phone || !email || !date || !time) {
-    btn.textContent = 'Completează câmpurile marcate cu * ';
+  const name    = this.querySelector('#fname').value.trim();
+  const phone   = this.querySelector('#fphone').value.trim();
+  const email   = this.querySelector('#femail').value.trim();
+  const message = this.querySelector('#fmsg').value.trim();
+  if (!name || !phone || !email || !message) {
+    btn.textContent = 'Completează câmpurile marcate cu *';
     btn.style.background = '#e05252';
-    setTimeout(() => { btn.textContent = 'Confirmă programarea →'; btn.style.background = ''; }, 3000);
+    setTimeout(() => { btn.textContent = 'Trimite mesajul →'; btn.style.background = ''; }, 3000);
     return;
   }
   btn.textContent = 'Se trimite...';
   btn.disabled = true;
   try {
-    const res = await fetch('/api/booking', {
+    const res = await fetch('/api/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name, phone, email, date, time,
-        service: this.querySelector('#fservice').value,
-        message: this.querySelector('#fmsg').value.trim(),
-      }),
+      body: JSON.stringify({ name, phone, email, service: this.querySelector('#fservice').value, message }),
     });
     if (res.ok) {
       if (typeof fbq === 'function') fbq('track', 'Lead');
-      if (typeof gtag !== 'undefined') {
-        gtag('event', 'generate_lead', { value: 300, currency: 'EUR', event_category: 'contact' });
-      }
-      btn.textContent = '✓ Mulțumim! Te contactăm în maxim 2 ore pentru confirmarea programării.';
+      if (typeof gtag !== 'undefined') gtag('event', 'generate_lead', { value: 300, currency: 'EUR', event_category: 'contact' });
+      btn.textContent = '✓ Mesaj trimis! Te contactăm în maxim 2 ore.';
       btn.style.background = '#28c840';
       this.reset();
-      document.getElementById('fdate').min = new Date().toISOString().split('T')[0];
-      setTimeout(() => { btn.textContent = 'Confirmă programarea →'; btn.style.background = ''; btn.disabled = false; }, 6000);
+      setTimeout(() => { btn.textContent = 'Trimite mesajul →'; btn.style.background = ''; btn.disabled = false; }, 6000);
     } else {
       throw new Error();
     }
@@ -1319,7 +1233,7 @@ document.getElementById('bookingForm').addEventListener('submit', async function
     btn.textContent = 'Eroare — încearcă din nou sau sună direct';
     btn.style.background = '#e05252';
     btn.disabled = false;
-    setTimeout(() => { btn.textContent = 'Confirmă programarea →'; btn.style.background = ''; }, 4000);
+    setTimeout(() => { btn.textContent = 'Trimite mesajul →'; btn.style.background = ''; }, 4000);
   }
 });
 
