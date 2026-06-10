@@ -114,7 +114,7 @@ footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--teal
         <li><a href="/servicii">Servicii</a></li>
         <li><a href="/despre-noi">Despre noi</a></li>
         <li><a href="/#portofoliu">Portofoliu</a></li>
-        <li><a href="/#contact">Contact</a></li>
+        <li><a href="/contact">Contact</a></li>
         <li><a href="/blog">Blog</a></li>
       </ul>
       <a href="tel:+40753116155" class="nav-phone">0753 116 155</a>
@@ -124,7 +124,7 @@ footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--teal
   </div>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
-  <a href="/servicii">Servicii</a><a href="/despre-noi">Despre noi</a><a href="/#portofoliu">Portofoliu</a><a href="/#contact">Contact</a><a href="/blog">Blog</a>
+  <a href="/servicii">Servicii</a><a href="/despre-noi">Despre noi</a><a href="/#portofoliu">Portofoliu</a><a href="/contact">Contact</a><a href="/blog">Blog</a>
   <a href="tel:+40753116155">0753 116 155</a><a href="/#contact" class="btn-nav">Programează acum →</a>
 </div>
 <main>
@@ -879,6 +879,12 @@ export default {
     if (path === '/servicii') {
       const assetUrl = new URL(request.url);
       assetUrl.pathname = '/servicii.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
+    if (path === '/contact') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/contact.html';
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
 
