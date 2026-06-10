@@ -118,14 +118,14 @@ footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--teal
         <li><a href="/blog">Blog</a></li>
       </ul>
       <a href="tel:+40753116155" class="nav-phone">0753 116 155</a>
-      <a href="/#contact" class="btn-nav">Programează acum →</a>
+      <a href="/programare" class="btn-nav">Programează acum →</a>
       <button class="hamburger" id="hamburger" aria-label="Deschide meniu" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
   </div>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
   <a href="/servicii">Servicii</a><a href="/despre-noi">Despre noi</a><a href="/#portofoliu">Portofoliu</a><a href="/contact">Contact</a><a href="/blog">Blog</a>
-  <a href="tel:+40753116155">0753 116 155</a><a href="/#contact" class="btn-nav">Programează acum →</a>
+  <a href="tel:+40753116155">0753 116 155</a><a href="/programare" class="btn-nav">Programează acum →</a>
 </div>
 <main>
 <article>
@@ -138,7 +138,7 @@ footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--teal
   <div class="cta-box">
     <h3>Vrei un site profesional pentru afacerea ta?</h3>
     <p>Programează o şedinţă de consultanţă gratuită — fără obligaţii.</p>
-    <a href="/#contact" class="btn">Programează consultanţă gratuită →</a>
+    <a href="/programare" class="btn">Programează consultanţă gratuită →</a>
   </div>
 </div>
 </article>
@@ -1797,7 +1797,7 @@ Cerințe titluri:
       hero:'Hero principal', carousel:'Banner carousel', showcase:'Device showcase',
       services:'Servicii (teaser)', about:'Strip despre noi', startup:'Strip pachet startup',
       industries:'Industrii', process:'Procesul nostru', portfolio:'Portofoliu',
-      testimonials:'Testimoniale', contact:'Contact', trust:'Trust / statistici',
+      testimonials:'Testimoniale', contact:'CTA final (contact)', trust:'Trust / statistici',
     };
 
     if (path.startsWith('/api/layout/') && request.method === 'GET') {

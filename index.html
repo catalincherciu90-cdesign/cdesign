@@ -424,6 +424,8 @@
     /* 3. Section titles — bigger + gradient accent line */
     .sec-title{font-size:clamp(1.9rem,3.2vw,2.65rem);line-height:1.15;margin-bottom:14px;}
     .sec-title::after{content:'';display:block;width:44px;height:3px;background:linear-gradient(90deg,var(--teal),var(--teal-lt),transparent);border-radius:2px;margin-top:14px;}
+    #contact .sec-title::after{margin-left:auto;margin-right:auto;}
+    #contact .sec-sub{max-width:560px;}
     .sec-label{font-size:.7rem;letter-spacing:.16em;}
     .sec-sub{font-size:1.05rem;font-weight:400;line-height:1.88;margin-bottom:52px;}
 
@@ -578,7 +580,7 @@
         </h1>
         <p class="hero-desc" id="hero-desc-el">De la prima ta afacere până la un brand consacrat — construim site-uri clare, rapide și găsite pe Google. Fără termeni tehnici, fără surprize la factură.</p>
         <div class="hero-actions">
-          <a href="#contact" class="btn-primary">Hai să vorbim gratuit →</a>
+          <a href="/contact" class="btn-primary">Hai să vorbim gratuit →</a>
           <a href="#portofoliu" class="btn-ghost">Vezi lucrările →</a>
         </div>
       </div>
@@ -633,7 +635,7 @@
           <div class="bs-tag">SITE DE PREZENTARE</div>
           <h2 class="bs-h">De la idee la site live<br><span style="color:var(--teal)">în mai puțin de 3 săptămâni</span></h2>
           <p class="bs-sub">Un site profesional, clar și rapid — cu domeniu, găzduire și suport incluse. Tu conduci afacerea, noi ne ocupăm de tot restul.</p>
-          <a href="#contact" class="bs-cta">Cere o ofertă gratuită →</a>
+          <a href="/contact" class="bs-cta">Cere o ofertă gratuită →</a>
         </div>
         <div class="bs-visual" aria-hidden="true">
           <svg viewBox="0 0 220 180" width="220" height="180">
@@ -671,7 +673,7 @@
           <div class="bs-tag" style="color:#c084fc;background:rgba(192,132,252,.08);border:1px solid rgba(192,132,252,.25);">CONSULTANȚĂ GRATUITĂ</div>
           <h2 class="bs-h">Nu știi de unde să începi?<br><span class="hl2">Vorbim noi</span> primul pas</h2>
           <p class="bs-sub">30 de minute cu un om real, dedicat afacerii tale. Îți spunem sincer ce ai nevoie și cât costă — fără să te obligăm la nimic.</p>
-          <a href="#contact" class="bs-cta" style="background:linear-gradient(135deg,#c084fc,#818cf8);color:#fff;box-shadow:0 0 20px rgba(192,132,252,.3);">Alege data și ora →</a>
+          <a href="/programare" class="bs-cta" style="background:linear-gradient(135deg,#c084fc,#818cf8);color:#fff;box-shadow:0 0 20px rgba(192,132,252,.3);">Alege data și ora →</a>
         </div>
         <div class="bs-visual" aria-hidden="true">
           <svg viewBox="0 0 220 180" width="220" height="180">
@@ -744,7 +746,7 @@
           <div class="bs-tag" style="color:#fb7185;background:rgba(251,113,133,.08);border:1px solid rgba(251,113,133,.22);">REDESIGN SITE</div>
           <h2 class="bs-h">Site-ul vechi<br>te costă <span class="hl4">clienți în fiecare zi</span></h2>
           <p class="bs-sub">Îl modernizăm complet: arată mai bine, se încarcă mai repede și convinge mai ușor. Poziția ta pe Google rămâne — câștigurile cresc.</p>
-          <a href="#contact" class="bs-cta" style="background:linear-gradient(135deg,#fb7185,#f43f5e);color:#fff;box-shadow:0 0 20px rgba(244,63,94,.3);">Modernizează acum →</a>
+          <a href="/contact" class="bs-cta" style="background:linear-gradient(135deg,#fb7185,#f43f5e);color:#fff;box-shadow:0 0 20px rgba(244,63,94,.3);">Modernizează acum →</a>
         </div>
         <div class="bs-visual" aria-hidden="true">
           <svg viewBox="0 0 220 180" width="220" height="180">
@@ -795,7 +797,7 @@
         <div class="dss-feat"><span>⚡</span><div><strong>Se încarcă în mai puțin de 2 secunde</strong><small>Clienții nu mai așteaptă — nici Google nu mai iartă</small></div></div>
         <div class="dss-feat"><span>🔍</span><div><strong>Vizibil când cineva caută ce oferi tu</strong><small>SEO local inclus în fiecare proiect, de la prima zi</small></div></div>
       </div>
-      <a href="#contact" class="btn-primary" id="dss-cta-el" style="margin-top:28px;display:inline-flex;">Vorbim gratuit despre site-ul tău →</a>
+      <a href="/contact" class="btn-primary" id="dss-cta-el" style="margin-top:28px;display:inline-flex;">Vorbim gratuit despre site-ul tău →</a>
     </div>
   </div>
 </section>
@@ -883,45 +885,15 @@
 </section>
 
 
-<section class="contact-bg" id="contact" aria-labelledby="contact-heading" data-section="contact">
-  <div class="container">
-    <div class="contact-grid">
-      <div>
-        <div class="sec-label reveal">CONTACT</div>
-        <h2 class="contact-info-title reveal" id="contact-heading">Povestește-ne<br>despre afacerea ta</h2>
-        <p class="contact-info-sub reveal">Trimite-ne un mesaj și te contactăm în maxim 2 ore. Sau dacă vrei să programezi o întâlnire, <a href="/programare" style="color:var(--teal);text-decoration:underline;text-underline-offset:3px;">alege data și ora aici →</a></p>
-        <address class="contact-items" style="font-style:normal">
-          <div class="c-item reveal"><div class="c-icon" aria-hidden="true">📞</div><div><div style="font-size:.78rem;color:var(--muted);font-family:'Share Tech Mono',monospace;margin-bottom:3px">telefon</div><a href="tel:+40753116155" onclick="if(typeof gtag!=='undefined')gtag('event','phone_click',{event_category:'contact'})">0753 116 155</a></div></div>
-          <div class="c-item reveal"><div class="c-icon" aria-hidden="true">✉️</div><div><div style="font-size:.78rem;color:var(--muted);font-family:'Share Tech Mono',monospace;margin-bottom:3px">email</div><a href="mailto:office@c-design.ro" onclick="if(typeof gtag!=='undefined')gtag('event','email_click',{event_category:'contact'})">office@c-design.ro</a></div></div>
-          <div class="c-item reveal"><div class="c-icon" aria-hidden="true">💬</div><div><div style="font-size:.78rem;color:var(--muted);font-family:'Share Tech Mono',monospace;margin-bottom:3px">whatsapp</div><a href="https://wa.me/40753116155" rel="noopener noreferrer" onclick="if(typeof gtag!=='undefined')gtag('event','whatsapp_click',{event_category:'contact'})">Scrie-ne pe WhatsApp</a></div></div>
-
-          <div class="c-item reveal"><div class="c-icon" aria-hidden="true">⏰</div><div><div style="font-size:.78rem;color:var(--muted);font-family:'Share Tech Mono',monospace;margin-bottom:3px">program</div><span id="workingHoursLabel">Luni–Vineri, 09:00–18:00</span></div></div>
-        </address>
-      </div>
-      <div class="contact-form reveal">
-        <form id="contactForm" novalidate aria-label="Formular de contact">
-          <div class="f-row">
-            <div class="f-group"><label class="f-label" for="fname">Nume complet *</label><input class="f-input" type="text" id="fname" name="name" placeholder="Ion Popescu" required autocomplete="name" onfocus="if(!this.dataset.started){this.dataset.started=1;if(typeof gtag!=='undefined')gtag('event','form_start',{event_category:'contact'});}"></div>
-            <div class="f-group"><label class="f-label" for="fphone">Telefon *</label><input class="f-input" type="tel" id="fphone" name="phone" placeholder="07XX XXX XXX" required autocomplete="tel"></div>
-          </div>
-          <div class="f-group"><label class="f-label" for="femail">Email *</label><input class="f-input" type="email" id="femail" name="email" placeholder="ion@firma-ta.ro" required autocomplete="email"></div>
-          <div class="f-group">
-            <label class="f-label" for="fservice">Ce te interesează?</label>
-            <select class="f-select" id="fservice" name="service">
-              <option value="">Alege serviciul...</option>
-              <option>Site de prezentare</option>
-              <option>Pachet Start-Up Online</option>
-              <option>Redesign site existent</option>
-              <option>Administrare Facebook</option>
-              <option>Design grafic / Logo</option>
-              <option>Mentenanță &amp; Suport</option>
-              <option>Altceva</option>
-            </select>
-          </div>
-          <div class="f-group"><label class="f-label" for="fmsg">Mesaj *</label><textarea class="f-input" id="fmsg" name="message" placeholder="Spune-ne pe scurt despre afacerea ta și cum te putem ajuta..." required></textarea></div>
-          <button type="submit" class="btn-submit">Trimite mesajul →</button>
-        </form>
-      </div>
+<!-- CTA FINAL (fostul formular de contact — acum pagină dedicată /contact) -->
+<section class="contact-bg" id="contact" aria-labelledby="contact-heading" data-section="contact" style="border-top:1px solid var(--border);">
+  <div class="container" style="text-align:center;">
+    <div class="sec-label reveal">HAI SĂ VORBIM</div>
+    <h2 class="sec-title reveal" id="contact-heading" style="margin-bottom:14px;">Pregătit să discutăm despre site-ul tău?</h2>
+    <p class="sec-sub reveal" style="margin:0 auto 32px;">Scrie-ne sau programează o consultanță gratuită de 30 de minute — răspundem în maxim 2 ore.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;" class="reveal">
+      <a href="/contact" class="btn-primary">Contactează-ne →</a>
+      <a href="/programare" class="btn-ghost">Programează 30 min gratuit →</a>
     </div>
   </div>
 </section>
@@ -950,7 +922,7 @@
       <div class="footer-col"><h4>Servicii</h4><ul><li><a href="/servicii">Site de prezentare</a></li><li><a href="/pachet-startup">Pachet Start-Up</a></li><li><a href="/servicii">Redesign site</a></li><li><a href="/servicii">Design grafic</a></li><li><a href="/abonament-lunar">Abonament lunar</a></li></ul></div>
       <div class="footer-col"><h4>Industrii</h4><ul><li><a href="/web-design-auto">Web Design Auto</a></li><li><a href="/web-design-restaurante">Web Design Restaurante</a></li><li><a href="/web-design-afaceri-mici">Web Design Afaceri Mici</a></li></ul></div>
       <div class="footer-col"><h4>Companie</h4><ul><li><a href="/despre-noi">Despre noi</a></li><li><a href="#portofoliu">Portofoliu</a></li><li><a href="#testimoniale">Recenzii</a></li><li><a href="/despre-noi#proces">Cum lucrăm</a></li><li><a href="/blog">Blog</a></li></ul></div>
-      <div class="footer-col"><h4>Contact</h4><ul><li><a href="tel:+40753116155" onclick="if(typeof gtag!=='undefined')gtag('event','phone_click',{event_category:'contact'})">0753 116 155</a></li><li><a href="mailto:office@c-design.ro" onclick="if(typeof gtag!=='undefined')gtag('event','email_click',{event_category:'contact'})">office@c-design.ro</a></li><li><a href="https://wa.me/40753116155" rel="noopener noreferrer" onclick="if(typeof gtag!=='undefined')gtag('event','whatsapp_click',{event_category:'contact'})">WhatsApp</a></li><li><a href="#contact">Programează gratuit</a></li></ul></div>
+      <div class="footer-col"><h4>Contact</h4><ul><li><a href="tel:+40753116155" onclick="if(typeof gtag!=='undefined')gtag('event','phone_click',{event_category:'contact'})">0753 116 155</a></li><li><a href="mailto:office@c-design.ro" onclick="if(typeof gtag!=='undefined')gtag('event','email_click',{event_category:'contact'})">office@c-design.ro</a></li><li><a href="https://wa.me/40753116155" rel="noopener noreferrer" onclick="if(typeof gtag!=='undefined')gtag('event','whatsapp_click',{event_category:'contact'})">WhatsApp</a></li><li><a href="/programare">Programează gratuit</a></li></ul></div>
     </div>
     <div class="footer-bottom">
       <span>© 2026 C Design · Toate drepturile rezervate</span>
@@ -1047,44 +1019,6 @@ const mob=document.getElementById('mobileMenu');
 ham.addEventListener('click',()=>{const open=mob.classList.toggle('open');ham.setAttribute('aria-expanded',open);});
 mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mob.classList.remove('open');ham.setAttribute('aria-expanded','false');}));
 
-document.getElementById('contactForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const btn = this.querySelector('.btn-submit');
-  const name    = this.querySelector('#fname').value.trim();
-  const phone   = this.querySelector('#fphone').value.trim();
-  const email   = this.querySelector('#femail').value.trim();
-  const message = this.querySelector('#fmsg').value.trim();
-  if (!name || !phone || !email || !message) {
-    btn.textContent = 'Completează câmpurile marcate cu *';
-    btn.style.background = '#e05252';
-    setTimeout(() => { btn.textContent = 'Trimite mesajul →'; btn.style.background = ''; }, 3000);
-    return;
-  }
-  btn.textContent = 'Se trimite...';
-  btn.disabled = true;
-  try {
-    const res = await fetch('/api/contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, phone, email, service: this.querySelector('#fservice').value, message }),
-    });
-    if (res.ok) {
-      if (typeof fbq === 'function') fbq('track', 'Lead');
-      if (typeof gtag !== 'undefined') gtag('event', 'generate_lead', { value: 300, currency: 'EUR', event_category: 'contact' });
-      btn.textContent = '✓ Mesaj trimis! Te contactăm în maxim 2 ore.';
-      btn.style.background = '#28c840';
-      this.reset();
-      setTimeout(() => { btn.textContent = 'Trimite mesajul →'; btn.style.background = ''; btn.disabled = false; }, 6000);
-    } else {
-      throw new Error();
-    }
-  } catch {
-    btn.textContent = 'Eroare — încearcă din nou sau sună direct';
-    btn.style.background = '#e05252';
-    btn.disabled = false;
-    setTimeout(() => { btn.textContent = 'Trimite mesajul →'; btn.style.background = ''; }, 4000);
-  }
-});
 
 // Social media footer + floating bar
 (async () => {
