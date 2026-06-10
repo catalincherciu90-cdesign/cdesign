@@ -1067,8 +1067,33 @@ mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mob.classLi
       case 'stats': return renderStats(id, block);
       case 'text': return renderTextBlock(id, block);
       case 'columns': return renderColumns(id, block);
+      case 'hero': return renderHeroBlock(id, block);
       default: return '';
     }
+  }
+
+  function renderHeroBlock(id, b) {
+    var heights = { small:'280px', medium:'420px', large:'560px' };
+    var minH = heights[b.height] || heights.medium;
+    var alignCenter = (b.align || 'center') !== 'left';
+    var cssUrl = function(u){ return String(u||'').replace(/["'()\\]/g,''); };
+    var uid = 'hb-' + String(id).replace(/[^a-zA-Z0-9_-]/g,'');
+    var bgMob = b.bgImgMobile && b.bgImgMobile !== b.bgImg ? b.bgImgMobile : '';
+    var css = '<style>'
+      + '#'+uid+'{position:relative;display:flex;align-items:center;min-height:'+minH+';padding:64px 0;overflow:hidden;'
+      + (b.bgImg ? 'background:url("'+cssUrl(b.bgImg)+'") center/cover no-repeat;' : 'background:linear-gradient(135deg,var(--bg2),var(--bg3));')
+      + '}'
+      + (bgMob ? '@media(max-width:768px){#'+uid+'{background-image:url("'+cssUrl(bgMob)+'");}}' : '')
+      + (b.overlay !== false ? '#'+uid+'::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,10,10,.45),rgba(4,10,10,.6));}' : '')
+      + '</style>';
+    var mAuto = alignCenter ? 'margin-left:auto;margin-right:auto;' : '';
+    var inner = '<div class="container" style="position:relative;z-index:2;width:100%;'+(alignCenter?'text-align:center;':'')+'">'
+      + (b.tag ? '<div style="display:inline-block;background:rgba(var(--teal-glow-rgb),.15);color:var(--teal);border:1px solid var(--teal-border);padding:5px 16px;border-radius:4px;font-family:\'Share Tech Mono\',monospace;font-size:.75rem;letter-spacing:.08em;margin-bottom:20px;">'+escHtml(b.tag)+'</div>' : '')
+      + (b.title ? '<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.9rem,4.5vw,3.2rem);font-weight:800;color:#fff;line-height:1.15;letter-spacing:-.02em;margin-bottom:14px;max-width:800px;'+mAuto+'text-shadow:0 2px 18px rgba(0,0,0,.4);">'+escHtml(b.title)+'</h2>' : '')
+      + (b.subtitle ? '<p style="font-size:1.05rem;color:rgba(255,255,255,.88);line-height:1.75;max-width:620px;margin-bottom:28px;'+mAuto+'text-shadow:0 1px 10px rgba(0,0,0,.4);">'+escHtml(b.subtitle)+'</p>' : '')
+      + (b.btnText ? '<a href="'+escHtml(b.btnUrl||'/contact')+'" class="btn-primary" style="display:inline-flex;">'+escHtml(b.btnText)+'</a>' : '')
+      + '</div>';
+    return '<section data-section="'+id+'" id="'+uid+'" aria-label="'+escHtml(b.title||'Banner')+'">'+css+inner+'</section>';
   }
 
   function renderFaq(id, b) {
