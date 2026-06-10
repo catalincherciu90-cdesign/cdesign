@@ -3983,7 +3983,7 @@
     { type:'text',  icon:'📝', label:'Bloc text', desc:'Secțiune cu titlu și paragraf',
       default:{ title:'Titlu secțiune', content:'Adaugă conținutul tău aici. Poți edita din admin.' }},
     { type:'hero',  icon:'🖼️', label:'Hero Banner', desc:'Banner full-width cu imagine de fundal, titlu, subtitlu și buton — ca Hero-ul principal',
-      default:{ tag:'', title:'Titlul tău aici', subtitle:'Un subtitlu scurt care convinge vizitatorul.', btnText:'Hai să vorbim →', btnUrl:'/contact', bgImg:'', bgImgMobile:'', height:'medium', align:'center', overlay:true }},
+      default:{ tag:'', title:'Titlul tău aici', subtitle:'Un subtitlu scurt care convinge vizitatorul.', btnText:'Hai să vorbim →', btnUrl:'/contact', bgImg:'', bgImgMobile:'', fit:'cover', height:'medium', align:'center', overlay:true }},
     { type:'columns', icon:'⬛', label:'Coloane / Cards', desc:'Grid cu 2-4 coloane editabile (icon, titlu, text, buton)',
       default:{ title:'', subtitle:'', columns:[
         { icon:'✅', title:'Primul avantaj', text:'Descriere scurtă a primului avantaj al serviciului tău.', btnText:'', btnUrl:'' },
@@ -4236,7 +4236,10 @@
           + '<div class="block-field"><label>Subtitlu</label><textarea rows="2" oninput="updateEditingBlock(\'subtitle\',this.value)">' + esc(block.subtitle||'') + '</textarea></div>'
           + '<div class="block-field"><label>Text buton (gol = fără buton)</label><input value="' + esc(block.btnText||'') + '" oninput="updateEditingBlock(\'btnText\',this.value)"></div>'
           + '<div class="block-field"><label>URL buton</label><input value="' + esc(block.btnUrl||'') + '" oninput="updateEditingBlock(\'btnUrl\',this.value)"></div>'
-          + '<div class="block-field"><label>Înălțime banner</label><select onchange="updateEditingBlock(\'height\',this.value)">'
+          + '<div class="block-field"><label>Afișare imagine</label><select onchange="updateEditingBlock(\'fit\',this.value)">'
+          + '<option value="cover"' + (block.fit!=='contain'?' selected':'') + '>Umple secțiunea — fundal decorativ (se poate decupa pe mobil)</option>'
+          + '<option value="contain"' + (block.fit==='contain'?' selected':'') + '>Imaginea întreagă — banner grafic cu text în imagine (nu se decupează)</option></select></div>'
+          + '<div class="block-field"><label>Înălțime banner (doar la «Umple secțiunea»)</label><select onchange="updateEditingBlock(\'height\',this.value)">'
           + '<option value="small"' + (block.height==='small'?' selected':'') + '>Mică (~280px)</option>'
           + '<option value="medium"' + (!block.height||block.height==='medium'?' selected':'') + '>Medie (~420px)</option>'
           + '<option value="large"' + (block.height==='large'?' selected':'') + '>Mare (~560px)</option></select></div>'
