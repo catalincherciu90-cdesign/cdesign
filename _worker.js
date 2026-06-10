@@ -818,6 +818,48 @@ export default {
       return Response.redirect('https://www.c-design.ro' + REDIRECTS_301[path], 301);
     }
 
+    // ── SITEMAP DINAMIC ───────────────────────────────────────
+    // Generat la cerere: paginile statice + articolele de blog publicate
+    // din KV. Înlocuiește sitemap.xml static (nu mai necesită întreținere).
+    if (path === '/sitemap.xml' && request.method === 'GET') {
+      const BASE = 'https://www.c-design.ro';
+      const SITE_LASTMOD = '2026-06-10';
+      const staticPages = [
+        { loc: '/',                           cf: 'weekly',  pr: '1.0' },
+        { loc: '/servicii',                   cf: 'monthly', pr: '0.9' },
+        { loc: '/despre-noi',                 cf: 'monthly', pr: '0.8' },
+        { loc: '/contact',                    cf: 'monthly', pr: '0.8' },
+        { loc: '/programare',                 cf: 'monthly', pr: '0.8' },
+        { loc: '/pachet-startup',             cf: 'monthly', pr: '0.8' },
+        { loc: '/abonament-lunar',            cf: 'monthly', pr: '0.8' },
+        { loc: '/blog',                       cf: 'weekly',  pr: '0.7' },
+        { loc: '/web-design-bucuresti',       cf: 'monthly', pr: '0.8' },
+        { loc: '/web-design-cluj',            cf: 'monthly', pr: '0.8' },
+        { loc: '/web-design-timisoara',       cf: 'monthly', pr: '0.8' },
+        { loc: '/web-design-auto',            cf: 'monthly', pr: '0.8' },
+        { loc: '/web-design-restaurante',     cf: 'monthly', pr: '0.8' },
+        { loc: '/web-design-afaceri-mici',    cf: 'monthly', pr: '0.8' },
+        { loc: '/politica-confidentialitate', cf: 'yearly',  pr: '0.3' },
+      ];
+      const urlXml = (loc, lastmod, cf, pr) =>
+        `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${cf}</changefreq>\n    <priority>${pr}</priority>\n  </url>`;
+      const parts = staticPages.map(p => urlXml(BASE + p.loc, SITE_LASTMOD, p.cf, p.pr));
+      try {
+        const raw = await env.PROGRAMARI.get('__blog__');
+        if (raw) {
+          const posts = JSON.parse(raw).filter(p => p.published && p.slug);
+          for (const p of posts) {
+            const d = String(p.updatedAt || p.createdAt || '').slice(0, 10) || SITE_LASTMOD;
+            parts.push(urlXml(BASE + '/blog/' + encodeURIComponent(p.slug), d, 'yearly', '0.6'));
+          }
+        }
+      } catch {}
+      const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${parts.join('\n')}\n</urlset>`;
+      return new Response(xml, {
+        headers: { 'Content-Type': 'application/xml;charset=utf-8', 'Cache-Control': 'public, max-age=3600' }
+      });
+    }
+
     // ── BLOG PUBLIC PAGES ─────────────────────────────────────
 
     if (path === '/blog' || path === '/blog/') {
