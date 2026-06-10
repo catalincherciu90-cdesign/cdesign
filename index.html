@@ -1073,25 +1073,40 @@ mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mob.classLi
   }
 
   function renderHeroBlock(id, b) {
-    var heights = { small:'280px', medium:'420px', large:'560px' };
-    var minH = heights[b.height] || heights.medium;
+    var heights = { small:{d:'280px',m:'220px'}, medium:{d:'420px',m:'300px'}, large:{d:'560px',m:'380px'} };
+    var h = heights[b.height] || heights.medium;
     var alignCenter = (b.align || 'center') !== 'left';
     var cssUrl = function(u){ return String(u||'').replace(/["'()\\]/g,''); };
     var uid = 'hb-' + String(id).replace(/[^a-zA-Z0-9_-]/g,'');
     var bgMob = b.bgImgMobile && b.bgImgMobile !== b.bgImg ? b.bgImgMobile : '';
+    var mAuto = alignCenter ? 'margin-left:auto;margin-right:auto;' : '';
     var css = '<style>'
-      + '#'+uid+'{position:relative;display:flex;align-items:center;min-height:'+minH+';padding:64px 0;overflow:hidden;'
+      + '#'+uid+'{position:relative;display:flex;align-items:center;min-height:'+h.d+';padding:64px 0;overflow:hidden;'
       + (b.bgImg ? 'background:url("'+cssUrl(b.bgImg)+'") center/cover no-repeat;' : 'background:linear-gradient(135deg,var(--bg2),var(--bg3));')
       + '}'
-      + (bgMob ? '@media(max-width:768px){#'+uid+'{background-image:url("'+cssUrl(bgMob)+'");}}' : '')
       + (b.overlay !== false ? '#'+uid+'::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,10,10,.45),rgba(4,10,10,.6));}' : '')
+      + '#'+uid+' .hb-inner{position:relative;z-index:2;width:100%;'+(alignCenter?'text-align:center;':'')+'}'
+      + '#'+uid+' .hb-tag{display:inline-block;background:rgba(var(--teal-glow-rgb),.15);color:var(--teal);border:1px solid var(--teal-border);padding:5px 16px;border-radius:4px;font-family:\'Share Tech Mono\',monospace;font-size:.75rem;letter-spacing:.08em;margin-bottom:20px;}'
+      + '#'+uid+' .hb-title{font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.9rem,4.5vw,3.2rem);font-weight:800;color:#fff;line-height:1.15;letter-spacing:-.02em;margin-bottom:14px;max-width:800px;'+mAuto+'text-shadow:0 2px 18px rgba(0,0,0,.4);overflow-wrap:break-word;}'
+      + '#'+uid+' .hb-sub{font-size:1.05rem;color:rgba(255,255,255,.88);line-height:1.75;max-width:620px;margin-bottom:28px;'+mAuto+'text-shadow:0 1px 10px rgba(0,0,0,.4);}'
+      + '#'+uid+' .hb-btn{display:inline-flex;justify-content:center;max-width:100%;}'
+      + '@media(max-width:768px){'
+        + '#'+uid+'{min-height:'+h.m+';padding:48px 0;}'
+        + (bgMob ? '#'+uid+'{background-image:url("'+cssUrl(bgMob)+'");}' : '')
+        + '#'+uid+' .hb-title{font-size:clamp(1.5rem,7vw,2.1rem);}'
+        + '#'+uid+' .hb-sub{font-size:.95rem;line-height:1.7;margin-bottom:22px;}'
+        + '#'+uid+' .hb-tag{font-size:.68rem;padding:4px 12px;margin-bottom:14px;}'
+      + '}'
+      + '@media(max-width:480px){'
+        + '#'+uid+'{padding:40px 0;}'
+        + '#'+uid+' .hb-btn{width:100%;}'
+      + '}'
       + '</style>';
-    var mAuto = alignCenter ? 'margin-left:auto;margin-right:auto;' : '';
-    var inner = '<div class="container" style="position:relative;z-index:2;width:100%;'+(alignCenter?'text-align:center;':'')+'">'
-      + (b.tag ? '<div style="display:inline-block;background:rgba(var(--teal-glow-rgb),.15);color:var(--teal);border:1px solid var(--teal-border);padding:5px 16px;border-radius:4px;font-family:\'Share Tech Mono\',monospace;font-size:.75rem;letter-spacing:.08em;margin-bottom:20px;">'+escHtml(b.tag)+'</div>' : '')
-      + (b.title ? '<h2 style="font-family:\'Space Grotesk\',sans-serif;font-size:clamp(1.9rem,4.5vw,3.2rem);font-weight:800;color:#fff;line-height:1.15;letter-spacing:-.02em;margin-bottom:14px;max-width:800px;'+mAuto+'text-shadow:0 2px 18px rgba(0,0,0,.4);">'+escHtml(b.title)+'</h2>' : '')
-      + (b.subtitle ? '<p style="font-size:1.05rem;color:rgba(255,255,255,.88);line-height:1.75;max-width:620px;margin-bottom:28px;'+mAuto+'text-shadow:0 1px 10px rgba(0,0,0,.4);">'+escHtml(b.subtitle)+'</p>' : '')
-      + (b.btnText ? '<a href="'+escHtml(b.btnUrl||'/contact')+'" class="btn-primary" style="display:inline-flex;">'+escHtml(b.btnText)+'</a>' : '')
+    var inner = '<div class="container hb-inner">'
+      + (b.tag ? '<div class="hb-tag">'+escHtml(b.tag)+'</div>' : '')
+      + (b.title ? '<h2 class="hb-title">'+escHtml(b.title)+'</h2>' : '')
+      + (b.subtitle ? '<p class="hb-sub">'+escHtml(b.subtitle)+'</p>' : '')
+      + (b.btnText ? '<a href="'+escHtml(b.btnUrl||'/contact')+'" class="btn-primary hb-btn">'+escHtml(b.btnText)+'</a>' : '')
       + '</div>';
     return '<section data-section="'+id+'" id="'+uid+'" aria-label="'+escHtml(b.title||'Banner')+'">'+css+inner+'</section>';
   }
