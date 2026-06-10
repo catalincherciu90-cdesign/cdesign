@@ -322,7 +322,7 @@
     .block-editor-title{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:20px;}
     .block-field{margin-bottom:16px;}
     .block-field label{display:block;font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--soft);margin-bottom:6px;}
-    .block-field input,.block-field textarea{width:100%;background:var(--bg3);border:1px solid var(--border-soft);border-radius:7px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.88rem;padding:9px 12px;outline:none;resize:vertical;}
+    .block-field input,.block-field textarea,.block-field select{width:100%;background:var(--bg3);border:1px solid var(--border-soft);border-radius:7px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.88rem;padding:9px 12px;outline:none;resize:vertical;}
     .block-faq-items{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;}
     .block-faq-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;position:relative;}
     .block-faq-item input{width:100%;background:var(--bg2);border:1px solid var(--border-soft);border-radius:5px;color:var(--text);font-size:.82rem;padding:6px 10px;outline:none;margin-bottom:6px;}
@@ -4168,6 +4168,16 @@
   }
 
   function buildBlockEditorFields(block) {
+    // Selector de lățime — comun pentru toate tipurile de blocuri
+    var widthField = '<div class="block-field"><label>Lățime bloc</label>'
+      + '<select onchange="updateEditingBlock(\'fullWidth\', this.value===\'full\')">'
+      + '<option value="normal"' + (!block.fullWidth ? ' selected' : '') + '>Normală — conținut centrat (max 1180px)</option>'
+      + '<option value="full"' + (block.fullWidth ? ' selected' : '') + '>Full width — pe toată lățimea paginii</option>'
+      + '</select></div>';
+    return widthField + buildBlockTypeFields(block);
+  }
+
+  function buildBlockTypeFields(block) {
     switch(block.type) {
       case 'faq':
         var items = (block.items||[]).map(function(item, i) {
