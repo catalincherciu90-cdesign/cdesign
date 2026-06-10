@@ -879,6 +879,12 @@ export default {
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
 
+    if (path === '/programare') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/programare.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
     // ── LEGAL ─────────────────────────────────────────────────
 
     if (path === '/politica-confidentialitate') {
