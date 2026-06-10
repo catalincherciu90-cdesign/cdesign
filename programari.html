@@ -3982,6 +3982,8 @@
       default:{ title:'De ce ne aleg clienții', items:[{number:'50+',label:'Proiecte livrate'},{number:'3 ani',label:'Experiență'},{number:'98%',label:'Clienți mulțumiți'},{number:'24h',label:'Răspuns rapid'}] }},
     { type:'text',  icon:'📝', label:'Bloc text', desc:'Secțiune cu titlu și paragraf',
       default:{ title:'Titlu secțiune', content:'Adaugă conținutul tău aici. Poți edita din admin.' }},
+    { type:'hero',  icon:'🖼️', label:'Hero Banner', desc:'Banner full-width cu imagine de fundal, titlu, subtitlu și buton — ca Hero-ul principal',
+      default:{ tag:'', title:'Titlul tău aici', subtitle:'Un subtitlu scurt care convinge vizitatorul.', btnText:'Hai să vorbim →', btnUrl:'/contact', bgImg:'', bgImgMobile:'', height:'medium', align:'center', overlay:true }},
     { type:'columns', icon:'⬛', label:'Coloane / Cards', desc:'Grid cu 2-4 coloane editabile (icon, titlu, text, buton)',
       default:{ title:'', subtitle:'', columns:[
         { icon:'✅', title:'Primul avantaj', text:'Descriere scurtă a primului avantaj al serviciului tău.', btnText:'', btnUrl:'' },
@@ -4168,6 +4170,8 @@
   }
 
   function buildBlockEditorFields(block) {
+    // Hero banner e mereu full-width — nu are nevoie de selectorul de lățime
+    if (block.type === 'hero') return buildBlockTypeFields(block);
     // Selector de lățime — comun pentru toate tipurile de blocuri
     var widthField = '<div class="block-field"><label>Lățime bloc</label>'
       + '<select onchange="updateEditingBlock(\'fullWidth\', this.value===\'full\')">'
@@ -4219,6 +4223,29 @@
           + '<div class="block-field"><label>Coloane</label>'
           + '<div id="colItems">'+renderColEditors(block.columns||[])+'</div>'
           + '<button class="gib-btn" style="font-size:.78rem;padding:6px 14px;margin-top:4px;" onclick="addColumn()">+ Adaugă coloană</button></div>';
+
+      case 'hero':
+        return '<div class="block-field"><label>Imagine fundal (desktop)</label>'
+          + '<div style="display:flex;gap:8px;"><input id="hb-bgimg" placeholder="/media/... sau URL extern" value="' + esc(block.bgImg||'') + '" oninput="updateEditingBlock(\'bgImg\',this.value)">'
+          + '<button class="media-pick-btn" style="padding:0 12px;white-space:nowrap;" onclick="openMediaPickerForInput(\'hb-bgimg\')">📂 Media</button></div></div>'
+          + '<div class="block-field"><label>Imagine fundal mobil (opțional — gol = aceeași)</label>'
+          + '<div style="display:flex;gap:8px;"><input id="hb-bgimg-mob" placeholder="/media/..." value="' + esc(block.bgImgMobile||'') + '" oninput="updateEditingBlock(\'bgImgMobile\',this.value)">'
+          + '<button class="media-pick-btn" style="padding:0 12px;white-space:nowrap;" onclick="openMediaPickerForInput(\'hb-bgimg-mob\')">📂 Media</button></div></div>'
+          + '<div class="block-field"><label>Etichetă mică deasupra titlului (opțional)</label><input value="' + esc(block.tag||'') + '" oninput="updateEditingBlock(\'tag\',this.value)"></div>'
+          + '<div class="block-field"><label>Titlu</label><input value="' + esc(block.title||'') + '" oninput="updateEditingBlock(\'title\',this.value)"></div>'
+          + '<div class="block-field"><label>Subtitlu</label><textarea rows="2" oninput="updateEditingBlock(\'subtitle\',this.value)">' + esc(block.subtitle||'') + '</textarea></div>'
+          + '<div class="block-field"><label>Text buton (gol = fără buton)</label><input value="' + esc(block.btnText||'') + '" oninput="updateEditingBlock(\'btnText\',this.value)"></div>'
+          + '<div class="block-field"><label>URL buton</label><input value="' + esc(block.btnUrl||'') + '" oninput="updateEditingBlock(\'btnUrl\',this.value)"></div>'
+          + '<div class="block-field"><label>Înălțime banner</label><select onchange="updateEditingBlock(\'height\',this.value)">'
+          + '<option value="small"' + (block.height==='small'?' selected':'') + '>Mică (~280px)</option>'
+          + '<option value="medium"' + (!block.height||block.height==='medium'?' selected':'') + '>Medie (~420px)</option>'
+          + '<option value="large"' + (block.height==='large'?' selected':'') + '>Mare (~560px)</option></select></div>'
+          + '<div class="block-field"><label>Aliniere text</label><select onchange="updateEditingBlock(\'align\',this.value)">'
+          + '<option value="center"' + (block.align!=='left'?' selected':'') + '>Centrat</option>'
+          + '<option value="left"' + (block.align==='left'?' selected':'') + '>Stânga</option></select></div>'
+          + '<div class="block-field"><label>Overlay întunecat peste imagine (text mai lizibil)</label><select onchange="updateEditingBlock(\'overlay\', this.value===\'1\')">'
+          + '<option value="1"' + (block.overlay!==false?' selected':'') + '>Da</option>'
+          + '<option value="0"' + (block.overlay===false?' selected':'') + '>Nu</option></select></div>';
 
       default: return '<p style="color:var(--muted);">Tip de bloc necunoscut.</p>';
     }
