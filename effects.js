@@ -115,20 +115,21 @@
         if (e.key === 'Escape') closeFooter();
       });
 
-      // iconițele social media: clonate din #footerSocial (populat de pagină)
-      var srcSocial = document.getElementById('footerSocial');
+      // iconițele din bara de footer: telefon + WhatsApp + email + social,
+      // clonate din floating-bar (sau din #footerSocial ca fallback)
+      var srcIcons = document.getElementById('floatingBar') || document.getElementById('footerSocial');
       var bottomBar = footerEl.querySelector('.footer-bottom-bar, .footer-bottom');
-      if (srcSocial && bottomBar) {
+      if (srcIcons && bottomBar) {
         var slot = document.createElement('span');
         slot.className = 'fx-foot-social';
         bottomBar.appendChild(slot);
         var syncSocial = function () {
-          if (srcSocial.innerHTML.trim() && slot.innerHTML !== srcSocial.innerHTML) {
-            slot.innerHTML = srcSocial.innerHTML;
+          if (srcIcons.innerHTML.trim() && slot.innerHTML !== srcIcons.innerHTML) {
+            slot.innerHTML = srcIcons.innerHTML;
           }
         };
         syncSocial();
-        new MutationObserver(syncSocial).observe(srcSocial, { childList: true });
+        new MutationObserver(syncSocial).observe(srcIcons, { childList: true });
       }
     }
 
