@@ -64,6 +64,32 @@
     dotsBox.setAttribute('aria-label', 'Navigare secțiuni');
     body.appendChild(dotsBox);
 
+    /* indiciu de scroll pe primul slide — dispare la prima interacțiune */
+    var hint = document.createElement('div');
+    hint.className = 'fx-scrollhint';
+    hint.setAttribute('aria-hidden', 'true');
+    hint.innerHTML = '<span class="fx-sh-mouse"><span></span></span>'
+      + '<span class="fx-sh-chevs"><i></i><i></i></span>'
+      + '<span class="fx-sh-label">scroll</span>';
+    body.appendChild(hint);
+    var hintDismissed = false, hintTimer = null;
+    function showHint() {
+      if (hintDismissed) return;
+      clearTimeout(hintTimer);
+      hintTimer = setTimeout(function () {
+        if (!hintDismissed && body.classList.contains('fx-slide')) hint.classList.add('show');
+      }, 1500);
+    }
+    function dismissHint() {
+      if (hintDismissed) return;
+      hintDismissed = true;
+      clearTimeout(hintTimer);
+      hint.classList.remove('show');
+    }
+    ['wheel', 'touchstart', 'keydown'].forEach(function (e) {
+      window.addEventListener(e, dismissHint, { passive: true, once: false });
+    });
+
     function slideOn() {
       // activ pe toate dispozitivele; doar prefers-reduced-motion îl oprește
       return !reduced && window.innerHeight >= 420;
@@ -138,6 +164,7 @@
           panels.forEach(function (p) { p.classList.remove('fx-notrans'); });
         });
       });
+      if (active === 0) showHint();
     }
 
     function goTo(j) {
@@ -147,6 +174,7 @@
       var cur = panels[active], nxt = panels[j], prevIdx = active;
       active = j;
       var exitClass = side(j) === 'left' ? 'fx-off-right' : 'fx-off-left';
+      dismissHint();
       cur.classList.remove('fx-active');
       cur.classList.add(exitClass);
       nxt.classList.remove('fx-off-left', 'fx-off-right');
