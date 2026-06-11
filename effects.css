@@ -65,8 +65,9 @@ body.fx-slide .mobile-menu{z-index:290;}
 body.fx-slide .mobile-menu.open{display:flex;}
 /* în mod slide, animațiile reveal existente nu mai țin elementele ascunse */
 body.fx-slide .reveal{opacity:1!important;transform:none!important;}
-/* bara de progres scroll nu are sens fără scroll */
-body.fx-slide .scroll-bar{display:none;}
+/* suprapunerile decorative din designul vechi (modelul punctat de pe
+   hero-uri) sunt redundante peste fundalul animat al temei noi */
+body[data-fx] .hero::before{display:none;}
 /* footer-ul devine ultimul slide — centrat și compact */
 body.fx-slide footer.fx-panel{align-items:center;}
 body.fx-slide footer.fx-panel>.container{max-height:calc(100vh - 160px);overflow-y:auto;}

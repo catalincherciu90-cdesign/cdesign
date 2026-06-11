@@ -249,7 +249,6 @@ html{scroll-behavior:smooth}
     .plan-cta-main:hover{background:#f0f0f0;}
     @media(max-width:768px){body{font-size:1rem;line-height:1.75;}.sec-title{font-size:1.6rem;}.card{padding:24px;}}
 
-.scroll-bar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--teal),var(--teal-lt));width:0%;z-index:9999;transition:width .1s linear;box-shadow:0 0 8px var(--teal);}
 nav{position:relative;}
 nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,168,168,.6) 40%,rgba(83,148,255,.4) 60%,transparent);pointer-events:none;}
 .nav-links{display:flex;align-items:center;gap:28px;list-style:none;}
@@ -296,7 +295,6 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 </head>
 <body data-fx>
 
-<div class="scroll-bar" id="scrollBar"></div>
 
 <nav aria-label="Navigare principală">
   <div class="container">
@@ -555,8 +553,6 @@ nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;backg
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=893560673744618&ev=PageView&noscript=1"/></noscript>
 
 <script>
-const scrollBar=document.getElementById('scrollBar');
-if(scrollBar)window.addEventListener('scroll',()=>{const pct=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100;scrollBar.style.width=pct+'%';},{passive:true});
 const reveals=document.querySelectorAll('.reveal');
 if(reveals.length){const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revObs.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});reveals.forEach(el=>revObs.observe(el));}
 const ham=document.getElementById('hamburger');
