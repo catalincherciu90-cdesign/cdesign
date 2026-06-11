@@ -976,6 +976,7 @@
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
           <span id="media-count" style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);"></span>
           <button onclick="mediaCleanRefs()" title="Elimină din site (hero, blocuri, blog) referințele către imagini care nu mai există — repară erorile 404" style="cursor:pointer;padding:8px 16px;font-size:.8rem;background:transparent;color:var(--soft);border:1px solid var(--border);border-radius:8px;font-family:inherit;">🧹 Curăță referințe moarte</button>
+          <button id="media-opt-all" onclick="mediaOptimizeAll()" title="Redimensionează la max. 1920px și recodează WebP toate imaginile, păstrând aceleași URL-uri — recomandat pentru viteza site-ului (PageSpeed)" style="cursor:pointer;padding:8px 16px;font-size:.8rem;background:transparent;color:var(--soft);border:1px solid var(--border);border-radius:8px;font-family:inherit;">⚡ Optimizează imaginile</button>
           <label class="btn-save" style="cursor:pointer;padding:8px 18px;font-size:.85rem;">
             ⬆ Upload imagine
             <input type="file" accept="image/*" style="display:none" onchange="mediaUploadFile(this)">
@@ -4619,18 +4620,44 @@
     }
   }
 
+  // Comprimă imaginea în browser înainte de upload: redimensionează la max.
+  // 1920px pe latura mare și o recodează WebP. Păstrează fișierul original
+  // dacă nu merită (GIF/SVG, deja mică, sau rezultatul nu scade cu min. 10%).
+  function compressImage(file, cb) {
+    var ct = (file.type || '').toLowerCase();
+    if (ct === 'image/gif' || ct === 'image/svg+xml' || file.size < 60 * 1024) { cb(file); return; }
+    var objUrl = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function() {
+      try {
+        var MAX = 1920;
+        var w = img.naturalWidth, h = img.naturalHeight;
+        var scale = Math.min(1, MAX / Math.max(w, h));
+        var cv = document.createElement('canvas');
+        cv.width = Math.round(w * scale); cv.height = Math.round(h * scale);
+        cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+        cv.toBlob(function(blob) {
+          URL.revokeObjectURL(objUrl);
+          cb(blob && blob.size < file.size * 0.9 ? blob : file);
+        }, 'image/webp', 0.82);
+      } catch (e) { URL.revokeObjectURL(objUrl); cb(file); }
+    };
+    img.onerror = function() { URL.revokeObjectURL(objUrl); cb(file); };
+    img.src = objUrl;
+  }
+
   function uploadMedia(file, onSuccess, onError) {
     var token = localStorage.getItem('cdAdmin');
-    var statusId = 'upload-status-' + Date.now();
-    // afișăm status dacă există un element cu id-ul dat
-    fetch('/api/media?token=' + encodeURIComponent(token), {
-      method: 'POST',
-      headers: { 'Content-Type': file.type },
-      body: file
-    }).then(function(r){ return r.json(); }).then(function(d) {
-      if (d.url) onSuccess(d.url);
-      else onError(d.error || 'Eroare upload');
-    }).catch(function(){ onError('Eroare rețea'); });
+    compressImage(file, function(body) {
+      fetch('/api/media?token=' + encodeURIComponent(token), {
+        method: 'POST',
+        headers: { 'Content-Type': body.type || file.type },
+        body: body
+      }).then(function(r){ return r.json(); }).then(function(d) {
+        if (d.url) onSuccess(d.url);
+        else onError(d.error || 'Eroare upload');
+      }).catch(function(){ onError('Eroare rețea'); });
+    });
   }
 
   function triggerImageUpload(ci, ei, field, statusElId) {
@@ -4911,6 +4938,7 @@
   let mediaList = [];
   let mediaActiveUrls = new Set();
   let mediaUsage = {};
+  let mediaBust = 0; // cache-buster pentru thumbnail-uri după optimizare
 
   async function fetchMedia() {
     const grid = document.getElementById('media-grid');
@@ -4953,13 +4981,14 @@
       const isActive = mediaActiveUrls.has(f.url) || mediaActiveUrls.has(location.origin + f.url);
       const isPortrait = f.filename.toLowerCase().includes('mobile') || f.filename.toLowerCase().includes('portrait');
       return `<div class="media-card${isActive ? ' active-img' : ''}" id="mcard-${CSS.escape(f.filename)}">
-        <img class="media-thumb${isPortrait ? ' portrait' : ''}" src="${f.url}" alt="${f.filename}" loading="lazy" onerror="this.style.background='var(--bg3)';this.style.opacity='.3'">
+        <img class="media-thumb${isPortrait ? ' portrait' : ''}" src="${f.url}${mediaBust ? '?v=' + mediaBust : ''}" alt="${f.filename}" loading="lazy" onerror="this.style.background='var(--bg3)';this.style.opacity='.3'">
         <div class="media-info">
           ${isActive ? '<span class="media-badge" title="' + (mediaUsage[f.filename] || []).join(' • ').replace(/"/g, '&quot;') + '">✓ ACTIV</span>' : ''}
           <div class="media-name" title="${f.filename}">${f.filename}</div>
           <div class="media-actions">
             <button class="media-btn" onclick="mediaCopyUrl('${f.url}')">📋 Copiază</button>
             <button class="media-btn" onclick="mediaSetHero('${f.url}')">🖼 Hero</button>
+            <button class="media-btn" onclick="mediaOptimize('${f.filename}')" title="Redimensionează la max. 1920px + WebP, același URL">⚡</button>
             <button class="media-btn del" onclick="mediaDelete('${f.filename}')">🗑</button>
           </div>
         </div>
@@ -4991,6 +5020,54 @@
       renderMediaGrid();
       showToast('Hero banner actualizat!');
     } catch { alert('Eroare la salvare.'); }
+  }
+
+  function fmtKB(n) { return n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.round(n / 1024) + ' KB'; }
+
+  // Optimizare in-place: descarcă imaginea, o comprimă în browser
+  // (max. 1920px + WebP) și o salvează peste același fișier — toate
+  // referințele /media/ de pe site rămân valabile.
+  async function mediaOptimize(filename, quiet) {
+    try {
+      const r = await fetch('/media/' + filename, { cache: 'no-store' });
+      if (!r.ok) throw new Error();
+      const blob = await r.blob();
+      const ct = (blob.type || '').toLowerCase();
+      if (ct === 'image/gif' || ct === 'image/svg+xml') {
+        if (!quiet) showToast('GIF/SVG nu se recodează.');
+        return 0;
+      }
+      const out = await new Promise(res => compressImage(new File([blob], filename, { type: ct || 'image/png' }), res));
+      if (out.size >= blob.size * 0.9) {
+        if (!quiet) showToast('„' + filename + '" e deja optimă (' + fmtKB(blob.size) + ').');
+        return 0;
+      }
+      const ur = await fetch('/api/media?token=' + encodeURIComponent(adminToken) + '&name=' + encodeURIComponent(filename), {
+        method: 'POST', headers: { 'Content-Type': out.type || 'image/webp' }, body: out
+      });
+      if (!ur.ok) throw new Error();
+      mediaBust = Date.now();
+      if (!quiet) { renderMediaGrid(); showToast('✓ ' + fmtKB(blob.size) + ' → ' + fmtKB(out.size)); }
+      return blob.size - out.size;
+    } catch (e) {
+      if (!quiet) alert('Eroare la optimizarea imaginii.');
+      return 0;
+    }
+  }
+
+  async function mediaOptimizeAll() {
+    if (!mediaList.length) { showToast('Nicio imagine în arhivă.'); return; }
+    if (!confirm('Optimizez toate imaginile din arhivă?\n\nFiecare imagine e redimensionată la max. 1920px și recodată WebP, păstrând același URL — nimic nu se strică pe site. Operația nu poate fi anulată.')) return;
+    const btn = document.getElementById('media-opt-all');
+    let saved = 0, changed = 0;
+    for (let i = 0; i < mediaList.length; i++) {
+      if (btn) btn.textContent = '⚡ ' + (i + 1) + '/' + mediaList.length + '…';
+      const s = await mediaOptimize(mediaList[i].filename, true);
+      if (s > 0) { saved += s; changed++; }
+    }
+    if (btn) btn.textContent = '⚡ Optimizează imaginile';
+    renderMediaGrid();
+    showToast(changed ? '✓ ' + changed + ' imagini optimizate — economisit ' + fmtKB(saved) : 'Toate imaginile erau deja optime.');
   }
 
   async function mediaDelete(filename) {
