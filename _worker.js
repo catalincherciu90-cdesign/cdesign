@@ -2041,7 +2041,8 @@ Cerințe titluri:
       } catch { return json({ error: 'Eroare' }, 500); }
     }
 
-    // Media upload
+    // Media upload — cu ?name=<fișier existent> suprascrie imaginea în loc
+    // (folosit de optimizarea din admin: referințele /media/ rămân valabile)
     if (path === '/api/media' && request.method === 'POST') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
@@ -2049,8 +2050,17 @@ Cerințe titluri:
         if (!ct.startsWith('image/')) return json({ error: 'Doar imagini acceptate' }, 400);
         const buf = await request.arrayBuffer();
         if (buf.byteLength > 5 * 1024 * 1024) return json({ error: 'Fișier prea mare (max 5MB)' }, 400);
-        const ext = ct.includes('png') ? 'png' : ct.includes('gif') ? 'gif' : ct.includes('webp') ? 'webp' : 'jpg';
-        const filename = 'media_' + Date.now() + '.' + ext;
+        const overwrite = url.searchParams.get('name') || '';
+        let filename;
+        if (overwrite) {
+          if (!/^[A-Za-z0-9._-]+$/.test(overwrite)) return json({ error: 'Nume invalid' }, 400);
+          const existing = await env.PROGRAMARI.get('__media__' + overwrite);
+          if (existing === null) return json({ error: 'Imaginea nu există' }, 404);
+          filename = overwrite;
+        } else {
+          const ext = ct.includes('png') ? 'png' : ct.includes('gif') ? 'gif' : ct.includes('webp') ? 'webp' : 'jpg';
+          filename = 'media_' + Date.now() + '.' + ext;
+        }
         await env.PROGRAMARI.put('__media__' + filename, buf, { metadata: { ct } });
         return json({ url: '/media/' + filename, filename });
       } catch { return json({ error: 'Eroare la upload' }, 500); }

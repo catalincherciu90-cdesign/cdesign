@@ -122,15 +122,14 @@ body.fx-slide .fx-dots{display:flex;}
 /* pâlpâit lent — doar pe opacity (compus pe GPU) */
 @keyframes fx-dot-blink{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* ── LOGO — glow alb cu pâlpâit lent (filter e compus pe GPU) ── */
+/* ── LOGO — glow alb static + pâlpâit lent doar pe opacity
+   (animarea filter cu drop-shadow «mută pixeli» și apărea în
+   PageSpeed la «Evită animațiile necompuse») ── */
 body[data-fx] nav .logo img{
   filter:drop-shadow(0 0 6px rgba(255,255,255,.6)) drop-shadow(0 0 16px rgba(255,255,255,.3));
-  animation:fx-logo-glow 3.2s ease-in-out infinite;
+  animation:fx-logo-blink 3.2s ease-in-out infinite;
 }
-@keyframes fx-logo-glow{
-  0%,100%{filter:drop-shadow(0 0 6px rgba(255,255,255,.6)) drop-shadow(0 0 16px rgba(255,255,255,.3));}
-  50%{filter:drop-shadow(0 0 2px rgba(255,255,255,.25)) drop-shadow(0 0 7px rgba(255,255,255,.1));}
-}
+@keyframes fx-logo-blink{0%,100%{opacity:1}50%{opacity:.55}}
 
 /* floating-bar peste slide-uri, dar sub dots */
 body.fx-slide .floating-bar{z-index:210;}
