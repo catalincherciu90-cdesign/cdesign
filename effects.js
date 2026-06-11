@@ -90,6 +90,48 @@
       window.addEventListener(e, dismissHint, { passive: true, once: false });
     });
 
+    /* footer fix: buton-sertar (deschide footer-ul complet) + social în bară */
+    var footerEl = document.querySelector('footer');
+    if (footerEl) {
+      var tgl = document.createElement('button');
+      tgl.className = 'fx-foot-toggle';
+      tgl.setAttribute('aria-label', 'Deschide footer-ul complet');
+      tgl.setAttribute('aria-expanded', 'false');
+      footerEl.appendChild(tgl);
+      tgl.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var open = footerEl.classList.toggle('fx-open');
+        tgl.setAttribute('aria-expanded', open);
+        tgl.setAttribute('aria-label', open ? 'Închide footer-ul' : 'Deschide footer-ul complet');
+      });
+      function closeFooter() {
+        footerEl.classList.remove('fx-open');
+        tgl.setAttribute('aria-expanded', 'false');
+      }
+      document.addEventListener('click', function (e) {
+        if (footerEl.classList.contains('fx-open') && !footerEl.contains(e.target)) closeFooter();
+      });
+      window.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeFooter();
+      });
+
+      // iconițele social media: clonate din #footerSocial (populat de pagină)
+      var srcSocial = document.getElementById('footerSocial');
+      var bottomBar = footerEl.querySelector('.footer-bottom-bar, .footer-bottom');
+      if (srcSocial && bottomBar) {
+        var slot = document.createElement('span');
+        slot.className = 'fx-foot-social';
+        bottomBar.appendChild(slot);
+        var syncSocial = function () {
+          if (srcSocial.innerHTML.trim() && slot.innerHTML !== srcSocial.innerHTML) {
+            slot.innerHTML = srcSocial.innerHTML;
+          }
+        };
+        syncSocial();
+        new MutationObserver(syncSocial).observe(srcSocial, { childList: true });
+      }
+    }
+
     function slideOn() {
       // activ pe toate dispozitivele; doar prefers-reduced-motion îl oprește
       return !reduced && window.innerHeight >= 420;
@@ -174,6 +216,7 @@
       active = j;
       var exitClass = side(j) === 'left' ? 'fx-off-right' : 'fx-off-left';
       dismissHint();
+      if (footerEl) footerEl.classList.remove('fx-open');
       cur.classList.remove('fx-active');
       cur.classList.add(exitClass);
       nxt.classList.remove('fx-off-left', 'fx-off-right');
@@ -192,6 +235,12 @@
     /* input: rotiță — întâi derulează caseta internă, apoi schimbă slide-ul */
     window.addEventListener('wheel', function (e) {
       if (!body.classList.contains('fx-slide')) return;
+      // sertarul de footer deschis: scroll nativ în footer, fără schimbare de slide
+      if (footerEl && footerEl.classList.contains('fx-open')) {
+        if (e.target.closest('footer')) return;
+        e.preventDefault();
+        return;
+      }
       var boxEl = panels[active] && panels[active].querySelector('.fx-neon');
       if (boxEl && boxEl.scrollHeight > boxEl.clientHeight + 4) {
         var down = e.deltaY > 0;
@@ -224,7 +273,8 @@
       var endY = e.changedTouches[0].clientY, endX = e.changedTouches[0].clientX;
       var dy = tY - endY, dx = tX - endX;
       tY = null; tX = null;
-      if (e.target.closest('.mobile-menu, nav, .fx-dots')) return;
+      if (e.target.closest('.mobile-menu, nav, .fx-dots, footer')) return;
+      if (footerEl && footerEl.classList.contains('fx-open')) return;
       if (animating || Math.abs(dy) < 55 || Math.abs(dy) < Math.abs(dx) * 1.2) return;
       var down = dy > 0;
       var boxEl = panels[active] && panels[active].querySelector('.fx-neon');
