@@ -41,23 +41,50 @@ a{color:inherit;text-decoration:none}
 @keyframes wave-drift{from{transform:translateX(0)}to{transform:translateX(-220px)}}
 
 /* ── ANIMAȚII STÂNGA → DREAPTA + TRANZIȚIE ÎNTRE BLOCURI ── */
-.al{opacity:0;transform:translateX(-70px);transition:opacity .65s cubic-bezier(.22,.8,.32,1),transform .65s cubic-bezier(.22,.8,.32,1);}
-.panel.in-view .al{opacity:1;transform:translateX(0);}
-/* blocul care iese: elementele alunecă mai departe spre dreapta și dispar */
-.panel.leaving .al{opacity:0;transform:translateX(70px);}
-.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
-.d4{transition-delay:.4s}.d5{transition-delay:.5s}.d6{transition-delay:.6s}
+/* easing «expo-out» — pornire vie, finalizare foarte lină */
+.al{opacity:0;transform:translateX(-48px);filter:blur(8px);
+  transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1),filter .9s cubic-bezier(.16,1,.3,1);
+  will-change:opacity,transform;}
+.panel.in-view .al{opacity:1;transform:none;filter:blur(0);}
+/* blocul care iese: elementele alunecă spre dreapta și se estompează */
+.panel.leaving .al{opacity:0;transform:translateX(48px);filter:blur(8px);}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
+.d4{transition-delay:.32s}.d5{transition-delay:.4s}.d6{transition-delay:.48s}
+
+/* caseta neon glisează și ea, ca un strat sub elementele din interior */
+.neon-box{opacity:0;transform:translateX(-28px) scale(.985);
+  transition:opacity 1s cubic-bezier(.16,1,.3,1),transform 1s cubic-bezier(.16,1,.3,1);}
+.panel.in-view .neon-box{opacity:1;transform:none;}
+.panel.leaving .neon-box{opacity:0;transform:translateX(28px) scale(.985);}
 
 /* fiecare bloc = un ecran întreg; scroll-ul sare de la unul la altul */
-.panel{min-height:100vh;display:flex;align-items:center;padding:100px 0 60px;position:relative;z-index:2;}
+.panel{min-height:100vh;display:flex;align-items:center;padding:96px 0 56px;position:relative;z-index:2;}
 @media(min-width:900px) and (min-height:640px){
   html{scroll-snap-type:y mandatory;}
   .panel{scroll-snap-align:start;scroll-snap-stop:always;}
   footer{scroll-snap-align:end;}
 }
+
+/* ── CASETĂ CU EFECT NEON ────────────────────────────────── */
+.neon-box{background:rgba(4,28,14,.58);backdrop-filter:blur(12px);
+  border:1px solid rgba(39,224,122,.45);border-radius:22px;
+  padding:52px 48px;position:relative;
+  box-shadow:0 0 10px rgba(39,224,122,.28),0 0 44px rgba(39,224,122,.13),inset 0 0 24px rgba(39,224,122,.05);
+  animation:neon-breathe 4.5s ease-in-out infinite;}
+.neon-box::before{content:'';position:absolute;inset:-1px;border-radius:22px;pointer-events:none;
+  background:linear-gradient(135deg,rgba(94,242,158,.35),transparent 30%,transparent 70%,rgba(94,242,158,.25));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;padding:1px;}
+@keyframes neon-breathe{
+  0%,100%{box-shadow:0 0 10px rgba(39,224,122,.28),0 0 44px rgba(39,224,122,.13),inset 0 0 24px rgba(39,224,122,.05);}
+  50%{box-shadow:0 0 18px rgba(39,224,122,.5),0 0 72px rgba(39,224,122,.22),inset 0 0 32px rgba(39,224,122,.09);}
+}
+@media(max-width:768px){.neon-box{padding:30px 22px;border-radius:16px;}}
+
 @media(prefers-reduced-motion:reduce){
-  .al,.panel.leaving .al{opacity:1;transform:none;transition:none;}
+  .al,.panel.leaving .al,.neon-box,.panel.leaving .neon-box{opacity:1;transform:none;filter:none;transition:none;}
   html{scroll-snap-type:none;}
+  .neon-box{animation:none;}
   .tri-slow,.tri-med,.tri-fast,.plus,.diamond,.glow,.dots-wave{animation:none;}
 }
 
@@ -110,7 +137,7 @@ section{padding:84px 0;position:relative;z-index:2;}
 .card li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700;}
 
 /* strip despre */
-.strip{background:linear-gradient(90deg,rgba(39,224,122,.12),rgba(39,224,122,.03));border-top:1px solid var(--green-border);border-bottom:1px solid var(--green-border);padding:52px 0;}
+.strip{padding:0;}
 .strip-inner{display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;}
 .strip-title{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:8px;}
 .strip-sub{font-size:.97rem;color:var(--soft);max-width:560px;line-height:1.8;}
@@ -127,7 +154,7 @@ section{padding:84px 0;position:relative;z-index:2;}
 .t-role{display:block;font-size:.76rem;color:var(--muted);}
 
 /* CTA final */
-.cta-box{background:var(--bg2);border:1px solid var(--green-border);border-radius:18px;padding:60px 44px;text-align:center;max-width:760px;margin:0 auto;backdrop-filter:blur(8px);box-shadow:0 0 60px rgba(39,224,122,.08);}
+.cta-box{background:none;border:none;border-radius:0;padding:12px 0;text-align:center;max-width:640px;margin:0 auto;}
 .cta-box h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;margin-bottom:12px;}
 .cta-box p{color:var(--soft);margin-bottom:30px;max-width:480px;margin-left:auto;margin-right:auto;}
 
@@ -232,7 +259,7 @@ footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--gree
 <main>
 
 <section class="hero panel">
-  <div class="container">
+  <div class="container neon-box">
     <div class="hero-eyebrow al">PENTRU ORICE TIP DE AFACERE · CONSULTANȚĂ GRATUITĂ</div>
     <h1 class="al d1">Site-ul care<br>îți aduce<br><span class="hl">clienți noi</span></h1>
     <p class="hero-desc al d2">De la prima ta afacere până la un brand consacrat — construim site-uri clare, rapide și găsite pe Google. Fără termeni tehnici, fără surprize la factură.</p>
@@ -249,7 +276,7 @@ footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--gree
 </section>
 
 <section class="panel">
-  <div class="container" style="width:100%;">
+  <div class="container neon-box" style="width:100%;">
     <div class="sec-label al">CE PUTEM FACE PENTRU TINE</div>
     <h2 class="sec-title al d1">Indiferent unde ești,<br>avem soluția potrivită</h2>
     <p class="sec-sub al d2">Pornești de la zero sau ai deja un site care nu mai ține pasul? Avem servicii clare pentru fiecare etapă a afacerii tale.</p>
@@ -292,7 +319,7 @@ footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--gree
 </section>
 
 <div class="strip panel">
-  <div class="container" style="width:100%;">
+  <div class="container neon-box" style="width:100%;">
     <div class="strip-inner">
       <div>
         <div class="sec-label al">DESPRE NOI</div>
@@ -305,7 +332,7 @@ footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--gree
 </div>
 
 <section class="panel">
-  <div class="container" style="width:100%;">
+  <div class="container neon-box" style="width:100%;">
     <div class="sec-label al">RECENZII REALE</div>
     <h2 class="sec-title al d1">Ei ne-au ales — și nu au regretat</h2>
     <p class="sec-sub al d2">Recenzii reale de la clienți cu afaceri ca a ta.</p>
@@ -318,7 +345,7 @@ footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--gree
 </section>
 
 <section class="panel">
-  <div class="container" style="width:100%;">
+  <div class="container neon-box" style="width:100%;">
     <div class="cta-box al">
       <h2 class="al d1">Pregătit să discutăm despre site-ul tău?</h2>
       <p class="al d2">Scrie-ne sau programează o consultanță gratuită de 30 de minute — răspundem în maxim 2 ore.</p>
