@@ -98,6 +98,15 @@
       tgl.setAttribute('aria-label', 'Deschide footer-ul complet');
       tgl.setAttribute('aria-expanded', 'false');
       footerEl.appendChild(tgl);
+      var closeBtn = document.createElement('button');
+      closeBtn.className = 'fx-foot-close';
+      closeBtn.setAttribute('aria-label', 'Închide footer-ul');
+      closeBtn.textContent = '✕';
+      footerEl.insertBefore(closeBtn, footerEl.firstChild);
+      closeBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        closeFooter();
+      });
       tgl.addEventListener('click', function (e) {
         e.stopPropagation();
         var open = footerEl.classList.toggle('fx-open');
