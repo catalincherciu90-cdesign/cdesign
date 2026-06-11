@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Analytics (GA4 + Meta Pixel) — încărcate la prima interacțiune sau după 5s. -->
   <script>
-    window.addEventListener('load', function() {
-      var s = document.createElement('script');
-      s.async = true;
-      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-K3VR7JC1QW';
-      document.head.appendChild(s);
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-K3VR7JC1QW');
-    });
+window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){dataLayer.push(arguments);};
+gtag('js',new Date());gtag('config','G-K3VR7JC1QW');
+!function(f){if(f.fbq)return;var n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[]}(window);
+fbq('init','893560673744618');fbq('track','PageView');
+(function(){var d=false;function L(){if(d)return;d=true;
+var a=document.createElement('script');a.src='https://www.googletagmanager.com/gtag/js?id=G-K3VR7JC1QW';a.async=true;document.head.appendChild(a);
+var b=document.createElement('script');b.src='https://connect.facebook.net/en_US/fbevents.js';b.async=true;document.head.appendChild(b);}
+['pointerdown','keydown','touchstart','wheel','scroll'].forEach(function(e){addEventListener(e,L,{passive:true,once:true});});
+setTimeout(L,5000);})();
   </script>
   <title>Programează o Consultanță Gratuită – 30 min, Fără Obligații | C Design</title>
   <meta name="description" content="Alege data și ora care ți-e convenabilă și programează o consultanță gratuită de 30 de minute. Fără obligații, fără costuri ascunse. Sună: 0753 116 155.">
@@ -447,12 +447,6 @@ document.getElementById('bookingForm').addEventListener('submit', async function
 })();
 </script>
 
-<!-- Meta Pixel -->
-<script>
-  window.addEventListener('load', function() {
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','893560673744618');fbq('track','PageView');
-  });
-</script>
 
 </body>
 </html>
