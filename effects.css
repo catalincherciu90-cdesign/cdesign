@@ -99,6 +99,7 @@ body.fx-slide .fx-foot-social{display:inline-flex;gap:8px;align-items:center;}
 .fx-foot-social a:hover{color:var(--teal,#00c8b4);border-color:var(--teal,#00c8b4);
   box-shadow:0 0 10px rgba(var(--teal-glow-rgb,0,200,180),.5);}
 .fx-foot-social a svg{width:13px;height:13px;}
+.fx-foot-social .fb-label{display:none;}
 
 /* ── PUNCTE DE NAVIGARE (stânga) ───────────────────────────── */
 .fx-dots{display:none;position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:220;flex-direction:column;gap:4px;}
@@ -142,9 +143,14 @@ body.fx-slide .fx-scrollhint.show{opacity:1;visibility:visible;}
   body.fx-slide .fx-neon{padding:26px 18px!important;border-radius:16px;}
   .fx-dots{left:4px;gap:2px;}
   .fx-dots button::after{inset:8.5px;}
-  body.fx-slide .floating-bar{bottom:78px;}
   body.fx-slide footer .footer-bottom-bar span:last-child,
   body.fx-slide footer .footer-bottom span:last-child{display:none;}
+}
+
+/* pe mobil, bara plutitoare se ascunde în modul slide — toate
+   iconițele (telefon, WhatsApp, email, social) sunt în bara de footer */
+@media(max-width:640px){
+  body.fx-slide .floating-bar{display:none;}
 }
 
 /* ── REDUCED MOTION ────────────────────────────────────────── */
