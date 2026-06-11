@@ -57,9 +57,33 @@ a{color:inherit;text-decoration:none}
 .panel.in-view .neon-box{opacity:1;transform:none;}
 .panel.leaving .neon-box{opacity:0;transform:translateX(28px) scale(.985);}
 
-/* fiecare bloc = un ecran întreg; derularea între blocuri e animată
-   de motorul JS propriu (lent, cu easing), nu de snap-ul nativ */
 .panel{min-height:100vh;display:flex;align-items:center;padding:96px 0 56px;position:relative;z-index:2;}
+
+/* ── MOD SLIDE (desktop): blocurile intră lateral, alternativ ──
+   Panourile sunt suprapuse pe tot ecranul; la scroll, cel curent iese
+   lateral și următorul glisează înăuntru — din stânga, apoi din dreapta. */
+body.slide-mode{overflow:hidden;height:100vh;}
+body.slide-mode main{height:100vh;position:relative;}
+body.slide-mode .panel{position:fixed;inset:0;min-height:100vh;padding:96px 24px 56px;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform 1.4s cubic-bezier(.65,0,.35,1),opacity 1.4s cubic-bezier(.65,0,.35,1);
+  will-change:transform,opacity;pointer-events:none;opacity:0;z-index:2;}
+body.slide-mode .panel.no-trans{transition:none!important;}
+body.slide-mode .panel.off-left{transform:translateX(-100vw);}
+body.slide-mode .panel.off-right{transform:translateX(100vw);}
+body.slide-mode .panel.active{transform:none;opacity:1;pointer-events:auto;z-index:3;}
+body.slide-mode footer{display:none;}
+/* cascada interioară pornește din partea din care a intrat panoul */
+body.slide-mode .panel .al{transform:translateX(-40px);}
+body.slide-mode .panel.side-right .al{transform:translateX(40px);}
+body.slide-mode .panel.in-view .al{transform:none;}
+/* dacă un bloc e mai înalt decât ecranul, caseta derulează intern */
+body.slide-mode .neon-box{max-height:calc(100vh - 180px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(39,224,122,.4) transparent;}
+/* puncte de navigare */
+.slide-dots{display:none;position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:200;flex-direction:column;gap:12px;}
+body.slide-mode .slide-dots{display:flex;}
+.slide-dots button{width:11px;height:11px;border-radius:50%;border:1px solid var(--green-border);background:transparent;cursor:pointer;padding:0;transition:background .3s,box-shadow .3s,transform .3s;}
+.slide-dots button.on{background:var(--green);box-shadow:0 0 12px rgba(39,224,122,.7);transform:scale(1.25);}
 
 /* ── CASETĂ CU EFECT NEON ────────────────────────────────── */
 .neon-box{background:rgba(4,28,14,.58);backdrop-filter:blur(12px);
@@ -361,13 +385,15 @@ footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--gree
 </footer>
 
 <div class="test-badge">⚠ PAGINĂ DE TEST</div>
+<div class="slide-dots" id="slideDots" aria-label="Navigare blocuri"></div>
 
 <script>
-// Tranziție între blocuri: cel care intră apare de la stânga,
-// cel care iese alunecă spre dreapta și dispare.
 const panels = Array.from(document.querySelectorAll('.panel'));
+
+// Pe mobil (fără slide-mode): blocurile se animă la scroll, ca înainte
 const leaveTimers = new WeakMap();
 const pObs = new IntersectionObserver(entries => {
+  if (document.body.classList.contains('slide-mode')) return;
   entries.forEach(e => {
     const p = e.target;
     if (e.isIntersecting) {
@@ -377,71 +403,113 @@ const pObs = new IntersectionObserver(entries => {
     } else if (p.classList.contains('in-view')) {
       p.classList.remove('in-view');
       p.classList.add('leaving');
-      // după ce animația de ieșire se termină, resetăm la starea
-      // de start (stânga), ca următoarea intrare să vină tot de la stânga
       leaveTimers.set(p, setTimeout(() => p.classList.remove('leaving'), 2200));
     }
   });
 }, { threshold: 0.3 });
 panels.forEach(p => pObs.observe(p));
 
-// ── Motor de derulare lentă între blocuri (desktop) ──────────
-// Înlocuiește snap-ul nativ: la scroll, pagina glisează animat (~1.4s,
-// ease-in-out) spre blocul următor/anterior.
+// ── MOD SLIDE (desktop): blocurile vin alternativ din stânga / dreapta ──
 (function() {
-  const SCROLL_MS = 1400;       // durata tranziției între blocuri
-  const COOLDOWN_MS = 250;      // pauză după tranziție, anti-dublu-scroll
-  let animating = false;
+  const SLIDE_MS = 1400;       // durata glisării unui bloc
+  const COOLDOWN_MS = 300;     // pauză după tranziție
+  let active = 0, animating = false;
 
-  function engineOn() {
+  const dotsBox = document.getElementById('slideDots');
+  panels.forEach((p, i) => {
+    const b = document.createElement('button');
+    b.setAttribute('aria-label', 'Blocul ' + (i + 1));
+    b.addEventListener('click', () => goTo(i));
+    dotsBox.appendChild(b);
+  });
+  const dots = Array.from(dotsBox.children);
+
+  function slideOn() {
     return window.innerWidth >= 900 && window.innerHeight >= 640
       && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
-  function currentIndex() {
-    const y = window.scrollY;
-    let best = 0, bd = Infinity;
-    panels.forEach((p, i) => {
-      const d = Math.abs(p.offsetTop - y);
-      if (d < bd) { bd = d; best = i; }
-    });
-    return best;
-  }
-  function easeInOutCubic(t) {
-    return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  }
-  function scrollToPanel(i) {
-    animating = true;
-    const start = window.scrollY;
-    const end = panels[i].offsetTop;
-    const t0 = performance.now();
-    function step(now) {
-      const t = Math.min(1, (now - t0) / SCROLL_MS);
-      window.scrollTo({ top: start + (end - start) * easeInOutCubic(t), behavior: 'instant' });
-      if (t < 1) requestAnimationFrame(step);
-      else setTimeout(() => { animating = false; }, COOLDOWN_MS);
+  // partea din care intră fiecare bloc: par = stânga, impar = dreapta
+  function side(i) { return i % 2 === 0 ? 'left' : 'right'; }
+
+  function setup() {
+    if (!slideOn()) {
+      document.body.classList.remove('slide-mode');
+      panels.forEach(p => p.classList.remove('off-left','off-right','active','side-right','no-trans'));
+      return;
     }
-    requestAnimationFrame(step);
+    document.body.classList.add('slide-mode');
+    window.scrollTo(0, 0);
+    panels.forEach((p, i) => {
+      p.classList.add('no-trans');
+      p.classList.remove('off-left','off-right','active','in-view','leaving');
+      p.classList.toggle('side-right', side(i) === 'right');
+      if (i === active) p.classList.add('active','in-view');
+      else p.classList.add(side(i) === 'left' ? 'off-left' : 'off-right');
+    });
+    updateDots();
+    requestAnimationFrame(() => requestAnimationFrame(() =>
+      panels.forEach(p => p.classList.remove('no-trans'))));
   }
-  function go(dir) {
-    const next = currentIndex() + dir;
-    if (next < 0 || next >= panels.length) return false; // lasă scroll nativ (footer / top)
-    scrollToPanel(next);
-    return true;
+
+  function updateDots() {
+    dots.forEach((d, i) => d.classList.toggle('on', i === active));
   }
+
+  function goTo(j) {
+    if (!document.body.classList.contains('slide-mode')) return;
+    if (animating || j === active || j < 0 || j >= panels.length) return;
+    animating = true;
+    const cur = panels[active], nxt = panels[j];
+    const prevIdx = active;
+    active = j;
+    // blocul nou intră din partea lui; cel curent iese în partea opusă,
+    // ca amândouă să alunece în aceeași direcție (efect de carusel)
+    const exitClass = side(j) === 'left' ? 'off-right' : 'off-left';
+    cur.classList.remove('active','in-view');
+    cur.classList.add(exitClass);
+    nxt.classList.remove('off-left','off-right');
+    nxt.classList.add('active');
+    // cascada interioară pornește după ce panoul a intrat pe jumătate
+    setTimeout(() => nxt.classList.add('in-view'), Math.round(SLIDE_MS * 0.35));
+    updateDots();
+    setTimeout(() => {
+      // re-parcăm blocul ieșit pe partea lui de intrare, fără tranziție,
+      // ca data viitoare să intre tot din partea care îi revine
+      cur.classList.add('no-trans');
+      cur.classList.remove('off-left','off-right');
+      cur.classList.add(side(prevIdx) === 'left' ? 'off-left' : 'off-right');
+      void cur.offsetWidth;
+      cur.classList.remove('no-trans');
+      animating = false;
+    }, SLIDE_MS + COOLDOWN_MS);
+  }
+
   window.addEventListener('wheel', e => {
-    if (!engineOn()) return;
-    if (animating) { e.preventDefault(); return; }
-    if (Math.abs(e.deltaY) < 8) return;
-    if (go(e.deltaY > 0 ? 1 : -1)) e.preventDefault();
+    if (!document.body.classList.contains('slide-mode')) return;
+    // dacă blocul activ are conținut derulabil intern, lăsăm întâi
+    // caseta să deruleze până la capăt, abia apoi schimbăm blocul
+    const box = panels[active].querySelector('.neon-box');
+    if (box && box.scrollHeight > box.clientHeight + 4) {
+      const down = e.deltaY > 0;
+      const atTop = box.scrollTop <= 0;
+      const atBottom = box.scrollTop + box.clientHeight >= box.scrollHeight - 4;
+      if ((down && !atBottom) || (!down && !atTop)) return;
+    }
+    e.preventDefault();
+    if (animating || Math.abs(e.deltaY) < 8) return;
+    goTo(active + (e.deltaY > 0 ? 1 : -1));
   }, { passive: false });
+
   window.addEventListener('keydown', e => {
-    if (!engineOn() || e.target.closest('input,textarea,select')) return;
-    if (animating) { e.preventDefault(); return; }
-    const downKeys = ['ArrowDown', 'PageDown', ' '];
-    const upKeys = ['ArrowUp', 'PageUp'];
-    if (downKeys.includes(e.key)) { if (go(1)) e.preventDefault(); }
-    else if (upKeys.includes(e.key)) { if (go(-1)) e.preventDefault(); }
+    if (!document.body.classList.contains('slide-mode')) return;
+    if (e.target.closest('input,textarea,select')) return;
+    if (['ArrowDown','PageDown',' ','ArrowRight'].includes(e.key)) { e.preventDefault(); goTo(active + 1); }
+    else if (['ArrowUp','PageUp','ArrowLeft'].includes(e.key)) { e.preventDefault(); goTo(active - 1); }
   });
+
+  let rsT;
+  window.addEventListener('resize', () => { clearTimeout(rsT); rsT = setTimeout(setup, 200); });
+  setup();
 })();
 
 const ham = document.getElementById('hamburger');
