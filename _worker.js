@@ -466,6 +466,7 @@ const CONTENT_PAGES = {
   'servicii': '/servicii.html',
   'despre-noi': '/despre-noi.html',
   'contact': '/contact.html',
+  'parteneri': '/parteneri.html',
   'pachet-startup': '/pachet-startup.html',
   'abonament-lunar': '/abonament-lunar.html',
   'web-design-bucuresti': '/web-design-bucuresti.html',
@@ -909,6 +910,7 @@ export default {
         { loc: '/servicii',                   cf: 'monthly', pr: '0.9' },
         { loc: '/despre-noi',                 cf: 'monthly', pr: '0.8' },
         { loc: '/contact',                    cf: 'monthly', pr: '0.8' },
+        { loc: '/parteneri',                  cf: 'monthly', pr: '0.6' },
         { loc: '/programare',                 cf: 'monthly', pr: '0.8' },
         { loc: '/pachet-startup',             cf: 'monthly', pr: '0.8' },
         { loc: '/abonament-lunar',            cf: 'monthly', pr: '0.8' },
@@ -1004,6 +1006,10 @@ export default {
 
     if (path === '/contact') {
       return serveContentPage(request, env, 'contact');
+    }
+
+    if (path === '/parteneri') {
+      return serveContentPage(request, env, 'parteneri');
     }
 
     // Pagină de test (noindex) — variantă animată a homepage-ului
