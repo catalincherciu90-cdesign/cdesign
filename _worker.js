@@ -104,8 +104,11 @@ footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;color
 footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--teal)}
 @media(max-width:640px){article{padding:40px 0 60px}.art-title{font-size:1.7rem}nav .nav-links,.nav-phone,.btn-nav{display:none}.hamburger{display:flex}}
 </style>
+<link rel="stylesheet" href="/theme.css">
+<link rel="stylesheet" href="/effects.css">
+<script src="/effects.js" defer><\/script>
 </head>
-<body>
+<body data-fx>
 <nav>
   <div class="wide">
     <div class="nav-inner">
