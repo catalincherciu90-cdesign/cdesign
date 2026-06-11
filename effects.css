@@ -23,7 +23,9 @@
 @keyframes fx-wave{from{transform:translateX(0)}to{transform:translateX(-220px)}}
 
 /* conținutul paginii stă deasupra fundalului */
-body[data-fx] main,body[data-fx] nav,body[data-fx] footer{position:relative;z-index:2;}
+body[data-fx] main,body[data-fx] footer{position:relative;z-index:2;}
+/* nav-ul rămâne sticky (scroll normal) și mereu deasupra conținutului */
+body[data-fx] nav{z-index:300;}
 
 /* ── CASETĂ NEON ───────────────────────────────────────────── */
 body.fx-slide .fx-neon{background:rgba(var(--teal-glow-rgb,0,200,180),.04);
@@ -53,6 +55,10 @@ body.fx-slide .fx-notrans{transition:none!important;}
 body.fx-slide .fx-off-left{transform:translateX(-100vw);}
 body.fx-slide .fx-off-right{transform:translateX(100vw);}
 body.fx-slide .fx-active{transform:none;opacity:1;pointer-events:auto;z-index:3;}
+/* în mod slide, nav-ul e fix sus, deasupra slide-urilor — mereu clicabil */
+body.fx-slide nav{position:fixed!important;top:0;left:0;right:0;z-index:300;}
+body.fx-slide .mobile-menu{z-index:290;}
+body.fx-slide .mobile-menu.open{display:flex;}
 /* în mod slide, animațiile reveal existente nu mai țin elementele ascunse */
 body.fx-slide .reveal{opacity:1!important;transform:none!important;}
 /* bara de progres scroll nu are sens fără scroll */
