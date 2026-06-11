@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEST — Homepage Animat | C Design</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="/logo-c-design.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=DM+Sans:wght@300;400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#27e07a; --green-lt:#5ef29e; --green-dk:#16a35a;
+  --green-dim:rgba(39,224,122,.1); --green-border:rgba(39,224,122,.32);
+  --bg:#04210f; --bg2:rgba(6,40,20,.72); --bg3:rgba(9,52,26,.85);
+  --text:#eafff2; --soft:#a9dfc0; --muted:#5e9678;
+  --border:rgba(94,242,158,.14);
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:radial-gradient(120% 90% at 70% 10%,#0a3d1e 0%,#04210f 55%,#021608 100%);color:var(--text);line-height:1.75;overflow-x:hidden;min-height:100vh;}
+a{color:inherit;text-decoration:none}
+.container{max-width:1140px;margin:0 auto;padding:0 24px;position:relative;z-index:2;}
+
+/* ── FUNDAL ANIMAT (recreare SVG a imaginii) ─────────────── */
+.bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.bg-layer svg{width:100%;height:100%;display:block;}
+.tri{fill:none;stroke:rgba(94,242,158,.30);stroke-width:1.2;transform-origin:center;transform-box:fill-box;}
+.tri-slow{animation:drift 18s ease-in-out infinite alternate;}
+.tri-med{animation:drift 12s ease-in-out infinite alternate-reverse;}
+.tri-fast{animation:spin 40s linear infinite;}
+.plus{fill:rgba(39,224,122,.5);animation:pulse-dot 4s ease-in-out infinite;}
+.diamond{fill:none;stroke:rgba(39,224,122,.55);stroke-width:3;animation:spin 26s linear infinite;transform-origin:center;transform-box:fill-box;}
+.glow{fill:#5ef29e;filter:drop-shadow(0 0 6px #27e07a);animation:pulse-dot 3.2s ease-in-out infinite;}
+.dots-wave{animation:wave-drift 26s linear infinite;}
+.lines{stroke:rgba(94,242,158,.10);stroke-width:1;}
+@keyframes drift{from{transform:translate(0,0) rotate(0deg)}to{transform:translate(26px,-18px) rotate(9deg)}}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes pulse-dot{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes wave-drift{from{transform:translateX(0)}to{transform:translateX(-220px)}}
+
+/* ── ANIMAȚII STÂNGA → DREAPTA ───────────────────────────── */
+.al{opacity:0;transform:translateX(-70px);transition:opacity .7s cubic-bezier(.22,.8,.32,1),transform .7s cubic-bezier(.22,.8,.32,1);}
+.al.visible{opacity:1;transform:translateX(0);}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+.d4{transition-delay:.4s}.d5{transition-delay:.5s}.d6{transition-delay:.6s}
+@media(prefers-reduced-motion:reduce){
+  .al{opacity:1;transform:none;transition:none;}
+  .tri-slow,.tri-med,.tri-fast,.plus,.diamond,.glow,.dots-wave{animation:none;}
+}
+
+/* ── NAV ─────────────────────────────────────────────────── */
+nav{position:sticky;top:0;z-index:100;background:rgba(3,26,13,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px;}
+.nav-links{display:flex;align-items:center;gap:28px;list-style:none;}
+.nav-links a{font-size:.875rem;color:var(--soft);transition:color .2s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--green);transform:scaleX(0);transition:transform .2s;}
+.nav-links a:hover{color:var(--green)}.nav-links a:hover::after{transform:scaleX(1)}
+.nav-phone{font-family:'Share Tech Mono',monospace;font-size:.9rem;color:var(--green);}
+.btn-nav{background:var(--green);color:#03200f;font-weight:700;font-size:.875rem;padding:9px 20px;border-radius:8px;box-shadow:0 0 22px rgba(39,224,122,.4);transition:transform .15s,box-shadow .2s;}
+.btn-nav:hover{transform:translateY(-1px);box-shadow:0 0 34px rgba(39,224,122,.65);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:6px;}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;}
+.mobile-menu{display:none;position:fixed;inset:68px 0 0 0;background:rgba(3,26,13,.97);z-index:99;padding:32px 24px;flex-direction:column;gap:8px;border-top:1px solid var(--border);}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-size:1rem;color:var(--soft);padding:13px 0;border-bottom:1px solid var(--border);}
+
+/* ── HERO ────────────────────────────────────────────────── */
+.hero{min-height:78vh;display:flex;align-items:center;position:relative;padding:72px 0;}
+.hero-eyebrow{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:.14em;color:var(--green);border:1px solid var(--green-border);background:var(--green-dim);padding:6px 16px;border-radius:4px;margin-bottom:24px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.2rem,5.5vw,4rem);font-weight:800;line-height:1.08;letter-spacing:-.02em;margin-bottom:20px;}
+.hero h1 .hl{color:var(--green);text-shadow:0 0 28px rgba(39,224,122,.5);}
+.hero-desc{font-size:1.12rem;color:var(--soft);max-width:560px;line-height:1.85;margin-bottom:34px;}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#03200f;font-weight:700;font-size:1rem;padding:15px 34px;border-radius:9px;box-shadow:0 0 26px rgba(39,224,122,.4);transition:transform .15s,box-shadow .2s;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 44px rgba(39,224,122,.7);}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--text);font-weight:600;font-size:1rem;padding:14px 30px;border-radius:9px;border:1px solid var(--green-border);transition:background .2s,border-color .2s;}
+.btn-ghost:hover{background:var(--green-dim);border-color:var(--green);}
+.hero-stats{display:flex;gap:44px;flex-wrap:wrap;margin-top:52px;}
+.hs-num{font-family:'Space Grotesk',sans-serif;font-size:2.2rem;font-weight:800;color:var(--green);text-shadow:0 0 18px rgba(39,224,122,.4);}
+.hs-lbl{font-size:.76rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:2px;}
+
+/* ── SECȚIUNI ────────────────────────────────────────────── */
+section{padding:84px 0;position:relative;z-index:2;}
+.sec-label{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--green);letter-spacing:.16em;text-transform:uppercase;margin-bottom:12px;}
+.sec-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,3.4vw,2.6rem);font-weight:800;line-height:1.15;margin-bottom:14px;}
+.sec-title::after{content:'';display:block;width:48px;height:3px;background:linear-gradient(90deg,var(--green),var(--green-lt),transparent);border-radius:2px;margin-top:14px;}
+.sec-sub{color:var(--soft);font-size:1.04rem;max-width:580px;margin-bottom:48px;line-height:1.85;}
+
+/* carduri servicii */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:30px 26px;backdrop-filter:blur(8px);transition:border-color .25s,transform .2s,box-shadow .25s;}
+.card:hover{border-color:var(--green-border);transform:translateX(6px);box-shadow:0 8px 38px rgba(39,224,122,.12);}
+.card-icon{font-size:2rem;margin-bottom:14px;}
+.card h3{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:10px;}
+.card ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.card li{font-size:.9rem;color:var(--soft);line-height:1.6;padding-left:22px;position:relative;}
+.card li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700;}
+
+/* strip despre */
+.strip{background:linear-gradient(90deg,rgba(39,224,122,.12),rgba(39,224,122,.03));border-top:1px solid var(--green-border);border-bottom:1px solid var(--green-border);padding:52px 0;}
+.strip-inner{display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;}
+.strip-title{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:8px;}
+.strip-sub{font-size:.97rem;color:var(--soft);max-width:560px;line-height:1.8;}
+
+/* testimoniale */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.testi-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:28px;backdrop-filter:blur(8px);transition:border-color .25s,transform .2s;}
+.testi-card:hover{border-color:var(--green-border);transform:translateX(6px);}
+.testi-stars{color:#ffd34d;letter-spacing:2px;margin-bottom:14px;font-size:.9rem;}
+.testi-text{font-size:.93rem;color:var(--soft);line-height:1.78;font-style:italic;margin-bottom:18px;}
+.testi-author{display:flex;align-items:center;gap:12px;}
+.t-avatar{width:40px;height:40px;border-radius:50%;background:var(--green-dim);border:1px solid var(--green-border);color:var(--green);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;font-family:'Space Grotesk',sans-serif;}
+.t-name{display:block;font-weight:600;font-size:.88rem;}
+.t-role{display:block;font-size:.76rem;color:var(--muted);}
+
+/* CTA final */
+.cta-box{background:var(--bg2);border:1px solid var(--green-border);border-radius:18px;padding:60px 44px;text-align:center;max-width:760px;margin:0 auto;backdrop-filter:blur(8px);box-shadow:0 0 60px rgba(39,224,122,.08);}
+.cta-box h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;margin-bottom:12px;}
+.cta-box p{color:var(--soft);margin-bottom:30px;max-width:480px;margin-left:auto;margin-right:auto;}
+
+footer{border-top:1px solid var(--border);padding:36px 0;text-align:center;color:var(--muted);font-size:.84rem;position:relative;z-index:2;background:rgba(3,26,13,.6);}
+footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--green)}
+
+.test-badge{position:fixed;bottom:14px;left:14px;z-index:300;background:#ff5f57;color:#fff;font-family:'Share Tech Mono',monospace;font-size:.7rem;font-weight:700;letter-spacing:.08em;padding:6px 14px;border-radius:20px;box-shadow:0 4px 18px rgba(0,0,0,.4);}
+
+@media(max-width:900px){.grid-3,.testi-grid{grid-template-columns:1fr;}.hero{min-height:auto;}}
+@media(max-width:768px){nav .nav-links,.nav-phone,.btn-nav{display:none!important}.hamburger{display:flex!important}.hero-stats{gap:28px;}}
+</style>
+</head>
+<body>
+
+<!-- FUNDAL ANIMAT — recreare a imaginii: verde, triunghiuri wireframe, val de puncte, luminițe -->
+<div class="bg-layer" aria-hidden="true">
+<svg viewBox="0 0 1772 886" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="bgrad" cx="65%" cy="15%" r="85%">
+      <stop offset="0%" stop-color="#0b421f"/>
+      <stop offset="55%" stop-color="#04250f"/>
+      <stop offset="100%" stop-color="#021507"/>
+    </radialGradient>
+    <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
+      <circle cx="4" cy="4" r="2.6" fill="rgba(94,242,158,.5)"/>
+    </pattern>
+  </defs>
+  <rect width="1772" height="886" fill="url(#bgrad)"/>
+  <!-- linii fine orizontale -->
+  <g class="lines">
+    <line x1="0" y1="700" x2="1772" y2="690"/><line x1="0" y1="760" x2="1772" y2="755"/>
+    <line x1="0" y1="820" x2="1772" y2="818"/><line x1="0" y1="640" x2="1772" y2="628"/>
+  </g>
+  <!-- valul de puncte halftone -->
+  <g class="dots-wave" opacity=".75">
+    <path d="M-200,480 C160,360 420,640 760,560 C1100,480 1240,760 1600,660 C1820,600 2000,500 2100,480 L2100,886 L-200,886 Z" fill="url(#dots)" opacity=".5"/>
+    <path d="M-150,560 C200,460 480,700 820,620 C1160,540 1330,820 1700,700 L2150,640 L2150,886 L-150,886 Z" fill="url(#dots)" opacity=".35"/>
+  </g>
+  <!-- rețea poligonală -->
+  <g class="lines" opacity=".8">
+    <polyline points="700,150 620,600 1020,610 1110,200 700,150" fill="none" stroke="rgba(94,242,158,.16)"/>
+    <line x1="1110" y1="200" x2="1370" y2="0"/><line x1="1020" y1="610" x2="1420" y2="480"/>
+    <line x1="1110" y1="200" x2="1420" y2="480"/><line x1="620" y1="600" x2="380" y2="886"/>
+  </g>
+  <!-- triunghiuri wireframe -->
+  <g>
+    <polygon class="tri tri-slow" points="300,180 250,330 440,320"/>
+    <polygon class="tri tri-med"  points="340,30 270,180 430,170" opacity=".7"/>
+    <polygon class="tri tri-slow" points="120,440 110,520 260,500" opacity=".8"/>
+    <polygon class="tri tri-med"  points="1440,90 1530,260 1640,170"/>
+    <polygon class="tri tri-slow" points="1400,600 1430,760 1560,680" opacity=".9"/>
+    <polygon class="tri tri-med"  points="1540,400 1590,470 1650,420" opacity=".6"/>
+    <polygon class="tri tri-slow" points="120,690 230,680 180,760" opacity=".7"/>
+    <polygon class="tri tri-med"  points="430,600 415,680 510,660" opacity=".6"/>
+    <polygon class="tri tri-slow" points="540,700 460,886 640,860" opacity=".8"/>
+    <polygon class="tri tri-med"  points="1190,690 1240,780 1300,710" opacity=".55"/>
+    <polygon class="tri tri-slow" points="1200,90 1230,140 1180,140" opacity=".6"/>
+    <polygon class="tri tri-med"  points="1690,540 1772,640 1772,500" opacity=".7"/>
+  </g>
+  <!-- diamante și plusuri -->
+  <rect class="diamond" x="1050" y="20" width="34" height="34" transform="rotate(45 1067 37)"/>
+  <rect class="diamond" x="1395" y="455" width="28" height="28" transform="rotate(45 1409 469)" style="animation-delay:-8s"/>
+  <path class="plus" d="M485,232 h14 v-14 h14 v14 h14 v14 h-14 v14 h-14 v-14 h-14 z" transform="rotate(18 506 246)"/>
+  <path class="plus" d="M645,755 h13 v-13 h13 v13 h13 v13 h-13 v13 h-13 v-13 h-13 z" transform="rotate(12 664 768)" style="animation-delay:-1.6s"/>
+  <!-- luminițe -->
+  <circle class="glow" cx="745" cy="205" r="5"/>
+  <circle class="glow" cx="900" cy="135" r="4" style="animation-delay:-1s"/>
+  <circle class="glow" cx="585" cy="565" r="4.5" style="animation-delay:-2.2s"/>
+  <circle class="glow" cx="1005" cy="645" r="5" style="animation-delay:-.6s"/>
+  <circle class="glow" cx="755" cy="825" r="4" style="animation-delay:-1.8s"/>
+  <circle class="glow" cx="1530" cy="745" r="4.5" style="animation-delay:-2.8s"/>
+</svg>
+</div>
+
+<nav aria-label="Navigare principală">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="/" aria-label="C Design – Pagina principală" style="display:flex;align-items:center;"><img src="/logo-c-design.png" alt="C Design" style="height:42px;width:auto;display:block;"></a>
+      <ul class="nav-links" role="list">
+        <li><a href="/servicii">Servicii</a></li>
+        <li><a href="/despre-noi">Despre noi</a></li>
+        <li><a href="/#portofoliu">Portofoliu</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+      <a href="tel:+40753116155" class="nav-phone">0753 116 155</a>
+      <a href="/programare" class="btn-nav">Programează acum →</a>
+      <button class="hamburger" id="hamburger" aria-label="Deschide meniu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Meniu mobil">
+  <a href="/servicii">Servicii</a>
+  <a href="/despre-noi">Despre noi</a>
+  <a href="/#portofoliu">Portofoliu</a>
+  <a href="/blog">Blog</a>
+  <a href="/contact">Contact</a>
+  <a href="tel:+40753116155">0753 116 155</a>
+</div>
+
+<main>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow al">PENTRU ORICE TIP DE AFACERE · CONSULTANȚĂ GRATUITĂ</div>
+    <h1 class="al d1">Site-ul care<br>îți aduce<br><span class="hl">clienți noi</span></h1>
+    <p class="hero-desc al d2">De la prima ta afacere până la un brand consacrat — construim site-uri clare, rapide și găsite pe Google. Fără termeni tehnici, fără surprize la factură.</p>
+    <div class="hero-actions al d3">
+      <a href="/contact" class="btn-primary">Hai să vorbim gratuit →</a>
+      <a href="/#portofoliu" class="btn-ghost">Vezi lucrările →</a>
+    </div>
+    <div class="hero-stats">
+      <div class="al d4"><div class="hs-num">120+</div><div class="hs-lbl">proiecte livrate</div></div>
+      <div class="al d5"><div class="hs-num">10+</div><div class="hs-lbl">ani experiență</div></div>
+      <div class="al d6"><div class="hs-num">14 zile</div><div class="hs-lbl">termen garantat</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="sec-label al">CE PUTEM FACE PENTRU TINE</div>
+    <h2 class="sec-title al d1">Indiferent unde ești,<br>avem soluția potrivită</h2>
+    <p class="sec-sub al d2">Pornești de la zero sau ai deja un site care nu mai ține pasul? Avem servicii clare pentru fiecare etapă a afacerii tale.</p>
+    <div class="grid-3">
+      <article class="card al d1">
+        <div class="card-icon">🌐</div>
+        <h3>Site de Prezentare</h3>
+        <ul>
+          <li>Livrat în maxim 14 zile, garantat</li>
+          <li>Domeniu .ro și găzduire incluse</li>
+          <li>Perfect pe telefon, tabletă și PC</li>
+          <li>Optimizat să apară pe Google</li>
+        </ul>
+      </article>
+      <article class="card al d2">
+        <div class="card-icon">🚀</div>
+        <h3>Pachet Start-Up Online</h3>
+        <ul>
+          <li>Site + logo + pagină Facebook</li>
+          <li>Pornești profesional din prima zi</li>
+          <li>Nu trebuie să știi nimic tehnic</li>
+          <li>Un singur om de contact pentru tot</li>
+        </ul>
+      </article>
+      <article class="card al d3">
+        <div class="card-icon">🔄</div>
+        <h3>Redesign Site</h3>
+        <ul>
+          <li>Site-ul vechi, transformat complet</li>
+          <li>Se încarcă de 2–3× mai repede</li>
+          <li>Poziția pe Google nu se pierde</li>
+          <li>Afacerea nu se oprește nicio secundă</li>
+        </ul>
+      </article>
+    </div>
+    <div style="margin-top:40px;" class="al d4">
+      <a href="/servicii" class="btn-primary">Vezi toate serviciile →</a>
+    </div>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="container">
+    <div class="strip-inner">
+      <div>
+        <div class="sec-label al">DESPRE NOI</div>
+        <div class="strip-title al d1">Facem site-uri care aduc clienți, nu premii.</div>
+        <div class="strip-sub al d2">Peste 10 ani de experiență, 120+ proiecte livrate pentru afaceri mici din toată România. Termen garantat 14 zile, preț fix, zero costuri ascunse.</div>
+      </div>
+      <a href="/despre-noi" class="btn-primary al d3" style="flex-shrink:0;">Cunoaște echipa →</a>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+    <div class="sec-label al">RECENZII REALE</div>
+    <h2 class="sec-title al d1">Ei ne-au ales — și nu au regretat</h2>
+    <p class="sec-sub al d2">Recenzii reale de la clienți cu afaceri ca a ta.</p>
+    <div class="testi-grid">
+      <div class="testi-card al d1"><div class="testi-stars">★★★★★</div><p class="testi-text">"A fost simplu de la început până la final. Mi-au explicat fiecare pas, n-am simțit că nu înțeleg ce se întâmplă."</p><div class="testi-author"><div class="t-avatar">MB</div><div><span class="t-name">Mihai B.</span><span class="t-role">Servicii auto</span></div></div></div>
+      <div class="testi-card al d2"><div class="testi-stars">★★★★★</div><p class="testi-text">"De când am noul site, am primit cereri de ofertă direct de pe pagina de contact. Primul client a acoperit toată investiția."</p><div class="testi-author"><div class="t-avatar">IA</div><div><span class="t-name">Ioana A.</span><span class="t-role">Consultant financiar</span></div></div></div>
+      <div class="testi-card al d3"><div class="testi-stars">★★★★★</div><p class="testi-text">"Au respectat termenul și bugetul. Exact ce mi-au promis, exact când mi-au promis. Rară calitate în piața asta."</p><div class="testi-author"><div class="t-avatar">CR</div><div><span class="t-name">Cristian R.</span><span class="t-role">Firmă construcții</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-box al">
+      <h2 class="al d1">Pregătit să discutăm despre site-ul tău?</h2>
+      <p class="al d2">Scrie-ne sau programează o consultanță gratuită de 30 de minute — răspundem în maxim 2 ore.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;" class="al d3">
+        <a href="/contact" class="btn-primary">Contactează-ne →</a>
+        <a href="/programare" class="btn-ghost">Programează 30 min gratuit →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>© 2026 C Design · <a href="/">Înapoi la site-ul live</a> · <a href="/politica-confidentialitate">Politică de Confidențialitate</a></p>
+  </div>
+</footer>
+
+<div class="test-badge">⚠ PAGINĂ DE TEST</div>
+
+<script>
+// Animații stânga → dreapta la scroll
+const els = document.querySelectorAll('.al');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+els.forEach(el => obs.observe(el));
+
+const ham = document.getElementById('hamburger');
+const mob = document.getElementById('mobileMenu');
+if (ham && mob) {
+  ham.addEventListener('click', () => { const o = mob.classList.toggle('open'); ham.setAttribute('aria-expanded', o); });
+  mob.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { mob.classList.remove('open'); ham.setAttribute('aria-expanded', 'false'); }));
+}
+</script>
+</body>
+</html>
