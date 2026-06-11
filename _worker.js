@@ -413,6 +413,8 @@ const SEC_HEADERS = {
   'X-Frame-Options': 'SAMEORIGIN',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+  'Cross-Origin-Opener-Policy': 'same-origin',
   'X-XSS-Protection': '1; mode=block',
   'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.resend.com https://www.google-analytics.com;",
 };
@@ -518,10 +520,16 @@ async function serveContentPage(request, env, page) {
     env.ASSETS.fetch(new Request(assetUrl.toString(), request)),
     env.PROGRAMARI.get('__content__' + page).catch(() => null),
   ]);
-  if (!raw) return resp;
+  // paginile servite de aici primesc mereu headerele de securitate
+  const withSec = (r) => {
+    const h = new Headers(r.headers);
+    Object.entries(SEC_HEADERS).forEach(([k, v]) => h.set(k, v));
+    return new Response(r.body, { status: r.status, headers: h });
+  };
+  if (!raw) return withSec(resp);
   let overrides;
-  try { overrides = JSON.parse(raw); } catch { return resp; }
-  if (!overrides || !Object.keys(overrides).length) return resp;
+  try { overrides = JSON.parse(raw); } catch { return withSec(resp); }
+  if (!overrides || !Object.keys(overrides).length) return withSec(resp);
   const html = applyContentOverrides(await resp.text(), overrides);
   return new Response(html, {
     headers: { ...SEC_HEADERS, 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'no-cache, no-store, must-revalidate' }
@@ -2959,9 +2967,16 @@ Cerințe titluri:
             }
             inject += '</style>';
             const distinctM = heroM && heroM !== heroD;
-            if (heroD) inject += '<link rel="preload" as="image" href="' + escA(heroD) + '"' + (distinctM ? ' media="(min-width:769px)"' : '') + '>';
-            if (distinctM) inject += '<link rel="preload" as="image" href="' + escA(heroM) + '" media="(max-width:768px)">';
+            if (heroD) inject += '<link rel="preload" as="image" fetchpriority="high" href="' + escA(heroD) + '"' + (distinctM ? ' media="(min-width:769px)"' : '') + '>';
+            if (distinctM) inject += '<link rel="preload" as="image" fetchpriority="high" href="' + escA(heroM) + '" media="(max-width:768px)">';
             html = html.replace('</head>', inject + '</head>');
+            // clasele hero din settings, aplicate server-side — clientul le
+            // seta abia după fetch, redimensionând hero-ul (sursă de CLS)
+            const heroCls = [];
+            if (settings.heroGradient === false) heroCls.push('no-gradient');
+            if (settings.heroText === false) heroCls.push('no-text');
+            if (settings.heroHeight && settings.heroHeight !== 'full') heroCls.push('h-' + String(settings.heroHeight).replace(/[^a-z-]/g, ''));
+            if (heroCls.length) html = html.replace('<section class="hero"', '<section class="hero ' + heroCls.join(' ') + '"');
           }
         } catch {}
         return new Response(html, { headers: { ...SEC_HEADERS, 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'no-cache, no-store, must-revalidate' } });

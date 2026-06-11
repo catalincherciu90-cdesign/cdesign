@@ -239,8 +239,12 @@
       rsT = setTimeout(setup, 250);
     });
 
-    /* prima inițializare: după load, ca layout-ul din admin și blocurile
-       custom să fie deja aplicate */
+    /* prima inițializare IMEDIAT (înainte de primul paint, când e posibil)
+       — altfel rearanjarea în panouri la +400ms după load era numărată
+       de Lighthouse drept Cumulative Layout Shift */
+    setup();
+    /* re-scan după load, când layout-ul din admin și blocurile custom
+       au fost aplicate (MutationObserver acoperă și injectările târzii) */
     if (document.readyState === 'complete') setTimeout(setup, 400);
     else window.addEventListener('load', function () { setTimeout(setup, 400); });
 
