@@ -1,0 +1,76 @@
+/* ════════════════════════════════════════════════════════════
+   C DESIGN — STRAT DE EFECTE (design «neon slides»)
+   Fundal animat + casete neon + slide-uri laterale între secțiuni.
+   Folosește variabilele temei site-ului (var(--teal) etc.), deci
+   urmează automat culorile setate din admin → Temă.
+   Activare: <body data-fx> + acest CSS + /effects.js
+   ════════════════════════════════════════════════════════════ */
+
+/* ── FUNDAL ANIMAT ─────────────────────────────────────────── */
+.fx-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.fx-bg svg{width:100%;height:100%;display:block;}
+.fx-tri{fill:none;stroke:var(--teal,#00c8b4);stroke-width:1.2;opacity:.22;transform-origin:center;transform-box:fill-box;}
+.fx-tri-slow{animation:fx-drift 18s ease-in-out infinite alternate;}
+.fx-tri-med{animation:fx-drift 12s ease-in-out infinite alternate-reverse;}
+.fx-plus{fill:var(--teal,#00c8b4);opacity:.3;animation:fx-pulse 4s ease-in-out infinite;}
+.fx-diamond{fill:none;stroke:var(--teal,#00c8b4);stroke-width:3;opacity:.35;animation:fx-spin 26s linear infinite;transform-origin:center;transform-box:fill-box;}
+.fx-glow{fill:var(--teal,#00c8b4);filter:drop-shadow(0 0 6px var(--teal,#00c8b4));animation:fx-pulse 3.2s ease-in-out infinite;}
+.fx-dotswave{animation:fx-wave 26s linear infinite;}
+.fx-lines{stroke:var(--teal,#00c8b4);opacity:.07;stroke-width:1;}
+@keyframes fx-drift{from{transform:translate(0,0) rotate(0deg)}to{transform:translate(26px,-18px) rotate(9deg)}}
+@keyframes fx-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes fx-pulse{0%,100%{opacity:.18}50%{opacity:.55}}
+@keyframes fx-wave{from{transform:translateX(0)}to{transform:translateX(-220px)}}
+
+/* conținutul paginii stă deasupra fundalului */
+body[data-fx] main,body[data-fx] nav,body[data-fx] footer{position:relative;z-index:2;}
+
+/* ── CASETĂ NEON ───────────────────────────────────────────── */
+body.fx-slide .fx-neon{background:rgba(var(--teal-glow-rgb,0,200,180),.04);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(var(--teal-glow-rgb,0,200,180),.4);border-radius:22px;
+  padding:48px 44px!important;
+  box-shadow:0 0 10px rgba(var(--teal-glow-rgb,0,200,180),.22),0 0 44px rgba(var(--teal-glow-rgb,0,200,180),.1),inset 0 0 24px rgba(var(--teal-glow-rgb,0,200,180),.04);
+  animation:fx-neon-breathe 4.5s ease-in-out infinite;
+  max-height:calc(100vh - 200px);overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:rgba(var(--teal-glow-rgb,0,200,180),.4) transparent;}
+@keyframes fx-neon-breathe{
+  0%,100%{box-shadow:0 0 10px rgba(var(--teal-glow-rgb,0,200,180),.22),0 0 44px rgba(var(--teal-glow-rgb,0,200,180),.1),inset 0 0 24px rgba(var(--teal-glow-rgb,0,200,180),.04);}
+  50%{box-shadow:0 0 18px rgba(var(--teal-glow-rgb,0,200,180),.42),0 0 72px rgba(var(--teal-glow-rgb,0,200,180),.18),inset 0 0 32px rgba(var(--teal-glow-rgb,0,200,180),.07);}
+}
+
+/* ── MOD SLIDE (desktop) ───────────────────────────────────── */
+body.fx-slide{overflow:hidden;height:100vh;}
+body.fx-slide main{height:100vh;}
+body.fx-slide .fx-panel{position:fixed;inset:0;min-height:100vh;margin:0;
+  padding:90px 24px 40px;display:flex!important;align-items:center;justify-content:center;
+  background:transparent!important;border:none!important;
+  transition:transform 1.4s cubic-bezier(.65,0,.35,1),opacity 1.4s cubic-bezier(.65,0,.35,1);
+  will-change:transform,opacity;pointer-events:none;opacity:0;z-index:2;}
+body.fx-slide .fx-panel>*{width:100%;}
+body.fx-slide .fx-notrans{transition:none!important;}
+body.fx-slide .fx-off-left{transform:translateX(-100vw);}
+body.fx-slide .fx-off-right{transform:translateX(100vw);}
+body.fx-slide .fx-active{transform:none;opacity:1;pointer-events:auto;z-index:3;}
+/* în mod slide, animațiile reveal existente nu mai țin elementele ascunse */
+body.fx-slide .reveal{opacity:1!important;transform:none!important;}
+/* bara de progres scroll nu are sens fără scroll */
+body.fx-slide .scroll-bar{display:none;}
+/* footer-ul devine ultimul slide — centrat și compact */
+body.fx-slide footer.fx-panel{align-items:center;}
+body.fx-slide footer.fx-panel>.container{max-height:calc(100vh - 160px);overflow-y:auto;}
+
+/* ── PUNCTE DE NAVIGARE ────────────────────────────────────── */
+.fx-dots{display:none;position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:220;flex-direction:column;gap:12px;}
+body.fx-slide .fx-dots{display:flex;}
+.fx-dots button{width:11px;height:11px;border-radius:50%;border:1px solid rgba(var(--teal-glow-rgb,0,200,180),.5);background:transparent;cursor:pointer;padding:0;transition:background .3s,box-shadow .3s,transform .3s;}
+.fx-dots button.on{background:var(--teal,#00c8b4);box-shadow:0 0 12px rgba(var(--teal-glow-rgb,0,200,180),.8);transform:scale(1.25);}
+
+/* floating-bar peste slide-uri, dar sub dots */
+body.fx-slide .floating-bar{z-index:210;}
+
+/* ── REDUCED MOTION ────────────────────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  .fx-tri-slow,.fx-tri-med,.fx-plus,.fx-diamond,.fx-glow,.fx-dotswave{animation:none;}
+  body.fx-slide .fx-neon{animation:none;}
+}
