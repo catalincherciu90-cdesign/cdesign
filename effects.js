@@ -107,8 +107,7 @@
       kids.sort(function (a, b) {
         return (parseInt(getComputedStyle(a).order, 10) || 0) - (parseInt(getComputedStyle(b).order, 10) || 0);
       });
-      var footer = document.querySelector('footer');
-      if (footer) kids.push(footer);
+      // footer-ul NU mai e slide — devine bară fixă jos (vezi effects.css)
       return kids;
     }
 
