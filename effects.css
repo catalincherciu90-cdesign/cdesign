@@ -33,14 +33,15 @@ body.fx-slide .fx-neon{background:rgba(var(--teal-glow-rgb,0,200,180),.04);
   box-shadow:0 0 10px rgba(var(--teal-glow-rgb,0,200,180),.22),0 0 44px rgba(var(--teal-glow-rgb,0,200,180),.1),inset 0 0 24px rgba(var(--teal-glow-rgb,0,200,180),.04);
   animation:fx-neon-breathe 4.5s ease-in-out infinite;
   max-height:calc(100vh - 200px);overflow-y:auto;
+  touch-action:pan-y;-webkit-overflow-scrolling:touch;
   scrollbar-width:thin;scrollbar-color:rgba(var(--teal-glow-rgb,0,200,180),.4) transparent;}
 @keyframes fx-neon-breathe{
   0%,100%{box-shadow:0 0 10px rgba(var(--teal-glow-rgb,0,200,180),.22),0 0 44px rgba(var(--teal-glow-rgb,0,200,180),.1),inset 0 0 24px rgba(var(--teal-glow-rgb,0,200,180),.04);}
   50%{box-shadow:0 0 18px rgba(var(--teal-glow-rgb,0,200,180),.42),0 0 72px rgba(var(--teal-glow-rgb,0,200,180),.18),inset 0 0 32px rgba(var(--teal-glow-rgb,0,200,180),.07);}
 }
 
-/* ── MOD SLIDE (desktop) ───────────────────────────────────── */
-body.fx-slide{overflow:hidden;height:100vh;}
+/* ── MOD SLIDE ─────────────────────────────────────────────── */
+body.fx-slide{overflow:hidden;height:100vh;overscroll-behavior:none;}
 body.fx-slide main{height:100vh;}
 body.fx-slide .fx-panel{position:fixed;inset:0;min-height:100vh;margin:0;
   padding:90px 24px 40px;display:flex!important;align-items:center;justify-content:center;
@@ -68,6 +69,15 @@ body.fx-slide .fx-dots{display:flex;}
 
 /* floating-bar peste slide-uri, dar sub dots */
 body.fx-slide .floating-bar{z-index:210;}
+
+/* ── MOBIL: slide-uri compacte ─────────────────────────────── */
+@media(max-width:900px){
+  body.fx-slide .fx-panel{padding:80px 12px 32px;}
+  body.fx-slide .fx-neon{padding:26px 18px!important;border-radius:16px;max-height:calc(100vh - 130px);}
+  .fx-dots{right:8px;gap:10px;}
+  .fx-dots button{width:9px;height:9px;}
+  body.fx-slide footer.fx-panel>.container{max-height:calc(100vh - 120px);}
+}
 
 /* ── REDUCED MOTION ────────────────────────────────────────── */
 @media(prefers-reduced-motion:reduce){
