@@ -32,15 +32,12 @@ body.fx-slide .fx-neon{background:rgba(var(--teal-glow-rgb,0,200,180),.04);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   border:1px solid rgba(var(--teal-glow-rgb,0,200,180),.4);border-radius:22px;
   padding:48px 44px!important;
-  box-shadow:0 0 10px rgba(var(--teal-glow-rgb,0,200,180),.22),0 0 44px rgba(var(--teal-glow-rgb,0,200,180),.1),inset 0 0 24px rgba(var(--teal-glow-rgb,0,200,180),.04);
-  animation:fx-neon-breathe 4.5s ease-in-out infinite;
+  box-shadow:0 0 14px rgba(var(--teal-glow-rgb,0,200,180),.3),0 0 56px rgba(var(--teal-glow-rgb,0,200,180),.14),inset 0 0 26px rgba(var(--teal-glow-rgb,0,200,180),.05);
   max-height:calc(100vh - 200px);overflow-y:auto;
   touch-action:pan-y;-webkit-overflow-scrolling:touch;
   scrollbar-width:thin;scrollbar-color:rgba(var(--teal-glow-rgb,0,200,180),.4) transparent;}
-@keyframes fx-neon-breathe{
-  0%,100%{box-shadow:0 0 10px rgba(var(--teal-glow-rgb,0,200,180),.22),0 0 44px rgba(var(--teal-glow-rgb,0,200,180),.1),inset 0 0 24px rgba(var(--teal-glow-rgb,0,200,180),.04);}
-  50%{box-shadow:0 0 18px rgba(var(--teal-glow-rgb,0,200,180),.42),0 0 72px rgba(var(--teal-glow-rgb,0,200,180),.18),inset 0 0 32px rgba(var(--teal-glow-rgb,0,200,180),.07);}
-}
+/* glow static — animarea box-shadow nu e compusă pe GPU și apărea
+   în PageSpeed la «Evită animațiile necompuse» */
 
 /* ── MOD SLIDE ─────────────────────────────────────────────── */
 body.fx-slide{overflow:hidden;height:100vh;overscroll-behavior:none;}
@@ -73,10 +70,12 @@ body.fx-slide footer.fx-panel{align-items:center;}
 body.fx-slide footer.fx-panel>.container{max-height:calc(100vh - 160px);overflow-y:auto;}
 
 /* ── PUNCTE DE NAVIGARE ────────────────────────────────────── */
-.fx-dots{display:none;position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:220;flex-direction:column;gap:12px;}
+.fx-dots{display:none;position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:220;flex-direction:column;gap:4px;}
 body.fx-slide .fx-dots{display:flex;}
-.fx-dots button{width:11px;height:11px;border-radius:50%;border:1px solid rgba(var(--teal-glow-rgb,0,200,180),.5);background:transparent;cursor:pointer;padding:0;transition:background .3s,box-shadow .3s,transform .3s;}
-.fx-dots button.on{background:var(--teal,#00c8b4);box-shadow:0 0 12px rgba(var(--teal-glow-rgb,0,200,180),.8);transform:scale(1.25);}
+/* țintă de atins de 26px (cerință accesibilitate), punct vizual de 11px */
+.fx-dots button{width:26px;height:26px;border:none;background:transparent;cursor:pointer;padding:0;position:relative;}
+.fx-dots button::after{content:'';position:absolute;inset:7.5px;border-radius:50%;border:1px solid rgba(var(--teal-glow-rgb,0,200,180),.5);transition:background .3s,box-shadow .3s,transform .3s;}
+.fx-dots button.on::after{background:var(--teal,#00c8b4);box-shadow:0 0 12px rgba(var(--teal-glow-rgb,0,200,180),.8);transform:scale(1.25);}
 
 /* floating-bar peste slide-uri, dar sub dots */
 body.fx-slide .floating-bar{z-index:210;}
@@ -85,8 +84,8 @@ body.fx-slide .floating-bar{z-index:210;}
 @media(max-width:900px){
   body.fx-slide .fx-panel{padding:80px 12px 32px;}
   body.fx-slide .fx-neon{padding:26px 18px!important;border-radius:16px;max-height:calc(100vh - 130px);}
-  .fx-dots{right:8px;gap:10px;}
-  .fx-dots button{width:9px;height:9px;}
+  .fx-dots{right:4px;gap:2px;}
+  .fx-dots button::after{inset:8.5px;}
   body.fx-slide footer.fx-panel>.container{max-height:calc(100vh - 120px);}
 }
 
