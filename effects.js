@@ -72,8 +72,10 @@
 
     function collectPanels() {
       var kids = Array.prototype.slice.call(main.children).filter(function (el) {
-        var cs = getComputedStyle(el);
-        return cs.display !== 'none' && el.offsetHeight > 40;
+        // toate elementele vizibile devin slide-uri — fără filtru de înălțime
+        // (unele secțiuni, ex. carousel-ul, au înălțimea calculată târziu de
+        // propriul JS și ar rămâne altfel plutind peste slide-ul activ)
+        return getComputedStyle(el).display !== 'none';
       });
       // respectă ordinea vizuală setată de layout-ul din admin (flex order)
       kids.sort(function (a, b) {
