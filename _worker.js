@@ -2936,6 +2936,34 @@ Cerințe titluri:
         html = injectText(html, 'portofoliu-sub-el',  'p',  settings.portSub);
         html = injectText(html, 'testi-heading',      'h2', settings.testiTitle);
         html = injectText(html, 'contact-heading',    'h2', settings.contactTitle);
+        // LCP: imaginea hero injectată server-side + preload — browserul o
+        // descarcă imediat, nu după fetch-ul client-side de site-settings
+        try {
+          const heroD = settings.heroImage || '';
+          const heroM = settings.heroImageMobile || '';
+          if (heroD || heroM) {
+            const cssUrl = (u) => String(u).replace(/["'()\\<>]/g, '');
+            const escA = (u) => String(u).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+            let inject = '<style id="hero-ssr">';
+            if (heroD) {
+              inject += '.hero-bg-photo{background-image:url("' + cssUrl(heroD) + '")'
+                + (settings.heroSize ? ';background-size:' + cssUrl(settings.heroSize) : '')
+                + (settings.heroPosition ? ';background-position:' + cssUrl(settings.heroPosition) : '')
+                + ';}';
+            }
+            if (heroM) {
+              inject += '@media(max-width:768px){.hero-bg-photo{background-image:url("' + cssUrl(heroM) + '")'
+                + (settings.heroSizeMobile ? ';background-size:' + cssUrl(settings.heroSizeMobile) : '')
+                + (settings.heroPosMobile ? ';background-position:' + cssUrl(settings.heroPosMobile) : '')
+                + ';}}';
+            }
+            inject += '</style>';
+            const distinctM = heroM && heroM !== heroD;
+            if (heroD) inject += '<link rel="preload" as="image" href="' + escA(heroD) + '"' + (distinctM ? ' media="(min-width:769px)"' : '') + '>';
+            if (distinctM) inject += '<link rel="preload" as="image" href="' + escA(heroM) + '" media="(max-width:768px)">';
+            html = html.replace('</head>', inject + '</head>');
+          }
+        } catch {}
         return new Response(html, { headers: { ...SEC_HEADERS, 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'no-cache, no-store, must-revalidate' } });
       } catch { return env.ASSETS.fetch(request); }
     }
