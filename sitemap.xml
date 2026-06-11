@@ -43,6 +43,14 @@
   </url>
 
   <url>
+    <loc>https://www.c-design.ro/parteneri/hosting</loc>
+    <lastmod>2026-06-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://www.c-design.ro/parteneri/hosting"/>
+  </url>
+
+  <url>
     <loc>https://www.c-design.ro/programare</loc>
     <lastmod>2026-06-10</lastmod>
     <changefreq>monthly</changefreq>
