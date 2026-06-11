@@ -65,7 +65,8 @@
     body.appendChild(dotsBox);
 
     function slideOn() {
-      return window.innerWidth >= 900 && window.innerHeight >= 640 && !reduced;
+      // activ pe toate dispozitivele; doar prefers-reduced-motion îl oprește
+      return !reduced && window.innerHeight >= 420;
     }
     function side(i) { return i % 2 === 0 ? 'left' : 'right'; }
 
@@ -175,6 +176,31 @@
       if (['ArrowDown', 'PageDown', ' ', 'ArrowRight'].indexOf(e.key) > -1) { e.preventDefault(); goTo(active + 1); }
       else if (['ArrowUp', 'PageUp', 'ArrowLeft'].indexOf(e.key) > -1) { e.preventDefault(); goTo(active - 1); }
     });
+
+    /* input: touch — swipe vertical schimbă slide-ul; caseta internă
+       derulează nativ și are prioritate până ajunge la capăt */
+    var tY = null, tX = null;
+    window.addEventListener('touchstart', function (e) {
+      if (!body.classList.contains('fx-slide')) return;
+      tY = e.touches[0].clientY;
+      tX = e.touches[0].clientX;
+    }, { passive: true });
+    window.addEventListener('touchend', function (e) {
+      if (!body.classList.contains('fx-slide') || tY === null) return;
+      var endY = e.changedTouches[0].clientY, endX = e.changedTouches[0].clientX;
+      var dy = tY - endY, dx = tX - endX;
+      tY = null; tX = null;
+      if (e.target.closest('.mobile-menu, nav, .fx-dots')) return;
+      if (animating || Math.abs(dy) < 55 || Math.abs(dy) < Math.abs(dx) * 1.2) return;
+      var down = dy > 0;
+      var boxEl = panels[active] && panels[active].querySelector('.fx-neon');
+      if (boxEl && boxEl.scrollHeight > boxEl.clientHeight + 4) {
+        var atTop = boxEl.scrollTop <= 0;
+        var atBottom = boxEl.scrollTop + boxEl.clientHeight >= boxEl.scrollHeight - 4;
+        if ((down && !atBottom) || (!down && !atTop)) return;
+      }
+      goTo(active + (down ? 1 : -1));
+    }, { passive: true });
 
     /* link-urile cu ancoră sar la slide-ul care conține ținta */
     function panelIndexFor(id) {
