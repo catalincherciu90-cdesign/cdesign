@@ -90,6 +90,15 @@ body.fx-slide footer.fx-open .footer-grid-full{display:grid;animation:fx-foot-in
 body.fx-slide footer.fx-open .footer-grid{display:grid;animation:fx-foot-in .45s cubic-bezier(.22,.8,.32,1);}
 @keyframes fx-foot-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
+/* buton ✕ de închidere, vizibil doar cu sertarul deschis */
+.fx-foot-close{display:none;}
+body.fx-slide footer.fx-open .fx-foot-close{display:flex;position:sticky;top:0;margin-left:auto;margin-right:16px;
+  width:34px;height:34px;align-items:center;justify-content:center;cursor:pointer;z-index:5;
+  background:rgba(var(--teal-glow-rgb,0,200,180),.1);border:1px solid rgba(var(--teal-glow-rgb,0,200,180),.4);
+  border-radius:9px;color:var(--teal,#00c8b4);font-size:1rem;line-height:1;padding:0;
+  font-family:'DM Sans',sans-serif;}
+body.fx-slide footer.fx-open .fx-foot-close:hover{background:rgba(var(--teal-glow-rgb,0,200,180),.2);}
+
 /* iconițele social media în bara fixă */
 .fx-foot-social{display:none;}
 body.fx-slide .fx-foot-social{display:inline-flex;gap:8px;align-items:center;}
