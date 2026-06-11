@@ -69,8 +69,8 @@ body[data-fx] .hero::before{display:none;}
 body.fx-slide footer.fx-panel{align-items:center;}
 body.fx-slide footer.fx-panel>.container{max-height:calc(100vh - 160px);overflow-y:auto;}
 
-/* ── PUNCTE DE NAVIGARE ────────────────────────────────────── */
-.fx-dots{display:none;position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:220;flex-direction:column;gap:4px;}
+/* ── PUNCTE DE NAVIGARE (stânga) ───────────────────────────── */
+.fx-dots{display:none;position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:220;flex-direction:column;gap:4px;}
 body.fx-slide .fx-dots{display:flex;}
 /* țintă de atins de 26px (cerință accesibilitate), punct vizual de 11px */
 .fx-dots button{width:26px;height:26px;border:none;background:transparent;cursor:pointer;padding:0;position:relative;}
@@ -80,11 +80,36 @@ body.fx-slide .fx-dots{display:flex;}
 /* floating-bar peste slide-uri, dar sub dots */
 body.fx-slide .floating-bar{z-index:210;}
 
+/* ── INDICIU DE SCROLL (primul slide) ──────────────────────────
+   Mouse cu rotiță animată pe desktop, săgeți pulsante pe mobil.
+   Dispare la prima interacțiune. */
+.fx-scrollhint{position:fixed;left:50%;bottom:66px;transform:translateX(-50%);z-index:160;
+  display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;
+  opacity:0;visibility:hidden;transition:opacity .7s ease,visibility .7s;}
+body.fx-slide .fx-scrollhint.show{opacity:1;visibility:visible;}
+.fx-sh-label{font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--teal,#00c8b4);opacity:.85;}
+.fx-sh-mouse{width:24px;height:38px;border:2px solid rgba(var(--teal-glow-rgb,0,200,180),.75);
+  border-radius:13px;position:relative;box-shadow:0 0 14px rgba(var(--teal-glow-rgb,0,200,180),.25);}
+.fx-sh-mouse span{position:absolute;left:50%;top:6px;width:4px;height:8px;margin-left:-2px;
+  border-radius:2px;background:var(--teal,#00c8b4);animation:fx-sh-wheel 1.7s ease-in-out infinite;}
+@keyframes fx-sh-wheel{0%{transform:translateY(0);opacity:1}65%{transform:translateY(13px);opacity:0}100%{transform:translateY(13px);opacity:0}}
+.fx-sh-chevs{display:flex;flex-direction:column;align-items:center;}
+.fx-sh-chevs i{display:block;width:11px;height:11px;border-right:2px solid var(--teal,#00c8b4);
+  border-bottom:2px solid var(--teal,#00c8b4);transform:rotate(45deg);margin:-5px 0;
+  opacity:0;animation:fx-sh-chev 1.7s ease-in-out infinite;}
+.fx-sh-chevs i:nth-child(2){animation-delay:.22s;}
+@keyframes fx-sh-chev{0%{opacity:0;transform:rotate(45deg) translate(-5px,-5px)}45%{opacity:1}85%,100%{opacity:0;transform:rotate(45deg) translate(4px,4px)}}
+@media(max-width:900px){
+  .fx-sh-mouse{display:none;}
+  .fx-scrollhint{bottom:72px;}
+}
+
 /* ── MOBIL: slide-uri compacte ─────────────────────────────── */
 @media(max-width:900px){
   body.fx-slide .fx-panel{padding:80px 12px 32px;}
   body.fx-slide .fx-neon{padding:26px 18px!important;border-radius:16px;max-height:calc(100vh - 130px);}
-  .fx-dots{right:4px;gap:2px;}
+  .fx-dots{left:4px;gap:2px;}
   .fx-dots button::after{inset:8.5px;}
   body.fx-slide footer.fx-panel>.container{max-height:calc(100vh - 120px);}
 }
