@@ -468,6 +468,7 @@ const CONTENT_PAGES = {
   'contact': '/contact.html',
   'parteneri': '/parteneri.html',
   'partener-hosting': '/partener-hosting.html',
+  'partener-print': '/partener-print.html',
   'pachet-startup': '/pachet-startup.html',
   'abonament-lunar': '/abonament-lunar.html',
   'web-design-bucuresti': '/web-design-bucuresti.html',
@@ -913,6 +914,7 @@ export default {
         { loc: '/contact',                    cf: 'monthly', pr: '0.8' },
         { loc: '/parteneri',                  cf: 'monthly', pr: '0.6' },
         { loc: '/parteneri/hosting',          cf: 'monthly', pr: '0.5' },
+        { loc: '/parteneri/print',            cf: 'monthly', pr: '0.5' },
         { loc: '/programare',                 cf: 'monthly', pr: '0.8' },
         { loc: '/pachet-startup',             cf: 'monthly', pr: '0.8' },
         { loc: '/abonament-lunar',            cf: 'monthly', pr: '0.8' },
@@ -1012,6 +1014,10 @@ export default {
 
     if (path === '/parteneri/hosting') {
       return serveContentPage(request, env, 'partener-hosting');
+    }
+
+    if (path === '/parteneri/print') {
+      return serveContentPage(request, env, 'partener-print');
     }
 
     if (path === '/parteneri') {
