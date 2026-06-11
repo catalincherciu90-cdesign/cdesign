@@ -121,7 +121,12 @@
         p.classList.add('fx-panel', 'fx-notrans');
         if (i === active) p.classList.add('fx-active');
         else p.classList.add(side(i) === 'left' ? 'fx-off-left' : 'fx-off-right');
-        if (!p.hasAttribute('data-fx-noneon')) {
+        // fără casetă neon pe bannerele vizuale: hero-ul cu fotografie de
+        // fundal sau secțiunile marcate explicit cu data-fx-noneon
+        var skipNeon = p.hasAttribute('data-fx-noneon')
+          || p.getAttribute('data-section') === 'hero'
+          || p.querySelector('.hero-bg-photo');
+        if (!skipNeon) {
           var c = p.querySelector(':scope > .container, :scope > .wide, :scope > * > .container');
           if (c) c.classList.add('fx-neon');
         }
