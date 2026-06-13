@@ -167,7 +167,7 @@ setTimeout(L,5000);})();
         <li><a href="/blog">Blog</a></li>
       </ul>
       <a href="tel:+40753116155" class="nav-phone" onclick="if(typeof gtag!=='undefined')gtag('event','phone_click',{event_category:'contact'})">0753 116 155</a>
-      <a href="/programare" class="btn-nav" aria-current="page">Programează acum →</a>
+      <a href="/programare" class="btn-nav" aria-current="page">Programează acum</a>
       <button class="hamburger" id="hamburger" aria-label="Deschide meniu" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -181,7 +181,7 @@ setTimeout(L,5000);})();
   <a href="/contact">Contact</a>
   <a href="/blog">Blog</a>
   <a href="tel:+40753116155" onclick="if(typeof gtag!=='undefined')gtag('event','phone_click',{event_category:'contact'})">0753 116 155</a>
-  <a href="/programare" class="btn-nav">Programează acum →</a>
+  <a href="/programare" class="btn-nav">Programează acum</a>
 </div>
 
 <main>
@@ -276,7 +276,7 @@ setTimeout(L,5000);})();
             </select>
           </div>
           <div class="f-group"><label class="f-label" for="fmsg">Mesaj (opțional)</label><textarea class="f-input" id="fmsg" name="message" placeholder="Spune-ne pe scurt despre afacerea ta..."></textarea></div>
-          <button type="submit" class="btn-submit">Confirmă programarea →</button>
+          <button type="submit" class="btn-submit">Confirmă programarea</button>
           <p class="f-note">Te contactăm în maxim 2 ore pentru confirmare. Consultanța este 100% gratuită.</p>
         </form>
       </div>
@@ -402,7 +402,7 @@ document.getElementById('bookingForm').addEventListener('submit', async function
   if (!name || !phone || !email || !date || !time) {
     btn.textContent = 'Completează câmpurile marcate cu *';
     btn.style.background = '#e05252';
-    setTimeout(() => { btn.textContent = 'Confirmă programarea →'; btn.style.background = ''; }, 3000);
+    setTimeout(() => { btn.textContent = 'Confirmă programarea'; btn.style.background = ''; }, 3000);
     return;
   }
   btn.textContent = 'Se trimite...';
@@ -424,13 +424,13 @@ document.getElementById('bookingForm').addEventListener('submit', async function
       btn.style.background = '#28c840';
       this.reset();
       document.getElementById('fdate').min = new Date().toISOString().split('T')[0];
-      setTimeout(() => { btn.textContent = 'Confirmă programarea →'; btn.style.background = ''; btn.disabled = false; }, 7000);
+      setTimeout(() => { btn.textContent = 'Confirmă programarea'; btn.style.background = ''; btn.disabled = false; }, 7000);
     } else { throw new Error(); }
   } catch {
     btn.textContent = 'Eroare — încearcă din nou sau sună direct';
     btn.style.background = '#e05252';
     btn.disabled = false;
-    setTimeout(() => { btn.textContent = 'Confirmă programarea →'; btn.style.background = ''; }, 4000);
+    setTimeout(() => { btn.textContent = 'Confirmă programarea'; btn.style.background = ''; }, 4000);
   }
 });
 
