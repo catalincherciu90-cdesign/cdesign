@@ -108,6 +108,30 @@ footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--teal
 <link rel="stylesheet" href="/theme.css">
 <link rel="stylesheet" href="/effects.css">
 <script src="/effects.js" defer><\/script>
+<script>
+// Analytics stubs (queued until consent is granted)
+window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){dataLayer.push(arguments);};
+gtag('js',new Date());gtag('config','G-K3VR7JC1QW');
+!function(f){if(f.fbq)return;var n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[]}(window);
+fbq('init','893560673744618');fbq('track','PageView');
+// Gate tracking load on consent
+(function(){
+  var d=false;
+  function L(){
+    if(d)return;d=true;
+    var a=document.createElement('script');a.src='https://www.googletagmanager.com/gtag/js?id=G-K3VR7JC1QW';a.async=true;document.head.appendChild(a);
+    var b=document.createElement('script');b.src='https://connect.facebook.net/en_US/fbevents.js';b.async=true;document.head.appendChild(b);
+  }
+  function checkConsent(){
+    var c=localStorage.getItem('cdCookieConsent');
+    if(c==='granted'){L();} else if(c==='denied'){return;}
+    /* nedecis: nu se incarca tracking pana la accept din banner */
+  }
+  window.addEventListener('cookie-consent-granted',L);
+  checkConsent();
+})();
+<\/script>
+<script src="/cookie-consent.js" defer><\/script>
 </head>
 <body data-fx>
 <nav>
@@ -149,7 +173,7 @@ footer a{color:var(--muted);transition:color .2s}footer a:hover{color:var(--teal
 </main>
 <footer>
   <a href="/" aria-label="C Design – Pagina principală"><img src="/logo-c-design.png" alt="C Design" style="height:32px;width:auto;display:block;margin:0 auto 12px;"></a>
-  <p>© ${yr} C Design · <a href="tel:+40753116155">0753 116 155</a> · <a href="mailto:office@c-design.ro">office@c-design.ro</a> · <a href="/blog">Blog</a></p>
+  <p>© ${yr} C Design · <a href="tel:+40753116155">0753 116 155</a> · <a href="mailto:office@c-design.ro">office@c-design.ro</a> · <a href="/blog">Blog</a> · <a href="#" onclick="window.openCookieConsentBanner();return false;" style="cursor:pointer;">Setări cookies</a></p>
 </footer>
 <script>
 const ham=document.getElementById('hamburger'),mob=document.getElementById('mobileMenu');

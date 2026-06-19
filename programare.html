@@ -9,11 +9,21 @@ window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){dataLa
 gtag('js',new Date());gtag('config','G-K3VR7JC1QW');
 !function(f){if(f.fbq)return;var n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[]}(window);
 fbq('init','893560673744618');fbq('track','PageView');
-(function(){var d=false;function L(){if(d)return;d=true;
-var a=document.createElement('script');a.src='https://www.googletagmanager.com/gtag/js?id=G-K3VR7JC1QW';a.async=true;document.head.appendChild(a);
-var b=document.createElement('script');b.src='https://connect.facebook.net/en_US/fbevents.js';b.async=true;document.head.appendChild(b);}
-['pointerdown','keydown','touchstart','wheel','scroll'].forEach(function(e){addEventListener(e,L,{passive:true,once:true});});
-setTimeout(L,5000);})();
+(function(){
+  var d=false;
+  function L(){
+    if(d)return;d=true;
+    var a=document.createElement('script');a.src='https://www.googletagmanager.com/gtag/js?id=G-K3VR7JC1QW';a.async=true;document.head.appendChild(a);
+    var b=document.createElement('script');b.src='https://connect.facebook.net/en_US/fbevents.js';b.async=true;document.head.appendChild(b);
+  }
+  function checkConsent(){
+    var c=localStorage.getItem('cdCookieConsent');
+    if(c==='granted'){L();} else if(c==='denied'){return;}
+    /* nedecis: nu se incarca tracking pana la accept din banner */
+  }
+  window.addEventListener('cookie-consent-granted',L);
+  checkConsent();
+})();
   </script>
   <title>Programează o Consultanță Gratuită – 30 min, Fără Obligații | C Design</title>
   <meta name="description" content="Alege data și ora care ți-e convenabilă și programează o consultanță gratuită de 30 de minute. Fără obligații, fără costuri ascunse. Sună: 0753 116 155.">
@@ -163,6 +173,7 @@ setTimeout(L,5000);})();
     @media(max-width:640px){.floating-bar{top:auto;bottom:16px;transform:none;gap:6px;flex-direction:row;right:12px;}.floating-bar a{width:42px;height:42px;border-radius:50%;border:1px solid rgba(0,0,0,.16);}.floating-bar a .fb-label{display:none;}}
   </style>
   <link rel="stylesheet" href="/theme.css">
+<script src="/cookie-consent.js" defer></script>
 </head>
 <body>
 
@@ -329,7 +340,7 @@ setTimeout(L,5000);})();
     </div>
     <div class="footer-bottom-bar">
       <span>© 2026 C Design · Toate drepturile rezervate</span>
-      <span><a href="/politica-confidentialitate">Politică de Confidențialitate</a></span>
+      <span><a href="/politica-confidentialitate">Politică de Confidențialitate</a> · <a href="#" onclick="window.openCookieConsentBanner();return false;" style="cursor:pointer;">Setări cookies</a></span>
       <span>Made with <span class="teal">♥</span> in România</span>
     </div>
   </div>
