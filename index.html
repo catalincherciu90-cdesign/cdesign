@@ -5,15 +5,27 @@
   <!-- Analytics (GA4 + Meta Pixel) — încărcate la prima interacțiune sau după 5s.
      Stub-urile pun evenimentele în coadă, nimic nu se pierde. -->
 <script>
+// Analytics stubs (queued until consent is granted)
 window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){dataLayer.push(arguments);};
 gtag('js',new Date());gtag('config','G-K3VR7JC1QW');
 !function(f){if(f.fbq)return;var n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[]}(window);
 fbq('init','893560673744618');fbq('track','PageView');
-(function(){var d=false;function L(){if(d)return;d=true;
-var a=document.createElement('script');a.src='https://www.googletagmanager.com/gtag/js?id=G-K3VR7JC1QW';a.async=true;document.head.appendChild(a);
-var b=document.createElement('script');b.src='https://connect.facebook.net/en_US/fbevents.js';b.async=true;document.head.appendChild(b);}
-['pointerdown','keydown','touchstart','wheel','scroll'].forEach(function(e){addEventListener(e,L,{passive:true,once:true});});
-setTimeout(L,5000);})();
+// Gate tracking load on consent
+(function(){
+  var d=false;
+  function L(){
+    if(d)return;d=true;
+    var a=document.createElement('script');a.src='https://www.googletagmanager.com/gtag/js?id=G-K3VR7JC1QW';a.async=true;document.head.appendChild(a);
+    var b=document.createElement('script');b.src='https://connect.facebook.net/en_US/fbevents.js';b.async=true;document.head.appendChild(b);
+  }
+  function checkConsent(){
+    var c=localStorage.getItem('cdCookieConsent');
+    if(c==='granted'){L();} else if(c==='denied'){return;}
+    /* nedecis: nu se incarca tracking pana la accept din banner */
+  }
+  window.addEventListener('cookie-consent-granted',L);
+  checkConsent();
+})();
 </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Web Design Ilfov & București – Site în 14 Zile | C Design</title>
@@ -516,6 +528,7 @@ setTimeout(L,5000);})();
   <link rel="stylesheet" href="/theme.css">
 <link rel="stylesheet" href="/effects.css">
 <script src="/effects.js" defer></script>
+<script src="/cookie-consent.js" defer></script>
 </head>
 <body data-fx>
 
@@ -909,7 +922,7 @@ setTimeout(L,5000);})();
     </div>
     <div class="footer-bottom">
       <span>© 2026 C Design · Toate drepturile rezervate</span>
-      <span><a href="/politica-confidentialitate">Politică de Confidențialitate</a></span>
+      <span><a href="/politica-confidentialitate">Politică de Confidențialitate</a> · <a href="#" onclick="window.openCookieConsentBanner();return false;" style="cursor:pointer;">Setări cookies</a></span>
       <span>Made with <span class="teal">♥</span> in România</span>
     </div>
   </div>
