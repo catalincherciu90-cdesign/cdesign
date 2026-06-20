@@ -90,6 +90,21 @@ body.fx-slide footer.fx-open .footer-grid-full{display:grid;animation:fx-foot-in
 body.fx-slide footer.fx-open .footer-grid{display:grid;animation:fx-foot-in .45s cubic-bezier(.22,.8,.32,1);}
 @keyframes fx-foot-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
+/* footer lizibil în modul slide: fundal aproape opac (fără text peste blur)
+   + contrast bun pe titluri/linkuri/descriere */
+body.fx-slide footer{background:rgba(9,13,17,.97)!important;}
+body.fx-slide footer .footer-col h3,
+body.fx-slide footer .footer-col-full h3{color:#ffffff!important;}
+body.fx-slide footer .footer-about,
+body.fx-slide footer .footer-col a,
+body.fx-slide footer .footer-col-full a{color:#cdd6df!important;}
+body.fx-slide footer .footer-bottom,
+body.fx-slide footer .footer-bottom a{color:#cdd6df!important;}
+body.fx-slide footer .footer-col a:hover,
+body.fx-slide footer .footer-col-full a:hover,
+body.fx-slide footer .footer-bottom a:hover{color:var(--teal,#00c8b4)!important;}
+body.fx-slide footer .footer-bottom .teal{color:var(--teal,#00c8b4)!important;}
+
 /* buton ✕ de închidere, vizibil doar cu sertarul deschis */
 .fx-foot-close{display:none;}
 body.fx-slide footer.fx-open .fx-foot-close{display:flex;position:sticky;top:0;margin-left:auto;margin-right:16px;
