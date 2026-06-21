@@ -4341,25 +4341,32 @@
     }
   }
 
-  // --- GAZE: reactorul "se uita in prejur" + urmareste cursorul ---
+  // --- GAZE: reactorul "se uita in prejur" + urmareste cursorul/atingerea ---
   function jvsGaze() {
     const svg = document.querySelector('#panel-gibilan .clippy-body');
     const gaze = document.getElementById('jvs-gaze');
     if (!svg || !gaze || gaze.dataset.jvsBound) return;
     gaze.dataset.jvsBound = '1';
     let idleTimer = null;
-    document.addEventListener('pointermove', (e) => {
+    const aim = (e) => {
       const r = svg.getBoundingClientRect();
       if (!r.width) return; // tabul ascuns
+      const px = (e.clientX != null) ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : null);
+      const py = (e.clientY != null) ? e.clientY : (e.touches && e.touches[0] ? e.touches[0].clientY : null);
+      if (px == null) return;
       const cx = r.left + r.width / 2;
       const cy = r.top + r.height / 2;
-      const ang = Math.atan2(e.clientY - cy, e.clientX - cx);
+      const ang = Math.atan2(py - cy, px - cx);
       const R = 6;
       gaze.classList.add('jvs-track');
       gaze.style.transform = 'translate(' + (Math.cos(ang) * R).toFixed(1) + 'px,' + (Math.sin(ang) * R).toFixed(1) + 'px)';
       clearTimeout(idleTimer);
       idleTimer = setTimeout(() => { gaze.classList.remove('jvs-track'); gaze.style.transform = ''; }, 2400);
-    }, { passive: true });
+    };
+    // mouse pe desktop; tap + drag pe mobil (pointerdown prinde si atingerea statica)
+    document.addEventListener('pointermove', aim, { passive: true });
+    document.addEventListener('pointerdown', aim, { passive: true });
+    document.addEventListener('touchmove', aim, { passive: true });
   }
 
   // --- INIT WIDGETS ON GIBILAN TAB ---
