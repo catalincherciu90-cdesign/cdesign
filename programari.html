@@ -504,6 +504,8 @@
     .jvs-speak-btn:hover{background:rgba(0,229,255,.18);box-shadow:0 0 14px rgba(0,229,255,.4);transform:translateY(-1px);}
     .jvs-speak-btn.speaking{animation:jvs-speak-pulse 1s ease-in-out infinite;}
     @keyframes jvs-speak-pulse{0%,100%{box-shadow:0 0 8px rgba(0,229,255,.3)}50%{box-shadow:0 0 18px rgba(0,229,255,.7)}}
+    #jvs-mic-btn.listening{color:#ff5f57;border-color:#ff5f57;text-shadow:0 0 8px rgba(255,95,87,.6);animation:jvs-mic-pulse 1s ease-in-out infinite;}
+    @keyframes jvs-mic-pulse{0%,100%{box-shadow:0 0 8px rgba(255,95,87,.35)}50%{box-shadow:0 0 18px rgba(255,95,87,.75)}}
     @keyframes clippy-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
     @keyframes clippy-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
@@ -988,7 +990,10 @@
             <!-- Galaxie (canvas) -->
             <canvas id="jvs-galaxy" class="clippy-body" width="320" height="320" style="width:172px;height:172px;display:block;cursor:pointer;" onclick="jvsSpeak()" title="Raport vocal"></canvas>
             </div>
-            <button id="jvs-speak-btn" class="jvs-speak-btn" type="button" onclick="jvsSpeak()">🔊 Raport vocal</button>
+            <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;justify-content:center;">
+              <button id="jvs-speak-btn" class="jvs-speak-btn" type="button" onclick="jvsSpeak()">🔊 Raport vocal</button>
+              <button id="jvs-mic-btn" class="jvs-speak-btn" type="button" onclick="jvsVoiceCmd()" title="Comenzi vocale: 'ce am azi' sau 'adaugă task ...'">🎤 Vorbește</button>
+            </div>
           </div>
 
           <!-- Status Widget (right panel) -->
@@ -4076,30 +4081,49 @@
     bubble.innerHTML = msgs[gibMsgIdx];
   }
 
-  // Raport vocal: Gibilan spune cate intalniri/taskuri/deadline-uri ai
-  function jvsSpeak() {
-    if (typeof gibData === 'undefined' || !gibData) return;
+  // Raport vocal: agenda completa (intalniri, taskuri, deadline-uri, urmatoarea intalnire, cheltuieli)
+  function jvsSpeakText() {
     const today = new Date().toISOString().split('T')[0];
     const in7 = new Date(); in7.setDate(in7.getDate() + 7);
     const in7Str = in7.toISOString().split('T')[0];
-    const m = (gibData.meetings || []).filter(x => x.date === today).length;
+    const meetings = gibData.meetings || [];
+    const m = meetings.filter(x => x.date === today).length;
     const t = (gibData.todos || []).filter(x => !x.done).length;
     const d = (gibData.deadlines || []).filter(x => x.date >= today && x.date <= in7Str).length;
 
     let txt;
     if (m === 0 && t === 0 && d === 0) {
-      txt = 'Bună! Momentan nu ai nimic programat. Zi liniștită!';
+      txt = 'Momentan nu ai nimic programat. Zi liniștită!';
     } else {
       const parts = [];
       parts.push(m === 1 ? 'o întâlnire azi' : m + ' întâlniri azi');
       parts.push(t === 1 ? 'un task de făcut' : t + ' task-uri de făcut');
       parts.push(d === 1 ? 'un deadline în următoarele 7 zile' : d + ' deadline-uri în următoarele 7 zile');
-      txt = 'Bună! Ai ' + parts.join(', ') + '.';
+      txt = 'Ai ' + parts.join(', ') + '.';
     }
+    const next = meetings.slice().sort((a, b) => ((a.date || '') + (a.time || '')).localeCompare((b.date || '') + (b.time || ''))).find(x => x.date >= today);
+    if (next) {
+      txt += ' Următoarea întâlnire: ' + (next.title || 'fără titlu')
+        + (next.time ? ' la ora ' + next.time : '')
+        + (next.date === today ? ', astăzi.' : ', pe ' + formatDate(next.date) + '.');
+    }
+    const acum = new Date();
+    const lunaAc = acum.getFullYear() + '-' + String(acum.getMonth() + 1).padStart(2, '0');
+    const chLuna = (typeof allCheltuieli !== 'undefined' ? (allCheltuieli || []) : []).filter(c => (c.data || '').startsWith(lunaAc));
+    if (chLuna.length) {
+      const totalLuna = chLuna.reduce((s, c) => s + (parseFloat(c.suma) || 0), 0);
+      const neachit = chLuna.filter(c => !c.achitat).reduce((s, c) => s + (parseFloat(c.suma) || 0), 0);
+      txt += ' Cheltuieli luna aceasta: ' + Math.round(totalLuna) + ' lei'
+        + (neachit > 0 ? ', din care ' + Math.round(neachit) + ' lei neachitate.' : '.');
+    }
+    return txt;
+  }
 
+  function jvsSpeak(prefix) {
+    if (typeof gibData === 'undefined' || !gibData) return;
+    let txt = (prefix ? prefix + '! ' : 'Bună! ') + jvsSpeakText();
     const bubble = document.getElementById('gib-bubble');
     if (bubble) bubble.textContent = txt;
-
     try {
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
@@ -4109,14 +4133,92 @@
         const ro = voices.find(v => /ro/i.test(v.lang));
         if (ro) u.voice = ro;
         const btn = document.getElementById('jvs-speak-btn');
-        if (btn) {
-          btn.classList.add('speaking');
-          u.onend = u.onerror = () => btn.classList.remove('speaking');
-        }
+        if (btn) { btn.classList.add('speaking'); u.onend = u.onerror = () => btn.classList.remove('speaking'); }
         window.speechSynthesis.speak(u);
       }
     } catch (e) {}
   }
+
+  // Salut automat o data pe zi, la prima interactiune cand esti pe tabul Gibilan
+  function jvsGreet() {
+    try {
+      if (typeof gibData === 'undefined' || !gibData || !gibData.meetings) return;
+      const today = new Date().toISOString().split('T')[0];
+      if (localStorage.getItem('jvsGreetDate') === today) return;
+      const panel = document.getElementById('panel-gibilan');
+      if (!panel || !panel.classList.contains('active')) return;
+      localStorage.setItem('jvsGreetDate', today);
+      const h = new Date().getHours();
+      jvsSpeak(h < 12 ? 'Bună dimineața' : (h < 18 ? 'Bună ziua' : 'Bună seara'));
+    } catch (e) {}
+  }
+  document.addEventListener('pointerdown', function () { jvsGreet(); }, { passive: true });
+
+  // Badge in titlu + notificare zilnica + alerta vizuala (galaxia devine rosie la deadline azi)
+  const jvsBaseTitle = document.title;
+  function jvsUpdateBadge() {
+    if (typeof gibData === 'undefined' || !gibData) return;
+    const today = new Date().toISOString().split('T')[0];
+    const tCount = (gibData.todos || []).filter(x => !x.done).length;
+    const mToday = (gibData.meetings || []).filter(x => x.date === today).length;
+    const dDueOrLate = (gibData.deadlines || []).filter(x => x.date <= today).length;
+    const n = tCount + mToday + dDueOrLate;
+    document.title = (n > 0 ? '(' + n + ') ' : '') + jvsBaseTitle;
+    if (typeof jvsGalaxy !== 'undefined') jvsGalaxy.alert = dDueOrLate > 0;
+    jvsNotifyDaily(mToday, (gibData.deadlines || []).filter(x => x.date === today).length);
+  }
+  function jvsNotifyDaily(meetingsToday, deadlinesToday) {
+    try {
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+      if (meetingsToday === 0 && deadlinesToday === 0) return;
+      const today = new Date().toISOString().split('T')[0];
+      if (localStorage.getItem('jvsNotifyDate') === today) return;
+      localStorage.setItem('jvsNotifyDate', today);
+      const parts = [];
+      if (meetingsToday) parts.push(meetingsToday + (meetingsToday === 1 ? ' întâlnire' : ' întâlniri'));
+      if (deadlinesToday) parts.push(deadlinesToday + (deadlinesToday === 1 ? ' deadline' : ' deadline-uri'));
+      new Notification('Gibilan — agenda de azi', { body: 'Ai ' + parts.join(' și ') + ' astăzi.', icon: '/logo-c-design.png' });
+    } catch (e) {}
+  }
+  document.addEventListener('pointerdown', function jvsAskNotif() {
+    try { if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission(); } catch (e) {}
+    document.removeEventListener('pointerdown', jvsAskNotif);
+  }, { passive: true, once: true });
+
+  // Comenzi vocale: vorbesti tu cu Gibilan
+  function jvsVoiceCmd() {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { alert('Recunoașterea vocală nu e suportată de acest browser. Încearcă în Chrome.'); return; }
+    const rec = new SR();
+    rec.lang = 'ro-RO'; rec.interimResults = false; rec.maxAlternatives = 1;
+    const mic = document.getElementById('jvs-mic-btn');
+    if (mic) mic.classList.add('listening');
+    const done = () => { if (mic) mic.classList.remove('listening'); };
+    rec.onerror = done; rec.onend = done;
+    rec.onresult = (e) => { jvsHandleCommand((e.results[0][0].transcript || '').toLowerCase().trim()); };
+    try { rec.start(); } catch (e) { done(); }
+  }
+  function jvsHandleCommand(said) {
+    const bubble = document.getElementById('gib-bubble');
+    const speak = (txt) => {
+      if (bubble) bubble.textContent = txt;
+      try { if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(txt); u.lang = 'ro-RO'; window.speechSynthesis.speak(u); } } catch (e) {}
+    };
+    if (!said) { speak('Nu am auzit nimic.'); return; }
+    const add = said.match(/(?:adaug[ăa]?|noteaz[ăa]?|creeaz[ăa]?)(?:\s+un)?\s+task\s+(.+)/) || said.match(/task\s+nou\s+(.+)/);
+    if (add && add[1]) {
+      const titlu = add[1].trim();
+      const inp = document.getElementById('gib-t-title');
+      if (inp) inp.value = titlu.charAt(0).toUpperCase() + titlu.slice(1);
+      const f = document.getElementById('form-todo');
+      if (f && !f.classList.contains('open') && typeof toggleGibForm === 'function') toggleGibForm('form-todo');
+      speak('Am pregătit task-ul: ' + titlu + '. Apasă Salvează ca să-l adaugi.');
+      return;
+    }
+    if (/ce am|raport|agend|azi|cheltuiel|deadline|întâlnir|intalnir/.test(said)) { jvsSpeak('Sigur'); return; }
+    speak('Nu am înțeles. Spune "ce am azi" sau "adaugă task" urmat de ce ai de făcut.');
+  }
+
 
   async function loadGibilan() {
     if (!adminToken) return;
@@ -4134,6 +4236,7 @@
       renderGibilanSidebar();
       rotateGibMessage();
       if (typeof jvsUpdateStats === 'function') jvsUpdateStats();
+      if (typeof jvsUpdateBadge === 'function') jvsUpdateBadge();
       if (selectedClientId) renderClientDetail(selectedClientId);
       if (currentTab === 'clients') renderClients();
     } catch {}
@@ -6793,7 +6896,7 @@
 
   // GALAXIE — reactorul Gibilan ca disc spiral pe canvas
   const jvsGalaxy = {
-    canvas: null, ctx: null, stars: [], raf: null, t: 0, running: false,
+    canvas: null, ctx: null, stars: [], raf: null, t: 0, running: false, alert: false,
     init() {
       this.canvas = document.getElementById('jvs-galaxy');
       if (!this.canvas) return;
@@ -6820,16 +6923,17 @@
     draw() {
       const ctx = this.ctx, W = this.canvas.width, cx = W / 2, cy = W / 2, maxR = W / 2 - 10;
       ctx.clearRect(0, 0, W, W);
+      const al = this.alert;
       let g = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR);
-      g.addColorStop(0, 'rgba(120,200,255,0.16)');
-      g.addColorStop(0.45, 'rgba(90,120,255,0.06)');
+      g.addColorStop(0, al ? 'rgba(255,90,70,0.18)' : 'rgba(120,200,255,0.16)');
+      g.addColorStop(0.45, al ? 'rgba(255,60,60,0.07)' : 'rgba(90,120,255,0.06)');
       g.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, maxR, 0, 6.2832); ctx.fill();
-      const pulse = 0.85 + 0.15 * Math.sin(this.t * 0.04);
+      const pulse = 0.85 + 0.15 * Math.sin(this.t * (al ? 0.09 : 0.04));
       let c = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 0.24);
       c.addColorStop(0, 'rgba(255,255,255,' + (0.95 * pulse) + ')');
-      c.addColorStop(0.5, 'rgba(185,240,255,' + (0.5 * pulse) + ')');
-      c.addColorStop(1, 'rgba(0,229,255,0)');
+      c.addColorStop(0.5, al ? 'rgba(255,150,120,' + (0.55 * pulse) + ')' : 'rgba(185,240,255,' + (0.5 * pulse) + ')');
+      c.addColorStop(1, al ? 'rgba(255,70,60,0)' : 'rgba(0,229,255,0)');
       ctx.fillStyle = c; ctx.beginPath(); ctx.arc(cx, cy, maxR * 0.24, 0, 6.2832); ctx.fill();
       const rot = this.t * 0.0035;
       ctx.globalCompositeOperation = 'lighter';
