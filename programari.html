@@ -981,102 +981,8 @@
           <div class="clippy-wrap">
             <div class="speech-bubble" id="gib-bubble">J.A.R.V.I.S. ONLINE</div>
             <div class="clippy-core">
-            <!-- HUD Rings SVG Overlay -->
-            <svg viewBox="0 0 180 180" width="150" height="150" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;filter:drop-shadow(0 0 20px rgba(0,229,255,0.6)),drop-shadow(0 0 40px rgba(24,182,214,0.2));">
-              <defs>
-                <radialGradient id="gReactor" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stop-color="rgba(0,229,255,0.4)"/>
-                  <stop offset="100%" stop-color="rgba(0,229,255,0.05)"/>
-                </radialGradient>
-              </defs>
-              <!-- Outer Ring 1 (rotating CW, thicker) -->
-              <circle cx="90" cy="90" r="75" fill="none" stroke="#00e5ff" stroke-width="2" opacity="0.7" style="transform-box:fill-box;transform-origin:center;animation:spin-cw 20s linear infinite;box-shadow:0 0 15px rgba(0,229,255,0.4);"/>
-              <!-- Ticks on outer ring (more details) -->
-              <g stroke="#7df9ff" stroke-width="1.2" opacity="0.6" style="transform-box:fill-box;transform-origin:center;animation:spin-cw 20s linear infinite;">
-                <line x1="90" y1="15" x2="90" y2="21"/><line x1="90" y1="159" x2="90" y2="165"/><line x1="15" y1="90" x2="21" y2="90"/><line x1="159" y1="90" x2="165" y2="90"/>
-                <line x1="128" y1="32" x2="133" y2="27"/><line x1="47" y1="148" x2="52" y2="153"/><line x1="32" y1="128" x2="27" y2="133"/><line x1="148" y1="47" x2="153" y2="52"/>
-                <line x1="133" y1="47" x2="138" y2="42"/><line x1="42" y1="138" x2="37" y2="143"/><line x1="47" y1="133" x2="42" y2="138"/><line x1="138" y1="42" x2="143" y2="37"/>
-              </g>
-              <!-- Mid Ring 2 (rotating CCW, darker) -->
-              <circle cx="90" cy="90" r="55" fill="none" stroke="#18b6d6" stroke-width="1.5" opacity="0.55" style="transform-box:fill-box;transform-origin:center;animation:spin-ccw 24s linear infinite;"/>
-              <!-- Inner Ring 3 (rotating CW, smaller) -->
-              <circle cx="90" cy="90" r="38" fill="none" stroke="#00e5ff" stroke-width="1" opacity="0.5" style="transform-box:fill-box;transform-origin:center;animation:spin-cw 18s linear infinite;"/>
-              <!-- Innermost Ring 4 (rotating CCW, very small) -->
-              <circle cx="90" cy="90" r="22" fill="none" stroke="#7df9ff" stroke-width="0.8" opacity="0.4" style="transform-box:fill-box;transform-origin:center;animation:spin-ccw 16s linear infinite;"/>
-              <!-- Arc segments (reactor fuel rods style) -->
-              <path d="M90 20 A70 70 0 0 1 140 28" fill="none" stroke="#ff6b35" stroke-width="1.2" opacity="0.6" style="animation:pulse 2.5s ease-in-out infinite;"/>
-              <path d="M140 28 A70 70 0 0 1 155 90" fill="none" stroke="#ff6b35" stroke-width="1.2" opacity="0.5" style="animation:pulse 2.5s ease-in-out infinite 0.3s;"/>
-              <path d="M155 90 A70 70 0 0 1 90 160" fill="none" stroke="#ff6b35" stroke-width="1.2" opacity="0.4" style="animation:pulse 2.5s ease-in-out infinite 0.6s;"/>
-              <!-- Center pulsing core -->
-              <circle cx="90" cy="90" r="14" fill="url(#gReactor)" style="animation:pulse 1.8s ease-in-out infinite;"/>
-              <circle cx="90" cy="90" r="14" fill="none" stroke="#00e5ff" stroke-width="0.6" opacity="0.8" style="animation:pulse 1.8s ease-in-out infinite;"/>
-            </svg>
-            <svg viewBox="0 0 120 120" width="115" height="115" class="clippy-body">
-              <defs>
-                <radialGradient id="jvsCore" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stop-color="#ffffff"/>
-                  <stop offset="35%" stop-color="#aef6ff"/>
-                  <stop offset="72%" stop-color="#00e5ff"/>
-                  <stop offset="100%" stop-color="rgba(0,229,255,0)"/>
-                </radialGradient>
-                <radialGradient id="jvsHalo" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stop-color="rgba(0,229,255,0.45)"/>
-                  <stop offset="100%" stop-color="rgba(0,229,255,0)"/>
-                </radialGradient>
-                <linearGradient id="jvsCoilGrad" x1="0" y1="1" x2="0" y2="0">
-                  <stop offset="0%" stop-color="rgba(0,229,255,0.06)"/>
-                  <stop offset="100%" stop-color="rgba(0,229,255,0.32)"/>
-                </linearGradient>
-                <path id="jvsCoilShape" d="M53 32 L67 32 L72 14 L48 14 Z"/>
-              </defs>
-
-              <!-- halo de energie -->
-              <circle cx="60" cy="60" r="57" fill="url(#jvsHalo)" style="animation:pulse 2.6s ease-in-out infinite;"/>
-
-              <!-- carcasa reactorului -->
-              <circle cx="60" cy="60" r="54" fill="#08141b" stroke="#0f2a33" stroke-width="3"/>
-              <circle cx="60" cy="60" r="52" fill="none" stroke="#00e5ff" stroke-width="1" opacity="0.5"/>
-              <!-- inel punctat contra-rotativ -->
-              <circle cx="60" cy="60" r="48" fill="none" stroke="#7df9ff" stroke-width="0.8" stroke-dasharray="2 6" opacity="0.5" style="transform-box:fill-box;transform-origin:center;animation:spin-ccw 14s linear infinite;"/>
-
-              <!-- inel de bobine (se roteste) -->
-              <g style="transform-box:fill-box;transform-origin:center;animation:spin-cw 32s linear infinite;">
-                <use href="#jvsCoilShape" fill="url(#jvsCoilGrad)" stroke="#00e5ff" stroke-width="0.8" opacity="0.85"/>
-                <use href="#jvsCoilShape" fill="url(#jvsCoilGrad)" stroke="#00e5ff" stroke-width="0.8" opacity="0.85" transform="rotate(40 60 60)"/>
-                <use href="#jvsCoilShape" fill="url(#jvsCoilGrad)" stroke="#00e5ff" stroke-width="0.8" opacity="0.85" transform="rotate(80 60 60)"/>
-                <use href="#jvsCoilShape" fill="url(#jvsCoilGrad)" stroke="#00e5ff" stroke-width="0.8" opacity="0.85" transform="rotate(120 60 60)"/>
-                <use href="#jvsCoilShape" fill="url(#jvsCoilGrad)" stroke="#00e5ff" stroke-width="0.8" opacity="0.85" transform="rotate(160 60 60)"/>
-                <use href="#jvsCoilShape" fill="url(#jvsCoilGrad)" stroke="#00e5ff" stroke-width="0.8" opacity="0.85" transform="rotate(200 60 60)"/>
-                <use href="#jvsCoilShape" fill="url(#jvsCoilGrad)" stroke="#00e5ff" stroke-width="0.8" opacity="0.85" transform="rotate(240 60 60)"/>
-                <use href="#jvsCoilShape" fill="url(#jvsCoilGrad)" stroke="#00e5ff" stroke-width="0.8" opacity="0.85" transform="rotate(280 60 60)"/>
-                <use href="#jvsCoilShape" fill="url(#jvsCoilGrad)" stroke="#00e5ff" stroke-width="0.8" opacity="0.85" transform="rotate(320 60 60)"/>
-              </g>
-
-              <!-- unde de energie care pulseaza spre exterior -->
-              <circle class="jvs-wave" cx="60" cy="60" r="34" fill="none" stroke="#00e5ff" stroke-width="1.6" style="transform-box:fill-box;transform-origin:center;animation:jvs-wave 3.2s ease-out infinite;"/>
-              <circle class="jvs-wave" cx="60" cy="60" r="34" fill="none" stroke="#7df9ff" stroke-width="1.2" style="transform-box:fill-box;transform-origin:center;animation:jvs-wave 3.2s ease-out infinite 1.6s;"/>
-
-              <!-- brat radar care scaneaza -->
-              <g style="transform-box:view-box;transform-origin:60px 60px;animation:spin-cw 4.5s linear infinite;">
-                <line x1="60" y1="60" x2="60" y2="30" stroke="#aef6ff" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
-                <line x1="60" y1="30" x2="60" y2="13" stroke="#00e5ff" stroke-width="1.4" stroke-linecap="round" opacity="0.35"/>
-              </g>
-
-              <!-- inel interior -->
-              <circle cx="60" cy="60" r="27" fill="#06141a" stroke="#18b6d6" stroke-width="1.5"/>
-              <circle cx="60" cy="60" r="27" fill="none" stroke="#00e5ff" stroke-width="0.6" opacity="0.6"/>
-
-              <!-- miez incandescent care respira -->
-              <circle cx="60" cy="60" r="23" fill="url(#jvsCore)" style="transform-box:fill-box;transform-origin:center;animation:pulse 1.8s ease-in-out infinite, jvs-breathe 3.4s ease-in-out infinite;"/>
-
-              <!-- triunghiul iconic -->
-              <path d="M60 49 L70 66 L50 66 Z" fill="none" stroke="#ffffff" stroke-width="1.4" opacity="0.85" stroke-linejoin="round"/>
-              <!-- privirea reactorului: irisul care se uita in prejur -->
-              <g id="jvs-gaze">
-                <circle cx="60" cy="60" r="5.6" fill="#eaffff" opacity="0.95" style="animation:pulse 1.8s ease-in-out infinite;"/>
-                <circle cx="60" cy="60" r="2.5" fill="#0099b0"/>
-              </g>
-            </svg>
+            <!-- Galaxie (canvas) -->
+            <canvas id="jvs-galaxy" class="clippy-body" width="320" height="320" style="width:172px;height:172px;display:block;"></canvas>
             </div>
           </div>
 
@@ -6837,6 +6743,72 @@
   };
 
   jvsCountUp.hookStats();
+
+  // GALAXIE — reactorul Gibilan ca disc spiral pe canvas
+  const jvsGalaxy = {
+    canvas: null, ctx: null, stars: [], raf: null, t: 0, running: false,
+    init() {
+      this.canvas = document.getElementById('jvs-galaxy');
+      if (!this.canvas) return;
+      this.ctx = this.canvas.getContext('2d');
+      this.build();
+    },
+    build() {
+      const W = this.canvas.width, maxR = W / 2 - 10, arms = 3, twist = 2.6;
+      this.stars = [];
+      const N = 300;
+      for (let i = 0; i < N; i++) {
+        const rr = Math.pow(Math.random(), 0.65);
+        const arm = Math.floor(Math.random() * arms);
+        const scatter = (Math.random() - 0.5) * (0.45 + (1 - rr) * 0.7);
+        const base = arm * (Math.PI * 2 / arms) + rr * twist * Math.PI + scatter;
+        let col;
+        if (rr < 0.18) col = 'rgba(255,255,255,';
+        else if (rr < 0.45) col = 'rgba(170,246,255,';
+        else if (rr < 0.72) col = 'rgba(120,200,255,';
+        else col = 'rgba(176,124,255,';
+        this.stars.push({ r: rr * maxR, base: base, col: col, size: Math.random() * 1.3 + 0.4, ph: Math.random() * 6.28, tw: 0.6 + Math.random() * 0.8 });
+      }
+    },
+    draw() {
+      const ctx = this.ctx, W = this.canvas.width, cx = W / 2, cy = W / 2, maxR = W / 2 - 10;
+      ctx.clearRect(0, 0, W, W);
+      let g = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR);
+      g.addColorStop(0, 'rgba(120,200,255,0.16)');
+      g.addColorStop(0.45, 'rgba(90,120,255,0.06)');
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, maxR, 0, 6.2832); ctx.fill();
+      const pulse = 0.85 + 0.15 * Math.sin(this.t * 0.04);
+      let c = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 0.24);
+      c.addColorStop(0, 'rgba(255,255,255,' + (0.95 * pulse) + ')');
+      c.addColorStop(0.5, 'rgba(185,240,255,' + (0.5 * pulse) + ')');
+      c.addColorStop(1, 'rgba(0,229,255,0)');
+      ctx.fillStyle = c; ctx.beginPath(); ctx.arc(cx, cy, maxR * 0.24, 0, 6.2832); ctx.fill();
+      const rot = this.t * 0.0035;
+      ctx.globalCompositeOperation = 'lighter';
+      for (const s of this.stars) {
+        const a = s.base + rot;
+        const x = cx + s.r * Math.cos(a), y = cy + s.r * Math.sin(a);
+        const tw = 0.5 + 0.5 * Math.sin(this.t * 0.05 * s.tw + s.ph);
+        ctx.fillStyle = s.col + (0.3 + 0.6 * tw) + ')';
+        ctx.beginPath(); ctx.arc(x, y, s.size, 0, 6.2832); ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+    },
+    loop() {
+      if (!this.running) return;
+      if (!document.hidden) { this.t++; this.draw(); }
+      this.raf = requestAnimationFrame(() => this.loop());
+    },
+    start() {
+      if (!this.canvas) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) { this.t = 300; this.draw(); return; }
+      if (this.running) return;
+      this.running = true; this.loop();
+    }
+  };
+  jvsGalaxy.init();
+  jvsGalaxy.start();
 
   // Pornire fiabila (apelurile bare ocolesc wrapperele pe window):
   // particulele pornesc mereu; beam-urile pornesc cand reactorul e vizibil.
