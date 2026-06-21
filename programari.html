@@ -474,6 +474,54 @@
     .gib-todo-cb{accent-color:#00e5ff;width:15px;height:15px;cursor:pointer;flex-shrink:0;}
 
     @media(max-width:768px){.gibilan-layout{grid-template-columns:1fr;}}
+
+    /* ── JARVIS CARD STYLE (Reusable) ──────────────────────────── */
+    .jvs-card{position:relative;background:linear-gradient(135deg,rgba(10,24,24,.8) 0%,rgba(15,32,32,.6) 100%);border:1px solid #00e5ff;border-radius:0;overflow:hidden;box-shadow:0 0 20px rgba(0,229,255,.15),inset 0 0 20px rgba(0,229,255,.05);display:flex;flex-direction:column;}
+    .jvs-card::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,rgba(0,229,255,.03) 0px,transparent 2px,transparent 4px,rgba(0,229,255,.03) 6px);pointer-events:none;animation:scanline-sweep 8s linear infinite;z-index:0;}
+    .jvs-card-head{background:linear-gradient(90deg,#00b8e6 0%,#00e5ff 100%);color:#fff;font-family:'Share Tech Mono',monospace;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:12px 16px;position:relative;z-index:2;box-shadow:0 2px 8px rgba(0,229,255,.3);display:flex;align-items:center;justify-content:space-between;}
+    .jvs-card-head::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#7df9ff,transparent);opacity:.6;}
+    .jvs-card-body{padding:20px;position:relative;z-index:1;flex:1;display:flex;flex-direction:column;gap:12px;}
+    /* Card Brackets (corner decorations) */
+    .jvs-card::after{content:'';position:absolute;top:-1px;left:-1px;width:14px;height:14px;border:1.5px solid #7df9ff;border-right:none;border-bottom:none;opacity:.7;pointer-events:none;z-index:3;}
+    .jvs-bracket{position:absolute;width:14px;height:14px;border:1.5px solid #7df9ff;opacity:.7;pointer-events:none;z-index:3;}
+    .jvs-bracket-tr{top:-1px;right:-1px;border-left:none;border-bottom:none;}
+    .jvs-bracket-bl{bottom:-1px;left:-1px;border-right:none;border-top:none;}
+    .jvs-bracket-br{bottom:-1px;right:-1px;border-left:none;border-top:none;}
+
+    /* Clock Widget */
+    .jvs-clock-display{font-family:'Share Tech Mono',monospace;font-size:3.2rem;font-weight:900;color:#00e5ff;text-align:center;line-height:1;letter-spacing:.05em;text-shadow:0 0 20px rgba(0,229,255,.8),0 0 40px rgba(24,182,214,.4);animation:pulse-glow 3s ease-in-out infinite;}
+    .jvs-clock-date{font-family:'Share Tech Mono',monospace;font-size:.85rem;color:#7df9ff;text-align:center;margin-top:8px;letter-spacing:.02em;}
+
+    /* Stats Grid */
+    .jvs-stat-item{display:flex;flex-direction:column;gap:6px;padding:10px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);border-radius:0;}
+    .jvs-stat-label{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:#7df9ff;text-transform:uppercase;letter-spacing:.08em;opacity:.8;}
+    .jvs-stat-value{font-family:'Share Tech Mono',monospace;font-size:2rem;font-weight:900;color:#00e5ff;text-shadow:0 0 15px rgba(0,229,255,.6);}
+
+    /* Notepad */
+    .jvs-notepad{width:100%;min-height:140px;background:rgba(6,15,15,.8);border:1px solid #7df9ff;border-radius:0;color:#00e5ff;font-family:'Share Tech Mono',monospace;font-size:.8rem;padding:12px;outline:none;resize:vertical;transition:all .2s;}
+    .jvs-notepad::placeholder{color:rgba(125,249,255,.4);}
+    .jvs-notepad:focus{border-color:#00e5ff;box-shadow:0 0 12px rgba(0,229,255,.3),inset 0 0 8px rgba(0,229,255,.1);}
+
+    /* Calculator */
+    .jvs-calc-display{background:rgba(6,15,15,.9);border:1px solid #7df9ff;border-radius:0;color:#00e5ff;font-family:'Share Tech Mono',monospace;font-size:1.8rem;font-weight:900;padding:12px;text-align:right;word-wrap:break-word;word-break:break-all;min-height:50px;display:flex;align-items:flex-end;justify-content:flex-end;box-shadow:inset 0 0 8px rgba(0,229,255,.1);margin-bottom:8px;}
+    .jvs-calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+    .jvs-calc-btn{background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.3);border-radius:0;color:#00e5ff;font-family:'Share Tech Mono',monospace;font-size:.85rem;font-weight:700;padding:10px;cursor:pointer;transition:all .2s;}
+    .jvs-calc-btn:hover{background:rgba(0,229,255,.15);box-shadow:0 0 10px rgba(0,229,255,.3);}
+    .jvs-calc-btn-op{background:rgba(254,188,46,.1);border-color:rgba(254,188,46,.4);color:#febc2e;}
+    .jvs-calc-btn-op:hover{background:rgba(254,188,46,.15);box-shadow:0 0 10px rgba(254,188,46,.3);}
+    .jvs-calc-btn-eq{background:rgba(76,175,80,.1);border-color:rgba(76,175,80,.4);color:#4db540;grid-column:span 2;}
+    .jvs-calc-btn-eq:hover{background:rgba(76,175,80,.15);box-shadow:0 0 10px rgba(76,175,80,.3);}
+    .jvs-calc-btn-clr{background:rgba(255,95,87,.1);border-color:rgba(255,95,87,.4);color:#ff5f57;grid-column:span 2;}
+    .jvs-calc-btn-clr:hover{background:rgba(255,95,87,.15);box-shadow:0 0 10px rgba(255,95,87,.3);}
+
+    /* Widgets Grid in Gibilan Panel */
+    .gibilan-widgets-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px;}
+    @media(max-width:1024px){.gibilan-widgets-grid{grid-template-columns:1fr;}}
+
+    /* Enhanced Reactor (more detailed) */
+    .enhanced-reactor-ring{position:absolute;border:1px solid;border-radius:50%;opacity:.6;transform-box:fill-box;transform-origin:center;}
+    .reactor-tick{position:absolute;width:1px;height:3px;background:#7df9ff;opacity:.5;transform-origin:70px center;}
+    .reactor-arc{fill:none;stroke:#00e5ff;opacity:.3;stroke-width:.8;}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 </head>
@@ -537,20 +585,34 @@
             <div class="speech-bubble" id="gib-bubble">J.A.R.V.I.S. ONLINE</div>
             <div class="clippy-core">
             <!-- HUD Rings SVG Overlay -->
-            <svg viewBox="0 0 180 180" width="150" height="150" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;filter:drop-shadow(0 0 15px rgba(0,229,255,0.4));">
-              <!-- Outer Ring 1 (rotating CW) -->
-              <circle cx="90" cy="90" r="70" fill="none" stroke="#00e5ff" stroke-width="1.5" opacity="0.6" style="transform-box:fill-box;transform-origin:center;animation:spin-cw 20s linear infinite;"/>
-              <!-- Ticks on outer ring -->
-              <g stroke="#7df9ff" stroke-width="1" opacity="0.4" style="transform-box:fill-box;transform-origin:center;animation:spin-cw 20s linear infinite;">
-                <line x1="90" y1="20" x2="90" y2="25"/><line x1="155" y1="90" x2="160" y2="90"/><line x1="90" y1="160" x2="90" y2="155"/><line x1="25" y1="90" x2="20" y2="90"/>
-                <line x1="135" y1="45" x2="139" y2="41"/><line x1="139" y1="139" x2="135" y2="135"/><line x1="45" y1="135" x2="41" y2="139"/><line x1="41" y1="41" x2="45" y2="45"/>
+            <svg viewBox="0 0 180 180" width="150" height="150" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;filter:drop-shadow(0 0 20px rgba(0,229,255,0.6)),drop-shadow(0 0 40px rgba(24,182,214,0.2));">
+              <defs>
+                <radialGradient id="gReactor" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="rgba(0,229,255,0.4)"/>
+                  <stop offset="100%" stop-color="rgba(0,229,255,0.05)"/>
+                </radialGradient>
+              </defs>
+              <!-- Outer Ring 1 (rotating CW, thicker) -->
+              <circle cx="90" cy="90" r="75" fill="none" stroke="#00e5ff" stroke-width="2" opacity="0.7" style="transform-box:fill-box;transform-origin:center;animation:spin-cw 20s linear infinite;box-shadow:0 0 15px rgba(0,229,255,0.4);"/>
+              <!-- Ticks on outer ring (more details) -->
+              <g stroke="#7df9ff" stroke-width="1.2" opacity="0.6" style="transform-box:fill-box;transform-origin:center;animation:spin-cw 20s linear infinite;">
+                <line x1="90" y1="15" x2="90" y2="21"/><line x1="90" y1="159" x2="90" y2="165"/><line x1="15" y1="90" x2="21" y2="90"/><line x1="159" y1="90" x2="165" y2="90"/>
+                <line x1="128" y1="32" x2="133" y2="27"/><line x1="47" y1="148" x2="52" y2="153"/><line x1="32" y1="128" x2="27" y2="133"/><line x1="148" y1="47" x2="153" y2="52"/>
+                <line x1="133" y1="47" x2="138" y2="42"/><line x1="42" y1="138" x2="37" y2="143"/><line x1="47" y1="133" x2="42" y2="138"/><line x1="138" y1="42" x2="143" y2="37"/>
               </g>
-              <!-- Mid Ring 2 (rotating CCW) -->
-              <circle cx="90" cy="90" r="50" fill="none" stroke="#7df9ff" stroke-width="1" opacity="0.5" style="transform-box:fill-box;transform-origin:center;animation:spin-ccw 24s linear infinite;"/>
+              <!-- Mid Ring 2 (rotating CCW, darker) -->
+              <circle cx="90" cy="90" r="55" fill="none" stroke="#18b6d6" stroke-width="1.5" opacity="0.55" style="transform-box:fill-box;transform-origin:center;animation:spin-ccw 24s linear infinite;"/>
               <!-- Inner Ring 3 (rotating CW, smaller) -->
-              <circle cx="90" cy="90" r="30" fill="none" stroke="#18b6d6" stroke-width="1.2" opacity="0.4" style="transform-box:fill-box;transform-origin:center;animation:spin-cw 18s linear infinite;"/>
-              <!-- Center Arc-like glow -->
-              <circle cx="90" cy="90" r="18" fill="none" stroke="#00e5ff" stroke-width="0.8" opacity="0.3" style="animation:pulse 2s ease-in-out infinite;"/>
+              <circle cx="90" cy="90" r="38" fill="none" stroke="#00e5ff" stroke-width="1" opacity="0.5" style="transform-box:fill-box;transform-origin:center;animation:spin-cw 18s linear infinite;"/>
+              <!-- Innermost Ring 4 (rotating CCW, very small) -->
+              <circle cx="90" cy="90" r="22" fill="none" stroke="#7df9ff" stroke-width="0.8" opacity="0.4" style="transform-box:fill-box;transform-origin:center;animation:spin-ccw 16s linear infinite;"/>
+              <!-- Arc segments (reactor fuel rods style) -->
+              <path d="M90 20 A70 70 0 0 1 140 28" fill="none" stroke="#ff6b35" stroke-width="1.2" opacity="0.6" style="animation:pulse 2.5s ease-in-out infinite;"/>
+              <path d="M140 28 A70 70 0 0 1 155 90" fill="none" stroke="#ff6b35" stroke-width="1.2" opacity="0.5" style="animation:pulse 2.5s ease-in-out infinite 0.3s;"/>
+              <path d="M155 90 A70 70 0 0 1 90 160" fill="none" stroke="#ff6b35" stroke-width="1.2" opacity="0.4" style="animation:pulse 2.5s ease-in-out infinite 0.6s;"/>
+              <!-- Center pulsing core -->
+              <circle cx="90" cy="90" r="14" fill="url(#gReactor)" style="animation:pulse 1.8s ease-in-out infinite;"/>
+              <circle cx="90" cy="90" r="14" fill="none" stroke="#00e5ff" stroke-width="0.6" opacity="0.8" style="animation:pulse 1.8s ease-in-out infinite;"/>
             </svg>
             <svg viewBox="0 0 120 120" width="115" height="115" class="clippy-body">
               <defs>
@@ -659,6 +721,84 @@
           <div>
             <div class="gib-date" id="gib-date-title">Se &icirc;ncarc&#259;...</div>
             <div class="gib-date-sub" id="gib-date-sub"></div>
+          </div>
+
+          <!-- JARVIS Widgets Grid -->
+          <div class="gibilan-widgets-grid">
+            <!-- Clock Widget -->
+            <div class="jvs-card">
+              <div class="jvs-card-head">TIME</div>
+              <div class="jvs-bracket jvs-bracket-tr"></div>
+              <div class="jvs-bracket jvs-bracket-bl"></div>
+              <div class="jvs-bracket jvs-bracket-br"></div>
+              <div class="jvs-card-body">
+                <div class="jvs-clock-display" id="jvs-clock-time">00:00:00</div>
+                <div class="jvs-clock-date" id="jvs-clock-date">Luni, 1 ianuarie 2025</div>
+              </div>
+            </div>
+
+            <!-- Stats Widget -->
+            <div class="jvs-card">
+              <div class="jvs-card-head">STATUS</div>
+              <div class="jvs-bracket jvs-bracket-tr"></div>
+              <div class="jvs-bracket jvs-bracket-bl"></div>
+              <div class="jvs-bracket jvs-bracket-br"></div>
+              <div class="jvs-card-body">
+                <div class="jvs-stat-item">
+                  <div class="jvs-stat-label">INTALNIRI AZI</div>
+                  <div class="jvs-stat-value" id="jvs-stat-meetings">0</div>
+                </div>
+                <div class="jvs-stat-item">
+                  <div class="jvs-stat-label">TO-DO ACTIV</div>
+                  <div class="jvs-stat-value" id="jvs-stat-todos">0</div>
+                </div>
+                <div class="jvs-stat-item">
+                  <div class="jvs-stat-label">DEADLINE (7Z)</div>
+                  <div class="jvs-stat-value" id="jvs-stat-deadlines">0</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Notepad Widget -->
+            <div class="jvs-card">
+              <div class="jvs-card-head">NOTEPAD</div>
+              <div class="jvs-bracket jvs-bracket-tr"></div>
+              <div class="jvs-bracket jvs-bracket-bl"></div>
+              <div class="jvs-bracket jvs-bracket-br"></div>
+              <div class="jvs-card-body">
+                <textarea class="jvs-notepad" id="jvs-notepad" placeholder="Notite rapide... (salveaza automat)"></textarea>
+              </div>
+            </div>
+
+            <!-- Calculator Widget -->
+            <div class="jvs-card">
+              <div class="jvs-card-head">CALCULATOR</div>
+              <div class="jvs-bracket jvs-bracket-tr"></div>
+              <div class="jvs-bracket jvs-bracket-bl"></div>
+              <div class="jvs-bracket jvs-bracket-br"></div>
+              <div class="jvs-card-body">
+                <div class="jvs-calc-display" id="jvs-calc-display">0</div>
+                <div class="jvs-calc-grid">
+                  <button class="jvs-calc-btn jvs-calc-btn-clr" onclick="jvsCalcClear()">C</button>
+                  <button class="jvs-calc-btn jvs-calc-btn-op" onclick="jvsCalcOp('/')">/</button>
+                  <button class="jvs-calc-btn" onclick="jvsCalcNum('7')">7</button>
+                  <button class="jvs-calc-btn" onclick="jvsCalcNum('8')">8</button>
+                  <button class="jvs-calc-btn" onclick="jvsCalcNum('9')">9</button>
+                  <button class="jvs-calc-btn jvs-calc-btn-op" onclick="jvsCalcOp('*')">*</button>
+                  <button class="jvs-calc-btn" onclick="jvsCalcNum('4')">4</button>
+                  <button class="jvs-calc-btn" onclick="jvsCalcNum('5')">5</button>
+                  <button class="jvs-calc-btn" onclick="jvsCalcNum('6')">6</button>
+                  <button class="jvs-calc-btn jvs-calc-btn-op" onclick="jvsCalcOp('-')">-</button>
+                  <button class="jvs-calc-btn" onclick="jvsCalcNum('1')">1</button>
+                  <button class="jvs-calc-btn" onclick="jvsCalcNum('2')">2</button>
+                  <button class="jvs-calc-btn" onclick="jvsCalcNum('3')">3</button>
+                  <button class="jvs-calc-btn jvs-calc-btn-op" onclick="jvsCalcOp('+')">+</button>
+                  <button class="jvs-calc-btn" onclick="jvsCalcNum('0')" style="grid-column:span 2;">0</button>
+                  <button class="jvs-calc-btn" onclick="jvsCalcNum('.')">.</button>
+                  <button class="jvs-calc-btn jvs-calc-btn-eq" onclick="jvsCalcEq()">=</button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Intalniri -->
@@ -3683,6 +3823,7 @@
       renderGibilanCheltuieli();
       renderGibilanSidebar();
       rotateGibMessage();
+      if (typeof jvsUpdateStats === 'function') jvsUpdateStats();
       if (selectedClientId) renderClientDetail(selectedClientId);
       if (currentTab === 'clients') renderClients();
     } catch {}
@@ -4076,6 +4217,158 @@
 
   // Rotire mesaje speech bubble la fiecare 5 secunde
   setInterval(rotateGibMessage, 5000);
+
+  // ════════════════════════════════════════════════════════════════
+  // JARVIS WIDGETS: Clock, Stats, Notepad, Calculator
+  // ════════════════════════════════════════════════════════════════
+
+  // --- CLOCK WIDGET ---
+  let jvsClockTimer = null;
+  function jvsClock() {
+    const updateClock = () => {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      const timeEl = document.getElementById('jvs-clock-time');
+      if (timeEl) timeEl.textContent = h + ':' + m + ':' + s;
+
+      const dateOpts = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+      const dateStr = now.toLocaleDateString('ro-RO', dateOpts);
+      const dateCapital = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+      const dateEl = document.getElementById('jvs-clock-date');
+      if (dateEl) dateEl.textContent = dateCapital;
+    };
+    updateClock();
+    if (!jvsClockTimer) jvsClockTimer = setInterval(updateClock, 1000);
+  }
+
+  // --- STATS WIDGET ---
+  function jvsUpdateStats() {
+    if (!gibData) return;
+    const today = new Date().toISOString().split('T')[0];
+    const in7 = new Date(); in7.setDate(in7.getDate() + 7);
+    const in7Str = in7.toISOString().split('T')[0];
+
+    const todayMeetings = (gibData.meetings || []).filter(m => m.date === today).length;
+    const el1 = document.getElementById('jvs-stat-meetings');
+    if (el1) el1.textContent = todayMeetings;
+
+    const activeTodos = (gibData.todos || []).filter(t => !t.done).length;
+    const el2 = document.getElementById('jvs-stat-todos');
+    if (el2) el2.textContent = activeTodos;
+
+    const upcomingDeadlines = (gibData.deadlines || [])
+      .filter(d => d.date >= today && d.date <= in7Str).length;
+    const el3 = document.getElementById('jvs-stat-deadlines');
+    if (el3) el3.textContent = upcomingDeadlines;
+  }
+  function jvsStats() { jvsUpdateStats(); }
+
+  // --- NOTEPAD WIDGET ---
+  function jvsNote() {
+    const textarea = document.getElementById('jvs-notepad');
+    if (!textarea || textarea.dataset.jvsBound) return;
+    textarea.dataset.jvsBound = '1';
+
+    const storageKey = 'cdGibNote';
+    const savedNote = localStorage.getItem(storageKey);
+    if (savedNote) textarea.value = savedNote;
+
+    textarea.addEventListener('input', () => {
+      localStorage.setItem(storageKey, textarea.value);
+    });
+  }
+
+  // --- CALCULATOR WIDGET ---
+  let jvsCalcState = { display: '0', current: '0', operator: null, shouldClear: false };
+
+  function jvsCalcNum(num) {
+    const state = jvsCalcState;
+    if (state.shouldClear) {
+      state.current = num;
+      state.shouldClear = false;
+    } else {
+      if (num === '.' && state.current.includes('.')) return;
+      state.current = state.current === '0' ? num : state.current + num;
+    }
+    state.display = state.current;
+    jvsCalcRender();
+  }
+
+  function jvsCalcOp(op) {
+    const state = jvsCalcState;
+    if (state.operator && !state.shouldClear) {
+      jvsCalcEq();
+    }
+    state.operator = op;
+    state.shouldClear = true;
+  }
+
+  function jvsCalcEq() {
+    const state = jvsCalcState;
+    if (!state.operator || state.shouldClear) return;
+
+    let result;
+    const curr = parseFloat(state.current);
+    const prev = parseFloat(state.display);
+
+    try {
+      if (state.operator === '+') result = prev + curr;
+      else if (state.operator === '-') result = prev - curr;
+      else if (state.operator === '*') result = prev * curr;
+      else if (state.operator === '/') result = prev / curr;
+      else return;
+
+      result = Math.round(result * 10000000) / 10000000; // Avoid floating point errors
+      state.current = String(result);
+      state.display = String(result);
+      state.operator = null;
+      state.shouldClear = true;
+    } catch {
+      state.display = 'ERROR';
+    }
+    jvsCalcRender();
+  }
+
+  function jvsCalcClear() {
+    jvsCalcState = { display: '0', current: '0', operator: null, shouldClear: false };
+    jvsCalcRender();
+  }
+
+  function jvsCalcRender() {
+    const display = document.getElementById('jvs-calc-display');
+    if (display) {
+      let text = jvsCalcState.display;
+      if (text === '0') text = '0';
+      display.textContent = text;
+    }
+  }
+
+  // --- INIT WIDGETS ON GIBILAN TAB ---
+  const originalSwitchTab = window.switchTab;
+  window.switchTab = function(tab, btn) {
+    const result = originalSwitchTab.call(this, tab, btn);
+    if (tab === 'gibilan') {
+      setTimeout(() => {
+        jvsClock();
+        jvsStats();
+        jvsNote();
+      }, 100);
+    }
+    return result;
+  };
+
+  // Auto-initialize on page load if Gibilan tab is active
+  document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('panel-gibilan').classList.contains('active')) {
+      setTimeout(() => {
+        jvsClock();
+        jvsStats();
+        jvsNote();
+      }, 500);
+    }
+  });
 
   // -- LAYOUT EDITOR --
 
