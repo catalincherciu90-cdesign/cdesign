@@ -500,6 +500,10 @@
     .clippy-wrap{position:relative;display:flex;flex-direction:column;align-items:center;}
     .clippy-core{position:relative;display:flex;align-items:center;justify-content:center;}
     .clippy-body{animation:clippy-float 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(0,229,255,.5));}
+    .jvs-speak-btn{margin-top:14px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.45);color:#00e5ff;font-family:'Share Tech Mono',monospace;font-size:.78rem;font-weight:700;letter-spacing:.04em;padding:9px 18px;border-radius:0;cursor:pointer;transition:background .2s,box-shadow .2s,transform .15s;text-shadow:0 0 8px rgba(0,229,255,.5);}
+    .jvs-speak-btn:hover{background:rgba(0,229,255,.18);box-shadow:0 0 14px rgba(0,229,255,.4);transform:translateY(-1px);}
+    .jvs-speak-btn.speaking{animation:jvs-speak-pulse 1s ease-in-out infinite;}
+    @keyframes jvs-speak-pulse{0%,100%{box-shadow:0 0 8px rgba(0,229,255,.3)}50%{box-shadow:0 0 18px rgba(0,229,255,.7)}}
     @keyframes clippy-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
     @keyframes clippy-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
@@ -982,8 +986,9 @@
             <div class="speech-bubble" id="gib-bubble">J.A.R.V.I.S. ONLINE</div>
             <div class="clippy-core">
             <!-- Galaxie (canvas) -->
-            <canvas id="jvs-galaxy" class="clippy-body" width="320" height="320" style="width:172px;height:172px;display:block;"></canvas>
+            <canvas id="jvs-galaxy" class="clippy-body" width="320" height="320" style="width:172px;height:172px;display:block;cursor:pointer;" onclick="jvsSpeak()" title="Raport vocal"></canvas>
             </div>
+            <button id="jvs-speak-btn" class="jvs-speak-btn" type="button" onclick="jvsSpeak()">🔊 Raport vocal</button>
           </div>
 
           <!-- Status Widget (right panel) -->
@@ -4069,6 +4074,48 @@
 
     gibMsgIdx = (gibMsgIdx + 1) % msgs.length;
     bubble.innerHTML = msgs[gibMsgIdx];
+  }
+
+  // Raport vocal: Gibilan spune cate intalniri/taskuri/deadline-uri ai
+  function jvsSpeak() {
+    if (typeof gibData === 'undefined' || !gibData) return;
+    const today = new Date().toISOString().split('T')[0];
+    const in7 = new Date(); in7.setDate(in7.getDate() + 7);
+    const in7Str = in7.toISOString().split('T')[0];
+    const m = (gibData.meetings || []).filter(x => x.date === today).length;
+    const t = (gibData.todos || []).filter(x => !x.done).length;
+    const d = (gibData.deadlines || []).filter(x => x.date >= today && x.date <= in7Str).length;
+
+    let txt;
+    if (m === 0 && t === 0 && d === 0) {
+      txt = 'Bună! Momentan nu ai nimic programat. Zi liniștită!';
+    } else {
+      const parts = [];
+      parts.push(m === 1 ? 'o întâlnire azi' : m + ' întâlniri azi');
+      parts.push(t === 1 ? 'un task de făcut' : t + ' task-uri de făcut');
+      parts.push(d === 1 ? 'un deadline în următoarele 7 zile' : d + ' deadline-uri în următoarele 7 zile');
+      txt = 'Bună! Ai ' + parts.join(', ') + '.';
+    }
+
+    const bubble = document.getElementById('gib-bubble');
+    if (bubble) bubble.textContent = txt;
+
+    try {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(txt);
+        u.lang = 'ro-RO'; u.rate = 1; u.pitch = 1;
+        const voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+        const ro = voices.find(v => /ro/i.test(v.lang));
+        if (ro) u.voice = ro;
+        const btn = document.getElementById('jvs-speak-btn');
+        if (btn) {
+          btn.classList.add('speaking');
+          u.onend = u.onerror = () => btn.classList.remove('speaking');
+        }
+        window.speechSynthesis.speak(u);
+      }
+    } catch (e) {}
   }
 
   async function loadGibilan() {
