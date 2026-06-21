@@ -214,14 +214,14 @@
       .client-sections{grid-template-columns:1fr;}
     }
     @media(max-width:768px){
-      .gibilan-layout{grid-template-columns:1fr;}
-      .gibilan-char{flex-direction:row;align-items:flex-start;gap:16px;flex-wrap:wrap;}
-      .clippy-wrap{flex-shrink:0;}
-      .gibilan-char svg{width:80px;height:80px;}
-      .speech-bubble{max-width:none;flex:1;margin-bottom:0;}
-      .speech-bubble::after{display:none;}
-      .gib-add-btns{flex-direction:row;flex-wrap:wrap;}
-      .gib-add-btn{flex:1;min-width:120px;}
+      .gibilan-layout{flex-direction:column;}
+      .gibilan-char{grid-template-columns:1fr;grid-template-areas:"time" "reactor" "status" "buttons";}
+      .clippy-wrap{margin:20px 0;}
+      .gibilan-char svg{width:100px;height:100px;}
+      .speech-bubble{max-width:200px;margin-bottom:12px;}
+      .gib-add-btns{grid-template-columns:1fr;gap:8px;}
+      .gib-add-btn{width:100%;text-align:center;}
+      .gibilan-agenda{grid-template-columns:1fr;}
       .crm-panel-grid{grid-template-columns:1fr;}
       .crm-sidebar{position:static;}
       .clients-grid{grid-template-columns:1fr;}
@@ -252,7 +252,7 @@
       .client-card{padding:14px;}
       .client-detail-header{gap:10px;}
       .client-detail-name{font-size:1.1rem;}
-      .gibilan-char svg{width:64px;height:64px;}
+      .gibilan-char svg{width:80px;height:80px;}
       .crm-sb-top{flex-wrap:wrap;gap:6px;}
       .client-info-grid{grid-template-columns:1fr;}
       .f-row{grid-template-columns:1fr;}
@@ -384,10 +384,58 @@
     .media-pick-btn:hover{border-color:var(--teal-border);color:var(--teal);}
 
     /* ── GIBILAN ─────────────────────────────────────────────── */
-    /* JARVIS HUD Theme: Cyan Arc Reactor Style */
-    .gibilan-layout{display:grid;grid-template-columns:260px 1fr;gap:32px;padding:24px 0;}
-    .gibilan-char{display:flex;flex-direction:column;align-items:center;gap:16px;}
+    /* JARVIS HUD Theme: Cyan Arc Reactor Style - Command Center Layout */
+    .gibilan-layout{display:flex;flex-direction:column;gap:32px;padding:24px 0;}
+
+    /* Hero Zone: Reactor in Center with Panels Around */
+    .gibilan-char{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:flex-start;grid-template-areas:"time reactor status" "buttons buttons buttons";margin-bottom:16px;}
+
+    /* Reactor centered and self-aligned */
+    .clippy-wrap{grid-area:reactor;display:flex;flex-direction:column;align-items:center;justify-self:center;align-self:start;padding-top:10px;}
+
+    /* Add buttons span full width at bottom */
+    .gib-add-btns{grid-area:buttons;}
+
+    /* TIME widget on left */
+    .gibilan-char .jvs-card:nth-child(1){grid-area:time;min-height:200px;}
+
+    /* STATUS widget on right */
+    .gibilan-char .jvs-card:nth-child(3){grid-area:status;min-height:200px;}
+
+    /* Responsive: Tablet - stack to single column */
+    @media(max-width:1024px){
+      .gibilan-char{grid-template-columns:1fr;grid-template-areas:"time" "reactor" "status" "buttons";gap:16px;}
+      .gibilan-char .jvs-card{width:100%;min-height:auto;}
+      .clippy-wrap{padding-top:20px;}
+    }
+
+    /* Responsive: Mobile - compact layout */
+    @media(max-width:768px){
+      .gibilan-char{grid-template-columns:1fr;gap:12px;}
+      .clippy-wrap{margin:20px 0;padding-top:10px;}
+      .gib-add-btns{grid-template-columns:1fr;gap:8px;}
+    }
+
+    /* Agenda Section: Flex by default, grid on desktop */
     .gibilan-agenda{display:flex;flex-direction:column;gap:20px;}
+
+    /* On desktop: NOTEPAD on left, sections on right in 2-col grid */
+    @media(min-width:1025px){
+      .gibilan-agenda{display:grid;grid-template-columns:1fr 1.2fr;gap:24px;}
+      .gibilan-agenda > div:first-child{grid-column:1/-1;grid-row:0;}
+      .gibilan-agenda > .jvs-card{grid-column:1;grid-row:2/8;align-self:start;}
+      .gibilan-agenda > .gib-section{grid-column:2;}
+      .gibilan-agenda > .gib-section:nth-of-type(2){grid-row:2;}
+      .gibilan-agenda > .gib-section:nth-of-type(3){grid-row:3;}
+      .gibilan-agenda > .gib-section:nth-of-type(4){grid-row:4;}
+      .gibilan-agenda > .gib-section:nth-of-type(5){grid-row:5;}
+      .gibilan-agenda > .gib-section:nth-of-type(6){grid-row:6;}
+    }
+
+    /* On tablet: single column, NOTEPAD full width */
+    @media(max-width:1024px){
+      .gibilan-agenda{flex-direction:column;}
+    }
 
     /* HUD Panels: Holographic Style */
     .gib-section{background:linear-gradient(135deg,rgba(10,24,24,.8) 0%,rgba(15,32,32,.6) 100%);border:1px solid #00e5ff;border-radius:0;padding:20px;position:relative;box-shadow:0 0 20px rgba(0,229,255,.15),inset 0 0 20px rgba(0,229,255,.05);overflow:visible;}
@@ -417,8 +465,12 @@
     .gib-date{font-family:'Share Tech Mono',monospace;font-size:1.6rem;font-weight:800;color:#00e5ff;margin-bottom:4px;text-shadow:0 0 20px rgba(0,229,255,.8),0 0 40px rgba(24,182,214,.4);letter-spacing:.05em;animation:pulse-glow 3s ease-in-out infinite;}
     .gib-date-sub{font-size:.82rem;color:#7df9ff;margin-bottom:20px;font-family:'Share Tech Mono',monospace;opacity:.8;}
 
-    .gib-add-btns{display:flex;flex-direction:column;gap:8px;width:100%;}
-    .gib-add-btn{background:transparent;border:2px solid #00e5ff;border-radius:0;color:#00e5ff;font-size:.82rem;padding:10px 14px;cursor:pointer;text-align:left;transition:all .3s;font-family:'Share Tech Mono',monospace;font-weight:600;letter-spacing:.02em;position:relative;overflow:hidden;}
+    .gib-add-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;}
+    .gib-add-btn{background:transparent;border:2px solid #00e5ff;border-radius:0;color:#00e5ff;font-size:.82rem;padding:10px 14px;cursor:pointer;text-align:center;transition:all .3s;font-family:'Share Tech Mono',monospace;font-weight:600;letter-spacing:.02em;position:relative;overflow:hidden;}
+
+    @media(max-width:768px){
+      .gib-add-btns{grid-template-columns:1fr;}
+    }
     .gib-add-btn::before{content:'';position:absolute;inset:0;background:rgba(0,229,255,.1);opacity:0;transition:opacity .3s;}
     .gib-add-btn:hover{background:rgba(0,229,255,.1);box-shadow:0 0 20px rgba(0,229,255,.4),inset 0 0 20px rgba(0,229,255,.1);color:#7df9ff;}
     .gib-add-btn:hover::before{opacity:1;}
@@ -482,7 +534,7 @@
 
     .gib-todo-cb{accent-color:#00e5ff;width:15px;height:15px;cursor:pointer;flex-shrink:0;}
 
-    @media(max-width:768px){.gibilan-layout{grid-template-columns:1fr;}}
+    @media(max-width:768px){.gibilan-layout{flex-direction:column;}}
 
     /* ── JARVIS CARD STYLE (Reusable) ──────────────────────────── */
     .jvs-card{position:relative;background:linear-gradient(135deg,rgba(10,24,24,.8) 0%,rgba(15,32,32,.6) 100%);border:1px solid #00e5ff;border-radius:0;overflow:hidden;box-shadow:0 0 20px rgba(0,229,255,.15),inset 0 0 20px rgba(0,229,255,.05);display:flex;flex-direction:column;}
@@ -577,8 +629,21 @@
   <div class="tab-panel active" id="panel-gibilan">
     <div class="main">
       <div class="gibilan-layout">
-        <!-- Stanga: caracter + adauga -->
+        <!-- Hero Zone: Reactor in Center with Panels Around -->
         <div class="gibilan-char">
+          <!-- Clock Widget (left panel) -->
+          <div class="jvs-card">
+            <div class="jvs-card-head">TIME</div>
+            <div class="jvs-bracket jvs-bracket-tr"></div>
+            <div class="jvs-bracket jvs-bracket-bl"></div>
+            <div class="jvs-bracket jvs-bracket-br"></div>
+            <div class="jvs-card-body">
+              <div class="jvs-clock-display" id="jvs-clock-time">00:00:00</div>
+              <div class="jvs-clock-date" id="jvs-clock-date">Luni, 1 ianuarie 2025</div>
+            </div>
+          </div>
+
+          <!-- Central Reactor -->
           <div class="clippy-wrap">
             <div class="speech-bubble" id="gib-bubble">J.A.R.V.I.S. ONLINE</div>
             <div class="clippy-core">
@@ -681,7 +746,29 @@
             </div>
           </div>
 
-          <!-- Butoane adauga -->
+          <!-- Status Widget (right panel) -->
+          <div class="jvs-card">
+            <div class="jvs-card-head">STATUS</div>
+            <div class="jvs-bracket jvs-bracket-tr"></div>
+            <div class="jvs-bracket jvs-bracket-bl"></div>
+            <div class="jvs-bracket jvs-bracket-br"></div>
+            <div class="jvs-card-body">
+              <div class="jvs-stat-item">
+                <div class="jvs-stat-label">INTALNIRI AZI</div>
+                <div class="jvs-stat-value" id="jvs-stat-meetings">0</div>
+              </div>
+              <div class="jvs-stat-item">
+                <div class="jvs-stat-label">TO-DO ACTIV</div>
+                <div class="jvs-stat-value" id="jvs-stat-todos">0</div>
+              </div>
+              <div class="jvs-stat-item">
+                <div class="jvs-stat-label">DEADLINE (7Z)</div>
+                <div class="jvs-stat-value" id="jvs-stat-deadlines">0</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Butoane adauga (full width at bottom) -->
           <div class="gib-add-btns">
             <button class="gib-add-btn" onclick="toggleGibForm('form-meeting')">+ &Icirc;nt&#xE2;lnire</button>
             <div class="gib-form" id="form-meeting">
@@ -724,53 +811,15 @@
             <div class="gib-date-sub" id="gib-date-sub"></div>
           </div>
 
-          <!-- JARVIS Widgets Grid -->
-          <div class="gibilan-widgets-grid">
-            <!-- Clock Widget -->
-            <div class="jvs-card">
-              <div class="jvs-card-head">TIME</div>
-              <div class="jvs-bracket jvs-bracket-tr"></div>
-              <div class="jvs-bracket jvs-bracket-bl"></div>
-              <div class="jvs-bracket jvs-bracket-br"></div>
-              <div class="jvs-card-body">
-                <div class="jvs-clock-display" id="jvs-clock-time">00:00:00</div>
-                <div class="jvs-clock-date" id="jvs-clock-date">Luni, 1 ianuarie 2025</div>
-              </div>
+          <!-- NOTEPAD Widget -->
+          <div class="jvs-card">
+            <div class="jvs-card-head">NOTEPAD</div>
+            <div class="jvs-bracket jvs-bracket-tr"></div>
+            <div class="jvs-bracket jvs-bracket-bl"></div>
+            <div class="jvs-bracket jvs-bracket-br"></div>
+            <div class="jvs-card-body">
+              <textarea class="jvs-notepad" id="jvs-notepad" placeholder="Notite rapide... (salveaza automat)"></textarea>
             </div>
-
-            <!-- Stats Widget -->
-            <div class="jvs-card">
-              <div class="jvs-card-head">STATUS</div>
-              <div class="jvs-bracket jvs-bracket-tr"></div>
-              <div class="jvs-bracket jvs-bracket-bl"></div>
-              <div class="jvs-bracket jvs-bracket-br"></div>
-              <div class="jvs-card-body">
-                <div class="jvs-stat-item">
-                  <div class="jvs-stat-label">INTALNIRI AZI</div>
-                  <div class="jvs-stat-value" id="jvs-stat-meetings">0</div>
-                </div>
-                <div class="jvs-stat-item">
-                  <div class="jvs-stat-label">TO-DO ACTIV</div>
-                  <div class="jvs-stat-value" id="jvs-stat-todos">0</div>
-                </div>
-                <div class="jvs-stat-item">
-                  <div class="jvs-stat-label">DEADLINE (7Z)</div>
-                  <div class="jvs-stat-value" id="jvs-stat-deadlines">0</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Notepad Widget -->
-            <div class="jvs-card">
-              <div class="jvs-card-head">NOTEPAD</div>
-              <div class="jvs-bracket jvs-bracket-tr"></div>
-              <div class="jvs-bracket jvs-bracket-bl"></div>
-              <div class="jvs-bracket jvs-bracket-br"></div>
-              <div class="jvs-card-body">
-                <textarea class="jvs-notepad" id="jvs-notepad" placeholder="Notite rapide... (salveaza automat)"></textarea>
-              </div>
-            </div>
-
           </div>
 
           <!-- Intalniri -->
