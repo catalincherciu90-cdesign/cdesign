@@ -511,17 +511,6 @@
     .jvs-notepad::placeholder{color:rgba(125,249,255,.4);}
     .jvs-notepad:focus{border-color:#00e5ff;box-shadow:0 0 12px rgba(0,229,255,.3),inset 0 0 8px rgba(0,229,255,.1);}
 
-    /* Calculator */
-    .jvs-calc-display{background:rgba(6,15,15,.9);border:1px solid #7df9ff;border-radius:0;color:#00e5ff;font-family:'Share Tech Mono',monospace;font-size:1.8rem;font-weight:900;padding:12px;text-align:right;word-wrap:break-word;word-break:break-all;min-height:50px;display:flex;align-items:flex-end;justify-content:flex-end;box-shadow:inset 0 0 8px rgba(0,229,255,.1);margin-bottom:8px;}
-    .jvs-calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
-    .jvs-calc-btn{background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.3);border-radius:0;color:#00e5ff;font-family:'Share Tech Mono',monospace;font-size:.85rem;font-weight:700;padding:10px;cursor:pointer;transition:all .2s;}
-    .jvs-calc-btn:hover{background:rgba(0,229,255,.15);box-shadow:0 0 10px rgba(0,229,255,.3);}
-    .jvs-calc-btn-op{background:rgba(254,188,46,.1);border-color:rgba(254,188,46,.4);color:#febc2e;}
-    .jvs-calc-btn-op:hover{background:rgba(254,188,46,.15);box-shadow:0 0 10px rgba(254,188,46,.3);}
-    .jvs-calc-btn-eq{background:rgba(76,175,80,.1);border-color:rgba(76,175,80,.4);color:#4db540;grid-column:span 2;}
-    .jvs-calc-btn-eq:hover{background:rgba(76,175,80,.15);box-shadow:0 0 10px rgba(76,175,80,.3);}
-    .jvs-calc-btn-clr{background:rgba(255,95,87,.1);border-color:rgba(255,95,87,.4);color:#ff5f57;grid-column:span 2;}
-    .jvs-calc-btn-clr:hover{background:rgba(255,95,87,.15);box-shadow:0 0 10px rgba(255,95,87,.3);}
 
     /* Widgets Grid in Gibilan Panel */
     .gibilan-widgets-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px;}
@@ -782,35 +771,6 @@
               </div>
             </div>
 
-            <!-- Calculator Widget -->
-            <div class="jvs-card">
-              <div class="jvs-card-head">CALCULATOR</div>
-              <div class="jvs-bracket jvs-bracket-tr"></div>
-              <div class="jvs-bracket jvs-bracket-bl"></div>
-              <div class="jvs-bracket jvs-bracket-br"></div>
-              <div class="jvs-card-body">
-                <div class="jvs-calc-display" id="jvs-calc-display">0</div>
-                <div class="jvs-calc-grid">
-                  <button class="jvs-calc-btn jvs-calc-btn-clr" onclick="jvsCalcClear()">C</button>
-                  <button class="jvs-calc-btn jvs-calc-btn-op" onclick="jvsCalcOp('/')">/</button>
-                  <button class="jvs-calc-btn" onclick="jvsCalcNum('7')">7</button>
-                  <button class="jvs-calc-btn" onclick="jvsCalcNum('8')">8</button>
-                  <button class="jvs-calc-btn" onclick="jvsCalcNum('9')">9</button>
-                  <button class="jvs-calc-btn jvs-calc-btn-op" onclick="jvsCalcOp('*')">*</button>
-                  <button class="jvs-calc-btn" onclick="jvsCalcNum('4')">4</button>
-                  <button class="jvs-calc-btn" onclick="jvsCalcNum('5')">5</button>
-                  <button class="jvs-calc-btn" onclick="jvsCalcNum('6')">6</button>
-                  <button class="jvs-calc-btn jvs-calc-btn-op" onclick="jvsCalcOp('-')">-</button>
-                  <button class="jvs-calc-btn" onclick="jvsCalcNum('1')">1</button>
-                  <button class="jvs-calc-btn" onclick="jvsCalcNum('2')">2</button>
-                  <button class="jvs-calc-btn" onclick="jvsCalcNum('3')">3</button>
-                  <button class="jvs-calc-btn jvs-calc-btn-op" onclick="jvsCalcOp('+')">+</button>
-                  <button class="jvs-calc-btn" onclick="jvsCalcNum('0')" style="grid-column:span 2;">0</button>
-                  <button class="jvs-calc-btn" onclick="jvsCalcNum('.')">.</button>
-                  <button class="jvs-calc-btn jvs-calc-btn-eq" onclick="jvsCalcEq()">=</button>
-                </div>
-              </div>
-            </div>
           </div>
 
           <!-- Intalniri -->
@@ -4290,71 +4250,6 @@
     textarea.addEventListener('input', () => {
       localStorage.setItem(storageKey, textarea.value);
     });
-  }
-
-  // --- CALCULATOR WIDGET ---
-  let jvsCalcState = { display: '0', current: '0', operator: null, shouldClear: false };
-
-  function jvsCalcNum(num) {
-    const state = jvsCalcState;
-    if (state.shouldClear) {
-      state.current = num;
-      state.shouldClear = false;
-    } else {
-      if (num === '.' && state.current.includes('.')) return;
-      state.current = state.current === '0' ? num : state.current + num;
-    }
-    state.display = state.current;
-    jvsCalcRender();
-  }
-
-  function jvsCalcOp(op) {
-    const state = jvsCalcState;
-    if (state.operator && !state.shouldClear) {
-      jvsCalcEq();
-    }
-    state.operator = op;
-    state.shouldClear = true;
-  }
-
-  function jvsCalcEq() {
-    const state = jvsCalcState;
-    if (!state.operator || state.shouldClear) return;
-
-    let result;
-    const curr = parseFloat(state.current);
-    const prev = parseFloat(state.display);
-
-    try {
-      if (state.operator === '+') result = prev + curr;
-      else if (state.operator === '-') result = prev - curr;
-      else if (state.operator === '*') result = prev * curr;
-      else if (state.operator === '/') result = prev / curr;
-      else return;
-
-      result = Math.round(result * 10000000) / 10000000; // Avoid floating point errors
-      state.current = String(result);
-      state.display = String(result);
-      state.operator = null;
-      state.shouldClear = true;
-    } catch {
-      state.display = 'ERROR';
-    }
-    jvsCalcRender();
-  }
-
-  function jvsCalcClear() {
-    jvsCalcState = { display: '0', current: '0', operator: null, shouldClear: false };
-    jvsCalcRender();
-  }
-
-  function jvsCalcRender() {
-    const display = document.getElementById('jvs-calc-display');
-    if (display) {
-      let text = jvsCalcState.display;
-      if (text === '0') text = '0';
-      display.textContent = text;
-    }
   }
 
   // --- GAZE: reactorul "se uita in prejur" + urmareste cursorul/atingerea ---
