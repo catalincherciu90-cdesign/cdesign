@@ -459,6 +459,11 @@
     .hud-ring-3{width:60px;height:60px;border-color:#18b6d6;animation:spin-cw 18s linear infinite;box-shadow:0 0 8px rgba(24,182,214,.3);opacity:.4;}
     @keyframes spin-cw{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
     @keyframes spin-ccw{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
+    /* privirea reactorului — glances idle + tracking spre cursor */
+    @keyframes jvs-glance{0%,100%{transform:translate(0,0)}12%{transform:translate(-5px,-2px)}30%{transform:translate(5px,-3px)}48%{transform:translate(-4px,3px)}68%{transform:translate(4px,2px)}86%{transform:translate(0,-4px)}}
+    #jvs-gaze{transform-box:fill-box;transform-origin:center;animation:jvs-glance 7s ease-in-out infinite;transition:transform .22s ease-out;}
+    #jvs-gaze.jvs-track{animation:none;}
+    @media(prefers-reduced-motion:reduce){#jvs-gaze{animation:none;}}
     @keyframes pulse-glow{0%,100%{text-shadow:0 0 15px rgba(0,229,255,.8),0 0 30px rgba(24,182,214,.3)}50%{text-shadow:0 0 25px rgba(0,229,255,.95),0 0 50px rgba(24,182,214,.5)}}
     @keyframes scanline-sweep{0%{transform:translateY(-100%)}100%{transform:translateY(100%)}}
 
@@ -660,9 +665,13 @@
               <!-- miez incandescent -->
               <circle cx="60" cy="60" r="23" fill="url(#jvsCore)" style="animation:pulse 1.8s ease-in-out infinite;"/>
 
-              <!-- triunghiul iconic + nucleu -->
+              <!-- triunghiul iconic -->
               <path d="M60 49 L70 66 L50 66 Z" fill="none" stroke="#ffffff" stroke-width="1.4" opacity="0.85" stroke-linejoin="round"/>
-              <circle cx="60" cy="60" r="5.5" fill="#ffffff" opacity="0.92" style="animation:pulse 1.8s ease-in-out infinite;"/>
+              <!-- privirea reactorului: irisul care se uita in prejur -->
+              <g id="jvs-gaze">
+                <circle cx="60" cy="60" r="5.6" fill="#eaffff" opacity="0.95" style="animation:pulse 1.8s ease-in-out infinite;"/>
+                <circle cx="60" cy="60" r="2.5" fill="#0099b0"/>
+              </g>
             </svg>
             </div>
           </div>
@@ -4332,6 +4341,27 @@
     }
   }
 
+  // --- GAZE: reactorul "se uita in prejur" + urmareste cursorul ---
+  function jvsGaze() {
+    const svg = document.querySelector('#panel-gibilan .clippy-body');
+    const gaze = document.getElementById('jvs-gaze');
+    if (!svg || !gaze || gaze.dataset.jvsBound) return;
+    gaze.dataset.jvsBound = '1';
+    let idleTimer = null;
+    document.addEventListener('pointermove', (e) => {
+      const r = svg.getBoundingClientRect();
+      if (!r.width) return; // tabul ascuns
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+      const ang = Math.atan2(e.clientY - cy, e.clientX - cx);
+      const R = 6;
+      gaze.classList.add('jvs-track');
+      gaze.style.transform = 'translate(' + (Math.cos(ang) * R).toFixed(1) + 'px,' + (Math.sin(ang) * R).toFixed(1) + 'px)';
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => { gaze.classList.remove('jvs-track'); gaze.style.transform = ''; }, 2400);
+    }, { passive: true });
+  }
+
   // --- INIT WIDGETS ON GIBILAN TAB ---
   const originalSwitchTab = window.switchTab;
   window.switchTab = function(tab, btn) {
@@ -4341,6 +4371,7 @@
         jvsClock();
         jvsStats();
         jvsNote();
+        jvsGaze();
       }, 100);
     }
     return result;
@@ -4353,6 +4384,7 @@
         jvsClock();
         jvsStats();
         jvsNote();
+        jvsGaze();
       }, 500);
     }
   });
