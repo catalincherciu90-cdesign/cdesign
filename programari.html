@@ -908,6 +908,9 @@
 </head>
 <body>
 
+<!-- JARVIS PARTICLES NETWORK BACKGROUND -->
+<canvas id="jvsParticlesCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;display:none;"></canvas>
+
 <!-- LOGIN -->
 <div class="login-wrap" id="loginWrap">
   <div class="login-box">
@@ -4603,19 +4606,16 @@
     const today = new Date().toISOString().split('T')[0];
     const in7 = new Date(); in7.setDate(in7.getDate() + 7);
     const in7Str = in7.toISOString().split('T')[0];
-
-    const todayMeetings = (gibData.meetings || []).filter(m => m.date === today).length;
-    const el1 = document.getElementById('jvs-stat-meetings');
-    if (el1) el1.textContent = todayMeetings;
-
-    const activeTodos = (gibData.todos || []).filter(t => !t.done).length;
-    const el2 = document.getElementById('jvs-stat-todos');
-    if (el2) el2.textContent = activeTodos;
-
-    const upcomingDeadlines = (gibData.deadlines || [])
-      .filter(d => d.date >= today && d.date <= in7Str).length;
-    const el3 = document.getElementById('jvs-stat-deadlines');
-    if (el3) el3.textContent = upcomingDeadlines;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const setVal = (el, val) => {
+      if (!el) return;
+      if (!reduce && typeof jvsCountUp !== 'undefined' && jvsCountUp.animateValue) {
+        jvsCountUp.animateValue(el, parseInt(el.textContent) || 0, val);
+      } else { el.textContent = val; }
+    };
+    setVal(document.getElementById('jvs-stat-meetings'), (gibData.meetings || []).filter(m => m.date === today).length);
+    setVal(document.getElementById('jvs-stat-todos'), (gibData.todos || []).filter(t => !t.done).length);
+    setVal(document.getElementById('jvs-stat-deadlines'), (gibData.deadlines || []).filter(d => d.date >= today && d.date <= in7Str).length);
   }
   function jvsStats() { jvsUpdateStats(); }
 
@@ -6568,6 +6568,318 @@
         </tr>`).join('') +
       '</tbody></table></div>';
   }
+
+  // ===== JARVIS ANIMATIONS =====
+
+  // 1) PARTICLES NETWORK BACKGROUND
+  const jvsParticles = {
+    enabled: false,
+    canvas: null,
+    ctx: null,
+    particles: [],
+    animationId: null,
+    particleCount: 50,
+
+    init() {
+      if (this.canvas) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      this.canvas = document.getElementById('jvsParticlesCanvas');
+      if (!this.canvas) return;
+
+      this.ctx = this.canvas.getContext('2d');
+      this.resize();
+      window.addEventListener('resize', () => this.resize());
+      document.addEventListener('visibilitychange', () => this.handleVisibility());
+    },
+
+    resize() {
+      if (!this.canvas) return;
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+      if (this.particles.length === 0) this.createParticles();
+    },
+
+    createParticles() {
+      this.particles = [];
+      const maxParticles = window.innerWidth < 768 ? 25 : this.particleCount;
+      for (let i = 0; i < maxParticles; i++) {
+        this.particles.push({
+          x: Math.random() * this.canvas.width,
+          y: Math.random() * this.canvas.height,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          r: Math.random() * 1.5 + 0.5,
+        });
+      }
+    },
+
+    animate() {
+      if (!this.ctx || !this.canvas) return;
+      if (document.hidden) return;
+
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+      this.particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
+
+        this.ctx.fillStyle = 'rgba(0, 229, 255, 0.6)';
+        this.ctx.beginPath();
+        this.ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        this.ctx.fill();
+      });
+
+      const connectionDistance = 120;
+      this.ctx.strokeStyle = 'rgba(0, 229, 255, 0.2)';
+      this.ctx.lineWidth = 0.8;
+      for (let i = 0; i < this.particles.length; i++) {
+        for (let j = i + 1; j < this.particles.length; j++) {
+          const dx = this.particles[i].x - this.particles[j].x;
+          const dy = this.particles[i].y - this.particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < connectionDistance) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
+            this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
+            this.ctx.stroke();
+          }
+        }
+      }
+
+      this.animationId = requestAnimationFrame(() => this.animate());
+    },
+
+    start() {
+      if (this.enabled || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      this.enabled = true;
+      if (this.canvas) this.canvas.style.display = 'block';
+      this.animate();
+    },
+
+    stop() {
+      this.enabled = false;
+      if (this.canvas) this.canvas.style.display = 'none';
+      if (this.animationId) cancelAnimationFrame(this.animationId);
+    },
+
+    handleVisibility() {
+      if (document.hidden) {
+        if (this.animationId) cancelAnimationFrame(this.animationId);
+      } else if (this.enabled) {
+        this.animate();
+      }
+    }
+  };
+
+  jvsParticles.init();
+
+  // 2) ENERGY BEAMS (reactor → TIME/STATUS cards)
+  const jvsBeams = {
+    overlay: null,
+    enabled: false,
+    animationId: null,
+    beamProgress: 0,
+
+    init() {
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const panel = document.getElementById('panel-gibilan');
+      if (!panel) return;
+
+      this.overlay = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      this.overlay.setAttribute('id', 'jvsBeamsOverlay');
+      this.overlay.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;';
+      this.overlay.setAttribute('viewBox', '0 0 1200 800');
+
+      panel.style.position = 'position' in panel.style ? 'relative' : 'static';
+      panel.insertBefore(this.overlay, panel.firstChild);
+    },
+
+    updateBeams() {
+      if (!this.overlay) return;
+      const panel = document.getElementById('panel-gibilan');
+      if (!panel || window.innerWidth < 1025) return this.stop();
+
+      const reactor = document.querySelector('#panel-gibilan .clippy-body');
+      const timeCard = panel.querySelector('.jvs-card:nth-child(1)');
+      const statusCard = panel.querySelector('.jvs-card:nth-child(3)');
+
+      if (!reactor || !timeCard || !statusCard) return this.stop();
+
+      const rr = reactor.getBoundingClientRect();
+      const tr = timeCard.getBoundingClientRect();
+      const sr = statusCard.getBoundingClientRect();
+
+      const panelRect = panel.getBoundingClientRect();
+      const rx = rr.left - panelRect.left + rr.width / 2;
+      const ry = rr.top - panelRect.top + rr.height / 2;
+      const tx = tr.left - panelRect.left + tr.width / 2;
+      const ty = tr.top - panelRect.top + tr.height / 2;
+      const sx = sr.left - panelRect.left + sr.width / 2;
+      const sy = sr.top - panelRect.top + sr.height / 2;
+
+      this.overlay.innerHTML = '';
+
+      const drawBeam = (fromX, fromY, toX, toY) => {
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', fromX);
+        line.setAttribute('y1', fromY);
+        line.setAttribute('x2', toX);
+        line.setAttribute('y2', toY);
+        line.setAttribute('stroke', '#00e5ff');
+        line.setAttribute('stroke-width', '1.5');
+        line.setAttribute('opacity', '0.5');
+        this.overlay.appendChild(line);
+
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        const progress = this.beamProgress % 1;
+        circle.setAttribute('cx', fromX + (toX - fromX) * progress);
+        circle.setAttribute('cy', fromY + (toY - fromY) * progress);
+        circle.setAttribute('r', '3');
+        circle.setAttribute('fill', '#7df9ff');
+        circle.setAttribute('opacity', '0.8');
+        this.overlay.appendChild(circle);
+      };
+
+      drawBeam(rx, ry, tx, ty);
+      drawBeam(rx, ry, sx, sy);
+    },
+
+    animate() {
+      this.beamProgress += 0.015;
+      this.updateBeams();
+
+      if (this.enabled) {
+        this.animationId = requestAnimationFrame(() => this.animate());
+      }
+    },
+
+    start() {
+      if (this.enabled || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (window.innerWidth < 1025) return;
+      this.enabled = true;
+      this.animate();
+    },
+
+    stop() {
+      this.enabled = false;
+      if (this.animationId) cancelAnimationFrame(this.animationId);
+      if (this.overlay) this.overlay.innerHTML = '';
+    }
+  };
+
+  jvsBeams.init();
+
+  // 3) COUNT-UP ANIMATION for stats
+  const jvsCountUp = {
+    active: {},
+
+    animateValue(el, start, end, duration = 600) {
+      if (!el) return;
+      const key = el.id;
+      if (this.active[key]) clearTimeout(this.active[key].timer);
+
+      const startTime = Date.now();
+      const update = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const current = Math.floor(start + (end - start) * progress);
+        el.textContent = current;
+
+        if (progress < 1) {
+          this.active[key] = { timer: setTimeout(update, 20) };
+        } else {
+          el.textContent = end;
+          delete this.active[key];
+        }
+      };
+      update();
+    },
+
+    hookStats() {
+      const original = window.jvsUpdateStats;
+      if (!original || original._jvsCountUpHooked) return;
+
+      window.jvsUpdateStats = function() {
+        const today = new Date().toISOString().split('T')[0];
+        const in7 = new Date(); in7.setDate(in7.getDate() + 7);
+        const in7Str = in7.toISOString().split('T')[0];
+
+        if (!window.gibData) return original.call(this);
+
+        const todayMeetings = (gibData.meetings || []).filter(m => m.date === today).length;
+        const el1 = document.getElementById('jvs-stat-meetings');
+        if (el1) {
+          const oldVal = parseInt(el1.textContent) || 0;
+          jvsCountUp.animateValue(el1, oldVal, todayMeetings);
+        }
+
+        const activeTodos = (gibData.todos || []).filter(t => !t.done).length;
+        const el2 = document.getElementById('jvs-stat-todos');
+        if (el2) {
+          const oldVal = parseInt(el2.textContent) || 0;
+          jvsCountUp.animateValue(el2, oldVal, activeTodos);
+        }
+
+        const upcomingDeadlines = (gibData.deadlines || [])
+          .filter(d => d.date >= today && d.date <= in7Str).length;
+        const el3 = document.getElementById('jvs-stat-deadlines');
+        if (el3) {
+          const oldVal = parseInt(el3.textContent) || 0;
+          jvsCountUp.animateValue(el3, oldVal, upcomingDeadlines);
+        }
+      };
+
+      window.jvsUpdateStats._jvsCountUpHooked = true;
+    }
+  };
+
+  jvsCountUp.hookStats();
+
+  // Pornire fiabila (apelurile bare ocolesc wrapperele pe window):
+  // particulele pornesc mereu; beam-urile pornesc cand reactorul e vizibil.
+  jvsParticles.start();
+  (function jvsBeamsAutoStart(){
+    var n = 0;
+    var t = setInterval(function(){
+      n++;
+      var panel = document.getElementById('panel-gibilan');
+      var svg = document.querySelector('#panel-gibilan .clippy-body');
+      if (panel && panel.classList.contains('active') && svg && svg.getBoundingClientRect().width > 0) {
+        if (window.innerWidth >= 1025 && jvsBeams && jvsBeams.start) jvsBeams.start();
+        clearInterval(t);
+      }
+      if (n > 60) clearInterval(t);
+    }, 500);
+  })();
+
+  // Auto-start animations on login
+  const originalFetchBookings = window.fetchBookings;
+  window.fetchBookings = async function(isLogin = false) {
+    const result = await originalFetchBookings.call(this, isLogin);
+    if (isLogin && result) {
+      setTimeout(() => {
+        jvsParticles.start();
+        if (currentTab === 'gibilan') {
+          jvsBeams.start();
+        }
+      }, 100);
+    }
+    return result;
+  };
+
+  // Switch tabs hook
+  const originalSwitchTabBeams = window.switchTab;
+  window.switchTab = function(tab, btn) {
+    originalSwitchTabBeams.call(this, tab, btn);
+    if (tab === 'gibilan') {
+      jvsBeams.start();
+    } else {
+      jvsBeams.stop();
+    }
+  };
 
 </script>
 </body>
