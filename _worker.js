@@ -2085,10 +2085,10 @@ Cerințe titluri:
             messages.push({ role: m.role, content: m.content.slice(0, 4000) });
           }
         }
-        const out = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', { messages, max_tokens: 800 });
+        const out = await env.AI.run('@cf/meta/llama-3.3-70b-instruct-fp8-fast', { messages, max_tokens: 800 });
         const reply = (out && (out.response || out.result)) || '';
         return json({ reply: String(reply).trim() || 'Nu am putut genera un răspuns.' });
-      } catch (e) { return json({ error: 'Eroare la generarea răspunsului' }, 500); }
+      } catch (e) { return json({ error: 'Eroare: ' + String((e && e.message) || e) }, 500); }
     }
 
     // Media upload — cu ?name=<fișier existent> suprascrie imaginea în loc
