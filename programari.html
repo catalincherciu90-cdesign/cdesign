@@ -1837,6 +1837,10 @@
               <button id="jvs-speak-btn" class="jvs-speak-btn" type="button" onclick="jvsSpeak()">🔊 Raport vocal</button>
               <button id="jvs-mic-btn" class="jvs-speak-btn" type="button" onclick="jvsVoiceCmd()" title="Comenzi vocale: 'ce am azi' sau 'adaugă task ...'">🎤 Vorbește</button>
             </div>
+            <select id="jvs-voice-mode" onchange="localStorage.setItem('jvsVoiceMode', this.value)" title="Limba vocii" style="margin-top:8px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.45);color:#00e5ff;font-family:'Share Tech Mono',monospace;font-size:.74rem;padding:6px 10px;border-radius:0;cursor:pointer;">
+              <option value="ro">Voce: Română (cadență JARVIS)</option>
+              <option value="en">Voce: Engleză (accent britanic JARVIS)</option>
+            </select>
           </div>
 
           <!-- Status Widget (right panel) -->
@@ -5002,6 +5006,25 @@
     return txt;
   }
 
+  // configureaza vocea dupa modul ales (RO calm / EN accent britanic), salvat in localStorage
+  function jvsConfigVoice(u) {
+    const mode = localStorage.getItem('jvsVoiceMode') || 'ro';
+    const voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+    u.rate = 0.92; u.pitch = 0.85;
+    if (mode === 'en') {
+      u.lang = 'en-GB';
+      let pool = voices.filter(v => /en[-_]?GB/i.test(v.lang));
+      if (!pool.length) pool = voices.filter(v => /^en/i.test(v.lang));
+      const pick = pool.find(v => /male|daniel|george|arthur|oliver|ryan|uk english/i.test(v.name)) || pool[0];
+      if (pick) u.voice = pick;
+    } else {
+      u.lang = 'ro-RO';
+      const ro = voices.filter(v => /ro/i.test(v.lang));
+      const pick = ro.find(v => /male|b(ă|a)rb|david|andrei|emil|george|paul|cristian/i.test(v.name)) || ro[0];
+      if (pick) u.voice = pick;
+    }
+  }
+
   function jvsSpeak(prefix) {
     if (typeof gibData === 'undefined' || !gibData) return;
     let txt = (prefix ? prefix + '! ' : 'Bună! ') + jvsSpeakText();
@@ -5011,11 +5034,7 @@
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(txt);
-        u.lang = 'ro-RO'; u.rate = 0.92; u.pitch = 0.85; // voce calma, masculina (cadenta JARVIS)
-        const voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
-        const roVoices = voices.filter(v => /ro/i.test(v.lang));
-        const ro = roVoices.find(v => /male|b(ă|a)rb|david|andrei|emil|george|paul|cristian/i.test(v.name)) || roVoices[0];
-        if (ro) u.voice = ro;
+        jvsConfigVoice(u);
         const btn = document.getElementById('jvs-speak-btn');
         if (btn) { btn.classList.add('speaking'); u.onend = u.onerror = () => btn.classList.remove('speaking'); }
         window.speechSynthesis.speak(u);
@@ -5086,7 +5105,7 @@
     const bubble = document.getElementById('gib-bubble');
     const speak = (txt) => {
       if (bubble) bubble.textContent = txt;
-      try { if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(txt); u.lang = 'ro-RO'; u.rate = 0.92; u.pitch = 0.85; var _vs = (window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : []).filter(v => /ro/i.test(v.lang)); var _v = _vs.find(v => /male|b(ă|a)rb|david|andrei|emil|george|paul|cristian/i.test(v.name)) || _vs[0]; if (_v) u.voice = _v; window.speechSynthesis.speak(u); } } catch (e) {}
+      try { if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(txt); jvsConfigVoice(u); window.speechSynthesis.speak(u); } } catch (e) {}
     };
     if (!said) { speak('Nu am auzit nimic.'); return; }
     const add = said.match(/(?:adaug[ăa]?|noteaz[ăa]?|creeaz[ăa]?)(?:\s+un)?\s+task\s+(.+)/) || said.match(/task\s+nou\s+(.+)/);
@@ -5574,6 +5593,8 @@
   let aiChatBusy = false;
 
   function aiChatInit() {
+    const vm = document.getElementById('jvs-voice-mode');
+    if (vm) vm.value = localStorage.getItem('jvsVoiceMode') || 'ro';
     const sel = document.getElementById('ai-agent-sel');
     if (!sel || sel.options.length) return;
     sel.innerHTML = AI_AGENTS.map(a => '<option value="' + a[0] + '">' + a[1] + '</option>').join('');
