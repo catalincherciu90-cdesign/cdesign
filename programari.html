@@ -1968,6 +1968,22 @@
           </div>
         </div>
       </div>
+
+      <!-- ECHIPA AI — panou standalone, full-width -->
+      <div class="jvs-card" id="ai-chat-panel" style="margin-top:24px;">
+        <div class="jvs-card-head">ECHIPA AI — întreabă orice coleg</div>
+        <div class="jvs-bracket jvs-bracket-tr"></div>
+        <div class="jvs-bracket jvs-bracket-bl"></div>
+        <div class="jvs-bracket jvs-bracket-br"></div>
+        <div class="jvs-card-body">
+          <select class="gib-input" id="ai-agent-sel" onchange="aiChatReset()" style="max-width:340px;margin-bottom:10px;"></select>
+          <div id="ai-chat-log" style="min-height:160px;max-height:460px;overflow-y:auto;font-size:.9rem;line-height:1.55;display:flex;flex-direction:column;gap:10px;padding:6px 4px;"></div>
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <input class="gib-input" id="ai-chat-input" type="text" placeholder="Întreabă echipa..." style="flex:1;" onkeydown="if(event.key==='Enter')aiChatSend()">
+            <button class="gib-save" id="ai-chat-send" onclick="aiChatSend()" style="white-space:nowrap;">Trimite</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
