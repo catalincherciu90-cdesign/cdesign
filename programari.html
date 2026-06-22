@@ -425,11 +425,11 @@
       .gibilan-agenda > div:first-child{grid-column:1/-1;grid-row:0;}
       .gibilan-agenda > .jvs-card{grid-column:1;grid-row:2/8;align-self:start;}
       .gibilan-agenda > .gib-section{grid-column:2;}
-      .gibilan-agenda > .gib-section:nth-of-type(2){grid-row:2;}
-      .gibilan-agenda > .gib-section:nth-of-type(3){grid-row:3;}
-      .gibilan-agenda > .gib-section:nth-of-type(4){grid-row:4;}
-      .gibilan-agenda > .gib-section:nth-of-type(5){grid-row:5;}
-      .gibilan-agenda > .gib-section:nth-of-type(6){grid-row:6;}
+      .gibilan-agenda > .gib-section:nth-of-type(3){grid-row:2;}
+      .gibilan-agenda > .gib-section:nth-of-type(4){grid-row:3;}
+      .gibilan-agenda > .gib-section:nth-of-type(5){grid-row:4;}
+      .gibilan-agenda > .gib-section:nth-of-type(6){grid-row:5;}
+      .gibilan-agenda > .gib-section:nth-of-type(7){grid-row:6;}
     }
 
     /* On tablet: single column, NOTEPAD full width */
@@ -1907,6 +1907,21 @@
             <div class="gib-date-sub" id="gib-date-sub"></div>
           </div>
 
+          <!-- ECHIPA AI — mutat in golul din stanga al agendei -->
+          <div class="jvs-card" id="ai-chat-panel">
+            <div class="jvs-bracket jvs-bracket-tr"></div>
+            <div class="jvs-bracket jvs-bracket-bl"></div>
+            <div class="jvs-bracket jvs-bracket-br"></div>
+            <div class="jvs-card-body">
+              <select class="gib-input" id="ai-agent-sel" onchange="aiChatReset()" style="max-width:340px;margin-bottom:10px;"></select>
+              <div id="ai-chat-log" style="min-height:360px;height:55vh;max-height:680px;overflow-y:auto;font-size:.92rem;line-height:1.6;display:flex;flex-direction:column;gap:12px;padding:10px 8px;"></div>
+              <div style="display:flex;gap:8px;margin-top:10px;">
+                <input class="gib-input" id="ai-chat-input" type="text" placeholder="Întreabă echipa..." style="flex:1 1 auto;width:auto;min-width:0;margin-bottom:0;" onkeydown="if(event.key==='Enter')aiChatSend()">
+                <button class="gib-save" id="ai-chat-send" onclick="aiChatSend()" style="flex:0 0 auto;width:auto;white-space:nowrap;">Trimite</button>
+              </div>
+            </div>
+          </div>
+
           <!-- Intalniri -->
           <div class="gib-section">
             <div class="gib-section-title">&#x1F550; &Icirc;NT&#xC2;LNIRI</div>
@@ -1945,18 +1960,37 @@
         </div>
       </div>
 
-      <!-- ECHIPA AI — panou standalone, full-width -->
-      <div class="jvs-card" id="ai-chat-panel" style="margin-top:24px;">
+      <!-- BLOG AI — studiu + generare articole, centralizat in Gibilan -->
+      <div class="jvs-card" id="gib-blog-panel" style="margin-top:24px;">
+        <div class="jvs-card-head">BLOG AI — studiu &amp; generare articole</div>
         <div class="jvs-bracket jvs-bracket-tr"></div>
         <div class="jvs-bracket jvs-bracket-bl"></div>
         <div class="jvs-bracket jvs-bracket-br"></div>
         <div class="jvs-card-body">
-          <select class="gib-input" id="ai-agent-sel" onchange="aiChatReset()" style="max-width:340px;margin-bottom:10px;"></select>
-          <div id="ai-chat-log" style="min-height:360px;height:55vh;max-height:680px;overflow-y:auto;font-size:.92rem;line-height:1.6;display:flex;flex-direction:column;gap:12px;padding:10px 8px;"></div>
-          <div style="display:flex;gap:8px;margin-top:10px;">
-            <input class="gib-input" id="ai-chat-input" type="text" placeholder="Întreabă echipa..." style="flex:1 1 auto;width:auto;min-width:0;margin-bottom:0;" onkeydown="if(event.key==='Enter')aiChatSend()">
-            <button class="gib-save" id="ai-chat-send" onclick="aiChatSend()" style="flex:0 0 auto;width:auto;white-space:nowrap;">Trimite</button>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+            <div style="flex:1 1 260px;min-width:0;">
+              <label class="f-label" style="display:block;margin-bottom:4px;">// subiect / nișă</label>
+              <input class="gib-input" id="gib-blog-subject" type="text" placeholder="ex: web design pentru cabinete stomatologice" style="margin-bottom:0;">
+            </div>
+            <div style="flex:0 0 230px;">
+              <label class="f-label" style="display:block;margin-bottom:4px;">// autor (agent)</label>
+              <select class="gib-input" id="gib-blog-agent" style="margin-bottom:0;">
+                <option value="">Implicit (SEO/copywriter)</option>
+                <option value="elena">Elena — SEO &amp; Content</option>
+                <option value="mihai">Mihai — Copywriter</option>
+                <option value="andrei">Andrei — Content Strategist</option>
+                <option value="gogu">Gogu — Marketing</option>
+                <option value="robert">Robert — Analytics</option>
+                <option value="victoria">Victoria — CMO</option>
+              </select>
+            </div>
           </div>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center;">
+            <button class="gib-save" type="button" onclick="gibBlogResearch()" style="width:auto;">🔎 Caută titluri</button>
+            <button class="gib-save" type="button" onclick="gibBlogGenerate()" style="width:auto;">✍️ Generează articol</button>
+            <span id="gib-blog-status" style="font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--muted);"></span>
+          </div>
+          <div id="gib-blog-results" style="margin-top:16px;"></div>
         </div>
       </div>
 
