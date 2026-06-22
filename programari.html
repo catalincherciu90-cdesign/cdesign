@@ -3495,6 +3495,16 @@
     <input type="hidden" id="blogEditId">
     <div class="f-group" style="background:var(--bg3);border:1px solid var(--teal-border);border-radius:10px;padding:14px 16px;">
       <label class="f-label" style="color:var(--teal);">// generează cu AI 🤖</label>
+      <select class="f-input" id="blogAiAgent" style="margin-top:6px;margin-bottom:0;">
+        <option value="">Autor: copywriter (implicit)</option>
+        <option value="elena">Elena — SEO &amp; Content</option>
+        <option value="mihai">Mihai — Copywriter</option>
+        <option value="andrei">Andrei — Content Strategist</option>
+        <option value="gogu">Gogu — Marketing</option>
+        <option value="ion">Ion — Social Media</option>
+        <option value="robert">Robert — Analytics</option>
+        <option value="victoria">Victoria — CMO</option>
+      </select>
       <div style="display:flex;gap:8px;margin-top:6px;">
         <input class="f-input" type="text" id="blogAiSubject" placeholder="ex: De ce ai nevoie de un site în 2025" style="margin-bottom:0;flex:1;">
         <button class="btn-save" id="blogAiBtn" onclick="generateBlogWithAI()" style="white-space:nowrap;padding:10px 16px;flex-shrink:0;">✨ Generează</button>
@@ -4125,6 +4135,8 @@
 
   async function generateBlogWithAI() {
     const subject = document.getElementById('blogAiSubject').value.trim();
+    const agentSel = document.getElementById('blogAiAgent');
+    const agent = agentSel ? agentSel.value : '';
     if (!subject) { alert('Introdu un subiect pentru articol.'); return; }
     const btn = document.getElementById('blogAiBtn');
     const status = document.getElementById('blogAiStatus');
@@ -4135,7 +4147,7 @@
       const res = await fetch('/api/blog/generate?token=' + encodeURIComponent(adminToken), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ subject })
+        body: JSON.stringify({ subject, agent })
       });
       const data = await res.json();
       if (!res.ok || !data.article) {
