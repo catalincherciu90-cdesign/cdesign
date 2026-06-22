@@ -345,6 +345,8 @@ fbq('init','893560673744618');fbq('track','PageView');
     .reveal{opacity:1}
     .reveal.visible{opacity:1}
     .reveal-delay-1,.reveal-delay-2,.reveal-delay-3{transition-delay:0s}
+    /* DIAGNOSTIC: toate efectele dezactivate (animatii + tranzitii) */
+    *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important;}
     /* ── TABLET landscape / small desktop (≤1024px) ── */
     @media(max-width:1024px){
       .hero{min-height:70vh;}
@@ -985,7 +987,7 @@ reveals.forEach(el=>revObs.observe(el));
   }
   window.bannerMove = (dir) => { clearInterval(timer); goTo(cur + dir); startTimer(); };
   window.bannerGo   = (n)   => { clearInterval(timer); goTo(n); startTimer(); };
-  function startTimer() { timer = setInterval(() => goTo(cur + 1), 5000); }
+  function startTimer() { /* DIAGNOSTIC: rotire automata dezactivata */ }
   let tx = 0;
   el.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
   el.addEventListener('touchend', e => {
