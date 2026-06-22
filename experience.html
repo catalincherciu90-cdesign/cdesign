@@ -255,25 +255,33 @@
       cta:{label:"Programează acum",href:"/programare"}, alt:{label:"Sună 0753 116 155",href:"tel:+40753116155"} }
   };
 
-  /* cube layout: key, left%, top%, size px, float delay */
+  /* cube layout on an isometric grid: key, gx, gy, size px
+     gx = coloana (dreapta-jos), gy = randul (stanga-jos).
+     Aranjament simetric tip diamant, centrat pe coloana gx==gy. */
   var CUBES = [
-    ["servicii",    40, 40, 150, 0.0],
-    ["portofoliu",  56, 30, 120, 0.6],
-    ["pachete",     30, 58, 130, 1.2],
-    ["despre",      48, 62, 110, 0.3],
-    ["blog",        62, 52, 100, 0.9],
-    ["testimoniale",70, 40,  90, 1.5],
-    ["contact",     46, 80, 140, 0.45]
+    ["portofoliu",  0, 0, 106],  // spate-centru
+    ["servicii",    1, 0, 112],  // spate-dreapta
+    ["despre",      0, 1, 112],  // spate-stanga
+    ["pachete",     1, 1, 120],  // mijloc-centru
+    ["blog",        2, 1, 110],  // mijloc-dreapta
+    ["testimoniale",1, 2, 110],  // mijloc-stanga
+    ["contact",     2, 2, 134]   // fata-centru (accent principal)
   ];
+  // proiectie izometrica -> pozitie pe ecran (%)
+  var CX = 47, CY = 26, SX = 11, SY = 7.4;
 
   var cubesWrap = document.getElementById('cubes');
   CUBES.forEach(function(c){
-    var key=c[0], b=BLOCKS[key];
+    var key=c[0], gx=c[1], gy=c[2], size=c[3], b=BLOCKS[key];
+    var left = CX + (gx - gy) * SX;
+    var top  = CY + (gx + gy) * SY;
+    var depth = gx + gy;                 // 0 = spate, mare = fata
     var el=document.createElement('div');
     el.className='cube-btn';
-    el.style.left=c[1]+'%'; el.style.top=c[2]+'%';
-    el.style.setProperty('--s', c[3]+'px');
-    el.style.animationDelay=(-c[4])+'s';
+    el.style.left=left+'%'; el.style.top=top+'%';
+    el.style.setProperty('--s', size+'px');
+    el.style.zIndex = 10 + depth;        // cuburile din fata acopera spatele
+    el.style.animationDelay=(-depth*0.5)+'s';
     el.setAttribute('data-key',key);
     el.setAttribute('role','button');
     el.setAttribute('tabindex','0');
