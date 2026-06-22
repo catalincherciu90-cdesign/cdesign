@@ -4672,6 +4672,7 @@
     setVal(document.getElementById('jvs-stat-meetings'), (gibData.meetings || []).filter(m => m.date === today).length);
     setVal(document.getElementById('jvs-stat-todos'), (gibData.todos || []).filter(t => !t.done).length);
     setVal(document.getElementById('jvs-stat-deadlines'), (gibData.deadlines || []).filter(d => d.date >= today && d.date <= in7Str).length);
+    if (typeof starkUpdateAgendaGauges === 'function') starkUpdateAgendaGauges();
   }
   function jvsStats() { jvsUpdateStats(); }
 
@@ -6993,12 +6994,537 @@
     return result;
   };
 
-  // Switch tabs hook
+  // ============= STARK INDUSTRIES GIBILAN REDESIGN =============
+  // Adaugă: inele concentrice rotative, gauge-uri circulare, bandă zilele lunii, gauge-uri agenda, meteo
+
+  "use strict";
+
+  const STARK_WEATHER_CITY = 'Bucuresti';
+  const STARK_WEATHER_API_TIMEOUT = 5000;
+
+  let starkWeatherData = null;
+  let starkGaugeMetricsInterval = null;
+
+  // ============= 1. INELE CONCENTRICE STARK =============
+  function starkCreateRings() {
+    const galaxyCanvas = document.getElementById('jvs-galaxy');
+    if (!galaxyCanvas || document.getElementById('stark-rings-svg')) return;
+
+    const wrap = galaxyCanvas.closest('.clippy-core') || galaxyCanvas.parentElement;
+    if (!wrap) return;
+
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('id', 'stark-rings-svg');
+    svg.setAttribute('viewBox', '0 0 320 320');
+    svg.setAttribute('width', '320');
+    svg.setAttribute('height', '320');
+    svg.style.position = 'absolute';
+    svg.style.top = '0';
+    svg.style.left = '0';
+    svg.style.width = '172px';
+    svg.style.height = '172px';
+    svg.style.pointerEvents = 'none';
+    svg.style.filter = 'drop-shadow(0 0 12px #00e5ff)';
+
+    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    const style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+    style.textContent = `
+      @keyframes stark-spin-1 { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      @keyframes stark-spin-2 { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
+      @media (prefers-reduced-motion: reduce) {
+        .stark-ring { animation: none !important; }
+      }
+    `;
+    defs.appendChild(style);
+    svg.appendChild(defs);
+
+    const cx = 160, cy = 160;
+    const radi = [110, 135, 160];
+    const colors = ['#00e5ff', '#00b8cc', '#009999'];
+
+    radi.forEach((r, i) => {
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', cx);
+      circle.setAttribute('cy', cy);
+      circle.setAttribute('r', r);
+      circle.setAttribute('fill', 'none');
+      circle.setAttribute('stroke', colors[i]);
+      circle.setAttribute('stroke-width', '1');
+      circle.setAttribute('opacity', '0.6');
+      circle.classList.add('stark-ring');
+      circle.style.transformBox = 'fill-box';
+      circle.style.transformOrigin = 'center';
+      circle.style.animation = (i % 2 === 0 ? 'stark-spin-1' : 'stark-spin-2') + ' ' + (20 + i * 3) + 's linear infinite';
+      svg.appendChild(circle);
+
+      if (i === 1) {
+        for (let a = 0; a < 360; a += 15) {
+          const rad = (a * Math.PI) / 180;
+          const x1 = cx + (r - 5) * Math.cos(rad);
+          const y1 = cy + (r - 5) * Math.sin(rad);
+          const x2 = cx + (r + 3) * Math.cos(rad);
+          const y2 = cy + (r + 3) * Math.sin(rad);
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', x1);
+          line.setAttribute('y1', y1);
+          line.setAttribute('x2', x2);
+          line.setAttribute('y2', y2);
+          line.setAttribute('stroke', colors[i]);
+          line.setAttribute('stroke-width', '0.8');
+          line.setAttribute('opacity', '0.4');
+          svg.appendChild(line);
+        }
+      }
+    });
+
+    wrap.style.position = 'relative';
+    wrap.insertBefore(svg, galaxyCanvas);
+  }
+
+  // ============= 2. GAUGE-URI CIRCULARE PENTRU CEAS ȘI DATĂ =============
+  function starkCreateClockGauges() {
+    const clockCard = document.querySelector('#panel-gibilan .jvs-card:nth-child(1)');
+    if (!clockCard || document.getElementById('stark-clock-gauges')) return;
+
+    const gaugesDiv = document.createElement('div');
+    gaugesDiv.id = 'stark-clock-gauges';
+    gaugesDiv.style.cssText = 'margin-top: 16px; display: flex; gap: 12px; justify-content: center; align-items: center;';
+
+    const hourSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    hourSvg.setAttribute('viewBox', '0 0 100 100');
+    hourSvg.style.width = '60px';
+    hourSvg.style.height = '60px';
+    hourSvg.style.filter = 'drop-shadow(0 0 8px #00e5ff)';
+
+    const hourCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    hourCircle.setAttribute('cx', '50');
+    hourCircle.setAttribute('cy', '50');
+    hourCircle.setAttribute('r', '45');
+    hourCircle.setAttribute('fill', 'none');
+    hourCircle.setAttribute('stroke', 'rgba(0,229,255,0.2)');
+    hourCircle.setAttribute('stroke-width', '2');
+    hourSvg.appendChild(hourCircle);
+
+    const hourProgress = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    hourProgress.setAttribute('cx', '50');
+    hourProgress.setAttribute('cy', '50');
+    hourProgress.setAttribute('r', '45');
+    hourProgress.setAttribute('fill', 'none');
+    hourProgress.setAttribute('stroke', '#00e5ff');
+    hourProgress.setAttribute('stroke-width', '3');
+    hourProgress.setAttribute('stroke-dasharray', '283');
+    hourProgress.setAttribute('stroke-dashoffset', '283');
+    hourProgress.style.transformOrigin = 'center';
+    hourProgress.style.transform = 'rotate(-90deg)';
+    hourProgress.id = 'stark-hour-gauge';
+    hourSvg.appendChild(hourProgress);
+
+    const hourText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    hourText.setAttribute('x', '50');
+    hourText.setAttribute('y', '50');
+    hourText.setAttribute('text-anchor', 'middle');
+    hourText.setAttribute('dominant-baseline', 'middle');
+    hourText.setAttribute('font-size', '16');
+    hourText.setAttribute('font-weight', '700');
+    hourText.setAttribute('fill', '#00e5ff');
+    hourText.setAttribute('font-family', 'monospace');
+    hourText.textContent = '--:--';
+    hourText.id = 'stark-hour-text';
+    hourSvg.appendChild(hourText);
+
+    gaugesDiv.appendChild(hourSvg);
+
+    const dateSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    dateSvg.setAttribute('viewBox', '0 0 100 100');
+    dateSvg.style.width = '60px';
+    dateSvg.style.height = '60px';
+    dateSvg.style.filter = 'drop-shadow(0 0 8px #00e5ff)';
+
+    const dateCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dateCircle.setAttribute('cx', '50');
+    dateCircle.setAttribute('cy', '50');
+    dateCircle.setAttribute('r', '45');
+    dateCircle.setAttribute('fill', 'none');
+    dateCircle.setAttribute('stroke', 'rgba(0,229,255,0.2)');
+    dateCircle.setAttribute('stroke-width', '2');
+    dateSvg.appendChild(dateCircle);
+
+    const dateProgress = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dateProgress.setAttribute('cx', '50');
+    dateProgress.setAttribute('cy', '50');
+    dateProgress.setAttribute('r', '45');
+    dateProgress.setAttribute('fill', 'none');
+    dateProgress.setAttribute('stroke', '#009999');
+    dateProgress.setAttribute('stroke-width', '3');
+    dateProgress.setAttribute('stroke-dasharray', '283');
+    dateProgress.setAttribute('stroke-dashoffset', '283');
+    dateProgress.style.transformOrigin = 'center';
+    dateProgress.style.transform = 'rotate(-90deg)';
+    dateProgress.id = 'stark-date-gauge';
+    dateSvg.appendChild(dateProgress);
+
+    const dateText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    dateText.setAttribute('x', '50');
+    dateText.setAttribute('y', '50');
+    dateText.setAttribute('text-anchor', 'middle');
+    dateText.setAttribute('dominant-baseline', 'middle');
+    dateText.setAttribute('font-size', '14');
+    dateText.setAttribute('font-weight', '700');
+    dateText.setAttribute('fill', '#009999');
+    dateText.setAttribute('font-family', 'monospace');
+    dateText.textContent = '01';
+    dateText.id = 'stark-date-text';
+    dateSvg.appendChild(dateText);
+
+    gaugesDiv.appendChild(dateSvg);
+
+    const cardBody = clockCard.querySelector('.jvs-card-body');
+    if (cardBody) cardBody.appendChild(gaugesDiv);
+  }
+
+  function starkUpdateClockGauges() {
+    const now = new Date();
+    const h = now.getHours();
+    const m = now.getMinutes();
+    const hourFrac = (h % 12) + m / 60;
+    const hourPct = (hourFrac / 12) * 100;
+    const dayOfMonth = now.getDate();
+    const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const datePct = (dayOfMonth / daysInMonth) * 100;
+
+    const hourGauge = document.getElementById('stark-hour-gauge');
+    const hourText = document.getElementById('stark-hour-text');
+    if (hourGauge) {
+      const dashLength = 283;
+      hourGauge.setAttribute('stroke-dashoffset', (dashLength * (100 - hourPct)) / 100);
+    }
+    if (hourText) {
+      hourText.textContent = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+    }
+
+    const dateGauge = document.getElementById('stark-date-gauge');
+    const dateText = document.getElementById('stark-date-text');
+    if (dateGauge) {
+      const dashLength = 283;
+      dateGauge.setAttribute('stroke-dashoffset', (dashLength * (100 - datePct)) / 100);
+    }
+    if (dateText) {
+      dateText.textContent = String(dayOfMonth).padStart(2, '0');
+    }
+  }
+
+  // ============= 3. BANDĂ CU ZILELE LUNII =============
+  function starkCreateMonthBand() {
+    if (document.getElementById('stark-month-band')) return;
+
+    const panel = document.getElementById('panel-gibilan');
+    if (!panel) return;
+
+    const main = panel.querySelector('.main');
+    if (!main) return;
+
+    const band = document.createElement('div');
+    band.id = 'stark-month-band';
+    band.style.cssText = 'background: linear-gradient(90deg, rgba(0,229,255,0.08), rgba(0,229,255,0.04)); border: 1px solid rgba(0,229,255,0.25); border-radius: 0; padding: 12px 16px; margin-bottom: 16px; display: flex; gap: 4px; overflow-x: auto; font-family: monospace; font-size: 0.7rem; color: #00e5ff; box-shadow: inset 0 0 10px rgba(0,229,255,0.05);';
+
+    const now = new Date();
+    const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const todayNum = now.getDate();
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dayBox = document.createElement('div');
+      dayBox.style.cssText = 'flex-shrink: 0; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(0,229,255,0.3); background: ' + (d === todayNum ? 'rgba(0,229,255,0.25)' : 'transparent') + '; border-radius: 0; font-weight: ' + (d === todayNum ? '700' : '400') + '; color: ' + (d === todayNum ? '#00e5ff' : 'rgba(0,229,255,0.6)') + '; box-shadow: ' + (d === todayNum ? '0 0 8px #00e5ff' : 'none') + ';';
+      dayBox.textContent = String(d).padStart(2, '0');
+      band.appendChild(dayBox);
+    }
+
+    main.insertBefore(band, main.firstChild);
+  }
+
+  // ============= 4. GAUGE-URI RADIALE PENTRU AGENDĂ =============
+  function starkCreateAgendaGauges() {
+    const statusCard = document.querySelector('#panel-gibilan .jvs-card:nth-child(3)');
+    if (!statusCard || document.getElementById('stark-agenda-gauges')) return;
+
+    const gaugesDiv = document.createElement('div');
+    gaugesDiv.id = 'stark-agenda-gauges';
+    gaugesDiv.style.cssText = 'display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px;';
+
+    const metrics = [
+      { id: 'stark-gauge-meetings', label: 'INTALNIRI', max: 5, color: '#00e5ff' },
+      { id: 'stark-gauge-todos', label: 'TO-DO', max: 8, color: '#00b8cc' },
+      { id: 'stark-gauge-deadlines', label: 'DEADLINE', max: 5, color: '#009999' },
+    ];
+
+    metrics.forEach((m) => {
+      const container = document.createElement('div');
+      container.style.cssText = 'display: flex; flex-direction: column; align-items: center; gap: 6px;';
+
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 80 80');
+      svg.style.width = '48px';
+      svg.style.height = '48px';
+      svg.style.filter = 'drop-shadow(0 0 6px ' + m.color + ')';
+
+      const bgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      bgCircle.setAttribute('cx', '40');
+      bgCircle.setAttribute('cy', '40');
+      bgCircle.setAttribute('r', '35');
+      bgCircle.setAttribute('fill', 'none');
+      bgCircle.setAttribute('stroke', 'rgba(0,229,255,0.15)');
+      bgCircle.setAttribute('stroke-width', '2');
+      svg.appendChild(bgCircle);
+
+      const progressCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      progressCircle.setAttribute('cx', '40');
+      progressCircle.setAttribute('cy', '40');
+      progressCircle.setAttribute('r', '35');
+      progressCircle.setAttribute('fill', 'none');
+      progressCircle.setAttribute('stroke', m.color);
+      progressCircle.setAttribute('stroke-width', '2.5');
+      progressCircle.setAttribute('stroke-dasharray', '220');
+      progressCircle.setAttribute('stroke-dashoffset', '220');
+      progressCircle.style.transformOrigin = 'center';
+      progressCircle.style.transform = 'rotate(-90deg)';
+      progressCircle.id = m.id;
+      progressCircle.dataset.max = m.max;
+      svg.appendChild(progressCircle);
+
+      const valueText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      valueText.setAttribute('x', '40');
+      valueText.setAttribute('y', '40');
+      valueText.setAttribute('text-anchor', 'middle');
+      valueText.setAttribute('dominant-baseline', 'middle');
+      valueText.setAttribute('font-size', '18');
+      valueText.setAttribute('font-weight', '700');
+      valueText.setAttribute('fill', m.color);
+      valueText.setAttribute('font-family', 'monospace');
+      valueText.textContent = '0';
+      valueText.id = m.id + '-text';
+      svg.appendChild(valueText);
+
+      container.appendChild(svg);
+
+      const label = document.createElement('div');
+      label.style.cssText = 'font-size: 0.65rem; font-weight: 600; color: ' + m.color + '; font-family: monospace; text-align: center; letter-spacing: 0.05em;';
+      label.textContent = m.label;
+      container.appendChild(label);
+
+      gaugesDiv.appendChild(container);
+    });
+
+    const cardBody = statusCard.querySelector('.jvs-card-body');
+    if (cardBody) cardBody.appendChild(gaugesDiv);
+  }
+
+  function starkUpdateAgendaGauges() {
+    if (typeof gibData === 'undefined' || !gibData) return;
+
+    const today = new Date().toISOString().split('T')[0];
+    const in7 = new Date();
+    in7.setDate(in7.getDate() + 7);
+    const in7Str = in7.toISOString().split('T')[0];
+
+    const meetingsCount = (gibData.meetings || []).filter((m) => m.date === today).length;
+    const todosCount = (gibData.todos || []).filter((t) => !t.done).length;
+    const deadlinesCount = (gibData.deadlines || []).filter((d) => d.date >= today && d.date <= in7Str).length;
+
+    const gauges = [
+      { id: 'stark-gauge-meetings', value: meetingsCount },
+      { id: 'stark-gauge-todos', value: todosCount },
+      { id: 'stark-gauge-deadlines', value: deadlinesCount },
+    ];
+
+    gauges.forEach((g) => {
+      const el = document.getElementById(g.id);
+      const textEl = document.getElementById(g.id + '-text');
+      if (el && textEl) {
+        const max = parseInt(el.dataset.max) || 5;
+        const pct = Math.min((g.value / max) * 100, 100);
+        const dashLength = 220;
+        el.setAttribute('stroke-dashoffset', (dashLength * (100 - pct)) / 100);
+        textEl.textContent = g.value;
+      }
+    });
+  }
+
+  // ============= 5. METEO CU OPEN-METEO =============
+  async function starkFetchWeather() {
+    try {
+      const geoRes = await Promise.race([
+        fetch('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(STARK_WEATHER_CITY) + '&count=1'),
+        new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), STARK_WEATHER_API_TIMEOUT)),
+      ]);
+      if (!geoRes.ok) return null;
+
+      const geoData = await geoRes.json();
+      if (!geoData.results || !geoData.results[0]) return null;
+
+      const lat = geoData.results[0].latitude;
+      const lon = geoData.results[0].longitude;
+
+      const forecastRes = await Promise.race([
+        fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto'),
+        new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), STARK_WEATHER_API_TIMEOUT)),
+      ]);
+      if (!forecastRes.ok) return null;
+
+      const forecastData = await forecastRes.json();
+      return forecastData;
+    } catch (e) {
+      console.error('Weather fetch error:', e);
+      return null;
+    }
+  }
+
+  function starkWeatherCodeToEmoji(code) {
+    if (code === 0 || code === 1) return '☀️';
+    if (code === 2) return '⛅';
+    if (code === 3) return '☁️';
+    if (code === 45 || code === 48) return '🌫️';
+    if (code >= 51 && code <= 67) return '🌧️';
+    if (code >= 71 && code <= 86) return '🌨️';
+    return '❓';
+  }
+
+  function starkCreateWeatherPanel() {
+    const agenda = document.querySelector('.gibilan-agenda');
+    if (!agenda || document.getElementById('stark-weather-panel')) return;
+
+    const panel = document.createElement('div');
+    panel.id = 'stark-weather-panel';
+    panel.style.cssText = 'background: linear-gradient(135deg, rgba(10,24,24,.8) 0%, rgba(15,32,32,.6) 100%); border: 1px solid #00e5ff; border-radius: 0; padding: 16px; box-shadow: 0 0 20px rgba(0,229,255,.15), inset 0 0 20px rgba(0,229,255,.05); position: relative;';
+
+    const title = document.createElement('div');
+    title.style.cssText = 'font-family: monospace; font-size: 0.75rem; font-weight: 700; color: #00e5ff; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em;';
+    title.textContent = '🌍 METEO — ' + STARK_WEATHER_CITY.toUpperCase();
+    panel.appendChild(title);
+
+    const loading = document.createElement('div');
+    loading.style.cssText = 'font-size: 0.8rem; color: #7df9ff; font-family: monospace;';
+    loading.textContent = 'Se încarcă...';
+    loading.id = 'stark-weather-content';
+    panel.appendChild(loading);
+
+    agenda.insertBefore(panel, agenda.firstChild);
+
+    starkFetchWeather().then((data) => {
+      starkWeatherData = data;
+      starkUpdateWeatherPanel();
+    });
+  }
+
+  function starkUpdateWeatherPanel() {
+    const content = document.getElementById('stark-weather-content');
+    if (!content) return;
+
+    if (!starkWeatherData) {
+      content.textContent = '— (rețea indisponibilă)';
+      content.style.color = '#7df9ff';
+      return;
+    }
+
+    try {
+      const current = starkWeatherData.current || {};
+      const daily = starkWeatherData.daily || {};
+      const temp = current.temperature_2m;
+      const code = current.weather_code;
+      const emoji = starkWeatherCodeToEmoji(code);
+
+      let html = '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;"><span style="font-size: 1.2rem;">' + emoji + '</span><div><div style="font-size: 1rem; font-weight: 700; color: #00e5ff; font-family: monospace;">' + temp + '°C</div><div style="font-size: 0.7rem; color: #7df9ff; font-family: monospace;">ACUM</div></div></div><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.7rem;">';
+
+      if (daily.time && daily.time[0]) {
+        const numDays = Math.min(4, daily.time.length);
+        for (let i = 0; i < numDays; i++) {
+          const dayDate = daily.time[i];
+          const dayCode = daily.weather_code[i];
+          const dayEmoji = starkWeatherCodeToEmoji(dayCode);
+          const maxTemp = daily.temperature_2m_max[i];
+          const minTemp = daily.temperature_2m_min[i];
+          const d = new Date(dayDate);
+          const dayName = ['DUM', 'LUN', 'MAR', 'MIE', 'JOI', 'VIN', 'SAM'][d.getDay()];
+          html += '<div style="border: 1px solid rgba(0,229,255,0.25); padding: 6px; border-radius: 0; background: rgba(0,229,255,0.06);"><div style="font-weight: 700; color: #00e5ff; margin-bottom: 2px;">' + dayName + '</div><div style="color: #7df9ff;">' + dayEmoji + ' ' + maxTemp + '°/' + minTemp + '°</div></div>';
+        }
+      }
+
+      html += '</div>';
+      content.innerHTML = html;
+    } catch (e) {
+      content.textContent = '— eroare';
+      content.style.color = '#f87171';
+    }
+  }
+
+  // ============= INIT & INTEGRARE =============
+  function starkInitialize() {
+    starkCreateRings();
+    starkCreateClockGauges();
+    starkCreateMonthBand();
+    starkCreateAgendaGauges();
+    starkCreateWeatherPanel();
+
+    if (starkGaugeMetricsInterval) clearInterval(starkGaugeMetricsInterval);
+    starkGaugeMetricsInterval = setInterval(() => {
+      if (document.hidden) return;
+      starkUpdateClockGauges();
+    }, 1000);
+
+    starkUpdateClockGauges();
+    starkUpdateAgendaGauges();
+  }
+
+  function starkOnLoadGibilan() {
+    starkUpdateAgendaGauges();
+    starkUpdateClockGauges();
+    if (starkWeatherData) starkUpdateWeatherPanel();
+  }
+
+  // Hook în loadGibilan și jvsUpdateStats
+  const starkOriginalLoadGibilan = window.loadGibilan;
+  if (typeof starkOriginalLoadGibilan === 'function') {
+    window.loadGibilan = async function () {
+      const result = await starkOriginalLoadGibilan.call(this);
+      starkOnLoadGibilan();
+      return result;
+    };
+  }
+
+  const starkOriginalJvsUpdateStats = window.jvsUpdateStats;
+  if (typeof starkOriginalJvsUpdateStats === 'function') {
+    window.jvsUpdateStats = function () {
+      starkOriginalJvsUpdateStats.call(this);
+      starkUpdateAgendaGauges();
+      starkUpdateClockGauges();
+    };
+  }
+
+  // Auto-initialize când tab-ul devine activ
+  document.addEventListener('DOMContentLoaded', () => {
+    const panel = document.getElementById('panel-gibilan');
+    if (panel && panel.classList.contains('active')) {
+      setTimeout(starkInitialize, 300);
+    }
+  });
+
+  // Cleanup la visibility change
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && starkGaugeMetricsInterval) {
+      clearInterval(starkGaugeMetricsInterval);
+      starkGaugeMetricsInterval = null;
+    } else if (!document.hidden && !starkGaugeMetricsInterval) {
+      starkGaugeMetricsInterval = setInterval(() => {
+        starkUpdateClockGauges();
+      }, 1000);
+    }
+  });
+
+  // Switch tabs hook (combinat cu beam-uri)
   const originalSwitchTabBeams = window.switchTab;
   window.switchTab = function(tab, btn) {
     originalSwitchTabBeams.call(this, tab, btn);
     if (tab === 'gibilan') {
       jvsBeams.start();
+      setTimeout(starkInitialize, 100);
     } else {
       jvsBeams.stop();
     }
