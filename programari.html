@@ -2098,6 +2098,40 @@
           </div>
         </div>
       </div>
+
+      <!-- BLOG AI — studiu + generare articole, centralizat in Gibilan -->
+      <div class="jvs-card" id="gib-blog-panel" style="margin-top:24px;">
+        <div class="jvs-card-head">BLOG AI — studiu &amp; generare articole</div>
+        <div class="jvs-bracket jvs-bracket-tr"></div>
+        <div class="jvs-bracket jvs-bracket-bl"></div>
+        <div class="jvs-bracket jvs-bracket-br"></div>
+        <div class="jvs-card-body">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+            <div style="flex:1 1 260px;min-width:0;">
+              <label class="f-label" style="display:block;margin-bottom:4px;">// subiect / nișă</label>
+              <input class="gib-input" id="gib-blog-subject" type="text" placeholder="ex: web design pentru cabinete stomatologice" style="margin-bottom:0;">
+            </div>
+            <div style="flex:0 0 230px;">
+              <label class="f-label" style="display:block;margin-bottom:4px;">// autor (agent)</label>
+              <select class="gib-input" id="gib-blog-agent" style="margin-bottom:0;">
+                <option value="">Implicit (SEO/copywriter)</option>
+                <option value="elena">Elena — SEO &amp; Content</option>
+                <option value="mihai">Mihai — Copywriter</option>
+                <option value="andrei">Andrei — Content Strategist</option>
+                <option value="gogu">Gogu — Marketing</option>
+                <option value="robert">Robert — Analytics</option>
+                <option value="victoria">Victoria — CMO</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center;">
+            <button class="gib-save" type="button" onclick="gibBlogResearch()" style="width:auto;">🔎 Caută titluri</button>
+            <button class="gib-save" type="button" onclick="gibBlogGenerate()" style="width:auto;">✍️ Generează articol</button>
+            <span id="gib-blog-status" style="font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--muted);"></span>
+          </div>
+          <div id="gib-blog-results" style="margin-top:16px;"></div>
+        </div>
+      </div>
     </div>
   </div>
 
