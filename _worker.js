@@ -1940,6 +1940,8 @@ Cerințe titluri:
 
     // ── LAYOUT (section order per page) ──────────────────────
 
+    const AGENT_PERSONAS = {"alex":{"label":"Alex","role":"Mobile App Developer. Expert în React Native și Flutter pentru iOS și Android."},"alina":{"label":"Alina","role":"Manager de proiect și coordonator echipe. Planuri de proiect, breakdown de task-uri, timelines, deadline-uri, prioritizare backlog și rapoarte de progres."},"ana-pm":{"label":"Ana-pm","role":"Project manager general. Coordonează task-uri, planifică implementări."},"ana":{"label":"Ana","role":"COO & Chief of Staff. Coordonează întreaga echipă, descompune task-uri, planificare strategică."},"anca":{"label":"Anca","role":"Asistent academic pentru învățătoare cls. I-IV, masterandă."},"andrei":{"label":"Andrei","role":"Content Strategist & Senior Copywriter. Content strategy, storytelling de brand, long-form content."},"clara":{"label":"Clara","role":"Specialist Copyright, Proprietate Intelectuală și Anti-Plagiat. Originalitate conținut, mărci, drepturi de autor, conformitate legală."},"cosmin":{"label":"Cosmin","role":"Full-stack web developer. Expert în GitHub, Cloudflare Pages și dezvoltare web modernă."},"cristina":{"label":"Cristina","role":"PR Manager & Specialist Comunicare. Relații publice, comunicare de criză, media relations, brand reputation."},"danbastan":{"label":"Danbastan","role":"Senior Platform & AI Engineer. Full-stack, AI/LLM, Cloudflare avansat, auth & payments, arhitecturi complexe, code review senior."},"daniela":{"label":"Daniela","role":"Project Coordinator & Traffic Manager. Coordonare zilnică, planificare task-uri, time tracking."},"diana":{"label":"Diana","role":"UI/UX Designer. Design de interfețe, experiență utilizator, prototipuri Figma, design systems."},"elena":{"label":"Elena","role":"SEO & Content Strategist. Optimizare pentru motoare de căutare, strategie de conținut, content marketing."},"emma":{"label":"Emma","role":"Account Director & Client Success Manager. Relația cu clienții, retention, upsell, comunicare client-agenție."},"george":{"label":"George","role":"Specialist Google Ads & PPC. Campanii Search, Display, Shopping, YouTube, Performance Max."},"gogu":{"label":"Gogu","role":"Expert marketing online, social media și manager agenție. Strategie de marketing digital, planuri editoriale, campanii Meta/Google Ads, SEO local."},"ioana":{"label":"Ioana","role":"Pricing & Sales Operations. Construcția ofertelor, pricing strategy, contracte, calcul de marjă."},"ion":{"label":"Ion","role":"Social media manager și marketing specialist. Facebook, LinkedIn, Instagram, TikTok, copywriting."},"irina":{"label":"Irina","role":"Senior UX Designer & Design Lead. User research, information architecture, design systems, UX strategy."},"laura":{"label":"Laura","role":"Performance Marketing Manager. Paid advertising — Google Ads, Meta Ads, TikTok, optimizare ROAS."},"lucian":{"label":"Lucian","role":"Expert programare web și dezvoltare software. Cod, buguri, arhitectură, deployment, baze de date, securitate."},"marian":{"label":"Marian","role":"Visual & Graphic Designer. Identitate vizuală, materiale print & digital, motion graphics, creative ads."},"mihai":{"label":"Mihai","role":"Copywriter & Content Writer. Texte persuasive pentru web, ads, emailuri și materiale de vânzare."},"radu":{"label":"Radu","role":"Specialist implantologie și estetică dentară. Conținut medical stomatologic, educație pacienți, personal branding medical."},"rares":{"label":"Rares","role":"Manager Academie de Rugby pentru copii. Social media rugby, comunicare cu părinți, organizare turnee."},"robert":{"label":"Robert","role":"Head of Analytics & Strategic Advisor. Analytics, conversion rate optimization, atribuire, decizii bazate pe date."},"stefan":{"label":"Stefan","role":"Senior Project Manager & Operations Lead. Delivery management, planificare, resource allocation, optimizare procese."},"victor":{"label":"Victor","role":"VR/XR Developer. Meta Quest, Unity XR, Unreal Engine, mixed reality, avatare 3D."},"victoria":{"label":"Victoria","role":"Chief Marketing Officer & Strategy Director. Strategie de marketing integrată, brand positioning, GTM, leadership."}};
+
     const LAYOUT_DEFAULTS = {
       index: ['hero','carousel','showcase','services','portfolio','about','testimonials','contact'],
       'web-design-bucuresti': ['hero','trust','services','portfolio','process','contact'],
@@ -2064,6 +2066,29 @@ Cerințe titluri:
         }));
         return json({ success: true });
       } catch { return json({ error: 'Eroare' }, 500); }
+    }
+
+    // ── CHAT ECHIPA AI (Cloudflare Workers AI — gratuit, fără cheie API) ──
+    if (path === '/api/agent-chat' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      if (!env.AI) return json({ error: 'Workers AI nu este activat. Adaugă binding-ul AI în Cloudflare Pages → Settings → Functions → AI bindings (variabila AI).' }, 503);
+      try {
+        const body = await request.json();
+        const persona = AGENT_PERSONAS[String(body.agent || '')];
+        if (!persona) return json({ error: 'Agent necunoscut' }, 400);
+        const userMsgs = Array.isArray(body.messages) ? body.messages.slice(-12) : [];
+        const system = 'Ești ' + persona.label + ', parte din echipa agenției de web design C Design din România. Rolul tău: ' + persona.role
+          + ' Răspunzi MEREU în limba română, concis, prietenos și la obiect, rămânând în rolul tău. Dacă întrebarea nu ține de expertiza ta, spui scurt asta și sugerezi ce coleg din echipă ar fi mai potrivit.';
+        const messages = [{ role: 'system', content: system }];
+        for (const m of userMsgs) {
+          if (m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string') {
+            messages.push({ role: m.role, content: m.content.slice(0, 4000) });
+          }
+        }
+        const out = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', { messages, max_tokens: 800 });
+        const reply = (out && (out.response || out.result)) || '';
+        return json({ reply: String(reply).trim() || 'Nu am putut genera un răspuns.' });
+      } catch (e) { return json({ error: 'Eroare la generarea răspunsului' }, 500); }
     }
 
     // Media upload — cu ?name=<fișier existent> suprascrie imaginea în loc

@@ -1915,6 +1915,22 @@
             </div>
           </div>
 
+          <!-- ECHIPA AI (chat) -->
+          <div class="jvs-card">
+            <div class="jvs-card-head">ECHIPA AI</div>
+            <div class="jvs-bracket jvs-bracket-tr"></div>
+            <div class="jvs-bracket jvs-bracket-bl"></div>
+            <div class="jvs-bracket jvs-bracket-br"></div>
+            <div class="jvs-card-body">
+              <select class="gib-input" id="ai-agent-sel" onchange="aiChatReset()" style="margin-bottom:8px;"></select>
+              <div id="ai-chat-log" style="min-height:90px;max-height:300px;overflow-y:auto;font-size:.82rem;line-height:1.5;display:flex;flex-direction:column;gap:8px;padding:4px 2px;"></div>
+              <div style="display:flex;gap:6px;margin-top:8px;">
+                <input class="gib-input" id="ai-chat-input" type="text" placeholder="Întreabă echipa..." style="flex:1;" onkeydown="if(event.key==='Enter')aiChatSend()">
+                <button class="gib-save" id="ai-chat-send" onclick="aiChatSend()" style="white-space:nowrap;">Trimite</button>
+              </div>
+            </div>
+          </div>
+
           <!-- Intalniri -->
           <div class="gib-section">
             <div class="gib-section-title">&#x1F550; &Icirc;NT&#xC2;LNIRI</div>
@@ -5519,6 +5535,80 @@
   }
   function jvsStats() { jvsUpdateStats(); }
 
+  // --- CHAT ECHIPA AI (Workers AI, gratuit) ---
+  const AI_AGENTS = [
+    ['ana','Ana — COO'],['alina','Alina — PM'],['stefan','Stefan — PM Operations'],['daniela','Daniela — Coordonare'],
+    ['cosmin','Cosmin — Web Dev'],['lucian','Lucian — Programare'],['danbastan','Danbastan — AI/Platform'],['alex','Alex — Mobile'],['victor','Victor — VR/XR'],
+    ['elena','Elena — SEO'],['mihai','Mihai — Copywriter'],['andrei','Andrei — Content'],['clara','Clara — Copyright/Legal'],
+    ['gogu','Gogu — Marketing'],['laura','Laura — Performance Ads'],['george','George — Google Ads'],['ion','Ion — Social Media'],['cristina','Cristina — PR'],
+    ['diana','Diana — UI/UX'],['irina','Irina — UX Lead'],['marian','Marian — Grafică'],
+    ['emma','Emma — Account'],['ioana','Ioana — Pricing/Oferte'],['robert','Robert — Analytics'],['victoria','Victoria — CMO'],
+    ['radu','Radu — Medical'],['rares','Rares — Rugby'],['anca','Anca — Academic'],['ana-pm','Ana — PM general']
+  ];
+  let aiChatHistory = {};
+  let aiChatBusy = false;
+
+  function aiChatInit() {
+    const sel = document.getElementById('ai-agent-sel');
+    if (!sel || sel.options.length) return;
+    sel.innerHTML = AI_AGENTS.map(a => '<option value="' + a[0] + '">' + a[1] + '</option>').join('');
+    aiChatReset();
+  }
+  function aiCurrentAgent() {
+    const sel = document.getElementById('ai-agent-sel');
+    return sel ? sel.value : 'ana';
+  }
+  function aiRenderLog() {
+    const log = document.getElementById('ai-chat-log');
+    if (!log) return;
+    const agent = aiCurrentAgent();
+    const hist = aiChatHistory[agent] || [];
+    if (!hist.length) {
+      const label = (AI_AGENTS.find(a => a[0] === agent) || [, agent])[1];
+      log.innerHTML = '<div style="color:var(--muted);font-style:italic;">Vorbește cu ' + label + '. Întreabă orice ține de rolul lui.</div>';
+      return;
+    }
+    log.innerHTML = hist.map(m =>
+      '<div style="align-self:' + (m.role === 'user' ? 'flex-end' : 'flex-start') + ';max-width:88%;background:' +
+      (m.role === 'user' ? 'rgba(0,229,255,.14)' : 'rgba(255,255,255,.05)') + ';border:1px solid rgba(0,229,255,' +
+      (m.role === 'user' ? '.4' : '.2') + ');border-radius:8px;padding:7px 10px;color:var(--text);white-space:pre-wrap;">' +
+      esc(m.content) + '</div>'
+    ).join('');
+    log.scrollTop = log.scrollHeight;
+  }
+  function aiChatReset() { aiRenderLog(); }
+
+  async function aiChatSend() {
+    if (aiChatBusy) return;
+    const input = document.getElementById('ai-chat-input');
+    const text = input ? input.value.trim() : '';
+    if (!text) return;
+    const agent = aiCurrentAgent();
+    if (!aiChatHistory[agent]) aiChatHistory[agent] = [];
+    aiChatHistory[agent].push({ role: 'user', content: text });
+    input.value = '';
+    aiChatBusy = true;
+    aiRenderLog();
+    const log = document.getElementById('ai-chat-log');
+    const wait = document.createElement('div');
+    wait.style.cssText = 'align-self:flex-start;color:var(--teal);font-style:italic;';
+    wait.textContent = 'scrie...';
+    if (log) { log.appendChild(wait); log.scrollTop = log.scrollHeight; }
+    try {
+      const r = await fetch('/api/agent-chat?token=' + encodeURIComponent(adminToken), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ agent: agent, messages: aiChatHistory[agent] })
+      });
+      const d = await r.json();
+      if (d.reply) aiChatHistory[agent].push({ role: 'assistant', content: d.reply });
+      else aiChatHistory[agent].push({ role: 'assistant', content: '⚠ ' + (d.error || 'Eroare.') });
+    } catch (e) {
+      aiChatHistory[agent].push({ role: 'assistant', content: '⚠ Eroare de rețea.' });
+    }
+    aiChatBusy = false;
+    aiRenderLog();
+  }
+
   // --- NOTEPAD WIDGET ---
   function jvsNote() {
     const textarea = document.getElementById('jvs-notepad');
@@ -5572,6 +5662,7 @@
         jvsStats();
         jvsNote();
         jvsGaze();
+        aiChatInit();
       }, 100);
     }
     return result;
@@ -5585,6 +5676,7 @@
         jvsStats();
         jvsNote();
         jvsGaze();
+        aiChatInit();
       }, 500);
     }
   });
