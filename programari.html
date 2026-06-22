@@ -437,6 +437,37 @@
       .gibilan-agenda{flex-direction:column;}
     }
 
+    /* ===== ORGANIGRAMA AGENTI AI ===== */
+    .org-wrap{display:flex;flex-direction:column;align-items:center;gap:0;padding:8px 4px 4px;}
+    .org-level{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;position:relative;}
+    .org-node{position:relative;cursor:pointer;background:linear-gradient(135deg,rgba(10,24,24,.92) 0%,rgba(15,32,32,.78) 100%);border:1px solid #00e5ff;border-radius:4px;padding:10px 16px;min-width:150px;text-align:center;transition:transform .15s ease,box-shadow .2s ease,border-color .2s ease;box-shadow:0 0 14px rgba(0,229,255,.12),inset 0 0 14px rgba(0,229,255,.04);}
+    .org-node:hover{transform:translateY(-2px);border-color:#7df9ff;box-shadow:0 0 22px rgba(0,229,255,.4),inset 0 0 16px rgba(0,229,255,.08);}
+    .org-node .org-name{font-family:'Share Tech Mono',monospace;font-weight:700;color:#7df9ff;font-size:.95rem;letter-spacing:.5px;}
+    .org-node .org-role{font-size:.7rem;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.5px;}
+    .org-root{border-color:#ffb000;box-shadow:0 0 22px rgba(255,176,0,.3),inset 0 0 14px rgba(255,176,0,.06);}
+    .org-root .org-name{color:#ffd060;}
+    .org-root:hover{border-color:#ffd060;box-shadow:0 0 30px rgba(255,176,0,.5);}
+    .org-coo{border-color:#ff5da2;box-shadow:0 0 22px rgba(255,93,162,.28),inset 0 0 14px rgba(255,93,162,.06);}
+    .org-coo .org-name{color:#ff9ccb;}
+    /* vertical spine connectors */
+    .org-spine{width:2px;height:22px;background:linear-gradient(#00e5ff,rgba(0,229,255,.2));margin:0 auto;}
+    .org-spine-amber{background:linear-gradient(#ffb000,rgba(255,176,0,.2));}
+    /* department cards row */
+    .org-depts{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-top:6px;width:100%;}
+    .org-dept{flex:1 1 240px;max-width:300px;background:linear-gradient(135deg,rgba(10,24,24,.75) 0%,rgba(15,32,32,.5) 100%);border:1px solid rgba(0,229,255,.45);border-top:2px solid #00e5ff;border-radius:4px;padding:14px;box-shadow:0 0 16px rgba(0,229,255,.1),inset 0 0 16px rgba(0,229,255,.03);}
+    .org-dept-title{font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:1px;color:#00e5ff;text-transform:uppercase;margin-bottom:10px;opacity:.85;}
+    .org-head{cursor:pointer;background:rgba(0,229,255,.08);border:1px solid #00e5ff;border-radius:4px;padding:8px 10px;margin-bottom:10px;transition:background .15s ease,box-shadow .2s ease;}
+    .org-head:hover{background:rgba(0,229,255,.18);box-shadow:0 0 14px rgba(0,229,255,.3);}
+    .org-head .org-name{font-family:'Share Tech Mono',monospace;font-weight:700;color:#7df9ff;font-size:.9rem;}
+    .org-head .org-role{font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+    .org-members{display:flex;flex-direction:column;gap:6px;}
+    .org-chip{cursor:pointer;display:flex;align-items:baseline;gap:7px;padding:6px 9px;border-radius:3px;border:1px solid rgba(0,229,255,.2);background:rgba(0,229,255,.03);transition:background .12s ease,border-color .15s ease,transform .12s ease;}
+    .org-chip:hover{background:rgba(0,229,255,.12);border-color:#00e5ff;transform:translateX(3px);}
+    .org-chip .org-cn{font-family:'Share Tech Mono',monospace;font-weight:700;color:#9fe9ff;font-size:.82rem;}
+    .org-chip .org-cr{font-size:.68rem;color:var(--muted);}
+    .org-hint{text-align:center;font-size:.72rem;color:var(--muted);margin-bottom:10px;font-family:'Share Tech Mono',monospace;}
+    @media(max-width:680px){.org-dept{flex:1 1 100%;max-width:100%;}.org-node{min-width:130px;}}
+
     /* HUD Panels: Holographic Style */
     .gib-section{background:linear-gradient(135deg,rgba(10,24,24,.8) 0%,rgba(15,32,32,.6) 100%);border:1px solid #00e5ff;border-radius:0;padding:20px;position:relative;box-shadow:0 0 20px rgba(0,229,255,.15),inset 0 0 20px rgba(0,229,255,.05);overflow:visible;}
     .gib-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,rgba(0,229,255,.03) 0px,transparent 2px,transparent 4px,rgba(0,229,255,.03) 6px);pointer-events:none;animation:scanline-sweep 8s linear infinite;z-index:1;}
@@ -1960,37 +1991,111 @@
         </div>
       </div>
 
-      <!-- BLOG AI — studiu + generare articole, centralizat in Gibilan -->
-      <div class="jvs-card" id="gib-blog-panel" style="margin-top:24px;">
-        <div class="jvs-card-head">BLOG AI — studiu &amp; generare articole</div>
+      <!-- ORGANIGRAMA AGENTI AI -->
+      <div class="jvs-card" id="gib-org-panel" style="margin-top:24px;">
+        <div class="jvs-card-head">ORGANIGRAM&#x102; ECHIPA AI &mdash; 29 agen&#x21B;i</div>
         <div class="jvs-bracket jvs-bracket-tr"></div>
         <div class="jvs-bracket jvs-bracket-bl"></div>
         <div class="jvs-bracket jvs-bracket-br"></div>
         <div class="jvs-card-body">
-          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
-            <div style="flex:1 1 260px;min-width:0;">
-              <label class="f-label" style="display:block;margin-bottom:4px;">// subiect / nișă</label>
-              <input class="gib-input" id="gib-blog-subject" type="text" placeholder="ex: web design pentru cabinete stomatologice" style="margin-bottom:0;">
+          <div class="org-hint">// click pe orice agent ca s&#x103; deschizi chat-ul cu el</div>
+          <div class="org-wrap">
+            <!-- Root: Gibilan -->
+            <div class="org-level">
+              <div class="org-node org-root" onclick="orgPickAgent('ana')">
+                <div class="org-name">&#x1F916; GIBILAN</div>
+                <div class="org-role">Orchestrator AI</div>
+              </div>
             </div>
-            <div style="flex:0 0 230px;">
-              <label class="f-label" style="display:block;margin-bottom:4px;">// autor (agent)</label>
-              <select class="gib-input" id="gib-blog-agent" style="margin-bottom:0;">
-                <option value="">Implicit (SEO/copywriter)</option>
-                <option value="elena">Elena — SEO &amp; Content</option>
-                <option value="mihai">Mihai — Copywriter</option>
-                <option value="andrei">Andrei — Content Strategist</option>
-                <option value="gogu">Gogu — Marketing</option>
-                <option value="robert">Robert — Analytics</option>
-                <option value="victoria">Victoria — CMO</option>
-              </select>
+            <div class="org-spine org-spine-amber"></div>
+            <!-- COO -->
+            <div class="org-level">
+              <div class="org-node org-coo" onclick="orgPickAgent('ana')">
+                <div class="org-name">ANA</div>
+                <div class="org-role">COO &amp; Chief of Staff</div>
+              </div>
+            </div>
+            <div class="org-spine"></div>
+            <!-- Departamente -->
+            <div class="org-depts">
+
+              <div class="org-dept">
+                <div class="org-dept-title">&#x1F4C8; Strategie &amp; Analytics</div>
+                <div class="org-head" onclick="orgPickAgent('victoria')"><div class="org-name">Victoria</div><div class="org-role">CMO &amp; Strategy</div></div>
+                <div class="org-members">
+                  <div class="org-chip" onclick="orgPickAgent('robert')"><span class="org-cn">Robert</span><span class="org-cr">Head of Analytics</span></div>
+                </div>
+              </div>
+
+              <div class="org-dept">
+                <div class="org-dept-title">&#x1F4CB; Project Management</div>
+                <div class="org-head" onclick="orgPickAgent('stefan')"><div class="org-name">Stefan</div><div class="org-role">Sr. PM &amp; Operations</div></div>
+                <div class="org-members">
+                  <div class="org-chip" onclick="orgPickAgent('alina')"><span class="org-cn">Alina</span><span class="org-cr">Manager proiect</span></div>
+                  <div class="org-chip" onclick="orgPickAgent('ana-pm')"><span class="org-cn">Ana-PM</span><span class="org-cr">PM general</span></div>
+                  <div class="org-chip" onclick="orgPickAgent('daniela')"><span class="org-cn">Daniela</span><span class="org-cr">Coordonare &amp; Traffic</span></div>
+                </div>
+              </div>
+
+              <div class="org-dept">
+                <div class="org-dept-title">&#x1F4BB; Development</div>
+                <div class="org-head" onclick="orgPickAgent('danbastan')"><div class="org-name">Danbastan</div><div class="org-role">Sr. Platform &amp; AI</div></div>
+                <div class="org-members">
+                  <div class="org-chip" onclick="orgPickAgent('lucian')"><span class="org-cn">Lucian</span><span class="org-cr">Programare web</span></div>
+                  <div class="org-chip" onclick="orgPickAgent('cosmin')"><span class="org-cn">Cosmin</span><span class="org-cr">Full-stack web</span></div>
+                  <div class="org-chip" onclick="orgPickAgent('alex')"><span class="org-cn">Alex</span><span class="org-cr">Mobile (RN/Flutter)</span></div>
+                  <div class="org-chip" onclick="orgPickAgent('victor')"><span class="org-cn">Victor</span><span class="org-cr">VR/XR</span></div>
+                </div>
+              </div>
+
+              <div class="org-dept">
+                <div class="org-dept-title">&#x1F3A8; Design</div>
+                <div class="org-head" onclick="orgPickAgent('irina')"><div class="org-name">Irina</div><div class="org-role">Design Lead / UX</div></div>
+                <div class="org-members">
+                  <div class="org-chip" onclick="orgPickAgent('diana')"><span class="org-cn">Diana</span><span class="org-cr">UI/UX Designer</span></div>
+                  <div class="org-chip" onclick="orgPickAgent('marian')"><span class="org-cn">Marian</span><span class="org-cr">Grafic&#x103; &amp; Motion</span></div>
+                </div>
+              </div>
+
+              <div class="org-dept">
+                <div class="org-dept-title">&#x1F4E3; Marketing &amp; Content</div>
+                <div class="org-head" onclick="orgPickAgent('gogu')"><div class="org-name">Gogu</div><div class="org-role">Marketing Manager</div></div>
+                <div class="org-members">
+                  <div class="org-chip" onclick="orgPickAgent('elena')"><span class="org-cn">Elena</span><span class="org-cr">SEO &amp; Content</span></div>
+                  <div class="org-chip" onclick="orgPickAgent('andrei')"><span class="org-cn">Andrei</span><span class="org-cr">Content Strategist</span></div>
+                  <div class="org-chip" onclick="orgPickAgent('mihai')"><span class="org-cn">Mihai</span><span class="org-cr">Copywriter</span></div>
+                  <div class="org-chip" onclick="orgPickAgent('ion')"><span class="org-cn">Ion</span><span class="org-cr">Social Media</span></div>
+                  <div class="org-chip" onclick="orgPickAgent('laura')"><span class="org-cn">Laura</span><span class="org-cr">Performance Ads</span></div>
+                  <div class="org-chip" onclick="orgPickAgent('george')"><span class="org-cn">George</span><span class="org-cr">Google Ads / PPC</span></div>
+                  <div class="org-chip" onclick="orgPickAgent('cristina')"><span class="org-cn">Cristina</span><span class="org-cr">PR &amp; Comunicare</span></div>
+                </div>
+              </div>
+
+              <div class="org-dept">
+                <div class="org-dept-title">&#x1F91D; Sales &amp; Client</div>
+                <div class="org-head" onclick="orgPickAgent('emma')"><div class="org-name">Emma</div><div class="org-role">Account Director</div></div>
+                <div class="org-members">
+                  <div class="org-chip" onclick="orgPickAgent('ioana')"><span class="org-cn">Ioana</span><span class="org-cr">Pricing &amp; Oferte</span></div>
+                </div>
+              </div>
+
+              <div class="org-dept">
+                <div class="org-dept-title">&#x2696; Legal</div>
+                <div class="org-head" onclick="orgPickAgent('clara')"><div class="org-name">Clara</div><div class="org-role">Copyright &amp; IP</div></div>
+                <div class="org-members"></div>
+              </div>
+
+              <div class="org-dept">
+                <div class="org-dept-title">&#x1F4BC; Proiecte dedicate</div>
+                <div class="org-members">
+                  <div class="org-chip" onclick="orgPickAgent('radu')"><span class="org-cn">Radu</span><span class="org-cr">Medical / Stomatologie</span></div>
+                  <div class="org-chip" onclick="orgPickAgent('rares')"><span class="org-cn">Rares</span><span class="org-cr">Academie Rugby</span></div>
+                  <div class="org-chip" onclick="orgPickAgent('anca')"><span class="org-cn">Anca</span><span class="org-cr">Academic</span></div>
+                </div>
+              </div>
+
             </div>
           </div>
-          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center;">
-            <button class="gib-save" type="button" onclick="gibBlogResearch()" style="width:auto;">🔎 Caută titluri</button>
-            <button class="gib-save" type="button" onclick="gibBlogGenerate()" style="width:auto;">✍️ Generează articol</button>
-            <span id="gib-blog-status" style="font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--muted);"></span>
-          </div>
-          <div id="gib-blog-results" style="margin-top:16px;"></div>
         </div>
       </div>
     </div>
@@ -5646,6 +5751,20 @@
     log.scrollTop = log.scrollHeight;
   }
   function aiChatReset() { aiRenderLog(); }
+
+  // Click pe un agent din organigrama -> selecteaza-l in chat si deruleaza la el
+  function orgPickAgent(value) {
+    const sel = document.getElementById('ai-agent-sel');
+    if (sel) {
+      if (!sel.options.length && typeof aiChatInit === 'function') aiChatInit();
+      const exists = Array.from(sel.options).some(o => o.value === value);
+      if (exists) { sel.value = value; if (typeof aiChatReset === 'function') aiChatReset(); }
+    }
+    const panel = document.getElementById('ai-chat-panel');
+    if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const inp = document.getElementById('ai-chat-input');
+    if (inp) setTimeout(() => { try { inp.focus(); } catch (e) {} }, 450);
+  }
 
   async function aiChatSend() {
     if (aiChatBusy) return;
