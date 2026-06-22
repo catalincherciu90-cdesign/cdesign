@@ -1061,6 +1061,13 @@ export default {
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
 
+    // Experiență 3D interactivă (noindex) — homepage spațial, preview
+    if (path === '/experience' || path === '/experienta') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/experience.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
     // ── CITY LANDING PAGES ───────────────────────────────────
 
     if (path === '/web-design-bucuresti') {
