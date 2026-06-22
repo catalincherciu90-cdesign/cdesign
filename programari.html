@@ -909,6 +909,837 @@
       }
     }
 
+    /* ═══════════════════════════════════════════════════════════════════════════════
+       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+       STARK INDUSTRIES HUD RESKIN - GLOBAL OVERRIDE
+       Extinzie estetică cyan/glow peste TOȚI panourile admin (fără a strica logica)
+       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+       ═════════════════════════════════════════════════════════════════════════════════ */
+
+    /* ─ STATS BOXES (taburi Programări, CRM, etc.) ─────────────────────────────── */
+    .stat-box {
+      background: linear-gradient(135deg, rgba(10, 24, 24, 0.9) 0%, rgba(15, 32, 32, 0.7) 100%) !important;
+      border: 1px solid rgba(0, 229, 255, 0.35) !important;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.12), inset 0 0 15px rgba(0, 229, 255, 0.04) !important;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00e5ff, transparent);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .stat-box:hover {
+      border-color: rgba(0, 229, 255, 0.55) !important;
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.2), inset 0 0 20px rgba(0, 229, 255, 0.1) !important;
+    }
+
+    .stat-box-num {
+      color: #00e5ff !important;
+      text-shadow: 0 0 12px rgba(0, 229, 255, 0.6), 0 0 24px rgba(24, 182, 214, 0.25) !important;
+      font-family: 'Share Tech Mono', monospace !important;
+    }
+
+    .stat-box-lbl {
+      color: #7df9ff !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.05em !important;
+      font-weight: 700 !important;
+    }
+
+    /* ─ TABELE (Programări, CRM) ────────────────────────────────────────────────── */
+    .table-wrap {
+      background: linear-gradient(135deg, rgba(10, 24, 24, 0.85) 0%, rgba(15, 32, 32, 0.6) 100%) !important;
+      border: 1px solid rgba(0, 229, 255, 0.3) !important;
+      box-shadow: 0 0 18px rgba(0, 229, 255, 0.12), inset 0 0 18px rgba(0, 229, 255, 0.04) !important;
+      border-radius: 0 !important;
+    }
+
+    .table-head {
+      background: linear-gradient(90deg, rgba(0, 229, 255, 0.15) 0%, rgba(0, 184, 230, 0.08) 100%) !important;
+      border-bottom: 2px solid rgba(0, 229, 255, 0.3) !important;
+      border-top: 1px solid rgba(0, 229, 255, 0.2) !important;
+    }
+
+    .table-head::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #7df9ff, transparent);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .th {
+      color: #00e5ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      font-weight: 700 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.06em !important;
+      font-size: 0.72rem !important;
+    }
+
+    .booking-row, .crm-row {
+      border-bottom: 1px solid rgba(0, 229, 255, 0.15) !important;
+      transition: all 0.2s ease !important;
+      position: relative;
+    }
+
+    .booking-row:hover, .crm-row:hover {
+      background: rgba(0, 229, 255, 0.08) !important;
+      box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.1), inset 0 2px 8px rgba(0, 229, 255, 0.05) !important;
+      border-bottom-color: rgba(0, 229, 255, 0.25) !important;
+    }
+
+    .td {
+      color: #e8edf2 !important;
+      font-size: 0.875rem !important;
+    }
+
+    .td-name {
+      color: #00e5ff !important;
+      font-weight: 600 !important;
+    }
+
+    .td-phone a {
+      color: #7df9ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+    }
+
+    .td-email, .td-date, .td-service {
+      color: #9ad4d4 !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      font-size: 0.8rem !important;
+    }
+
+    .td-time {
+      color: #00e5ff !important;
+      font-weight: 700 !important;
+      text-shadow: 0 0 8px rgba(0, 229, 255, 0.4) !important;
+    }
+
+    /* ─ STATUS BADGES ──────────────────────────────────────────────────────────── */
+    .s-nou {
+      background: rgba(254, 188, 46, 0.15) !important;
+      border: 1px solid rgba(254, 188, 46, 0.35) !important;
+      color: #febc2e !important;
+      text-shadow: 0 0 6px rgba(254, 188, 46, 0.3) !important;
+    }
+
+    .s-nou:hover {
+      box-shadow: 0 0 12px rgba(254, 188, 46, 0.2) !important;
+    }
+
+    .s-confirmat {
+      background: rgba(40, 200, 64, 0.15) !important;
+      border: 1px solid rgba(40, 200, 64, 0.35) !important;
+      color: #28c840 !important;
+      text-shadow: 0 0 6px rgba(40, 200, 64, 0.3) !important;
+    }
+
+    .s-confirmat:hover {
+      box-shadow: 0 0 12px rgba(40, 200, 64, 0.2) !important;
+    }
+
+    .s-anulat {
+      background: rgba(255, 95, 87, 0.15) !important;
+      border: 1px solid rgba(255, 95, 87, 0.35) !important;
+      color: #ff5f57 !important;
+      text-shadow: 0 0 6px rgba(255, 95, 87, 0.3) !important;
+    }
+
+    .s-anulat:hover {
+      box-shadow: 0 0 12px rgba(255, 95, 87, 0.2) !important;
+    }
+
+    .s-oferta {
+      background: rgba(254, 188, 46, 0.15) !important;
+      border: 1px solid rgba(254, 188, 46, 0.35) !important;
+      color: #febc2e !important;
+    }
+
+    .s-in_lucru {
+      background: rgba(0, 229, 255, 0.15) !important;
+      border: 1px solid rgba(0, 229, 255, 0.35) !important;
+      color: #00e5ff !important;
+    }
+
+    .s-finalizat {
+      background: rgba(40, 200, 64, 0.15) !important;
+      border: 1px solid rgba(40, 200, 64, 0.35) !important;
+      color: #28c840 !important;
+    }
+
+    /* ─ CARDURI (Proiecte, Clienți, Blog) ─────────────────────────────────────── */
+    .proj-card, .client-card {
+      background: linear-gradient(135deg, rgba(10, 24, 24, 0.85) 0%, rgba(15, 32, 32, 0.65) 100%) !important;
+      border: 1px solid rgba(0, 229, 255, 0.25) !important;
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.08), inset 0 0 12px rgba(0, 229, 255, 0.02) !important;
+      border-radius: 0 !important;
+      position: relative;
+      transition: all 0.3s ease !important;
+      overflow: hidden;
+    }
+
+    .proj-card::before, .client-card::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      width: 14px;
+      height: 14px;
+      border: 1px solid #7df9ff;
+      border-right: none;
+      border-bottom: none;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .proj-card::after, .client-card::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      right: -1px;
+      width: 14px;
+      height: 14px;
+      border: 1px solid #7df9ff;
+      border-left: none;
+      border-top: none;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .proj-card:hover, .client-card:hover {
+      border-color: rgba(0, 229, 255, 0.5) !important;
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.18), inset 0 0 15px rgba(0, 229, 255, 0.08) !important;
+      transform: translateY(-3px) !important;
+    }
+
+    .proj-card-title, .client-card-name {
+      color: #00e5ff !important;
+      font-weight: 700 !important;
+    }
+
+    .proj-card-tag, .proj-card-desc, .client-card-contact {
+      color: #7df9ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      font-size: 0.78rem !important;
+    }
+
+    .proj-card-thumb {
+      background: rgba(0, 229, 255, 0.08) !important;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.15) !important;
+    }
+
+    /* ─ BUTOANE (Editeaza, Sterge, Adauga, etc.) ───────────────────────────────── */
+    .btn-add, .btn-edit, .btn-del, .btn-save, .client-btn-sm {
+      font-family: 'Share Tech Mono', monospace !important;
+      transition: all 0.3s ease !important;
+      border-radius: 0 !important;
+    }
+
+    .btn-add {
+      background: transparent !important;
+      border: 2px solid #00e5ff !important;
+      color: #00e5ff !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.03em !important;
+      padding: 10px 20px !important;
+    }
+
+    .btn-add:hover {
+      background: rgba(0, 229, 255, 0.1) !important;
+      box-shadow: 0 0 18px rgba(0, 229, 255, 0.35), inset 0 0 15px rgba(0, 229, 255, 0.08) !important;
+      color: #7df9ff !important;
+    }
+
+    .btn-edit {
+      background: transparent !important;
+      border: 1px solid rgba(0, 229, 255, 0.3) !important;
+      color: #00e5ff !important;
+      padding: 6px 12px !important;
+      font-size: 0.72rem !important;
+    }
+
+    .btn-edit:hover {
+      border-color: rgba(0, 229, 255, 0.6) !important;
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.25) !important;
+      color: #7df9ff !important;
+    }
+
+    .btn-del {
+      background: rgba(255, 95, 87, 0.1) !important;
+      border: 1px solid rgba(255, 95, 87, 0.3) !important;
+      color: #ff5f57 !important;
+      font-size: 0.72rem !important;
+    }
+
+    .btn-del:hover {
+      background: rgba(255, 95, 87, 0.15) !important;
+      border-color: rgba(255, 95, 87, 0.5) !important;
+      box-shadow: 0 0 12px rgba(255, 95, 87, 0.2) !important;
+    }
+
+    .btn-save {
+      background: transparent !important;
+      border: 2px solid #00e5ff !important;
+      color: #00e5ff !important;
+      font-weight: 700 !important;
+      padding: 10px 20px !important;
+      letter-spacing: 0.03em !important;
+    }
+
+    .btn-save:hover {
+      background: rgba(0, 229, 255, 0.1) !important;
+      box-shadow: 0 0 18px rgba(0, 229, 255, 0.35) !important;
+      color: #7df9ff !important;
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.5) !important;
+    }
+
+    .btn-cancel {
+      background: transparent !important;
+      border: 1px solid rgba(0, 229, 255, 0.2) !important;
+      color: #7df9ff !important;
+    }
+
+    .btn-cancel:hover {
+      border-color: rgba(0, 229, 255, 0.4) !important;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.15) !important;
+    }
+
+    .client-btn-sm {
+      background: transparent !important;
+      border: 1px solid rgba(0, 229, 255, 0.2) !important;
+      color: #7df9ff !important;
+      font-size: 0.75rem !important;
+      padding: 5px 12px !important;
+    }
+
+    .client-btn-sm:hover {
+      border-color: rgba(0, 229, 255, 0.5) !important;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.2) !important;
+      color: #00e5ff !important;
+    }
+
+    /* ─ FILTER BUTTONS ─────────────────────────────────────────────────────────── */
+    .filter-btn {
+      background: rgba(0, 229, 255, 0.05) !important;
+      border: 1px solid rgba(0, 229, 255, 0.2) !important;
+      color: #7df9ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      font-weight: 600 !important;
+      letter-spacing: 0.02em !important;
+      transition: all 0.2s ease !important;
+      border-radius: 0 !important;
+      padding: 7px 14px !important;
+    }
+
+    .filter-btn:hover {
+      border-color: rgba(0, 229, 255, 0.4) !important;
+      background: rgba(0, 229, 255, 0.12) !important;
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.15) !important;
+      color: #00e5ff !important;
+    }
+
+    .filter-btn.active {
+      background: rgba(0, 229, 255, 0.15) !important;
+      border-color: rgba(0, 229, 255, 0.5) !important;
+      color: #00e5ff !important;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.25) !important;
+      text-shadow: 0 0 8px rgba(0, 229, 255, 0.3) !important;
+    }
+
+    /* ─ INPUT FIELDS (Form, Modale) ─────────────────────────────────────────────── */
+    .f-input, .gib-input, input[type="text"], input[type="email"], input[type="password"],
+    input[type="date"], input[type="time"], input[type="number"], textarea, select,
+    .layout-page-select, .theme-select, .theme-hex-input {
+      background: rgba(6, 15, 15, 0.8) !important;
+      border: 1px solid rgba(0, 229, 255, 0.25) !important;
+      color: #e8edf2 !important;
+      font-family: 'DM Sans', sans-serif !important;
+      border-radius: 0 !important;
+      transition: all 0.2s ease !important;
+      padding: 9px 12px !important;
+    }
+
+    .f-input::placeholder, .gib-input::placeholder,
+    input[type="text"]::placeholder, input[type="email"]::placeholder,
+    input[type="password"]::placeholder, textarea::placeholder {
+      color: rgba(125, 249, 255, 0.4) !important;
+    }
+
+    .f-input:focus, .gib-input:focus,
+    input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus,
+    input[type="date"]:focus, input[type="time"]:focus, input[type="number"]:focus,
+    textarea:focus, select:focus,
+    .layout-page-select:focus, .theme-select:focus, .theme-hex-input:focus {
+      border-color: rgba(0, 229, 255, 0.5) !important;
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.3), inset 0 0 8px rgba(0, 229, 255, 0.1) !important;
+      outline: none !important;
+    }
+
+    /* ─ MODALE ─────────────────────────────────────────────────────────────────── */
+    .modal, .block-editor-box, .block-picker-box {
+      background: linear-gradient(135deg, rgba(10, 24, 24, 0.95) 0%, rgba(15, 32, 32, 0.85) 100%) !important;
+      border: 1px solid rgba(0, 229, 255, 0.3) !important;
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.2), inset 0 0 20px rgba(0, 229, 255, 0.08) !important;
+      border-radius: 0 !important;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modal::before, .block-editor-box::before, .block-picker-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #00e5ff, transparent);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .modal h3, .block-editor-title, .block-picker-title {
+      color: #00e5ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.05em !important;
+      font-weight: 700 !important;
+    }
+
+    .f-label, .block-field label {
+      color: #7df9ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      font-weight: 600 !important;
+      letter-spacing: 0.02em !important;
+      text-transform: uppercase !important;
+      font-size: 0.7rem !important;
+    }
+
+    /* ─ SIDEBAR & SECȚIUNI ─────────────────────────────────────────────────────── */
+    .crm-sidebar, .client-section, .client-info-grid {
+      background: linear-gradient(135deg, rgba(10, 24, 24, 0.85) 0%, rgba(15, 32, 32, 0.65) 100%) !important;
+      border: 1px solid rgba(0, 229, 255, 0.25) !important;
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.08), inset 0 0 12px rgba(0, 229, 255, 0.02) !important;
+      border-radius: 0 !important;
+      position: relative;
+    }
+
+    .crm-sidebar::before, .client-section::before, .client-info-grid::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      width: 12px;
+      height: 12px;
+      border: 1px solid rgba(125, 249, 255, 0.4);
+      border-right: none;
+      border-bottom: none;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .crm-sb-title, .client-section-title {
+      color: #00e5ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      font-weight: 700 !important;
+    }
+
+    .crm-sb-sec-title {
+      color: #7df9ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.06em !important;
+      font-weight: 600 !important;
+    }
+
+    .crm-sb-link, .client-add-inline {
+      color: #00e5ff !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .crm-sb-link:hover, .client-add-inline:hover {
+      color: #7df9ff !important;
+      text-shadow: 0 0 8px rgba(0, 229, 255, 0.3) !important;
+    }
+
+    .crm-sb-form, .client-form-inline {
+      background: rgba(6, 15, 15, 0.8) !important;
+      border: 1px solid rgba(0, 229, 255, 0.25) !important;
+      border-radius: 0 !important;
+      box-shadow: inset 0 0 10px rgba(0, 229, 255, 0.05) !important;
+    }
+
+    .gib-item {
+      background: rgba(0, 229, 255, 0.08) !important;
+      border: 1px solid rgba(0, 229, 255, 0.25) !important;
+      border-radius: 0 !important;
+      color: #e8edf2 !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .gib-item:hover {
+      background: rgba(0, 229, 255, 0.15) !important;
+      border-color: rgba(0, 229, 255, 0.4) !important;
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.2) !important;
+    }
+
+    /* ─ MEDIA LIBRARY ──────────────────────────────────────────────────────────── */
+    .media-card {
+      background: linear-gradient(135deg, rgba(10, 24, 24, 0.85) 0%, rgba(15, 32, 32, 0.65) 100%) !important;
+      border: 1px solid rgba(0, 229, 255, 0.2) !important;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.08) !important;
+      border-radius: 0 !important;
+      overflow: hidden;
+      transition: all 0.3s ease !important;
+    }
+
+    .media-card:hover {
+      border-color: rgba(0, 229, 255, 0.4) !important;
+      box-shadow: 0 0 18px rgba(0, 229, 255, 0.15) !important;
+    }
+
+    .media-card.active-img {
+      border: 2px solid #00e5ff !important;
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.3) !important;
+    }
+
+    .media-thumb {
+      background: rgba(0, 229, 255, 0.08) !important;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.15) !important;
+    }
+
+    .media-name {
+      color: #7df9ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+    }
+
+    .media-badge {
+      background: rgba(0, 229, 255, 0.1) !important;
+      border: 1px solid rgba(0, 229, 255, 0.25) !important;
+      color: #00e5ff !important;
+    }
+
+    .media-btn {
+      background: rgba(0, 229, 255, 0.05) !important;
+      border: 1px solid rgba(0, 229, 255, 0.2) !important;
+      color: #7df9ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .media-btn:hover {
+      border-color: rgba(0, 229, 255, 0.4) !important;
+      background: rgba(0, 229, 255, 0.12) !important;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.15) !important;
+    }
+
+    .media-upload-zone {
+      border: 2px dashed rgba(0, 229, 255, 0.25) !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .media-upload-zone:hover, .media-upload-zone.drag {
+      border-color: rgba(0, 229, 255, 0.5) !important;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.15) !important;
+      background: rgba(0, 229, 255, 0.05) !important;
+    }
+
+    /* ─ THEME EDITOR ───────────────────────────────────────────────────────────── */
+    .theme-card, .theme-preview-box {
+      background: linear-gradient(135deg, rgba(10, 24, 24, 0.85) 0%, rgba(15, 32, 32, 0.65) 100%) !important;
+      border: 1px solid rgba(0, 229, 255, 0.2) !important;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.08) !important;
+      border-radius: 0 !important;
+    }
+
+    .theme-card-title, .theme-preview-title {
+      color: #00e5ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.05em !important;
+    }
+
+    .theme-label {
+      color: #e8edf2 !important;
+      font-family: 'Share Tech Mono', monospace !important;
+    }
+
+    .theme-color-swatch {
+      border: 2px solid rgba(0, 229, 255, 0.3) !important;
+      background: rgba(6, 15, 15, 0.8) !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .theme-color-swatch:hover {
+      border-color: rgba(0, 229, 255, 0.6) !important;
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.25) !important;
+    }
+
+    .theme-hex-input {
+      background: rgba(6, 15, 15, 0.8) !important;
+      border: 1px solid rgba(0, 229, 255, 0.2) !important;
+      color: #e8edf2 !important;
+      font-family: 'Share Tech Mono', monospace !important;
+    }
+
+    .theme-hex-input:focus {
+      border-color: rgba(0, 229, 255, 0.5) !important;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.2) !important;
+    }
+
+    .theme-preview-inner {
+      background: rgba(6, 15, 15, 0.9) !important;
+      border: 1px solid rgba(0, 229, 255, 0.15) !important;
+      border-radius: 0 !important;
+    }
+
+    /* ─ LAYOUT EDITOR ──────────────────────────────────────────────────────────── */
+    .layout-item {
+      background: linear-gradient(135deg, rgba(10, 24, 24, 0.85) 0%, rgba(15, 32, 32, 0.65) 100%) !important;
+      border: 1px solid rgba(0, 229, 255, 0.15) !important;
+      border-radius: 0 !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .layout-item:hover {
+      border-color: rgba(0, 229, 255, 0.3) !important;
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.12) !important;
+    }
+
+    .layout-item.sortable-chosen {
+      border-color: rgba(0, 229, 255, 0.5) !important;
+      box-shadow: 0 4px 24px rgba(0, 229, 255, 0.25) !important;
+      background: rgba(0, 229, 255, 0.08) !important;
+    }
+
+    .layout-item-name {
+      color: #e8edf2 !important;
+      font-weight: 600 !important;
+    }
+
+    .layout-item-badge {
+      background: rgba(0, 229, 255, 0.1) !important;
+      border: 1px solid rgba(0, 229, 255, 0.2) !important;
+      color: #7df9ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+    }
+
+    .block-type-card {
+      background: linear-gradient(135deg, rgba(10, 24, 24, 0.8) 0%, rgba(15, 32, 32, 0.6) 100%) !important;
+      border: 2px solid rgba(0, 229, 255, 0.15) !important;
+      border-radius: 0 !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .block-type-card:hover, .block-type-card.selected {
+      border-color: rgba(0, 229, 255, 0.45) !important;
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.18) !important;
+      background: rgba(0, 229, 255, 0.05) !important;
+    }
+
+    .block-type-label {
+      color: #00e5ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      font-weight: 700 !important;
+    }
+
+    .block-type-desc {
+      color: #7df9ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      font-size: 0.72rem !important;
+    }
+
+    /* ─ ENHANCEMENT: TOP BAR & TABS ────────────────────────────────────────────── */
+    .top-bar {
+      border-bottom: 1px solid rgba(0, 229, 255, 0.2) !important;
+      box-shadow: 0 2px 15px rgba(0, 229, 255, 0.1) !important;
+    }
+
+    .top-logo span {
+      color: #00e5ff !important;
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.5) !important;
+    }
+
+    .tabs {
+      border-bottom: 1px solid rgba(0, 229, 255, 0.15) !important;
+      box-shadow: 0 1px 10px rgba(0, 229, 255, 0.06) !important;
+    }
+
+    .tab {
+      color: #7df9ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      font-weight: 600 !important;
+      transition: all 0.25s ease !important;
+      position: relative;
+      letter-spacing: 0.02em !important;
+    }
+
+    .tab:hover {
+      color: #00e5ff !important;
+      text-shadow: 0 0 8px rgba(0, 229, 255, 0.3) !important;
+    }
+
+    .tab.active {
+      color: #00e5ff !important;
+      border-bottom-color: #00e5ff !important;
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.6) !important;
+      box-shadow: inset 0 -3px 0 0 rgba(0, 229, 255, 0.4) !important;
+    }
+
+    /* ─ LOADER & EMPTY STATE ───────────────────────────────────────────────────── */
+    .loading, .empty-state p, .gib-empty {
+      color: #7df9ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+    }
+
+    /* ─ ADDITIONAL GLOWS & POLISH ──────────────────────────────────────────────── */
+    .top-btn-refresh {
+      background: rgba(0, 229, 255, 0.08) !important;
+      border: 1px solid rgba(0, 229, 255, 0.25) !important;
+      color: #00e5ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .top-btn-refresh:hover {
+      background: rgba(0, 229, 255, 0.15) !important;
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.2) !important;
+      border-color: rgba(0, 229, 255, 0.5) !important;
+    }
+
+    .client-detail-back {
+      background: rgba(0, 229, 255, 0.05) !important;
+      border: 1px solid rgba(0, 229, 255, 0.2) !important;
+      color: #7df9ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .client-detail-back:hover {
+      border-color: rgba(0, 229, 255, 0.5) !important;
+      background: rgba(0, 229, 255, 0.1) !important;
+      color: #00e5ff !important;
+    }
+
+    .client-detail-name {
+      color: #00e5ff !important;
+      text-shadow: 0 0 12px rgba(0, 229, 255, 0.4) !important;
+    }
+
+    .crm-val {
+      color: #00e5ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      text-shadow: 0 0 8px rgba(0, 229, 255, 0.3) !important;
+    }
+
+    .crm-term {
+      font-family: 'Share Tech Mono', monospace !important;
+      color: #7df9ff !important;
+    }
+
+    .crm-term.overdue {
+      color: #ff5f57 !important;
+    }
+
+    .crm-term.urgent {
+      color: #febc2e !important;
+    }
+
+    .crm-term.ok {
+      color: #28c840 !important;
+    }
+
+    .crm-note {
+      color: #7df9ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      font-size: 0.75rem !important;
+    }
+
+    /* ─ MISC ELEMENTS ──────────────────────────────────────────────────────────── */
+    .layout-reset-btn, .theme-reset-btn {
+      background: rgba(0, 229, 255, 0.05) !important;
+      border: 1px solid rgba(0, 229, 255, 0.2) !important;
+      color: #7df9ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .layout-reset-btn:hover, .theme-reset-btn:hover {
+      border-color: rgba(0, 229, 255, 0.4) !important;
+      background: rgba(0, 229, 255, 0.1) !important;
+      color: #00e5ff !important;
+    }
+
+    .layout-info, .layout-eye-btn, .layout-drag-handle {
+      color: #7df9ff !important;
+      font-family: 'Share Tech Mono', monospace !important;
+    }
+
+    .layout-edit-btn {
+      background: transparent !important;
+      border: 1px solid rgba(0, 229, 255, 0.3) !important;
+      color: #00e5ff !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .layout-edit-btn:hover {
+      border-color: rgba(0, 229, 255, 0.6) !important;
+      box-shadow: 0 0 10px rgba(0, 229, 255, 0.2) !important;
+    }
+
+    .layout-del-btn {
+      background: transparent !important;
+      border: 1px solid rgba(0, 229, 255, 0.15) !important;
+      color: #7df9ff !important;
+      transition: all 0.2s ease !important;
+    }
+
+    .layout-del-btn:hover {
+      border-color: rgba(255, 95, 87, 0.4) !important;
+      color: #ff5f57 !important;
+    }
+
+    .block-del-item {
+      color: #7df9ff !important;
+    }
+
+    .block-del-item:hover {
+      color: #ff5f57 !important;
+    }
+
+    /* ─ SCROLLBAR STYLING (optional, Chrome) ─────────────────────────────────── */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 229, 255, 0.02);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 229, 255, 0.15);
+      border-radius: 0;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 229, 255, 0.3);
+    }
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 </head>
