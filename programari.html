@@ -2214,7 +2214,18 @@
             <input class="f-input" type="text" id="researchAudience" placeholder="ex: proprietari salon, mecanici auto..." style="margin-bottom:0;">
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div style="margin-top:10px;">
+          <label class="f-label" style="margin-bottom:5px;display:block;">// analist (agent)</label>
+          <select class="f-input" id="researchAgent" style="margin-bottom:0;max-width:320px;">
+            <option value="">Expert SEO (implicit)</option>
+            <option value="elena">Elena — SEO &amp; Content</option>
+            <option value="robert">Robert — Analytics</option>
+            <option value="gogu">Gogu — Marketing</option>
+            <option value="andrei">Andrei — Content Strategist</option>
+            <option value="victoria">Victoria — CMO</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px;">
           <button class="btn-save" id="btnResearchGo" onclick="runTitleResearch()" style="padding:10px 20px;">🔍 Analizează acum</button>
           <span id="researchStatus" style="font-family:'Share Tech Mono',monospace;font-size:.75rem;display:none;"></span>
         </div>
@@ -4062,6 +4073,8 @@
   async function runTitleResearch() {
     const focus = document.getElementById('researchFocus').value.trim();
     const audience = document.getElementById('researchAudience').value.trim();
+    const agentEl = document.getElementById('researchAgent');
+    const agent = agentEl ? agentEl.value : '';
     const btn = document.getElementById('btnResearchGo');
     const status = document.getElementById('researchStatus');
     const resultsWrap = document.getElementById('researchResults');
@@ -4077,7 +4090,7 @@
       const res = await fetch('/api/blog/research-titles?token=' + encodeURIComponent(adminToken), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ focus, audience, existing })
+        body: JSON.stringify({ focus, audience, existing, agent })
       });
       const data = await res.json();
       if (!res.ok || !data.titles) {

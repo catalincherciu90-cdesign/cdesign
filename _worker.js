@@ -1361,7 +1361,7 @@ Cerințe articol:
     if (path === '/api/blog/research-titles' && request.method === 'POST') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401, request);
       try {
-        const { focus, audience, existing } = await request.json();
+        const { focus, audience, existing, agent } = await request.json();
         if (!env.AI) return json({ error: 'AI binding nedisponibil — verifică wrangler.toml' }, 500, request);
 
         const existingList = Array.isArray(existing) && existing.length
@@ -1371,7 +1371,11 @@ Cerințe articol:
         const focusCtx = focus ? `Focalizare: ${focus}` : 'Servicii generale de web design pentru afaceri mici';
         const audienceCtx = audience ? `Public țintă: ${audience}` : 'Antreprenori și proprietari de afaceri mici din România';
 
-        const prompt = `Ești un expert SEO și content strategist pentru piața din România. Analizezi ce articole de blog ar trebui să scrie agenția "C Design" (web design din Ilfov/București, servicii pentru afaceri mici) pentru a-și îmbunătăți poziționarea pe Google și a atrage clienți potențiali.
+        const _rp = AGENT_PERSONAS[agent];
+        const _rIntro = _rp
+          ? `Ești ${_rp.label} din echipa C Design. Expertiza ta: ${_rp.role} Analizezi, cu expertiza ta, ce articole de blog ar trebui să scrie agenția "C Design" (web design din Ilfov/București, pentru afaceri mici) ca să crească pe Google și să atragă clienți potențiali.`
+          : `Ești un expert SEO și content strategist pentru piața din România. Analizezi ce articole de blog ar trebui să scrie agenția "C Design" (web design din Ilfov/București, servicii pentru afaceri mici) pentru a-și îmbunătăți poziționarea pe Google și a atrage clienți potențiali.`;
+        const prompt = _rIntro + `
 
 ${focusCtx}
 ${audienceCtx}${existingList}
