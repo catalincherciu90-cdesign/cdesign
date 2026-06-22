@@ -1814,15 +1814,14 @@
       <div class="gibilan-layout">
         <!-- Hero Zone: Reactor in Center with Panels Around -->
         <div class="gibilan-char">
-          <!-- Clock Widget (left panel) -->
+          <!-- Notepad (in locul ceasului) -->
           <div class="jvs-card">
-            <div class="jvs-card-head">TIME</div>
+            <div class="jvs-card-head">NOTEPAD</div>
             <div class="jvs-bracket jvs-bracket-tr"></div>
             <div class="jvs-bracket jvs-bracket-bl"></div>
             <div class="jvs-bracket jvs-bracket-br"></div>
             <div class="jvs-card-body">
-              <div class="jvs-clock-display" id="jvs-clock-time" style="display:none;">00:00:00</div>
-              <div class="jvs-clock-date" id="jvs-clock-date" style="display:none;"></div>
+              <textarea class="jvs-notepad" id="jvs-notepad" placeholder="Notite rapide... (salveaza automat)" style="width:100%;min-height:150px;resize:vertical;"></textarea>
             </div>
           </div>
 
@@ -1906,17 +1905,6 @@
           <div>
             <div class="gib-date" id="gib-date-title">Se &icirc;ncarc&#259;...</div>
             <div class="gib-date-sub" id="gib-date-sub"></div>
-          </div>
-
-          <!-- NOTEPAD Widget -->
-          <div class="jvs-card">
-            <div class="jvs-card-head">NOTEPAD</div>
-            <div class="jvs-bracket jvs-bracket-tr"></div>
-            <div class="jvs-bracket jvs-bracket-bl"></div>
-            <div class="jvs-bracket jvs-bracket-br"></div>
-            <div class="jvs-card-body">
-              <textarea class="jvs-notepad" id="jvs-notepad" placeholder="Notite rapide... (salveaza automat)"></textarea>
-            </div>
           </div>
 
           <!-- Intalniri -->
@@ -8577,7 +8565,6 @@
   // ============= INIT & INTEGRARE =============
   function starkInitialize() {
     starkCreateRings();
-    starkCreateClockGauges();
     starkCreateMonthBand();
     starkCreateAgendaGauges();
     starkCreateWeatherPanel();
