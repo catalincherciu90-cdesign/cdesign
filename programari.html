@@ -5011,7 +5011,7 @@
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(txt);
-        u.lang = 'ro-RO'; u.rate = 1; u.pitch = 1;
+        u.lang = 'ro-RO'; u.rate = 0.9; u.pitch = 0.4; // voce robotica (grava, monotona)
         const voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
         const ro = voices.find(v => /ro/i.test(v.lang));
         if (ro) u.voice = ro;
@@ -5085,7 +5085,7 @@
     const bubble = document.getElementById('gib-bubble');
     const speak = (txt) => {
       if (bubble) bubble.textContent = txt;
-      try { if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(txt); u.lang = 'ro-RO'; window.speechSynthesis.speak(u); } } catch (e) {}
+      try { if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(txt); u.lang = 'ro-RO'; u.rate = 0.9; u.pitch = 0.4; window.speechSynthesis.speak(u); } } catch (e) {}
     };
     if (!said) { speak('Nu am auzit nimic.'); return; }
     const add = said.match(/(?:adaug[ăa]?|noteaz[ăa]?|creeaz[ăa]?)(?:\s+un)?\s+task\s+(.+)/) || said.match(/task\s+nou\s+(.+)/);
