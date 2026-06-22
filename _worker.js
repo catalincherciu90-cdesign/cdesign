@@ -1061,6 +1061,13 @@ export default {
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
 
+    // Design nou (noindex) — preview homepage dupa schita client
+    if (path === '/design-nou') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/design-nou.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
     // ── CITY LANDING PAGES ───────────────────────────────────
 
     if (path === '/web-design-bucuresti') {

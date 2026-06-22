@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>C Design — Design nou (preview)</title>
+<link rel="icon" type="image/png" href="/logo-c-design.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal:#00a8a8; --teal-dk:#067e7e; --gold:#c9a96e; --gold-dk:#a8843d;
+    --ink:#101418; --soft:#48515a; --muted:#7a838d;
+    --bg:#ffffff; --bg-soft:#f5f7f7; --line:rgba(16,20,24,.10);
+    --shadow:0 18px 50px rgba(16,20,24,.10);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
+  h1,h2,h3,.dh{font-family:'Space Grotesk',sans-serif;line-height:1.08}
+  a{color:inherit;text-decoration:none}
+  .wrap{width:min(1180px,92vw);margin:0 auto}
+
+  /* ---------- NAVBAR ---------- */
+  .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.82);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk';font-weight:700;font-size:1.1rem;letter-spacing:.3px}
+  .brand img{height:32px;width:auto}
+  .nav-links{display:flex;align-items:center;gap:28px}
+  .nav-links a{font-size:.92rem;font-weight:500;color:var(--soft);transition:color .15s}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-cta{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:.9rem;color:#10201d;
+    background:linear-gradient(135deg,var(--gold),var(--gold-dk));padding:11px 20px;border-radius:40px;
+    box-shadow:0 6px 18px rgba(168,132,61,.32);transition:transform .15s,box-shadow .2s}
+  .nav-cta:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(168,132,61,.42)}
+  .burger{display:none;background:none;border:0;cursor:pointer;font-size:1.5rem;color:var(--ink)}
+
+  /* ---------- HERO BANNER ---------- */
+  .hero{position:relative;overflow:hidden;
+    background:
+      radial-gradient(60% 90% at 85% 10%, rgba(0,168,168,.10), transparent 60%),
+      radial-gradient(50% 80% at 8% 90%, rgba(201,169,110,.14), transparent 60%),
+      var(--bg-soft)}
+  .hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;
+    padding:clamp(48px,8vw,96px) 0}
+  .hero .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Space Grotesk';font-weight:600;
+    font-size:.78rem;letter-spacing:1px;text-transform:uppercase;color:var(--teal);
+    background:rgba(0,168,168,.08);border:1px solid rgba(0,168,168,.2);padding:7px 14px;border-radius:40px;margin-bottom:20px}
+  .hero h1{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:700;letter-spacing:-1px}
+  .hero h1 span{background:linear-gradient(120deg,var(--teal),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .hero p{margin-top:18px;font-size:clamp(1rem,1.7vw,1.18rem);color:var(--soft);max-width:520px}
+  .hero .cta-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
+  .btn{display:inline-flex;align-items:center;gap:9px;font-family:'Space Grotesk';font-weight:600;font-size:.98rem;
+    padding:15px 28px;border-radius:12px;transition:transform .15s,box-shadow .2s,background .2s}
+  .btn-primary{color:#fff;background:linear-gradient(135deg,var(--teal),var(--teal-dk));box-shadow:0 10px 26px rgba(0,168,168,.32)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(0,168,168,.45)}
+  .btn-ghost{color:var(--ink);background:#fff;border:1px solid var(--line)}
+  .btn-ghost:hover{border-color:var(--teal);color:var(--teal-dk)}
+  .hero-stats{display:flex;gap:28px;margin-top:36px;flex-wrap:wrap}
+  .hero-stats .s b{display:block;font-family:'Space Grotesk';font-weight:700;font-size:1.6rem;color:var(--ink)}
+  .hero-stats .s span{font-size:.82rem;color:var(--muted)}
+  /* hero visual */
+  .hero-art{position:relative;height:340px}
+  .hero-card{position:absolute;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+  .hero-card.big{inset:18px 0 18px 30px;background:linear-gradient(150deg,#0f2e2e,#0a1f1f);overflow:hidden}
+  .hero-card.big::before{content:'';position:absolute;inset:0;
+    background:radial-gradient(closest-side at 70% 25%, rgba(0,168,168,.35), transparent 60%),
+      repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 26px),
+      repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 1px,transparent 1px 26px)}
+  .hero-card.big .tag{position:absolute;left:22px;top:20px;color:#cfeeee;font-family:'Share Tech Mono',monospace;font-size:.8rem;letter-spacing:1px}
+  .hero-card.big .tag b{color:#fff}
+  .hero-chip{position:absolute;right:-6px;bottom:30px;background:#fff;padding:14px 18px;border-radius:14px;
+    border:1px solid var(--line);box-shadow:var(--shadow);display:flex;align-items:center;gap:12px;animation:floaty 5s ease-in-out infinite alternate}
+  .hero-chip .dot{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:1.2rem;
+    background:linear-gradient(135deg,rgba(201,169,110,.25),rgba(0,168,168,.18))}
+  .hero-chip b{font-family:'Space Grotesk';font-size:.92rem}
+  .hero-chip span{display:block;font-size:.74rem;color:var(--muted)}
+
+  /* ---------- 3 BANNERS ---------- */
+  .trio{padding:clamp(48px,7vw,84px) 0}
+  .sec-head{text-align:center;max-width:640px;margin:0 auto clamp(34px,5vw,52px)}
+  .sec-head .eyebrow{font-family:'Space Grotesk';font-weight:600;font-size:.78rem;letter-spacing:1px;text-transform:uppercase;color:var(--gold-dk)}
+  .sec-head h2{font-size:clamp(1.7rem,3.4vw,2.5rem);font-weight:700;margin-top:10px}
+  .sec-head p{margin-top:12px;color:var(--soft)}
+  .trio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .card{position:relative;background:#fff;border:1px solid var(--line);border-radius:20px;padding:32px 28px;
+    transition:transform .2s,box-shadow .25s,border-color .2s;overflow:hidden;cursor:default}
+  .card::after{content:'';position:absolute;left:0;top:0;width:100%;height:4px;
+    background:linear-gradient(90deg,var(--teal),var(--gold));transform:scaleX(0);transform-origin:left;transition:transform .3s}
+  .card:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:transparent}
+  .card:hover::after{transform:scaleX(1)}
+  .card .ic{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;font-size:1.7rem;margin-bottom:18px;
+    background:linear-gradient(135deg,rgba(0,168,168,.14),rgba(201,169,110,.16))}
+  .card h3{font-size:1.3rem;font-weight:700}
+  .card p{margin-top:10px;color:var(--soft);font-size:.95rem}
+  .card .more{display:inline-flex;align-items:center;gap:7px;margin-top:18px;font-family:'Space Grotesk';font-weight:600;
+    font-size:.88rem;color:var(--teal-dk)}
+  .card .more .ar{transition:transform .2s}
+  .card:hover .more .ar{transform:translateX(4px)}
+
+  /* ---------- BANNER WIDE ---------- */
+  .wide{padding:0 0 clamp(48px,7vw,84px)}
+  .wide-inner{position:relative;overflow:hidden;border-radius:26px;padding:clamp(40px,6vw,68px) clamp(28px,5vw,64px);
+    background:linear-gradient(135deg,#0f2e2e 0%,#0a1f1f 100%);color:#fff;
+    display:grid;grid-template-columns:1.4fr .6fr;gap:30px;align-items:center}
+  .wide-inner::before{content:'';position:absolute;right:-10%;top:-40%;width:60%;height:180%;
+    background:radial-gradient(closest-side,rgba(0,168,168,.35),transparent 70%)}
+  .wide-inner::after{content:'';position:absolute;left:-8%;bottom:-60%;width:50%;height:180%;
+    background:radial-gradient(closest-side,rgba(201,169,110,.25),transparent 70%)}
+  .wide-inner h2{position:relative;font-size:clamp(1.7rem,3.4vw,2.6rem);font-weight:700}
+  .wide-inner p{position:relative;margin-top:14px;color:#bfe0e0;max-width:520px}
+  .wide-cta{position:relative;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+  .wide-cta .btn{width:100%;justify-content:center}
+  .wide-cta .phone{display:inline-flex;align-items:center;gap:9px;color:#cfeeee;font-family:'Space Grotesk';font-weight:600;font-size:1.05rem}
+
+  /* ---------- footer ---------- */
+  .ft{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-size:.86rem}
+  .ft .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  .ft a{color:var(--soft)}
+
+  @keyframes floaty{from{transform:translateY(-7px)}to{transform:translateY(8px)}}
+
+  /* ---------- responsive ---------- */
+  @media(max-width:920px){
+    .hero .wrap{grid-template-columns:1fr;gap:34px}
+    .hero-art{height:280px;order:-1}
+    .wide-inner{grid-template-columns:1fr}
+    .trio-grid{grid-template-columns:1fr;gap:18px}
+  }
+  @media(max-width:720px){
+    .nav-links{position:fixed;inset:70px 0 auto 0;flex-direction:column;background:#fff;gap:0;
+      border-bottom:1px solid var(--line);padding:10px 0;transform:translateY(-150%);transition:transform .3s;box-shadow:var(--shadow)}
+    .nav-links.open{transform:none}
+    .nav-links a{padding:14px 7vw;width:100%}
+    .nav-links .nav-cta{margin:10px 7vw;justify-content:center}
+    .burger{display:block}
+  }
+  @media(prefers-reduced-motion:reduce){.hero-chip{animation:none}}
+</style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="nav">
+    <div class="wrap">
+      <a class="brand" href="/"><img src="/logo-c-design.png" alt="C Design"><span>C&nbsp;Design</span></a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#servicii">Servicii</a>
+        <a href="#trio">Ce facem</a>
+        <a href="/despre-noi">Despre</a>
+        <a href="/blog">Blog</a>
+        <a href="#contact">Contact</a>
+        <a class="nav-cta" href="/programare">Programează acum</a>
+      </nav>
+      <button class="burger" id="burger" aria-label="Meniu">☰</button>
+    </div>
+  </header>
+
+  <!-- HERO BANNER -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="eyebrow">● Web design · Ilfov &amp; București</span>
+        <h1>Site-uri care aduc <span>clienți</span>, livrate în 14 zile</h1>
+        <p>Construim site-uri profesionale pentru afaceri mici — design modern, optimizate pentru Google și telefon, la preț fix, fără costuri ascunse.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="/programare">Programează o consultanță gratuită →</a>
+          <a class="btn btn-ghost" href="#servicii">Vezi serviciile</a>
+        </div>
+        <div class="hero-stats">
+          <div class="s"><b>14 zile</b><span>livrare garantată</span></div>
+          <div class="s"><b>din 2017</b><span>experiență reală</span></div>
+          <div class="s"><b>preț fix</b><span>fără surprize</span></div>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="hero-card big"><div class="tag">// <b>c-design.ro</b></div></div>
+        <div class="hero-chip">
+          <div class="dot">🚀</div>
+          <div><b>Site live în 14 zile</b><span>domeniu + găzduire incluse</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 BANNERS -->
+  <section class="trio" id="trio">
+    <div class="wrap">
+      <div class="sec-head" id="servicii">
+        <span class="eyebrow">Ce facem</span>
+        <h2>Tot ce-ți trebuie ca să fii online</h2>
+        <p>De la primul site până la identitatea vizuală completă a afacerii tale.</p>
+      </div>
+      <div class="trio-grid">
+        <article class="card">
+          <div class="ic">🖥️</div>
+          <h3>Site de prezentare</h3>
+          <p>Site profesional, mobile-first și optimizat SEO, livrat în maxim 14 zile. Domeniu .ro și găzduire incluse.</p>
+          <a class="more" href="/servicii">Detalii <span class="ar">→</span></a>
+        </article>
+        <article class="card">
+          <div class="ic">🎨</div>
+          <h3>Redesign &amp; Grafică</h3>
+          <p>Modernizăm site-ul existent și îți construim identitatea vizuală: logo, culori și materiale de brand.</p>
+          <a class="more" href="/servicii">Detalii <span class="ar">→</span></a>
+        </article>
+        <article class="card">
+          <div class="ic">🚀</div>
+          <h3>Pachet Startup</h3>
+          <p>Pachet complet pentru un start rapid: site + logo + prezență online, de la 300€. Ideal pentru afaceri la început.</p>
+          <a class="more" href="/pachet-startup">Detalii <span class="ar">→</span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- BANNER WIDE -->
+  <section class="wide" id="contact">
+    <div class="wrap">
+      <div class="wide-inner">
+        <div>
+          <h2>Pregătit să discutăm despre site-ul tău?</h2>
+          <p>Programează o ședință de consultanță gratuită. Te contactăm în maxim 2 ore și primești o ofertă fixă, fără costuri ascunse.</p>
+        </div>
+        <div class="wide-cta">
+          <a class="btn btn-primary" href="/programare">Programează acum</a>
+          <a class="phone" href="tel:+40753116155">📞 0753 116 155</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="ft">
+    <div class="wrap">
+      <span>© <span id="yr"></span> C Design — Web design profesional, România</span>
+      <span><a href="/">Site clasic</a> · <a href="/politica-confidentialitate">Politică de confidențialitate</a></span>
+    </div>
+  </footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  var burger = document.getElementById('burger'), links = document.getElementById('navLinks');
+  burger.addEventListener('click', function(){ links.classList.toggle('open'); });
+  links.addEventListener('click', function(e){ if(e.target.tagName==='A') links.classList.remove('open'); });
+</script>
+</body>
+</html>
