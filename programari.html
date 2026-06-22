@@ -502,6 +502,18 @@
     .clippy-body{animation:clippy-float 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(0,229,255,.5));}
     .jvs-speak-btn{margin-top:14px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.45);color:#00e5ff;font-family:'Share Tech Mono',monospace;font-size:.78rem;font-weight:700;letter-spacing:.04em;padding:9px 18px;border-radius:0;cursor:pointer;transition:background .2s,box-shadow .2s,transform .15s;text-shadow:0 0 8px rgba(0,229,255,.5);}
     .jvs-speak-btn:hover{background:rgba(0,229,255,.18);box-shadow:0 0 14px rgba(0,229,255,.4);transform:translateY(-1px);}
+    /* casute holografice (Gibilan): translucid + glow + scanline + palpait subtil */
+    #panel-gibilan .jvs-card, #panel-gibilan .gib-section, #panel-gibilan #stark-weather-panel{
+      background:
+        repeating-linear-gradient(0deg, rgba(0,229,255,.05) 0px, rgba(0,229,255,.05) 1px, transparent 1px, transparent 5px),
+        linear-gradient(160deg, rgba(0,229,255,.10) 0%, rgba(6,18,24,.42) 55%, rgba(6,18,24,.30) 100%) !important;
+      border:1px solid rgba(0,229,255,.5) !important;
+      box-shadow:0 0 22px rgba(0,229,255,.20), 0 0 4px rgba(0,229,255,.35), inset 0 0 26px rgba(0,229,255,.07) !important;
+      backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+      animation:holo-flicker 6s ease-in-out infinite;
+    }
+    @keyframes holo-flicker{0%,100%{opacity:1}47%{opacity:.985}49%{opacity:.93}51%{opacity:.99}53%{opacity:.96}}
+    @media(prefers-reduced-motion:reduce){#panel-gibilan .jvs-card,#panel-gibilan .gib-section,#panel-gibilan #stark-weather-panel{animation:none !important;}}
     .jvs-speak-btn.speaking{animation:jvs-speak-pulse 1s ease-in-out infinite;}
     @keyframes jvs-speak-pulse{0%,100%{box-shadow:0 0 8px rgba(0,229,255,.3)}50%{box-shadow:0 0 18px rgba(0,229,255,.7)}}
     #jvs-mic-btn.listening{color:#ff5f57;border-color:#ff5f57;text-shadow:0 0 8px rgba(255,95,87,.6);animation:jvs-mic-pulse 1s ease-in-out infinite;}
@@ -1819,7 +1831,7 @@
             <div class="speech-bubble" id="gib-bubble">J.A.R.V.I.S. ONLINE</div>
             <div class="clippy-core">
             <!-- Galaxie (canvas) -->
-            <canvas id="jvs-galaxy" class="clippy-body" width="320" height="320" style="width:172px;height:172px;display:block;cursor:pointer;" onclick="jvsSpeak()" title="Raport vocal"></canvas>
+            <canvas id="jvs-galaxy" class="clippy-body" width="420" height="420" style="width:250px;height:250px;display:block;cursor:pointer;" onclick="jvsSpeak()" title="Raport vocal"></canvas>
             </div>
             <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;justify-content:center;">
               <button id="jvs-speak-btn" class="jvs-speak-btn" type="button" onclick="jvsSpeak()">🔊 Raport vocal</button>
@@ -7852,8 +7864,8 @@
     svg.style.position = 'absolute';
     svg.style.top = '0';
     svg.style.left = '0';
-    svg.style.width = '172px';
-    svg.style.height = '172px';
+    svg.style.width = '250px';
+    svg.style.height = '250px';
     svg.style.pointerEvents = 'none';
     svg.style.filter = 'drop-shadow(0 0 12px #00e5ff)';
 
