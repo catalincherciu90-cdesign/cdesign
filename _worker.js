@@ -505,6 +505,7 @@ const CONTENT_PAGES = {
   'web-design-auto': '/web-design-auto.html',
   'web-design-restaurante': '/web-design-restaurante.html',
   'web-design-afaceri-mici': '/web-design-afaceri-mici.html',
+  'design-nou': '/design-nou.html',
 };
 
 // Înlocuiește conținutul elementelor cu data-edit="cheie" cu textul salvat.
@@ -1061,11 +1062,9 @@ export default {
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
 
-    // Design nou (noindex) — preview homepage dupa schita client
+    // Design nou (noindex) — preview homepage dupa schita client (editabil din admin)
     if (path === '/design-nou') {
-      const assetUrl = new URL(request.url);
-      assetUrl.pathname = '/design-nou.html';
-      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      return serveContentPage(request, env, 'design-nou');
     }
 
     // ── CITY LANDING PAGES ───────────────────────────────────
