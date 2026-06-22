@@ -1300,7 +1300,7 @@ export default {
     if (path === '/api/blog/generate' && request.method === 'POST') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401, request);
       try {
-        const { subject, agent } = await request.json();
+        const { subject, agent, existing } = await request.json();
         if (!subject) return json({ error: 'Subiectul este obligatoriu' }, 400, request);
         if (!env.AI) return json({ error: 'AI binding nedisponibil — verifică wrangler.toml' }, 500, request);
 
@@ -1308,7 +1308,10 @@ export default {
         const intro = persona
           ? `Ești ${persona.label}, parte din echipa agenției C Design (web design, România). Rolul și expertiza ta: ${persona.role} Scrie, din perspectiva și cu expertiza ta, un articol de blog complet pentru "C Design" pe subiectul: "${subject}".`
           : `Ești un copywriter expert în web design și marketing digital pentru afaceri mici din România. Scrie un articol de blog complet pentru agenția "C Design" pe subiectul: "${subject}".`;
-        const prompt = intro + `
+        const avoid = (Array.isArray(existing) && existing.length)
+          ? `\n\nIMPORTANT: NU repeta și evită titluri/unghiuri similare cu aceste articole deja publicate (alege un titlu și un unghi DIFERIT):\n${existing.slice(0, 15).map(t => '- ' + t).join('\n')}`
+          : '';
+        const prompt = intro + avoid + `
 
 Returnează EXCLUSIV un obiect JSON valid, fără text înainte sau după, cu această structură:
 {
