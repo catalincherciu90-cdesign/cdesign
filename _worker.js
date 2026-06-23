@@ -2103,6 +2103,43 @@ Cerințe titluri:
       } catch (e) { return json({ error: 'Eroare: ' + String((e && e.message) || e) }, 500); }
     }
 
+    // Asistent virtual public (chat pe site) — Workers AI, fără auth, rate-limited.
+    // Răspunde vizitatorilor despre servicii și îi îndrumă spre o ofertă/contact.
+    if (path === '/api/assistant' && request.method === 'POST') {
+      const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+      const ok = await checkRateLimit(env, 'assistant_' + ip, 40, 3600);
+      if (!ok) return json({ reply: 'Ai trimis multe mesaje într-un timp scurt. Hai să discutăm direct: sună la 0753 116 155 sau scrie la office@c-design.ro. 🙂' }, 200, request);
+      const FALLBACK = 'Cel mai simplu e să discutăm direct — programează o consultanță gratuită pe pagina de Programare, sună la 0753 116 155 sau scrie la office@c-design.ro și îți facem o ofertă fixă, fără costuri ascunse.';
+      if (!env.AI) return json({ reply: FALLBACK }, 200, request);
+      try {
+        const body = await request.json();
+        const userMsgs = Array.isArray(body.messages) ? body.messages.slice(-10) : [];
+        const system = 'Ești asistentul virtual al C Design, o agenție de web design din Ilfov și București, care lucrează cu clienți din toată România. '
+          + 'Rolul tău: ajuți vizitatorii cu informații despre servicii și îi îndrumi cu căldură să ne contacteze pentru o ofertă personalizată gratuită. '
+          + 'SERVICII: Site de prezentare (livrat în maxim 14 zile, garantat; domeniu .ro și găzduire incluse; mobile-first; SEO de bază inclus). '
+          + 'Redesign site (modernizare + viteză, fără pierderea poziției pe Google). Design grafic & logo (identitate vizuală). Mentenanță (actualizări, securitate, suport). '
+          + 'Pachet Startup: site + logo + prezență online, de la 300€. Experiență din 2017. '
+          + 'REGULI: răspunzi MEREU în limba română, scurt (2-4 propoziții), prietenos, fără jargon tehnic. '
+          + 'NU inventa prețuri exacte (singura cifră permisă: „de la 300€" pentru Pachetul Startup) — explică faptul că prețul e fix și se stabilește printr-o consultanță gratuită, în funcție de nevoi. '
+          + 'Când e potrivit, îndrumă spre acțiune: „programează o consultanță gratuită" (pagina de Programare), sună la 0753 116 155 sau scrie la office@c-design.ro. '
+          + 'Dacă întrebarea nu ține de web design sau de serviciile noastre, răspunzi scurt și politicos și revii la cum putem ajuta cu site-ul. Nu promite lucruri pe care agenția nu le oferă.';
+        const messages = [{ role: 'system', content: system }];
+        for (const m of userMsgs) {
+          if (m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string') {
+            messages.push({ role: m.role, content: m.content.slice(0, 1500) });
+          }
+        }
+        if (messages.length === 1) {
+          return json({ reply: 'Salut! 👋 Sunt asistentul C Design. Cu ce te pot ajuta — un site nou, un redesign sau o ofertă pentru afacerea ta?' }, 200, request);
+        }
+        const out = await env.AI.run('@cf/meta/llama-3.3-70b-instruct-fp8-fast', { messages, max_tokens: 400 });
+        const reply = (out && (out.response || out.result)) || '';
+        return json({ reply: String(reply).trim() || FALLBACK }, 200, request);
+      } catch (e) {
+        return json({ reply: FALLBACK }, 200, request);
+      }
+    }
+
     // Media upload — cu ?name=<fișier existent> suprascrie imaginea în loc
     // (folosit de optimizarea din admin: referințele /media/ rămân valabile)
     if (path === '/api/media' && request.method === 'POST') {
