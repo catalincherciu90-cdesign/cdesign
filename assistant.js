@@ -62,6 +62,14 @@
     + '.cda-gate button{background:linear-gradient(135deg,var(--gold,#c9a96e),var(--gold-dk,#a8843d));color:#10201d;border:none;border-radius:9px;padding:11px;font-weight:700;font-family:"Space Grotesk",sans-serif;cursor:pointer;}'
     + '.cda-gate-err{color:#ff8a8a;font-size:.76rem;min-height:1em;}'
     + '.cda-gate-note{color:rgba(255,255,255,.5);font-size:.72rem;line-height:1.4;}'
+    + '.cda-teaser{position:fixed;right:18px;bottom:148px;z-index:8999;max-width:252px;background:#fff;color:#0e1f1c;border-radius:14px;padding:12px 34px 12px 14px;box-shadow:0 14px 40px rgba(0,0,0,.28);font-size:.86rem;line-height:1.45;cursor:pointer;display:none;border:1px solid rgba(0,0,0,.06);}'
+    + '.cda-teaser.cda-show{display:block;animation:cda-tin .35s ease;}'
+    + '@keyframes cda-tin{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}'
+    + '.cda-teaser b{color:var(--teal-dk,#067e7e);}'
+    + '.cda-teaser .cda-tx{position:absolute;top:5px;right:8px;border:none;background:none;font-size:1.1rem;line-height:1;color:#9aa5b4;cursor:pointer;padding:2px;}'
+    + '.cda-teaser .cda-tx:hover{color:#333;}'
+    + '.cda-teaser::after{content:"";position:absolute;right:24px;bottom:-7px;width:14px;height:14px;background:#fff;border-right:1px solid rgba(0,0,0,.06);border-bottom:1px solid rgba(0,0,0,.06);transform:rotate(45deg);}'
+    + '@media(max-width:640px){.cda-teaser{bottom:140px;right:8px;left:auto;}}'
     + '@media(max-width:640px){#cda-btn{bottom:70px;}#cda-panel{right:8px;left:8px;width:auto;bottom:8px;height:80vh;}}';
 
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
@@ -83,6 +91,13 @@
     + '<div class="cda-cta"><a class="cda-p" href="/programare">📅 Programează</a><a class="cda-s" href="tel:' + TEL + '">📞 Sună</a></div>'
     + '<div class="cda-in"><input id="cda-input" type="text" placeholder="Scrie un mesaj..." maxlength="600" autocomplete="off"><button id="cda-send" aria-label="Trimite">➤</button></div>';
   document.body.appendChild(panel);
+
+  // Mesaj "teaser" care apare după câteva secunde, lângă bulă
+  var teaser = document.createElement('div');
+  teaser.className = 'cda-teaser';
+  teaser.innerHTML = '<button class="cda-tx" aria-label="Închide">×</button>'
+    + '<span>👋 Bună! Vrei un site care îți aduce clienți? <b>Întreabă-mă orice</b> — răspund pe loc.</span>';
+  document.body.appendChild(teaser);
 
   var log = panel.querySelector('#cda-log');
   var chips = panel.querySelector('#cda-chips');
@@ -175,6 +190,7 @@
   }
 
   function open() {
+    hideTeaser();
     panel.classList.add('cda-on'); opened = true;
     btn.querySelector('.cda-badge').style.display = 'none';
     if (leadEmail && isMail(leadEmail)) { enableChat(); greet(); setTimeout(function () { input.focus(); }, 200); }
@@ -182,7 +198,22 @@
   }
   function close() { panel.classList.remove('cda-on'); }
 
-  btn.addEventListener('click', function () { panel.classList.contains('cda-on') ? close() : open(); });
+  // teaser: apare după câteva secunde de navigare, o singură dată / sesiune
+  var teaserDone = false;
+  try { teaserDone = sessionStorage.getItem('cdaTeaser') === 'x'; } catch (e) {}
+  function showTeaser() {
+    if (teaserDone || opened || panel.classList.contains('cda-on')) return;
+    teaser.classList.add('cda-show');
+  }
+  function hideTeaser() { teaser.classList.remove('cda-show'); }
+  teaser.addEventListener('click', function (e) {
+    if (e.target.classList.contains('cda-tx')) { e.stopPropagation(); teaserDone = true; try { sessionStorage.setItem('cdaTeaser', 'x'); } catch (_) {} hideTeaser(); return; }
+    teaserDone = true; try { sessionStorage.setItem('cdaTeaser', 'x'); } catch (_) {}
+    open();
+  });
+  setTimeout(showTeaser, 6000);
+
+  btn.addEventListener('click', function () { hideTeaser(); panel.classList.contains('cda-on') ? close() : open(); });
   panel.querySelector('.cda-x').addEventListener('click', close);
   sendBtn.addEventListener('click', function () { send(); });
   input.addEventListener('keydown', function (e) { if (e.key === 'Enter') send(); });
