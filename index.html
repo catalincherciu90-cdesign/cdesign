@@ -175,7 +175,7 @@ fbq('init','893560673744618');fbq('track','PageView');
     .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:6px;}
     .hamburger span{display:block;width:22px;height:2px;background:var(--nav-burger);border-radius:2px;}
     /* Hero height — default full screen, override cu clase */
-    .hero{min-height:calc(100svh - 68px);display:flex;align-items:center;position:relative;padding:80px 0;overflow:hidden;}
+    .hero{min-height:auto;display:flex;align-items:center;position:relative;padding:56px 0 48px;overflow:hidden;}
     .hero.h-large  {min-height:75vh;}
     .hero.h-medium {min-height:55vh;}
     .hero.h-auto   {min-height:0;height:auto;padding:100px 0 80px;}
@@ -396,7 +396,7 @@ fbq('init','893560673744618');fbq('track','PageView');
 
     /* ── MOBILE (≤480px) ── */
     @media(max-width:480px){
-      .hero{min-height:100svh;padding:0 0 48px;}
+      .hero{min-height:auto;padding:32px 0 40px;}
       .hero-bg-photo{background-position:center center;}
       .hero-bg-photo::after{background:var(--hero-grad-xs);}
       .hero h1{font-size:clamp(2rem,10vw,2.6rem);line-height:1.05;}
@@ -611,192 +611,6 @@ fbq('init','893560673744618');fbq('track','PageView');
   </div>
 </section>
 
-<!-- BANNER CAROUSEL -->
-<div class="banner-carousel" id="bannerCarousel" aria-label="Bannere promoționale" data-section="carousel">
-  <div class="banner-track" id="bannerTrack">
-
-    <!-- Slide 1: 14 zile -->
-    <div class="banner-slide bs-1" role="group" aria-label="Banner 1 din 4">
-      <svg class="bs-1-deco" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
-        <defs><radialGradient id="g1" cx="80%" cy="50%" r="50%"><stop offset="0%" stop-color="#00a8a8" stop-opacity=".12"/><stop offset="100%" stop-color="#00a8a8" stop-opacity="0"/></radialGradient></defs>
-        <rect width="1440" height="320" fill="url(#g1)"/>
-        <line x1="900" y1="0" x2="1440" y2="320" stroke="rgba(0,168,168,.06)" stroke-width="1"/>
-        <line x1="960" y1="0" x2="1440" y2="240" stroke="rgba(0,168,168,.05)" stroke-width="1"/>
-        <circle cx="1100" cy="160" r="140" fill="none" stroke="rgba(0,168,168,.07)" stroke-width="1"/>
-        <circle cx="1100" cy="160" r="90" fill="none" stroke="rgba(0,168,168,.05)" stroke-width="1"/>
-      </svg>
-      <div class="bs-inner">
-        <div class="bs-text">
-          <div class="bs-tag" data-edit="banner-eticheta-1">SITE DE PREZENTARE</div>
-          <h2 class="bs-h" data-edit="banner-titlu-1">De la idee la site live<br><span style="color:var(--teal)">în mai puțin de 3 săptămâni</span></h2>
-          <p class="bs-sub" data-edit="banner-text-1">Un site profesional, clar și rapid — cu domeniu, găzduire și suport incluse. Tu conduci afacerea, noi ne ocupăm de tot restul.</p>
-          <a href="/contact" class="bs-cta" data-edit="banner-buton-1">Cere o ofertă gratuită</a>
-        </div>
-        <div class="bs-visual" aria-hidden="true">
-          <svg viewBox="0 0 220 180" width="220" height="180">
-            <rect x="10" y="10" width="200" height="160" rx="10" fill="#0a1818" stroke="rgba(0,168,168,.25)" stroke-width="1"/>
-            <rect x="10" y="10" width="200" height="32" rx="10" fill="#0f2020"/>
-            <rect x="10" y="30" width="200" height="12" fill="#0f2020"/>
-            <circle cx="30" cy="26" r="5" fill="#ff5f57"/><circle cx="48" cy="26" r="5" fill="#febc2e"/><circle cx="66" cy="26" r="5" fill="#28c840"/>
-            <text x="110" y="30" font-family="monospace" font-size="8" fill="#4d6b8a" text-anchor="middle">livrez-site.sh</text>
-            <text x="22" y="62" font-family="monospace" font-size="8" fill="#00a8a8">$</text>
-            <text x="32" y="62" font-family="monospace" font-size="8" fill="#e8edf2">./start --client</text>
-            <text x="22" y="80" font-family="monospace" font-size="8" fill="#28c840">✓</text>
-            <text x="32" y="80" font-family="monospace" font-size="8" fill="#8bbaba">Design aprobat</text>
-            <text x="22" y="96" font-family="monospace" font-size="8" fill="#28c840">✓</text>
-            <text x="32" y="96" font-family="monospace" font-size="8" fill="#8bbaba">Cod livrat</text>
-            <text x="22" y="112" font-family="monospace" font-size="8" fill="#28c840">✓</text>
-            <text x="32" y="112" font-family="monospace" font-size="8" fill="#00a8a8">LIVE în 14 zile</text>
-            <text x="22" y="132" font-family="monospace" font-size="8" fill="#00a8a8">$</text>
-            <rect x="32" y="122" width="7" height="13" rx="1" fill="#00a8a8" opacity=".9"><animate attributeName="opacity" values="1;0;1" dur=".8s" repeatCount="indefinite"/></rect>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <!-- Slide 2: Consultanță -->
-    <div class="banner-slide bs-2" role="group" aria-label="Banner 2 din 4">
-      <svg style="position:absolute;inset:0;z-index:1;pointer-events:none;" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
-        <defs><radialGradient id="g2" cx="75%" cy="50%" r="55%"><stop offset="0%" stop-color="#c084fc" stop-opacity=".1"/><stop offset="100%" stop-color="#c084fc" stop-opacity="0"/></radialGradient></defs>
-        <rect width="1440" height="320" fill="url(#g2)"/>
-        <circle cx="1080" cy="160" r="180" fill="none" stroke="rgba(192,132,252,.06)" stroke-width="1"/>
-        <circle cx="1080" cy="160" r="120" fill="none" stroke="rgba(129,140,248,.06)" stroke-width="1"/>
-        <circle cx="1080" cy="160" r="60" fill="rgba(192,132,252,.04)"/>
-      </svg>
-      <div class="bs-inner">
-        <div class="bs-text">
-          <div class="bs-tag" style="color:#c084fc;background:rgba(192,132,252,.08);border:1px solid rgba(192,132,252,.25);" data-edit="banner-eticheta-2">CONSULTANȚĂ GRATUITĂ</div>
-          <h2 class="bs-h" data-edit="banner-titlu-2">Nu știi de unde să începi?<br><span class="hl2">Vorbim noi</span> primul pas</h2>
-          <p class="bs-sub" data-edit="banner-text-2">30 de minute cu un om real, dedicat afacerii tale. Îți spunem sincer ce ai nevoie și cât costă — fără să te obligăm la nimic.</p>
-          <a href="/programare" class="bs-cta" style="background:linear-gradient(135deg,#c084fc,#818cf8);color:#fff;box-shadow:0 0 20px rgba(192,132,252,.3);" data-edit="banner-buton-2">Alege data și ora</a>
-        </div>
-        <div class="bs-visual" aria-hidden="true">
-          <svg viewBox="0 0 220 180" width="220" height="180">
-            <rect x="20" y="15" width="180" height="150" rx="12" fill="#120d20" stroke="rgba(192,132,252,.2)" stroke-width="1"/>
-            <rect x="20" y="15" width="180" height="44" rx="12" fill="#18102a"/>
-            <rect x="20" y="46" width="180" height="13" fill="#18102a"/>
-            <text x="110" y="42" font-family="monospace" font-size="9" fill="#c084fc" text-anchor="middle" font-weight="bold">📅 CONSULTANȚĂ</text>
-            <text x="40" y="80" font-family="monospace" font-size="8" fill="#8bbaba">Data:</text>
-            <text x="80" y="80" font-family="monospace" font-size="8" fill="#e8edf2">Astăzi</text>
-            <text x="40" y="97" font-family="monospace" font-size="8" fill="#8bbaba">Ora:</text>
-            <text x="80" y="97" font-family="monospace" font-size="8" fill="#c084fc" font-weight="bold">10:00</text>
-            <text x="40" y="114" font-family="monospace" font-size="8" fill="#8bbaba">Durată:</text>
-            <text x="90" y="114" font-family="monospace" font-size="8" fill="#e8edf2">30 min</text>
-            <text x="40" y="131" font-family="monospace" font-size="8" fill="#8bbaba">Cost:</text>
-            <text x="80" y="131" font-family="monospace" font-size="8" fill="#28c840" font-weight="bold">GRATUIT</text>
-            <rect x="55" y="143" width="110" height="14" rx="4" fill="rgba(192,132,252,.2)" stroke="rgba(192,132,252,.4)" stroke-width="1"/>
-            <text x="110" y="153" font-family="monospace" font-size="7" fill="#c084fc" text-anchor="middle">CONFIRMĂ →</text>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <!-- Slide 3: Pachet Start-Up -->
-    <div class="banner-slide bs-3" role="group" aria-label="Banner 3 din 4">
-      <svg style="position:absolute;inset:0;z-index:1;pointer-events:none;" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
-        <defs><radialGradient id="g3" cx="78%" cy="50%" r="50%"><stop offset="0%" stop-color="#fbbf24" stop-opacity=".1"/><stop offset="100%" stop-color="#fbbf24" stop-opacity="0"/></radialGradient></defs>
-        <rect width="1440" height="320" fill="url(#g3)"/>
-        <polygon points="900,0 1440,0 1440,320 1050,320" fill="rgba(251,191,36,.03)"/>
-        <line x1="900" y1="0" x2="1050" y2="320" stroke="rgba(251,191,36,.07)" stroke-width="1"/>
-        <circle cx="1150" cy="100" r="8" fill="rgba(251,191,36,.15)"/>
-        <circle cx="1300" cy="220" r="5" fill="rgba(249,115,22,.15)"/>
-      </svg>
-      <div class="bs-inner">
-        <div class="bs-text">
-          <div class="bs-tag" style="color:#fbbf24;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.22);" data-edit="banner-eticheta-3">PACHET STARTUP</div>
-          <h2 class="bs-h" data-edit="banner-titlu-3">Abia începi?<br><span class="hl3">Te lansăm complet</span> online</h2>
-          <p class="bs-sub" data-edit="banner-text-3">Site + Logo + Pagină Facebook — tot ce-ți trebuie ca să atragi primii clienți. Un singur pachet, un singur om de contact, zero bătăi de cap.</p>
-          <a href="/pachet-startup" class="bs-cta" style="background:linear-gradient(135deg,#fbbf24,#f97316);color:#060f0f;box-shadow:0 0 20px rgba(251,191,36,.3);" data-edit="banner-buton-3">Descoperă pachetul</a>
-        </div>
-        <div class="bs-visual" aria-hidden="true">
-          <svg viewBox="0 0 220 180" width="220" height="180">
-            <rect x="10" y="20" width="130" height="90" rx="8" fill="#1a1202" stroke="rgba(251,191,36,.2)" stroke-width="1"/>
-            <text x="75" y="50" font-size="22" text-anchor="middle">🌐</text>
-            <text x="75" y="72" font-family="monospace" font-size="7" fill="#fbbf24" text-anchor="middle">SITE</text>
-            <text x="75" y="84" font-family="monospace" font-size="6" fill="#8bbaba" text-anchor="middle">profesional</text>
-            <rect x="80" y="20" width="130" height="90" rx="8" fill="#1a1202" stroke="rgba(249,115,22,.2)" stroke-width="1"/>
-            <text x="145" y="50" font-size="22" text-anchor="middle">✏️</text>
-            <text x="145" y="72" font-family="monospace" font-size="7" fill="#f97316" text-anchor="middle">LOGO</text>
-            <text x="145" y="84" font-family="monospace" font-size="6" fill="#8bbaba" text-anchor="middle">unic</text>
-            <rect x="45" y="85" width="130" height="75" rx="8" fill="#1a1202" stroke="rgba(251,191,36,.15)" stroke-width="1"/>
-            <text x="110" y="115" font-size="20" text-anchor="middle">📘</text>
-            <text x="110" y="137" font-family="monospace" font-size="7" fill="#fbbf24" text-anchor="middle">FACEBOOK</text>
-            <text x="110" y="149" font-family="monospace" font-size="6" fill="#8bbaba" text-anchor="middle">pagină activă</text>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <!-- Slide 4: Redesign -->
-    <div class="banner-slide bs-4" role="group" aria-label="Banner 4 din 4">
-      <svg style="position:absolute;inset:0;z-index:1;pointer-events:none;" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
-        <defs><radialGradient id="g4" cx="75%" cy="50%" r="50%"><stop offset="0%" stop-color="#fb7185" stop-opacity=".1"/><stop offset="100%" stop-color="#fb7185" stop-opacity="0"/></radialGradient></defs>
-        <rect width="1440" height="320" fill="url(#g4)"/>
-        <circle cx="1100" cy="160" r="160" fill="none" stroke="rgba(251,113,133,.05)" stroke-width="1"/>
-        <circle cx="1100" cy="160" r="100" fill="none" stroke="rgba(244,63,94,.06)" stroke-width="1"/>
-        <text x="1090" y="170" font-size="90" fill="rgba(251,113,133,.04)" font-weight="bold" font-family="sans-serif">↺</text>
-      </svg>
-      <div class="bs-inner">
-        <div class="bs-text">
-          <div class="bs-tag" style="color:#fb7185;background:rgba(251,113,133,.08);border:1px solid rgba(251,113,133,.22);" data-edit="banner-eticheta-4">REDESIGN SITE</div>
-          <h2 class="bs-h" data-edit="banner-titlu-4">Site-ul vechi<br>te costă <span class="hl4">clienți în fiecare zi</span></h2>
-          <p class="bs-sub" data-edit="banner-text-4">Îl modernizăm complet: arată mai bine, se încarcă mai repede și convinge mai ușor. Poziția ta pe Google rămâne — câștigurile cresc.</p>
-          <a href="/contact" class="bs-cta" style="background:linear-gradient(135deg,#fb7185,#f43f5e);color:#fff;box-shadow:0 0 20px rgba(244,63,94,.3);" data-edit="banner-buton-4">Modernizează acum</a>
-        </div>
-        <div class="bs-visual" aria-hidden="true">
-          <svg viewBox="0 0 220 180" width="220" height="180">
-            <rect x="10" y="30" width="88" height="120" rx="6" fill="#1a0c0f" stroke="rgba(251,113,133,.15)" stroke-width="1"/>
-            <text x="54" y="55" font-family="monospace" font-size="6" fill="#4d6b8a" text-anchor="middle">ÎNAINTE</text>
-            <rect x="20" y="62" width="68" height="5" rx="2" fill="#2a1218"/>
-            <rect x="20" y="72" width="50" height="5" rx="2" fill="#2a1218"/>
-            <rect x="20" y="85" width="68" height="40" rx="4" fill="#220d10"/>
-            <rect x="20" y="130" width="30" height="9" rx="3" fill="#2a1218"/>
-            <text x="110" y="95" font-size="22" text-anchor="middle" fill="#fb7185">→</text>
-            <rect x="122" y="10" width="88" height="152" rx="8" fill="#200c10" stroke="rgba(244,63,94,.35)" stroke-width="1.5"/>
-            <text x="166" y="32" font-family="monospace" font-size="6" fill="#fb7185" text-anchor="middle" font-weight="bold">DUPĂ ✓</text>
-            <rect x="132" y="40" width="68" height="6" rx="3" fill="#3a1020"/>
-            <rect x="132" y="52" width="50" height="6" rx="3" fill="#2a0c18"/>
-            <rect x="132" y="66" width="68" height="50" rx="6" fill="#f43f5e" opacity=".15"/>
-            <text x="166" y="96" font-size="18" text-anchor="middle">🚀</text>
-            <rect x="132" y="125" width="40" height="12" rx="5" fill="rgba(244,63,94,.8)"/>
-            <text x="152" y="134" font-family="monospace" font-size="6" fill="#fff" text-anchor="middle">LIVE</text>
-            <rect x="178" y="125" width="22" height="12" rx="3" fill="rgba(40,200,64,.15)" stroke="rgba(40,200,64,.3)" stroke-width="1"/>
-            <text x="189" y="134" font-family="monospace" font-size="5" fill="#28c840" text-anchor="middle">SEO</text>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <button class="banner-btn banner-prev" aria-label="Banner anterior" onclick="bannerMove(-1)">‹</button>
-  <button class="banner-btn banner-next" aria-label="Banner următor" onclick="bannerMove(1)">›</button>
-  <div class="banner-dots" role="tablist" aria-label="Navigare bannere">
-    <span class="banner-dot active" role="tab" aria-label="Banner 1" onclick="bannerGo(0)"></span>
-    <span class="banner-dot" role="tab" aria-label="Banner 2" onclick="bannerGo(1)"></span>
-    <span class="banner-dot" role="tab" aria-label="Banner 3" onclick="bannerGo(2)"></span>
-    <span class="banner-dot" role="tab" aria-label="Banner 4" onclick="bannerGo(3)"></span>
-  </div>
-</div>
-
-
-<!-- DEVICE SHOWCASE -->
-<section class="dss" aria-label="Cum arată site-urile noastre" data-section="showcase">
-  <div class="container">
-    <div class="dss-text" style="max-width:680px;">
-      <div class="sec-label">SITE-URI CARE FUNCȚIONEAZĂ</div>
-      <h2 class="sec-title" id="dss-title-el" data-edit="titlu-sectiune-1">Clientul tău te caută pe telefon. Ești acolo?</h2>
-      <p class="sec-sub" id="dss-sub-el" data-edit="subtitlu-sectiune-1">7 din 10 oameni caută pe Google de pe mobil. Fiecare site pe care îl livrăm arată și funcționează perfect pe orice dispozitiv — fără compromisuri.</p>
-      <div class="dss-feats" id="dss-feats-el">
-        <div class="dss-feat"><span>📱</span><div><strong>Telefon, tabletă, laptop — oricare</strong><small>Testat pe zeci de dispozitive înainte de lansare</small></div></div>
-        <div class="dss-feat"><span>⚡</span><div><strong>Se încarcă în mai puțin de 2 secunde</strong><small>Clienții nu mai așteaptă — nici Google nu mai iartă</small></div></div>
-        <div class="dss-feat"><span>🔍</span><div><strong>Vizibil când cineva caută ce oferi tu</strong><small>SEO local inclus în fiecare proiect, de la prima zi</small></div></div>
-      </div>
-      <a href="/contact" class="btn-primary" id="dss-cta-el" style="margin-top:28px;display:inline-flex;" data-edit="buton-2">Vorbim gratuit despre site-ul tău</a>
-    </div>
-  </div>
-</section>
-
 <section class="services-bg" id="servicii" aria-labelledby="servicii-heading" data-section="services">
   <div class="container">
     <div class="sec-label reveal">CE PUTEM FACE PENTRU TINE</div>
@@ -851,20 +665,7 @@ fbq('init','893560673744618');fbq('track','PageView');
 </section>
 
 
-
 <!-- STRIP DESPRE NOI (teaser către /despre-noi) -->
-<section id="despre-noi" data-section="about" style="padding:56px 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
-  <div class="container">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;">
-      <div style="max-width:640px;">
-        <div class="sec-label reveal">DESPRE NOI</div>
-        <h2 class="sec-title reveal" id="despre-heading" style="margin-bottom:12px;" data-edit="titlu-sectiune-2">Facem site-uri care aduc clienți, nu premii.</h2>
-        <p style="font-size:.97rem;line-height:1.8;color:var(--soft);" class="reveal">Peste 10 ani de experiență, 120+ proiecte livrate pentru afaceri mici din toată România. Termen garantat 14 zile, preț fix, zero costuri ascunse.</p>
-      </div>
-      <a href="/despre-noi" class="btn-primary reveal" style="display:inline-flex;flex-shrink:0;" data-edit="buton-4">Cunoaște echipa</a>
-    </div>
-  </div>
-</section>
 
 
 <section class="testi-bg" id="testimoniale" aria-labelledby="testi-heading" data-section="testimonials">
@@ -875,6 +676,20 @@ fbq('init','893560673744618');fbq('track','PageView');
       <div class="testi-card reveal"><div class="testi-stars" aria-label="5 stele"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="testi-text" data-edit="recenzie-text-1">"A fost simplu de la început până la final. Mi-au explicat fiecare pas, n-am simțit că nu înțeleg ce se întâmplă. Exact ce aveam nevoie."</p><div class="testi-author"><div class="t-avatar" aria-hidden="true">MB</div><div><span class="t-name" data-edit="recenzie-nume-1">Mihai B.</span><span class="t-role" data-edit="recenzie-rol-1">Servicii auto</span></div></div></div>
       <div class="testi-card reveal reveal-delay-1"><div style="display:inline-block;background:var(--teal);color:#fff;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:12px;letter-spacing:.04em;">⭐ RECOMANDAT</div><div class="testi-stars" aria-label="5 stele"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="testi-text" data-edit="recenzie-text-2">"De când am noul site, am primit cereri de ofertă direct de pe pagina de contact. Primul client a acoperit toată investiția în prima lună."</p><div class="testi-author"><div class="t-avatar" aria-hidden="true">IA</div><div><span class="t-name" data-edit="recenzie-nume-2">Ioana A.</span><span class="t-role" data-edit="recenzie-rol-2">Consultant financiar</span></div></div></div>
       <div class="testi-card reveal reveal-delay-2"><div class="testi-stars" aria-label="5 stele"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div><p class="testi-text" data-edit="recenzie-text-3">"Au respectat termenul și bugetul. Exact ce mi-au promis, exact când mi-au promis. Rară calitate în piața asta."</p><div class="testi-author"><div class="t-avatar" aria-hidden="true">CR</div><div><span class="t-name" data-edit="recenzie-nume-3">Cristian R.</span><span class="t-role" data-edit="recenzie-rol-3">Firmă construcții</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+
+<section id="despre-noi" data-section="about" style="padding:56px 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;">
+      <div style="max-width:640px;">
+        <div class="sec-label reveal">DESPRE NOI</div>
+        <h2 class="sec-title reveal" id="despre-heading" style="margin-bottom:12px;" data-edit="titlu-sectiune-2">Facem site-uri care aduc clienți, nu premii.</h2>
+        <p style="font-size:.97rem;line-height:1.8;color:var(--soft);" class="reveal">Peste 10 ani de experiență, 120+ proiecte livrate pentru afaceri mici din toată România. Termen garantat 14 zile, preț fix, zero costuri ascunse.</p>
+      </div>
+      <a href="/despre-noi" class="btn-primary reveal" style="display:inline-flex;flex-shrink:0;" data-edit="buton-4">Cunoaște echipa</a>
     </div>
   </div>
 </section>
@@ -937,7 +752,6 @@ const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isInter
 reveals.forEach(el=>revObs.observe(el));
 
 
-
 (async function loadProjects() {
   const grid = document.getElementById('portfolioGrid');
   const delays = ['', 'reveal-delay-1', 'reveal-delay-2'];
@@ -967,43 +781,6 @@ reveals.forEach(el=>revObs.observe(el));
   } catch {
     grid.innerHTML = '<p style="color:var(--muted);font-size:.9rem;padding:24px 0">Nu s-au putut încărca proiectele.</p>';
   }
-})();
-
-(function(){
-  const track = document.getElementById('bannerTrack');
-  const dots = document.querySelectorAll('.banner-dot');
-  const el = document.getElementById('bannerCarousel');
-  const slides = el.querySelectorAll('.banner-slide');
-  const total = 4;
-  let cur = 0, timer;
-  function setSize() {
-    const w = el.offsetWidth;
-    slides.forEach(s => { s.style.width = w + 'px'; });
-  }
-  function goTo(n) {
-    cur = (n + total) % total;
-    track.style.transform = `translateX(${-cur * el.offsetWidth}px)`;
-    dots.forEach((d, i) => d.classList.toggle('active', i === cur));
-  }
-  window.bannerMove = (dir) => { clearInterval(timer); goTo(cur + dir); startTimer(); };
-  window.bannerGo   = (n)   => { clearInterval(timer); goTo(n); startTimer(); };
-  function startTimer() { timer = setInterval(() => goTo(cur + 1), 5000); }
-  let tx = 0;
-  el.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
-  el.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - tx;
-    if (Math.abs(dx) > 50) { clearInterval(timer); goTo(cur + (dx < 0 ? 1 : -1)); startTimer(); }
-  }, {passive:true});
-  el.addEventListener('mouseenter', () => clearInterval(timer));
-  el.addEventListener('mouseleave', startTimer);
-  window.addEventListener('resize', throttle(() => {
-    setSize();
-    track.style.transition = 'none';
-    goTo(cur);
-    requestAnimationFrame(() => { track.style.transition = ''; });
-  }, 200), {passive:true});
-  setSize();
-  startTimer();
 })();
 
 const ham=document.getElementById('hamburger');
@@ -1041,7 +818,6 @@ mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mob.classLi
   } catch {}
 })();
 </script>
-
 
 
 <script>
