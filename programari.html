@@ -54,6 +54,9 @@
     .tabs{display:flex;gap:0;padding:0 8px;background:var(--bg2);border-bottom:1px solid var(--border);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
     .tabs::-webkit-scrollbar{display:none;}
     .tab{font-family:'Share Tech Mono',monospace;font-size:.8rem;padding:12px 16px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s;background:none;border-left:none;border-right:none;border-top:none;white-space:nowrap;flex-shrink:0;}
+    .tab-badge{display:none;background:#e8112d;color:#fff;font-size:.62rem;font-weight:700;padding:1px 6px;border-radius:20px;margin-left:4px;vertical-align:middle;}
+    .tab-badge.on{display:inline-block;animation:tab-badge-pulse 2s infinite;}
+    @keyframes tab-badge-pulse{0%,100%{box-shadow:0 0 0 0 rgba(232,17,45,.5)}60%{box-shadow:0 0 0 6px rgba(232,17,45,0)}}
     .tab:hover{color:var(--soft);}
     .tab.active{color:var(--teal);border-bottom-color:var(--teal);}
     .tab-panel{display:none;}.tab-panel.active{display:block;}
@@ -1828,7 +1831,7 @@
     <button class="tab" onclick="switchTab('projects',this)">&#x1F5BC; Portofoliu</button>
     <button class="tab" onclick="switchTab('clients',this)">&#x1F465; Clien&#x21B;i</button>
     <button class="tab" onclick="switchTab('crm',this)">&#x1F4CB; CRM &amp; Oferte</button>
-    <button class="tab" onclick="switchTab('chatai',this)">&#x1F4AC; Chat AI</button>
+    <button class="tab" onclick="switchTab('chatai',this)">&#x1F4AC; Chat AI <span class="tab-badge" id="chatai-tab-badge"></span></button>
     <button class="tab" onclick="switchTab('blog',this)">&#x270D; Blog</button>
     <button class="tab" onclick="switchTab('social',this)">&#x1F4F1; Social Media</button>
     <button class="tab" onclick="switchTab('pagini',this)">&#x1F4C4; Pagini</button>
@@ -1843,6 +1846,7 @@
   <!-- TAB: GIBILAN -->
   <div class="tab-panel active" id="panel-gibilan">
     <div class="main">
+      <div id="gib-leads-alert" style="display:none;"></div>
       <div class="gibilan-layout">
         <!-- Hero Zone: Reactor in Center with Panels Around -->
         <div class="gibilan-char">
@@ -5313,6 +5317,7 @@
 
   async function loadGibilan() {
     if (!adminToken) return;
+    if (typeof updateChataiBadge === 'function') updateChataiBadge();
     try {
       const res = await fetch('/api/gibilan/agenda?token=' + encodeURIComponent(adminToken));
       if (!res.ok) return;
@@ -7342,6 +7347,7 @@
       const d = await r.json();
       chataiData = d.conversations || [];
       renderConvList();
+      updateChataiBadge();
     } catch (e) { list.innerHTML = '<div style="color:#f87171">Eroare la &icirc;ncărcare.</div>'; }
   }
 
@@ -7385,6 +7391,31 @@
     if (it) it.status = status;
     renderConvList();
     viewConversation(id);
+    updateChataiBadge();
+  }
+
+  // Contor lead-uri noi pe tab + alertă în Gibilan (rulează din orice tab)
+  async function updateChataiBadge() {
+    try {
+      const r = await fetch('/api/conversations?token=' + encodeURIComponent(adminToken));
+      const d = await r.json();
+      const convs = d.conversations || [];
+      const newCount = convs.filter(function (c) { return (c.status || 'nou') === 'nou'; }).length;
+      const badge = document.getElementById('chatai-tab-badge');
+      if (badge) { if (newCount > 0) { badge.textContent = newCount; badge.classList.add('on'); } else { badge.textContent = ''; badge.classList.remove('on'); } }
+      const al = document.getElementById('gib-leads-alert');
+      if (al) {
+        if (newCount > 0) {
+          al.innerHTML = '<div style="background:linear-gradient(135deg,rgba(232,17,45,.14),rgba(232,17,45,.05));border:1px solid rgba(232,17,45,.5);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;">'
+            + '<span style="font-size:1.5rem;">&#x1F514;</span>'
+            + '<div style="flex:1;min-width:170px;"><div style="font-weight:700;color:var(--text);">' + newCount + ' lead-uri noi din chat</div>'
+            + '<div style="color:var(--muted);font-size:.82rem;">Clien&#x21B;i care au discutat cu asistentul de pe site &#x219;i a&#x219;teapt&#x103; un r&#x103;spuns.</div></div>'
+            + '<button class="btn-save" style="padding:8px 16px;font-size:.85rem;" onclick="switchTab(\'chatai\',document.querySelector(\'[onclick*=chatai]\'))">Vezi lead-urile &rarr;</button></div>';
+          al.style.display = '';
+        } else { al.style.display = 'none'; al.innerHTML = ''; }
+      }
+    } catch (e) {}
+    if (!window.__chataiPoll) window.__chataiPoll = setInterval(updateChataiBadge, 60000);
   }
   async function viewConversation(id) {
     const view = document.getElementById('chatai-view');
