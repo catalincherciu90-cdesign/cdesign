@@ -2129,8 +2129,9 @@ Cerințe titluri:
           if (userText) conv.messages.push({ role: 'user', content: String(userText).slice(0, 1500), ts: Date.now() });
           if (replyText) conv.messages.push({ role: 'assistant', content: String(replyText).slice(0, 2000), ts: Date.now() });
           if (conv.messages.length > 120) conv.messages = conv.messages.slice(-120);
+          if (isNew) conv.status = 'nou';
           const lastUser = [...conv.messages].reverse().find(m => m.role === 'user');
-          const meta = { email, updatedAt: conv.updatedAt, count: conv.messages.length, preview: (lastUser ? lastUser.content : '').slice(0, 90) };
+          const meta = { email, updatedAt: conv.updatedAt, count: conv.messages.length, preview: (lastUser ? lastUser.content : '').slice(0, 90), status: conv.status || 'nou' };
           await env.PROGRAMARI.put(key, JSON.stringify(conv), { metadata: meta });
           if (isNew) {
             const firstMsg = userText ? String(userText).slice(0, 500) : '';
@@ -2225,6 +2226,16 @@ Cerințe titluri:
         const conv = await env.PROGRAMARI.get('chat:' + cid, 'json');
         if (!conv) return json({ error: 'Conversație negăsită' }, 404, request);
         return json({ conversation: conv }, 200, request);
+      }
+      if (request.method === 'PUT') {
+        const conv = await env.PROGRAMARI.get('chat:' + cid, 'json');
+        if (!conv) return json({ error: 'Conversație negăsită' }, 404, request);
+        const upd = await request.json().catch(() => ({}));
+        if (typeof upd.status === 'string') conv.status = upd.status.slice(0, 20);
+        const lastUser = [...(conv.messages || [])].reverse().find(m => m.role === 'user');
+        const meta = { email: conv.email || '', updatedAt: conv.updatedAt || Date.now(), count: (conv.messages || []).length, preview: (lastUser ? lastUser.content : '').slice(0, 90), status: conv.status || 'nou' };
+        await env.PROGRAMARI.put('chat:' + cid, JSON.stringify(conv), { metadata: meta });
+        return json({ ok: true }, 200, request);
       }
       if (request.method === 'DELETE') {
         await env.PROGRAMARI.delete('chat:' + cid);
