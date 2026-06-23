@@ -151,6 +151,8 @@ fbq('init','893560673744618');fbq('track','PageView');
     img{max-width:100%;display:block}
         .container{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
     .container.block-fullwide{max-width:none;}
+    /* hero full-width (edge-to-edge), la fel ca banda caruselului */
+    .hero .container{max-width:none;padding-left:max(24px,4vw);padding-right:max(24px,4vw);}
     nav{position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
     @media(max-width:768px){nav{position:fixed;top:0;left:0;right:0;}body{padding-top:68px;}}
     nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--teal-glow-rgb),.6) 40%,rgba(83,148,255,.4) 60%,transparent);pointer-events:none;}
