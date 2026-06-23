@@ -108,6 +108,8 @@ body.slide-mode .slide-dots{display:flex;}
   .neon-box{animation:none;}
   .tri-slow,.tri-med,.tri-fast,.plus,.diamond,.glow,.dots-wave{animation:none;}
 }
+/* Slide dezactivat: elementele apar static, fara alunecare stanga/dreapta */
+.al,.panel .al,.panel.leaving .al,.neon-box,.panel.leaving .neon-box{opacity:1!important;transform:none!important;filter:none!important;transition:none!important;}
 
 /* ── NAV ─────────────────────────────────────────────────── */
 nav{position:sticky;top:0;z-index:100;background:rgba(3,26,13,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
@@ -438,8 +440,7 @@ panels.forEach(p => pObs.observe(p));
   const dots = Array.from(dotsBox.children);
 
   function slideOn() {
-    return window.innerWidth >= 900 && window.innerHeight >= 640
-      && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    return false; // slide-mode dezactivat: pagina deruleaza normal, fara panouri care aluneca
   }
   // partea din care intră fiecare bloc: par = stânga, impar = dreapta
   function side(i) { return i % 2 === 0 ? 'left' : 'right'; }
