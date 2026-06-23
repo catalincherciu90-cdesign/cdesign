@@ -67,56 +67,56 @@ body.fx-slide .reveal{opacity:1!important;transform:none!important;}
 body[data-fx] .hero::before{display:none;}
 /* footer-ul devine ultimul slide — centrat și compact */
 /* footer fix: bară compactă jos, mereu vizibilă peste orice slide */
-body.fx-slide footer{position:fixed!important;left:0;right:0;top:auto;bottom:0;z-index:150;
+body.fx-scroll footer{position:fixed!important;left:0;right:0;top:auto;bottom:0;z-index:150;
   padding:9px 0!important;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);}
-body.fx-slide footer .footer-grid-full,
-body.fx-slide footer .footer-grid{display:none;}
-body.fx-slide footer .footer-bottom-bar,
-body.fx-slide footer .footer-bottom{border-top:none;padding-top:0;margin:0;
+body.fx-scroll footer .footer-grid-full,
+body.fx-scroll footer .footer-grid{display:none;}
+body.fx-scroll footer .footer-bottom-bar,
+body.fx-scroll footer .footer-bottom{border-top:none;padding-top:0;margin:0;
   display:flex;justify-content:center;align-items:center;gap:8px 22px;flex-wrap:wrap;font-size:.74rem;}
 
 /* sertar: butonul ˄ deschide footer-ul complet peste slide */
 .fx-foot-toggle{display:none;}
-body.fx-slide .fx-foot-toggle{display:flex;position:absolute;top:-24px;left:50%;transform:translateX(-50%);
+body.fx-scroll .fx-foot-toggle{display:flex;position:absolute;top:-24px;left:50%;transform:translateX(-50%);
   width:52px;height:24px;border-radius:10px 10px 0 0;cursor:pointer;align-items:center;justify-content:center;
   background:rgba(var(--teal-glow-rgb,0,200,180),.08);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   border:1px solid rgba(var(--teal-glow-rgb,0,200,180),.35);border-bottom:none;color:var(--teal,#00c8b4);padding:0;}
 .fx-foot-toggle::after{content:'';width:8px;height:8px;border-left:2px solid currentColor;border-top:2px solid currentColor;
   transform:rotate(45deg) translate(2px,2px);transition:transform .35s;}
-body.fx-slide footer.fx-open .fx-foot-toggle::after{transform:rotate(225deg) translate(2px,2px);}
-body.fx-slide footer.fx-open{padding:26px 0 12px!important;max-height:82vh;max-height:82dvh;overflow-y:auto;
+body.fx-scroll footer.fx-open .fx-foot-toggle::after{transform:rotate(225deg) translate(2px,2px);}
+body.fx-scroll footer.fx-open{padding:26px 0 12px!important;max-height:82vh;max-height:82dvh;overflow-y:auto;
   box-shadow:0 -14px 48px rgba(0,0,0,.45);scrollbar-width:thin;}
-body.fx-slide footer.fx-open .footer-grid-full{display:grid;animation:fx-foot-in .45s cubic-bezier(.22,.8,.32,1);}
-body.fx-slide footer.fx-open .footer-grid{display:grid;animation:fx-foot-in .45s cubic-bezier(.22,.8,.32,1);}
+body.fx-scroll footer.fx-open .footer-grid-full{display:grid;animation:fx-foot-in .45s cubic-bezier(.22,.8,.32,1);}
+body.fx-scroll footer.fx-open .footer-grid{display:grid;animation:fx-foot-in .45s cubic-bezier(.22,.8,.32,1);}
 @keyframes fx-foot-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
 /* footer lizibil în modul slide: fundal aproape opac (fără text peste blur)
    + contrast bun pe titluri/linkuri/descriere */
-body.fx-slide footer{background:rgba(9,13,17,.97)!important;}
-body.fx-slide footer .footer-col h3,
-body.fx-slide footer .footer-col-full h3{color:#ffffff!important;}
-body.fx-slide footer .footer-about,
-body.fx-slide footer .footer-col a,
-body.fx-slide footer .footer-col-full a{color:#cdd6df!important;}
-body.fx-slide footer .footer-bottom,
-body.fx-slide footer .footer-bottom a{color:#cdd6df!important;}
-body.fx-slide footer .footer-col a:hover,
-body.fx-slide footer .footer-col-full a:hover,
-body.fx-slide footer .footer-bottom a:hover{color:var(--teal,#00c8b4)!important;}
-body.fx-slide footer .footer-bottom .teal{color:var(--teal,#00c8b4)!important;}
+body.fx-scroll footer{background:rgba(9,13,17,.97)!important;}
+body.fx-scroll footer .footer-col h3,
+body.fx-scroll footer .footer-col-full h3{color:#ffffff!important;}
+body.fx-scroll footer .footer-about,
+body.fx-scroll footer .footer-col a,
+body.fx-scroll footer .footer-col-full a{color:#cdd6df!important;}
+body.fx-scroll footer .footer-bottom,
+body.fx-scroll footer .footer-bottom a{color:#cdd6df!important;}
+body.fx-scroll footer .footer-col a:hover,
+body.fx-scroll footer .footer-col-full a:hover,
+body.fx-scroll footer .footer-bottom a:hover{color:var(--teal,#00c8b4)!important;}
+body.fx-scroll footer .footer-bottom .teal{color:var(--teal,#00c8b4)!important;}
 
 /* buton ✕ de închidere, vizibil doar cu sertarul deschis */
 .fx-foot-close{display:none;}
-body.fx-slide footer.fx-open .fx-foot-close{display:flex;position:sticky;top:0;margin-left:auto;margin-right:16px;
+body.fx-scroll footer.fx-open .fx-foot-close{display:flex;position:sticky;top:0;margin-left:auto;margin-right:16px;
   width:34px;height:34px;align-items:center;justify-content:center;cursor:pointer;z-index:5;
   background:rgba(var(--teal-glow-rgb,0,200,180),.1);border:1px solid rgba(var(--teal-glow-rgb,0,200,180),.4);
   border-radius:9px;color:var(--teal,#00c8b4);font-size:1rem;line-height:1;padding:0;
   font-family:'DM Sans',sans-serif;}
-body.fx-slide footer.fx-open .fx-foot-close:hover{background:rgba(var(--teal-glow-rgb,0,200,180),.2);}
+body.fx-scroll footer.fx-open .fx-foot-close:hover{background:rgba(var(--teal-glow-rgb,0,200,180),.2);}
 
 /* iconițele social media în bara fixă */
 .fx-foot-social{display:none;}
-body.fx-slide .fx-foot-social{display:inline-flex;gap:8px;align-items:center;}
+body.fx-scroll .fx-foot-social{display:inline-flex;gap:8px;align-items:center;}
 .fx-foot-social a{display:inline-flex;width:26px;height:26px;align-items:center;justify-content:center;
   border:1px solid rgba(var(--teal-glow-rgb,0,200,180),.35);border-radius:7px;color:var(--soft,#9aa5b4);
   transition:color .2s,border-color .2s,box-shadow .2s;}
@@ -147,7 +147,7 @@ body[data-fx] nav .logo img{
 @keyframes fx-logo-blink{0%,100%{opacity:1}50%{opacity:.55}}
 
 /* floating-bar peste slide-uri, dar sub dots */
-body.fx-slide .floating-bar{z-index:210;}
+body.fx-scroll .floating-bar{z-index:210;}
 
 /* ── INDICIU DE SCROLL (primul slide) ──────────────────────────
    Mouse cu rotiță animată pe desktop, săgeți pulsante pe mobil.
@@ -180,14 +180,14 @@ body.fx-slide .fx-scrollhint.show{opacity:1;visibility:visible;}
   body.fx-slide .fx-neon{padding:26px 18px!important;border-radius:16px;}
   .fx-dots{left:4px;gap:2px;}
   .fx-dots button::after{inset:8.5px;}
-  body.fx-slide footer .footer-bottom-bar span:last-child,
-  body.fx-slide footer .footer-bottom span:last-child{display:none;}
+  body.fx-scroll footer .footer-bottom-bar span:last-child,
+  body.fx-scroll footer .footer-bottom span:last-child{display:none;}
 }
 
 /* pe mobil, bara plutitoare se ascunde în modul slide — toate
    iconițele (telefon, WhatsApp, email, social) sunt în bara de footer */
 @media(max-width:640px){
-  body.fx-slide .floating-bar{display:none;}
+  body.fx-scroll .floating-bar{display:none;}
 }
 
 /* ── REDUCED MOTION ────────────────────────────────────────── */
@@ -204,7 +204,7 @@ body.fx-slide .fx-scrollhint.show{opacity:1;visibility:visible;}
    in cadru din stanga/dreapta cand intra in ecran. Pastreaza
    fundalul animat si casetele neon, dar FARA preluarea scroll-ului.
    ════════════════════════════════════════════════════════════ */
-body.fx-scroll{overflow-x:hidden;}
+body.fx-scroll{overflow-x:hidden;padding-bottom:54px;}
 /* caseta neon (doar aspect — fara max-height/overflow ca in modul slide) */
 body.fx-scroll .fx-neon{
   background:rgba(var(--teal-glow-rgb,0,200,180),.04);
