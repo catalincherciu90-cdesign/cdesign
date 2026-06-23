@@ -205,6 +205,10 @@ body.fx-slide .fx-scrollhint.show{opacity:1;visibility:visible;}
    fundalul animat si casetele neon, dar FARA preluarea scroll-ului.
    ════════════════════════════════════════════════════════════ */
 body.fx-scroll{overflow-x:hidden;padding-bottom:54px;}
+/* taie alunecarea laterala a sectiunilor exact la marginea ecranului,
+   ca translateX-ul de reveal sa nu produca scroll orizontal.
+   'clip' nu creeaza scroll container (nav sticky ramane ok). */
+body.fx-scroll main{overflow-x:clip;}
 /* caseta neon (doar aspect — fara max-height/overflow ca in modul slide) */
 body.fx-scroll .fx-neon{
   background:rgba(var(--teal-glow-rgb,0,200,180),.04);
