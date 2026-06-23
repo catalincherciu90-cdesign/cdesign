@@ -197,3 +197,32 @@ body.fx-slide .fx-scrollhint.show{opacity:1;visibility:visible;}
   .fx-dots button.on::after{animation:none;}
   body[data-fx] nav .logo img{animation:none;}
 }
+
+/* ════════════════════════════════════════════════════════════
+   MOD SCROLL NORMAL (fx-scroll)
+   Pagina deruleaza normal pe verticala; fiecare sectiune aluneca
+   in cadru din stanga/dreapta cand intra in ecran. Pastreaza
+   fundalul animat si casetele neon, dar FARA preluarea scroll-ului.
+   ════════════════════════════════════════════════════════════ */
+body.fx-scroll{overflow-x:hidden;}
+/* caseta neon (doar aspect — fara max-height/overflow ca in modul slide) */
+body.fx-scroll .fx-neon{
+  background:rgba(var(--teal-glow-rgb,0,200,180),.04);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(var(--teal-glow-rgb,0,200,180),.4);border-radius:22px;
+  padding:40px 36px!important;
+  box-shadow:0 0 14px rgba(var(--teal-glow-rgb,0,200,180),.3),0 0 56px rgba(var(--teal-glow-rgb,0,200,180),.14),inset 0 0 26px rgba(var(--teal-glow-rgb,0,200,180),.05);
+}
+/* reveal la scroll: alunecare laterala + fade, apoi pozitie normala */
+body.fx-scroll .fx-reveal{opacity:0;
+  transition:transform .85s cubic-bezier(.22,.61,.36,1),opacity .85s ease;
+  will-change:transform,opacity;}
+body.fx-scroll .fx-reveal.fx-from-left{transform:translateX(-70px);}
+body.fx-scroll .fx-reveal.fx-from-right{transform:translateX(70px);}
+body.fx-scroll .fx-reveal.fx-shown{opacity:1;transform:none;}
+/* animatiile reveal interne nu mai tin continutul ascuns in acest mod */
+body.fx-scroll .reveal{opacity:1!important;transform:none!important;}
+
+@media(prefers-reduced-motion:reduce){
+  body.fx-scroll .fx-reveal{opacity:1!important;transform:none!important;transition:none;}
+}
