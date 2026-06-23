@@ -1828,6 +1828,7 @@
     <button class="tab" onclick="switchTab('projects',this)">&#x1F5BC; Portofoliu</button>
     <button class="tab" onclick="switchTab('clients',this)">&#x1F465; Clien&#x21B;i</button>
     <button class="tab" onclick="switchTab('crm',this)">&#x1F4CB; CRM &amp; Oferte</button>
+    <button class="tab" onclick="switchTab('chatai',this)">&#x1F4AC; Chat AI</button>
     <button class="tab" onclick="switchTab('blog',this)">&#x270D; Blog</button>
     <button class="tab" onclick="switchTab('social',this)">&#x1F4F1; Social Media</button>
     <button class="tab" onclick="switchTab('pagini',this)">&#x1F4C4; Pagini</button>
@@ -2341,6 +2342,23 @@
   </div>
 
   <!-- TAB: PROIECTE -->
+  <div class="tab-panel" id="panel-chatai">
+    <div class="main">
+      <style>@media(max-width:820px){#panel-chatai .chatai-grid{grid-template-columns:1fr!important;}}</style>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px;">
+        <h3 style="font-family:'Share Tech Mono',monospace;font-size:.95rem;color:var(--soft);">// chat_ai &mdash; ce discut&#x103; clien&#x21B;ii cu asistentul de pe site</h3>
+        <button class="btn-save" onclick="loadConversations()" style="padding:8px 16px;font-size:.85rem;">&#x21BB; Re&icirc;mprosp&#x103;teaz&#x103;</button>
+      </div>
+      <div id="chatai-stats" style="color:var(--muted);font-size:.85rem;margin-bottom:12px;"></div>
+      <div class="chatai-grid" style="display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:16px;align-items:start;">
+        <div id="chatai-list" style="display:flex;flex-direction:column;gap:8px;max-height:72vh;overflow-y:auto;"><div style="color:var(--muted)">Se &icirc;ncarc&#x103;...</div></div>
+        <div id="chatai-view" style="background:var(--bg2);border:1px solid var(--border-soft);border-radius:10px;padding:18px;min-height:300px;max-height:72vh;overflow-y:auto;">
+          <div style="color:var(--muted)">Selecteaz&#x103; o conversa&#x21B;ie din st&#xE2;nga ca s&#x103; vezi discu&#x21B;ia complet&#x103;.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="tab-panel" id="panel-projects">
     <div class="main">
       <div class="proj-toolbar">
@@ -3823,6 +3841,7 @@
     if (tab === 'media') fetchMedia();
     if (tab === 'cheltuieli') fetchCheltuieli();
     if (tab === 'oferte') { fetchServicii(); fetchOferte(); fetchContracte(); populateOfertaClientSel(); }
+    if (tab === 'chatai') loadConversations();
   }
 
   function refreshCurrent() {
@@ -7293,6 +7312,60 @@
       if (statusEl) statusEl.textContent = '✓ Selectat din media';
       if (field === 'src') reRenderColItems(ci);
     });
+  }
+
+  // -- CHAT AI (conversatii asistent de pe site) --
+  async function loadConversations() {
+    const list = document.getElementById('chatai-list');
+    const stats = document.getElementById('chatai-stats');
+    if (!list) return;
+    list.innerHTML = '<div style="color:var(--muted)">Se &icirc;ncarc&#x103;...</div>';
+    try {
+      const r = await fetch('/api/conversations?token=' + encodeURIComponent(adminToken));
+      const d = await r.json();
+      const convs = d.conversations || [];
+      if (stats) stats.textContent = convs.length + ' conversații salvate (lead-uri cu email)';
+      if (!convs.length) { list.innerHTML = '<div style="color:var(--muted)">Nicio conversație &icirc;ncă. Apar aici după ce un vizitator discută cu asistentul de pe site (după ce lasă emailul).</div>'; return; }
+      list.innerHTML = convs.map(function (c) {
+        const when = c.updatedAt ? new Date(c.updatedAt).toLocaleString('ro-RO') : '';
+        return '<div class="chatai-item" onclick="viewConversation(\'' + esc(c.id) + '\')" style="background:var(--bg2);border:1px solid var(--border-soft);border-radius:9px;padding:11px 13px;cursor:pointer;">'
+          + '<div style="font-weight:600;color:var(--text);font-size:.9rem;word-break:break-all;">' + esc(c.email || '(fără email)') + '</div>'
+          + '<div style="color:var(--muted);font-size:.78rem;margin:3px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + esc(c.preview || '') + '</div>'
+          + '<div style="color:var(--muted);font-size:.72rem;">' + when + ' &middot; ' + (c.count || 0) + ' mesaje</div>'
+          + '</div>';
+      }).join('');
+    } catch (e) { list.innerHTML = '<div style="color:#f87171">Eroare la &icirc;ncărcare.</div>'; }
+  }
+  async function viewConversation(id) {
+    const view = document.getElementById('chatai-view');
+    if (!view) return;
+    view.innerHTML = '<div style="color:var(--muted)">Se &icirc;ncarcă...</div>';
+    try {
+      const r = await fetch('/api/conversation/' + encodeURIComponent(id) + '?token=' + encodeURIComponent(adminToken));
+      const d = await r.json();
+      const c = d.conversation;
+      if (!c) { view.innerHTML = '<div style="color:#f87171">Conversație negăsită.</div>'; return; }
+      const msgs = (c.messages || []).map(function (m) {
+        const who = m.role === 'user' ? (c.email || 'Client') : 'Asistent';
+        const bg = m.role === 'user' ? 'rgba(0,168,168,.10)' : 'var(--bg3)';
+        const t = m.ts ? new Date(m.ts).toLocaleString('ro-RO') : '';
+        return '<div style="background:' + bg + ';border:1px solid var(--border-soft);border-radius:9px;padding:10px 12px;margin-bottom:8px;">'
+          + '<div style="font-size:.72rem;color:var(--muted);margin-bottom:3px;">' + esc(who) + ' &middot; ' + t + '</div>'
+          + '<div style="font-size:.9rem;color:var(--text);white-space:pre-wrap;word-wrap:break-word;">' + esc(m.content || '') + '</div></div>';
+      }).join('');
+      view.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">'
+        + '<div><div style="font-weight:700;color:var(--text);word-break:break-all;">' + esc(c.email || '(fără email)') + '</div>'
+        + '<a href="mailto:' + esc(c.email || '') + '" style="color:var(--teal);font-size:.82rem;">Răspunde pe email &rarr;</a></div>'
+        + '<button class="btn-save" style="background:#7f1d1d;padding:7px 14px;font-size:.82rem;" onclick="deleteConversation(\'' + esc(id) + '\')">&#x1F5D1; &#x218;terge</button></div>'
+        + msgs;
+    } catch (e) { view.innerHTML = '<div style="color:#f87171">Eroare la &icirc;ncărcare.</div>'; }
+  }
+  async function deleteConversation(id) {
+    if (!confirm('Ștergi această conversație?')) return;
+    try { await fetch('/api/conversation/' + encodeURIComponent(id) + '?token=' + encodeURIComponent(adminToken), { method: 'DELETE' }); } catch (e) {}
+    const view = document.getElementById('chatai-view');
+    if (view) view.innerHTML = '<div style="color:var(--muted)">Conversație ștearsă.</div>';
+    loadConversations();
   }
 
   // -- UTILS --

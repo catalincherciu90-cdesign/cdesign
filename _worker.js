@@ -2111,9 +2111,30 @@ Cerințe titluri:
       if (!ok) return json({ reply: 'Ai trimis multe mesaje într-un timp scurt. Hai să discutăm direct: sună la 0753 116 155 sau scrie la office@c-design.ro. 🙂' }, 200, request);
       const FALLBACK = 'Cel mai simplu e să discutăm direct — programează o consultanță gratuită pe pagina de Programare, sună la 0753 116 155 sau scrie la office@c-design.ro și îți facem o ofertă fixă, fără costuri ascunse.';
       if (!env.AI) return json({ reply: FALLBACK }, 200, request);
+      const body0 = await request.json().catch(() => ({}));
+      const validEmail = (e) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e);
+      const convId = String((body0 && body0.id) || '').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 64) || (crypto.randomUUID ? crypto.randomUUID() : 'c' + Date.now() + Math.random().toString(36).slice(2));
+      const email = String((body0 && body0.email) || '').trim().slice(0, 160);
+      // Salvează conversația în KV (lead), când avem un email valid.
+      async function logConv(userText, replyText) {
+        if (!email || !validEmail(email)) return;
+        try {
+          const key = 'chat:' + convId;
+          let conv = await env.PROGRAMARI.get(key, 'json');
+          if (!conv || typeof conv !== 'object') conv = { id: convId, email, createdAt: Date.now(), ip, messages: [] };
+          conv.email = email;
+          conv.updatedAt = Date.now();
+          if (userText) conv.messages.push({ role: 'user', content: String(userText).slice(0, 1500), ts: Date.now() });
+          if (replyText) conv.messages.push({ role: 'assistant', content: String(replyText).slice(0, 2000), ts: Date.now() });
+          if (conv.messages.length > 120) conv.messages = conv.messages.slice(-120);
+          const lastUser = [...conv.messages].reverse().find(m => m.role === 'user');
+          const meta = { email, updatedAt: conv.updatedAt, count: conv.messages.length, preview: (lastUser ? lastUser.content : '').slice(0, 90) };
+          await env.PROGRAMARI.put(key, JSON.stringify(conv), { metadata: meta });
+        } catch (e) {}
+      }
       try {
-        const body = await request.json();
-        const userMsgs = Array.isArray(body.messages) ? body.messages.slice(-10) : [];
+        const userMsgs = Array.isArray(body0.messages) ? body0.messages.slice(-10) : [];
+        const lastUserMsg = [...userMsgs].reverse().find(m => m && m.role === 'user' && typeof m.content === 'string');
         const system = 'Ești asistentul virtual al C Design, o agenție de web design din Ilfov și București, care lucrează cu clienți din toată România. '
           + 'Rolul tău: ajuți vizitatorii cu informații despre servicii și îi îndrumi cu căldură să ne contacteze pentru o ofertă personalizată gratuită. '
           + 'SERVICII: Site de prezentare (livrat în maxim 14 zile, garantat; domeniu .ro și găzduire incluse; mobile-first; SEO de bază inclus). '
@@ -2130,13 +2151,46 @@ Cerințe titluri:
           }
         }
         if (messages.length === 1) {
-          return json({ reply: 'Salut! 👋 Sunt asistentul C Design. Cu ce te pot ajuta — un site nou, un redesign sau o ofertă pentru afacerea ta?' }, 200, request);
+          return json({ reply: 'Salut! 👋 Sunt asistentul C Design. Cu ce te pot ajuta — un site nou, un redesign sau o ofertă pentru afacerea ta?', id: convId }, 200, request);
         }
         const out = await env.AI.run('@cf/meta/llama-3.3-70b-instruct-fp8-fast', { messages, max_tokens: 400 });
-        const reply = (out && (out.response || out.result)) || '';
-        return json({ reply: String(reply).trim() || FALLBACK }, 200, request);
+        const reply = (String((out && (out.response || out.result)) || '').trim()) || FALLBACK;
+        await logConv(lastUserMsg ? lastUserMsg.content : '', reply);
+        return json({ reply, id: convId }, 200, request);
       } catch (e) {
-        return json({ reply: FALLBACK }, 200, request);
+        return json({ reply: FALLBACK, id: convId }, 200, request);
+      }
+    }
+
+    // Conversații asistent (admin) — listă lead-uri din chat
+    if (path === '/api/conversations' && request.method === 'GET') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const out = [];
+        let cursor;
+        do {
+          const list = await env.PROGRAMARI.list({ prefix: 'chat:', limit: 1000, cursor });
+          for (const k of list.keys) out.push({ id: k.name.slice(5), ...(k.metadata || {}) });
+          cursor = list.list_complete ? null : list.cursor;
+        } while (cursor);
+        out.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+        return json({ conversations: out }, 200, request);
+      } catch (e) { return json({ error: 'Eroare: ' + String((e && e.message) || e) }, 500, request); }
+    }
+
+    // Conversație asistent (admin) — transcript complet / ștergere
+    if (path.startsWith('/api/conversation/')) {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      const cid = path.slice('/api/conversation/'.length).replace(/[^a-zA-Z0-9_-]/g, '');
+      if (!cid) return json({ error: 'ID invalid' }, 400);
+      if (request.method === 'GET') {
+        const conv = await env.PROGRAMARI.get('chat:' + cid, 'json');
+        if (!conv) return json({ error: 'Conversație negăsită' }, 404, request);
+        return json({ conversation: conv }, 200, request);
+      }
+      if (request.method === 'DELETE') {
+        await env.PROGRAMARI.delete('chat:' + cid);
+        return json({ ok: true }, 200, request);
       }
     }
 

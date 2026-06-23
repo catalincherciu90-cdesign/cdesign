@@ -8,9 +8,13 @@
   'use strict';
   if (window.__cdAssistant) return; window.__cdAssistant = true;
 
-  var PHONE = '0753 116 155', TEL = '+40753116155', EMAIL = 'office@c-design.ro';
+  var PHONE = '0753 116 155', TEL = '+40753116155', EMAIL_TO = 'office@c-design.ro';
   var history = [];      // {role, content}
   var busy = false, opened = false, greeted = false;
+  var leadEmail = '', convId = '';
+  try { leadEmail = localStorage.getItem('cdaEmail') || ''; convId = localStorage.getItem('cdaId') || ''; } catch (e) {}
+  function genId() { try { return crypto.randomUUID(); } catch (e) { return 'c' + Date.now() + Math.random().toString(36).slice(2); } }
+  function isMail(v) { return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v); }
 
   /* ── stil ─────────────────────────────────────────────── */
   var css = ''
@@ -52,6 +56,12 @@
     + '.cda-in input:focus{border-color:var(--teal,#00a8a8);}'
     + '.cda-in button{background:linear-gradient(135deg,var(--teal,#00a8a8),var(--teal-dk,#067e7e));border:none;color:#fff;border-radius:10px;width:44px;font-size:1.1rem;cursor:pointer;}'
     + '.cda-in button:disabled{opacity:.5;cursor:default;}'
+    + '.cda-gate{display:flex;flex-direction:column;gap:8px;align-self:stretch;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px;}'
+    + '.cda-gate input{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:9px;color:#f2f4f4;padding:11px 12px;font-size:.9rem;outline:none;font-family:inherit;}'
+    + '.cda-gate input:focus{border-color:var(--teal,#00a8a8);}'
+    + '.cda-gate button{background:linear-gradient(135deg,var(--gold,#c9a96e),var(--gold-dk,#a8843d));color:#10201d;border:none;border-radius:9px;padding:11px;font-weight:700;font-family:"Space Grotesk",sans-serif;cursor:pointer;}'
+    + '.cda-gate-err{color:#ff8a8a;font-size:.76rem;min-height:1em;}'
+    + '.cda-gate-note{color:rgba(255,255,255,.5);font-size:.72rem;line-height:1.4;}'
     + '@media(max-width:640px){#cda-btn{bottom:70px;}#cda-panel{right:8px;left:8px;width:auto;bottom:8px;height:80vh;}}';
 
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
@@ -121,23 +131,54 @@
     try {
       var r = await fetch('/api/assistant', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: history.slice(-10) })
+        body: JSON.stringify({ id: convId, email: leadEmail, messages: history.slice(-10) })
       });
       var d = await r.json();
       typing(false);
+      if (d && d.id && d.id !== convId) { convId = d.id; try { localStorage.setItem('cdaId', convId); } catch (e) {} }
       var reply = (d && d.reply) || 'Hai să discutăm direct: programează o consultație gratuită sau sună la ' + PHONE + '.';
       addMsg('bot', reply); history.push({ role: 'assistant', content: reply });
     } catch (e) {
       typing(false);
-      addMsg('bot', 'Am o problemă de conexiune. Sună-ne la ' + PHONE + ' sau scrie la ' + EMAIL + ' și îți răspundem rapid.');
+      addMsg('bot', 'Am o problemă de conexiune. Sună-ne la ' + PHONE + ' sau scrie la ' + EMAIL_TO + ' și îți răspundem rapid.');
     }
     busy = false; sendBtn.disabled = false; input.focus();
+  }
+
+  var inBar = panel.querySelector('.cda-in');
+  var ctaBar = panel.querySelector('.cda-cta');
+
+  function enableChat() {
+    chips.style.display = ''; inBar.style.display = ''; ctaBar.style.display = '';
+    if (!convId) { convId = genId(); try { localStorage.setItem('cdaId', convId); } catch (e) {} }
+  }
+
+  function showGate() {
+    chips.style.display = 'none'; inBar.style.display = 'none'; ctaBar.style.display = 'none';
+    addMsg('bot', 'Salut! 👋 Sunt asistentul C Design. Înainte să începem, lasă-mi adresa ta de email ca să te putem contacta cu o ofertă personalizată.');
+    var wrap = document.createElement('div'); wrap.className = 'cda-gate';
+    wrap.innerHTML = '<input id="cda-email" type="email" placeholder="adresa ta de email" autocomplete="email" inputmode="email">'
+      + '<button id="cda-gate-go" type="button">Începe conversația</button>'
+      + '<div class="cda-gate-err" id="cda-gate-err"></div>'
+      + '<div class="cda-gate-note">Folosim emailul doar ca să-ți răspundem la solicitare. Fără spam.</div>';
+    log.appendChild(wrap); scroll();
+    var ein = wrap.querySelector('#cda-email'), ego = wrap.querySelector('#cda-gate-go'), eer = wrap.querySelector('#cda-gate-err');
+    setTimeout(function () { ein.focus(); }, 150);
+    function submit() {
+      var v = (ein.value || '').trim();
+      if (!isMail(v)) { eer.textContent = 'Te rog introdu o adresă de email validă.'; ein.focus(); return; }
+      leadEmail = v; try { localStorage.setItem('cdaEmail', v); } catch (e) {}
+      wrap.remove(); enableChat(); greet();
+    }
+    ego.addEventListener('click', submit);
+    ein.addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(); });
   }
 
   function open() {
     panel.classList.add('cda-on'); opened = true;
     btn.querySelector('.cda-badge').style.display = 'none';
-    greet(); setTimeout(function () { input.focus(); }, 200);
+    if (leadEmail && isMail(leadEmail)) { enableChat(); greet(); setTimeout(function () { input.focus(); }, 200); }
+    else { showGate(); }
   }
   function close() { panel.classList.remove('cda-on'); }
 
