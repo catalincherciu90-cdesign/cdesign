@@ -179,10 +179,13 @@
       });
     }
 
+    var scrollIO = null;
     function teardown() {
-      body.classList.remove('fx-slide');
+      body.classList.remove('fx-slide', 'fx-scroll');
+      if (scrollIO) { scrollIO.disconnect(); scrollIO = null; }
       panels.forEach(function (p) {
-        p.classList.remove('fx-panel', 'fx-off-left', 'fx-off-right', 'fx-active', 'fx-notrans');
+        p.classList.remove('fx-panel', 'fx-off-left', 'fx-off-right', 'fx-active', 'fx-notrans',
+          'fx-reveal', 'fx-from-left', 'fx-from-right', 'fx-shown');
         var c = p.querySelector('.fx-neon');
         if (c) c.classList.remove('fx-neon');
       });
@@ -194,14 +197,11 @@
       if (active >= panels.length) active = 0;
       buildDots();
       if (!slideOn() || panels.length < 2) return;
-      body.classList.add('fx-slide');
-      window.scrollTo(0, 0);
+      // MOD SCROLL NORMAL: pagina deruleaza normal pe verticala, iar fiecare
+      // sectiune aluneca in cadru din stanga/dreapta cand intra in ecran.
+      body.classList.add('fx-scroll');
       panels.forEach(function (p, i) {
-        p.classList.add('fx-panel', 'fx-notrans');
-        if (i === active) p.classList.add('fx-active');
-        else p.classList.add(side(i) === 'left' ? 'fx-off-left' : 'fx-off-right');
-        // fără casetă neon pe bannerele vizuale: hero-ul cu fotografie de
-        // fundal sau secțiunile marcate explicit cu data-fx-noneon
+        // caseta neon pe continut (fara hero-ul cu poza / sectiuni data-fx-noneon)
         var skipNeon = p.hasAttribute('data-fx-noneon')
           || p.getAttribute('data-section') === 'hero'
           || p.querySelector('.hero-bg-photo');
@@ -209,13 +209,17 @@
           var c = p.querySelector(':scope > .container, :scope > .wide, :scope > * > .container');
           if (c) c.classList.add('fx-neon');
         }
+        // pregatire reveal: intra alternativ din stanga/dreapta
+        p.classList.add('fx-reveal', side(i) === 'left' ? 'fx-from-left' : 'fx-from-right');
       });
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          panels.forEach(function (p) { p.classList.remove('fx-notrans'); });
+      // prima sectiune e vizibila imediat (fara intarziere la incarcare)
+      if (panels[0]) panels[0].classList.add('fx-shown');
+      scrollIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('fx-shown'); scrollIO.unobserve(e.target); }
         });
-      });
-      if (active === 0) showHint();
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+      panels.forEach(function (p) { scrollIO.observe(p); });
     }
 
     function goTo(j) {
