@@ -151,8 +151,8 @@ fbq('init','893560673744618');fbq('track','PageView');
     img{max-width:100%;display:block}
         .container{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
     .container.block-fullwide{max-width:none;}
-    nav{position:relative;z-index:100;background:var(--nav-bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-    @media(max-width:768px){nav{position:relative;}}
+    nav{position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+    @media(max-width:768px){nav{position:fixed;top:0;left:0;right:0;}body{padding-top:68px;}}
     nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--teal-glow-rgb),.6) 40%,rgba(83,148,255,.4) 60%,transparent);pointer-events:none;}
     .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px;}
     .logo{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.35rem;color:#fff;letter-spacing:-.5px;display:flex;align-items:center;gap:6px;}
@@ -342,9 +342,9 @@ fbq('init','893560673744618');fbq('track','PageView');
     .mobile-menu.open{display:flex}
     .mobile-menu a{font-size:1rem;font-weight:500;color:var(--soft);padding:13px 0;border-bottom:1px solid var(--border);transition:color .2s}
     .mobile-menu a:hover{color:var(--teal)}.mobile-menu .btn-nav{margin-top:12px;text-align:center;width:100%}
-    /* Fara efect de scroll: continut vizibil instant */
-    .reveal,.reveal.visible{opacity:1;transform:none;transition:none}
-    .reveal-delay-1,.reveal-delay-2,.reveal-delay-3{transition-delay:0s}
+    .reveal{opacity:0;transition:opacity .6s ease}
+    .reveal.visible{opacity:1}
+    .reveal-delay-1{transition-delay:80ms}.reveal-delay-2{transition-delay:160ms}.reveal-delay-3{transition-delay:240ms}
     /* ── TABLET landscape / small desktop (≤1024px) ── */
     @media(max-width:1024px){
       .hero{min-height:70vh;}
@@ -985,7 +985,7 @@ reveals.forEach(el=>revObs.observe(el));
   }
   window.bannerMove = (dir) => { clearInterval(timer); goTo(cur + dir); startTimer(); };
   window.bannerGo   = (n)   => { clearInterval(timer); goTo(n); startTimer(); };
-  function startTimer() { /* DIAGNOSTIC: rotire automata dezactivata */ }
+  function startTimer() { timer = setInterval(() => goTo(cur + 1), 5000); }
   let tx = 0;
   el.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
   el.addEventListener('touchend', e => {
