@@ -2116,12 +2116,14 @@ Cerințe titluri:
       const convId = String((body0 && body0.id) || '').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 64) || (crypto.randomUUID ? crypto.randomUUID() : 'c' + Date.now() + Math.random().toString(36).slice(2));
       const email = String((body0 && body0.email) || '').trim().slice(0, 160);
       // Salvează conversația în KV (lead), când avem un email valid.
+      // La primul mesaj al unei conversații noi: notificare email + intrare CRM.
       async function logConv(userText, replyText) {
         if (!email || !validEmail(email)) return;
         try {
           const key = 'chat:' + convId;
           let conv = await env.PROGRAMARI.get(key, 'json');
-          if (!conv || typeof conv !== 'object') conv = { id: convId, email, createdAt: Date.now(), ip, messages: [] };
+          const isNew = !conv || typeof conv !== 'object';
+          if (isNew) conv = { id: convId, email, createdAt: Date.now(), ip, messages: [] };
           conv.email = email;
           conv.updatedAt = Date.now();
           if (userText) conv.messages.push({ role: 'user', content: String(userText).slice(0, 1500), ts: Date.now() });
@@ -2130,6 +2132,42 @@ Cerințe titluri:
           const lastUser = [...conv.messages].reverse().find(m => m.role === 'user');
           const meta = { email, updatedAt: conv.updatedAt, count: conv.messages.length, preview: (lastUser ? lastUser.content : '').slice(0, 90) };
           await env.PROGRAMARI.put(key, JSON.stringify(conv), { metadata: meta });
+          if (isNew) {
+            const firstMsg = userText ? String(userText).slice(0, 500) : '';
+            // 1) Notificare email către agenție
+            try {
+              const apiKey = env.RESEND_API_KEY || RESEND_API_KEY;
+              if (apiKey) {
+                await fetch('https://api.resend.com/emails', {
+                  method: 'POST',
+                  headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    from: 'C Design <notificari@c-design.ro>',
+                    to: [env.NOTIFY_EMAIL || NOTIFY_EMAIL],
+                    reply_to: email,
+                    subject: '💬 Lead nou din chat AI: ' + email,
+                    html: '<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;">'
+                      + '<h2 style="color:#0e1f1c;">Lead nou din asistentul de pe site</h2>'
+                      + '<p><strong>Email:</strong> <a href="mailto:' + email + '">' + email + '</a></p>'
+                      + (firstMsg ? '<p><strong>Primul mesaj:</strong><br>' + firstMsg.replace(/</g, '&lt;') + '</p>' : '')
+                      + '<p style="margin-top:18px;"><a href="https://www.c-design.ro/programari.html" style="background:#00a8a8;color:#fff;padding:11px 22px;border-radius:8px;text-decoration:none;font-weight:700;">Vezi conversația în admin → Chat AI</a></p>'
+                      + '<p style="color:#9aa5b4;font-size:.8rem;margin-top:18px;">c-design.ro · 0753 116 155</p></div>',
+                  }),
+                });
+              }
+            } catch (e) {}
+            // 2) Intrare CRM (cu dedup după email)
+            try {
+              const raw = await env.PROGRAMARI.get('__crm__');
+              const entries = raw ? JSON.parse(raw) : [];
+              const exists = entries.some(en => (en.client && en.client.toLowerCase() === email.toLowerCase()) || (en.note && en.note.toLowerCase().includes(email.toLowerCase())));
+              if (!exists) {
+                const cid = 'crm_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+                entries.unshift({ id: cid, client: email, proiect: 'Lead din chat AI', valoare: '', termen: '', status: 'oferta', note: 'Lead automat din asistentul de pe site.' + (firstMsg ? ' Primul mesaj: ' + firstMsg : ''), createdAt: new Date().toISOString() });
+                await env.PROGRAMARI.put('__crm__', JSON.stringify(entries));
+              }
+            } catch (e) {}
+          }
         } catch (e) {}
       }
       try {
