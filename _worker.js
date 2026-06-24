@@ -1138,6 +1138,12 @@ export default {
         if (!phoneRegex.test(phone)) return json({ error: 'Telefon invalid' }, 400);
         if (name.length < 2) return json({ error: 'Nume invalid' }, 400);
         const contact = { name, phone, email, service: service || 'Nespecificat', message };
+        // Salvează mesajul în admin (KV), pe lângă notificarea pe email.
+        try {
+          const mid = 'msg_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+          const rec = { id: mid, name: String(name).slice(0, 120), phone: String(phone).slice(0, 40), email: String(email).slice(0, 160), service: contact.service, message: String(message).slice(0, 5000), createdAt: Date.now(), status: 'nou', ip };
+          await env.PROGRAMARI.put('msg:' + mid, JSON.stringify(rec), { metadata: { name: rec.name, email: rec.email, createdAt: rec.createdAt, status: 'nou', preview: String(message).slice(0, 90) } });
+        } catch (e) {}
         await sendContactNotification(contact, env);
         return json({ success: true });
       } catch { return json({ error: 'Eroare server' }, 500); }
@@ -2239,6 +2245,46 @@ Cerințe titluri:
       }
       if (request.method === 'DELETE') {
         await env.PROGRAMARI.delete('chat:' + cid);
+        return json({ ok: true }, 200, request);
+      }
+    }
+
+    // Mesaje contact (admin) — listă
+    if (path === '/api/messages' && request.method === 'GET') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const out = [];
+        let cursor;
+        do {
+          const list = await env.PROGRAMARI.list({ prefix: 'msg:', limit: 1000, cursor });
+          for (const k of list.keys) out.push({ id: k.name.slice(4), ...(k.metadata || {}) });
+          cursor = list.list_complete ? null : list.cursor;
+        } while (cursor);
+        out.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        return json({ messages: out }, 200, request);
+      } catch (e) { return json({ error: 'Eroare: ' + String((e && e.message) || e) }, 500, request); }
+    }
+
+    // Mesaj contact (admin) — detaliu / status / ștergere
+    if (path.startsWith('/api/message/')) {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      const mid = path.slice('/api/message/'.length).replace(/[^a-zA-Z0-9_-]/g, '');
+      if (!mid) return json({ error: 'ID invalid' }, 400);
+      if (request.method === 'GET') {
+        const rec = await env.PROGRAMARI.get('msg:' + mid, 'json');
+        if (!rec) return json({ error: 'Mesaj negăsit' }, 404, request);
+        return json({ message: rec }, 200, request);
+      }
+      if (request.method === 'PUT') {
+        const rec = await env.PROGRAMARI.get('msg:' + mid, 'json');
+        if (!rec) return json({ error: 'Mesaj negăsit' }, 404, request);
+        const upd = await request.json().catch(() => ({}));
+        if (typeof upd.status === 'string') rec.status = upd.status.slice(0, 20);
+        await env.PROGRAMARI.put('msg:' + mid, JSON.stringify(rec), { metadata: { name: rec.name || '', email: rec.email || '', createdAt: rec.createdAt || Date.now(), status: rec.status || 'nou', preview: String(rec.message || '').slice(0, 90) } });
+        return json({ ok: true }, 200, request);
+      }
+      if (request.method === 'DELETE') {
+        await env.PROGRAMARI.delete('msg:' + mid);
         return json({ ok: true }, 200, request);
       }
     }

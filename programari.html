@@ -1832,6 +1832,7 @@
     <button class="tab" onclick="switchTab('clients',this)">&#x1F465; Clien&#x21B;i</button>
     <button class="tab" onclick="switchTab('crm',this)">&#x1F4CB; CRM &amp; Oferte</button>
     <button class="tab" onclick="switchTab('chatai',this)">&#x1F4AC; Chat AI <span class="tab-badge" id="chatai-tab-badge"></span></button>
+    <button class="tab" onclick="switchTab('mesaje',this)">&#x1F4E8; Mesaje <span class="tab-badge" id="mesaje-tab-badge"></span></button>
     <button class="tab" onclick="switchTab('blog',this)">&#x270D; Blog</button>
     <button class="tab" onclick="switchTab('social',this)">&#x1F4F1; Social Media</button>
     <button class="tab" onclick="switchTab('pagini',this)">&#x1F4C4; Pagini</button>
@@ -2346,6 +2347,23 @@
   </div>
 
   <!-- TAB: PROIECTE -->
+  <div class="tab-panel" id="panel-mesaje">
+    <div class="main">
+      <style>@media(max-width:820px){#panel-mesaje .msg-grid{grid-template-columns:1fr!important;}}</style>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px;">
+        <h3 style="font-family:'Share Tech Mono',monospace;font-size:.95rem;color:var(--soft);">// mesaje &mdash; din formularul de Contact al site-ului</h3>
+        <button class="btn-save" onclick="loadMessages()" style="padding:8px 16px;font-size:.85rem;">&#x21BB; Re&icirc;mprosp&#x103;teaz&#x103;</button>
+      </div>
+      <div id="msg-stats" style="color:var(--muted);font-size:.85rem;margin-bottom:12px;"></div>
+      <div class="msg-grid" style="display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:16px;align-items:start;">
+        <div id="msg-list" style="display:flex;flex-direction:column;gap:8px;max-height:72vh;overflow-y:auto;"><div style="color:var(--muted)">Se &icirc;ncarc&#x103;...</div></div>
+        <div id="msg-view" style="background:var(--bg2);border:1px solid var(--border-soft);border-radius:10px;padding:18px;min-height:300px;max-height:72vh;overflow-y:auto;">
+          <div style="color:var(--muted)">Selecteaz&#x103; un mesaj din st&#xE2;nga ca s&#x103;-l vezi complet.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="tab-panel" id="panel-chatai">
     <div class="main">
       <style>@media(max-width:820px){#panel-chatai .chatai-grid{grid-template-columns:1fr!important;}}</style>
@@ -3853,6 +3871,7 @@
     if (tab === 'cheltuieli') fetchCheltuieli();
     if (tab === 'oferte') { fetchServicii(); fetchOferte(); fetchContracte(); populateOfertaClientSel(); }
     if (tab === 'chatai') loadConversations();
+    if (tab === 'mesaje') loadMessages();
   }
 
   function refreshCurrent() {
@@ -5318,6 +5337,7 @@
   async function loadGibilan() {
     if (!adminToken) return;
     if (typeof updateChataiBadge === 'function') updateChataiBadge();
+    if (typeof updateMsgBadge === 'function') updateMsgBadge();
     try {
       const res = await fetch('/api/gibilan/agenda?token=' + encodeURIComponent(adminToken));
       if (!res.ok) return;
@@ -7417,6 +7437,100 @@
     } catch (e) {}
     if (!window.__chataiPoll) window.__chataiPoll = setInterval(updateChataiBadge, 60000);
   }
+
+  // -- MESAJE (din formularul de Contact) --
+  var msgData = [];
+  var MSG_STATUS = { nou: { t: 'Nou', c: '#00a8a8' }, citit: { t: 'Citit', c: '#f59e0b' }, rezolvat: { t: 'Rezolvat', c: '#4ade80' } };
+
+  async function loadMessages() {
+    const list = document.getElementById('msg-list');
+    if (!list) return;
+    list.innerHTML = '<div style="color:var(--muted)">Se &icirc;ncarc&#x103;...</div>';
+    try {
+      const r = await fetch('/api/messages?token=' + encodeURIComponent(adminToken));
+      const d = await r.json();
+      msgData = d.messages || [];
+      renderMsgList();
+      updateMsgBadge();
+    } catch (e) { list.innerHTML = '<div style="color:#f87171">Eroare la &icirc;ncărcare.</div>'; }
+  }
+
+  function renderMsgList() {
+    const list = document.getElementById('msg-list');
+    const stats = document.getElementById('msg-stats');
+    if (!list) return;
+    const newCount = msgData.filter(function (m) { return (m.status || 'nou') === 'nou'; }).length;
+    if (stats) stats.innerHTML = msgData.length + ' mesaje &middot; <span style="color:#00a8a8;">' + newCount + ' noi</span>';
+    if (!msgData.length) { list.innerHTML = '<div style="color:var(--muted)">Niciun mesaj &icirc;ncă. Apar aici mesajele trimise din formularul de Contact al site-ului.</div>'; return; }
+    list.innerHTML = msgData.map(function (m) {
+      const when = m.createdAt ? new Date(m.createdAt).toLocaleString('ro-RO') : '';
+      const st = MSG_STATUS[m.status || 'nou'] || MSG_STATUS.nou;
+      return '<div class="chatai-item" onclick="viewMessage(\'' + esc(m.id) + '\')" style="background:var(--bg2);border:1px solid var(--border-soft);border-radius:9px;padding:11px 13px;cursor:pointer;">'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">'
+        + '<div style="font-weight:600;color:var(--text);font-size:.9rem;word-break:break-all;">' + esc(m.name || m.email || '(anonim)') + '</div>'
+        + '<span style="flex:0 0 auto;font-size:.66rem;font-weight:700;color:#06121a;background:' + st.c + ';padding:2px 8px;border-radius:20px;">' + st.t + '</span></div>'
+        + '<div style="color:var(--muted);font-size:.78rem;margin:3px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + esc(m.preview || '') + '</div>'
+        + '<div style="color:var(--muted);font-size:.72rem;">' + when + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  async function viewMessage(id) {
+    const view = document.getElementById('msg-view');
+    if (!view) return;
+    view.innerHTML = '<div style="color:var(--muted)">Se &icirc;ncarcă...</div>';
+    try {
+      const r = await fetch('/api/message/' + encodeURIComponent(id) + '?token=' + encodeURIComponent(adminToken));
+      const d = await r.json();
+      const m = d.message;
+      if (!m) { view.innerHTML = '<div style="color:#f87171">Mesaj negăsit.</div>'; return; }
+      const when = m.createdAt ? new Date(m.createdAt).toLocaleString('ro-RO') : '';
+      const mk = function (s, label) { return '<button class="btn-save" style="padding:6px 12px;font-size:.78rem;background:' + ((m.status || 'nou') === s ? 'var(--teal)' : 'var(--bg3)') + ';color:' + ((m.status || 'nou') === s ? '#06121a' : 'var(--text)') + ';" onclick="setMsgStatus(\'' + esc(id) + '\',\'' + s + '\')">' + label + '</button>'; };
+      view.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px;flex-wrap:wrap;">'
+        + '<div><div style="font-weight:700;color:var(--text);font-size:1.05rem;">' + esc(m.name || '(anonim)') + '</div><div style="color:var(--muted);font-size:.8rem;">' + when + '</div></div>'
+        + '<button class="btn-save" style="background:#7f1d1d;padding:7px 14px;font-size:.82rem;" onclick="deleteMessage(\'' + esc(id) + '\')">&#x1F5D1; &#x218;terge</button></div>'
+        + '<div style="display:grid;gap:6px;margin-bottom:14px;font-size:.9rem;">'
+        + '<div><span style="color:var(--muted);">Email:</span> <a href="mailto:' + esc(m.email || '') + '" style="color:var(--teal);">' + esc(m.email || '-') + '</a></div>'
+        + '<div><span style="color:var(--muted);">Telefon:</span> <a href="tel:' + esc((m.phone || '').replace(/\s/g, '')) + '" style="color:var(--teal);">' + esc(m.phone || '-') + '</a></div>'
+        + '<div><span style="color:var(--muted);">Serviciu:</span> ' + esc(m.service || '-') + '</div></div>'
+        + '<div style="background:var(--bg3);border:1px solid var(--border-soft);border-radius:9px;padding:13px;white-space:pre-wrap;word-wrap:break-word;font-size:.92rem;color:var(--text);margin-bottom:14px;">' + esc(m.message || '') + '</div>'
+        + '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">'
+        + '<span style="font-size:.74rem;color:var(--muted);margin-right:4px;">Marchează:</span>'
+        + mk('nou', 'Nou') + mk('citit', 'Citit') + mk('rezolvat', 'Rezolvat')
+        + '<a class="btn-save" style="padding:6px 12px;font-size:.78rem;margin-left:auto;text-decoration:none;" href="mailto:' + esc(m.email || '') + '">&#x2709; Răspunde pe email</a></div>';
+    } catch (e) { view.innerHTML = '<div style="color:#f87171">Eroare la &icirc;ncărcare.</div>'; }
+  }
+
+  async function setMsgStatus(id, status) {
+    try {
+      await fetch('/api/message/' + encodeURIComponent(id) + '?token=' + encodeURIComponent(adminToken), {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: status })
+      });
+    } catch (e) {}
+    const it = msgData.find(function (m) { return m.id === id; });
+    if (it) it.status = status;
+    renderMsgList(); viewMessage(id); updateMsgBadge();
+  }
+
+  async function deleteMessage(id) {
+    if (!confirm('Ștergi acest mesaj?')) return;
+    try { await fetch('/api/message/' + encodeURIComponent(id) + '?token=' + encodeURIComponent(adminToken), { method: 'DELETE' }); } catch (e) {}
+    const view = document.getElementById('msg-view');
+    if (view) view.innerHTML = '<div style="color:var(--muted)">Mesaj șters.</div>';
+    loadMessages();
+  }
+
+  async function updateMsgBadge() {
+    try {
+      const r = await fetch('/api/messages?token=' + encodeURIComponent(adminToken));
+      const d = await r.json();
+      const msgs = d.messages || [];
+      const newCount = msgs.filter(function (m) { return (m.status || 'nou') === 'nou'; }).length;
+      const badge = document.getElementById('mesaje-tab-badge');
+      if (badge) { if (newCount > 0) { badge.textContent = newCount; badge.classList.add('on'); } else { badge.textContent = ''; badge.classList.remove('on'); } }
+    } catch (e) {}
+  }
+
   async function viewConversation(id) {
     const view = document.getElementById('chatai-view');
     if (!view) return;
