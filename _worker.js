@@ -924,11 +924,16 @@ export default {
 
     // ── 301 REDIRECTS pentru URL-uri 404 semnalate în GSC ────────
     const REDIRECTS_301 = {
+      '/campanie-florarii/tema1': '/',
       '/campanie-florarii/tema2': '/',
       '/campanie-florarii/tema3': '/',
     };
     if (REDIRECTS_301[path]) {
       return Response.redirect('https://www.c-design.ro' + REDIRECTS_301[path], 301);
+    }
+    // orice alt URL vechi din campania de florărie → homepage (301)
+    if (path === '/campanie-florarii' || path.startsWith('/campanie-florarii/')) {
+      return Response.redirect('https://www.c-design.ro/', 301);
     }
 
     // ── SITEMAP DINAMIC ───────────────────────────────────────
