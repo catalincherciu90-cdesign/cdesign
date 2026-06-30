@@ -892,6 +892,49 @@ p{color:#8bbaba;font-size:1.05rem;line-height:1.75;margin-bottom:12px}
 
 const AGENT_PERSONAS = {"alex":{"label":"Alex","role":"Mobile App Developer. Expert în React Native și Flutter pentru iOS și Android."},"alina":{"label":"Alina","role":"Manager de proiect și coordonator echipe. Planuri de proiect, breakdown de task-uri, timelines, deadline-uri, prioritizare backlog și rapoarte de progres."},"ana-pm":{"label":"Ana-pm","role":"Project manager general. Coordonează task-uri, planifică implementări."},"ana":{"label":"Ana","role":"COO & Chief of Staff. Coordonează întreaga echipă, descompune task-uri, planificare strategică."},"anca":{"label":"Anca","role":"Asistent academic pentru învățătoare cls. I-IV, masterandă."},"andrei":{"label":"Andrei","role":"Content Strategist & Senior Copywriter. Content strategy, storytelling de brand, long-form content."},"clara":{"label":"Clara","role":"Specialist Copyright, Proprietate Intelectuală și Anti-Plagiat. Originalitate conținut, mărci, drepturi de autor, conformitate legală."},"cosmin":{"label":"Cosmin","role":"Full-stack web developer. Expert în GitHub, Cloudflare Pages și dezvoltare web modernă."},"cristina":{"label":"Cristina","role":"PR Manager & Specialist Comunicare. Relații publice, comunicare de criză, media relations, brand reputation."},"danbastan":{"label":"Danbastan","role":"Senior Platform & AI Engineer. Full-stack, AI/LLM, Cloudflare avansat, auth & payments, arhitecturi complexe, code review senior."},"daniela":{"label":"Daniela","role":"Project Coordinator & Traffic Manager. Coordonare zilnică, planificare task-uri, time tracking."},"diana":{"label":"Diana","role":"UI/UX Designer. Design de interfețe, experiență utilizator, prototipuri Figma, design systems."},"elena":{"label":"Elena","role":"SEO & Content Strategist. Optimizare pentru motoare de căutare, strategie de conținut, content marketing."},"emma":{"label":"Emma","role":"Account Director & Client Success Manager. Relația cu clienții, retention, upsell, comunicare client-agenție."},"george":{"label":"George","role":"Specialist Google Ads & PPC. Campanii Search, Display, Shopping, YouTube, Performance Max."},"gogu":{"label":"Gogu","role":"Expert marketing online, social media și manager agenție. Strategie de marketing digital, planuri editoriale, campanii Meta/Google Ads, SEO local."},"ioana":{"label":"Ioana","role":"Pricing & Sales Operations. Construcția ofertelor, pricing strategy, contracte, calcul de marjă."},"ion":{"label":"Ion","role":"Social media manager și marketing specialist. Facebook, LinkedIn, Instagram, TikTok, copywriting."},"irina":{"label":"Irina","role":"Senior UX Designer & Design Lead. User research, information architecture, design systems, UX strategy."},"laura":{"label":"Laura","role":"Performance Marketing Manager. Paid advertising — Google Ads, Meta Ads, TikTok, optimizare ROAS."},"lucian":{"label":"Lucian","role":"Expert programare web și dezvoltare software. Cod, buguri, arhitectură, deployment, baze de date, securitate."},"marian":{"label":"Marian","role":"Visual & Graphic Designer. Identitate vizuală, materiale print & digital, motion graphics, creative ads."},"mihai":{"label":"Mihai","role":"Copywriter & Content Writer. Texte persuasive pentru web, ads, emailuri și materiale de vânzare."},"radu":{"label":"Radu","role":"Specialist implantologie și estetică dentară. Conținut medical stomatologic, educație pacienți, personal branding medical."},"rares":{"label":"Rares","role":"Manager Academie de Rugby pentru copii. Social media rugby, comunicare cu părinți, organizare turnee."},"robert":{"label":"Robert","role":"Head of Analytics & Strategic Advisor. Analytics, conversion rate optimization, atribuire, decizii bazate pe date."},"stefan":{"label":"Stefan","role":"Senior Project Manager & Operations Lead. Delivery management, planificare, resource allocation, optimizare procese."},"victor":{"label":"Victor","role":"VR/XR Developer. Meta Quest, Unity XR, Unreal Engine, mixed reality, avatare 3D."},"victoria":{"label":"Victoria","role":"Chief Marketing Officer & Strategy Director. Strategie de marketing integrată, brand positioning, GTM, leadership."}};
 
+// ── GOOGLE SEARCH CONSOLE (service account → JWT → access token) ──
+function gscB64urlBytes(bytes) { let s = ''; for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+function gscB64urlStr(str) { return gscB64urlBytes(new TextEncoder().encode(str)); }
+async function gscImportKey(pem) {
+  const body = String(pem).replace(/-----BEGIN PRIVATE KEY-----/, '').replace(/-----END PRIVATE KEY-----/, '').replace(/\\n/g, '').replace(/\s+/g, '');
+  const der = Uint8Array.from(atob(body), c => c.charCodeAt(0));
+  return crypto.subtle.importKey('pkcs8', der.buffer, { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }, false, ['sign']);
+}
+async function gscAccessToken(env) {
+  const raw = env.GSC_SA_KEY;
+  if (!raw) throw new Error('GSC_SA_KEY lipsește (adaugă cheia service account ca secret în Cloudflare).');
+  const sa = JSON.parse(raw);
+  const now = Math.floor(Date.now() / 1000);
+  const header = gscB64urlStr(JSON.stringify({ alg: 'RS256', typ: 'JWT' }));
+  const claim = gscB64urlStr(JSON.stringify({
+    iss: sa.client_email,
+    scope: 'https://www.googleapis.com/auth/webmasters.readonly',
+    aud: 'https://oauth2.googleapis.com/token',
+    iat: now, exp: now + 3600,
+  }));
+  const unsigned = header + '.' + claim;
+  const key = await gscImportKey(sa.private_key);
+  const sig = await crypto.subtle.sign({ name: 'RSASSA-PKCS1-v1_5' }, key, new TextEncoder().encode(unsigned));
+  const jwt = unsigned + '.' + gscB64urlBytes(new Uint8Array(sig));
+  const res = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=' + encodeURIComponent(jwt),
+  });
+  const data = await res.json();
+  if (!data.access_token) throw new Error('Autentificare Google eșuată: ' + (data.error_description || data.error || JSON.stringify(data)));
+  return data.access_token;
+}
+async function gscQuery(token, site, payload) {
+  const res = await fetch('https://searchconsole.googleapis.com/webmasters/v3/sites/' + encodeURIComponent(site) + '/searchAnalytics/query', {
+    method: 'POST', headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error('GSC API: ' + (data.error && data.error.message || res.status));
+  return data.rows || [];
+}
+function gscDateStr(d) { return d.toISOString().slice(0, 10); }
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -2291,6 +2334,35 @@ Cerințe titluri:
       if (request.method === 'DELETE') {
         await env.PROGRAMARI.delete('msg:' + mid);
         return json({ ok: true }, 200, request);
+      }
+    }
+
+    // Google Search Console (admin) — performanță din ultimele 28 zile
+    if (path === '/api/gsc' && request.method === 'GET') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      if (!env.GSC_SA_KEY) return json({ configured: false }, 200, request);
+      try {
+        const site = env.GSC_SITE_URL || 'https://www.c-design.ro/';
+        const token = await gscAccessToken(env);
+        const end = new Date(Date.now() - 3 * 86400000);
+        const start = new Date(end.getTime() - 27 * 86400000);
+        const startDate = gscDateStr(start), endDate = gscDateStr(end);
+        const [totalsRows, queryRows, pageRows] = await Promise.all([
+          gscQuery(token, site, { startDate, endDate }),
+          gscQuery(token, site, { startDate, endDate, dimensions: ['query'], rowLimit: 25 }),
+          gscQuery(token, site, { startDate, endDate, dimensions: ['page'], rowLimit: 25 }),
+        ]);
+        const t = totalsRows[0] || { clicks: 0, impressions: 0, ctr: 0, position: 0 };
+        return json({
+          configured: true,
+          site,
+          range: { startDate, endDate },
+          totals: { clicks: t.clicks || 0, impressions: t.impressions || 0, ctr: t.ctr || 0, position: t.position || 0 },
+          queries: queryRows.map(r => ({ q: r.keys[0], clicks: r.clicks, impressions: r.impressions, ctr: r.ctr, position: r.position })),
+          pages: pageRows.map(r => ({ url: r.keys[0], clicks: r.clicks, impressions: r.impressions, ctr: r.ctr, position: r.position })),
+        }, 200, request);
+      } catch (e) {
+        return json({ configured: true, error: String((e && e.message) || e) }, 200, request);
       }
     }
 

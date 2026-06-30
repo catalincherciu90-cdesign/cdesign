@@ -1833,6 +1833,7 @@
     <button class="tab" onclick="switchTab('crm',this)">&#x1F4CB; CRM &amp; Oferte</button>
     <button class="tab" onclick="switchTab('chatai',this)">&#x1F4AC; Chat AI <span class="tab-badge" id="chatai-tab-badge"></span></button>
     <button class="tab" onclick="switchTab('mesaje',this)">&#x1F4E8; Mesaje <span class="tab-badge" id="mesaje-tab-badge"></span></button>
+    <button class="tab" onclick="switchTab('gsc',this)">&#x1F50E; Search Console</button>
     <button class="tab" onclick="switchTab('blog',this)">&#x270D; Blog</button>
     <button class="tab" onclick="switchTab('social',this)">&#x1F4F1; Social Media</button>
     <button class="tab" onclick="switchTab('pagini',this)">&#x1F4C4; Pagini</button>
@@ -2347,6 +2348,16 @@
   </div>
 
   <!-- TAB: PROIECTE -->
+  <div class="tab-panel" id="panel-gsc">
+    <div class="main">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px;">
+        <h3 style="font-family:'Share Tech Mono',monospace;font-size:.95rem;color:var(--soft);">// search_console &mdash; performan&#x21B;a pe Google (ultimele 28 zile)</h3>
+        <button class="btn-save" onclick="loadGsc()" style="padding:8px 16px;font-size:.85rem;">&#x21BB; Re&icirc;mprosp&#x103;teaz&#x103;</button>
+      </div>
+      <div id="gsc-content"><div style="color:var(--muted)">Se &icirc;ncarc&#x103;...</div></div>
+    </div>
+  </div>
+
   <div class="tab-panel" id="panel-mesaje">
     <div class="main">
       <style>@media(max-width:820px){#panel-mesaje .msg-grid{grid-template-columns:1fr!important;}}</style>
@@ -3872,6 +3883,7 @@
     if (tab === 'oferte') { fetchServicii(); fetchOferte(); fetchContracte(); populateOfertaClientSel(); }
     if (tab === 'chatai') loadConversations();
     if (tab === 'mesaje') loadMessages();
+    if (tab === 'gsc') loadGsc();
   }
 
   function refreshCurrent() {
@@ -7529,6 +7541,61 @@
       const badge = document.getElementById('mesaje-tab-badge');
       if (badge) { if (newCount > 0) { badge.textContent = newCount; badge.classList.add('on'); } else { badge.textContent = ''; badge.classList.remove('on'); } }
     } catch (e) {}
+  }
+
+  // -- SEARCH CONSOLE --
+  function gscNum(n) { return (n || 0).toLocaleString('ro-RO'); }
+  function gscPct(n) { return ((n || 0) * 100).toFixed(1) + '%'; }
+  async function loadGsc() {
+    const box = document.getElementById('gsc-content');
+    if (!box) return;
+    box.innerHTML = '<div style="color:var(--muted)">Se &icirc;ncarc&#x103; datele din Google...</div>';
+    try {
+      const r = await fetch('/api/gsc?token=' + encodeURIComponent(adminToken));
+      const d = await r.json();
+      if (d.configured === false) {
+        box.innerHTML = '<div style="background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:22px;max-width:760px;line-height:1.7;">'
+          + '<h3 style="margin-bottom:10px;color:var(--text);">&#x1F50C; Conectează Google Search Console</h3>'
+          + '<p style="color:var(--soft);font-size:.92rem;margin-bottom:12px;">Pentru a vedea aici performan&#x21B;a pe Google (clicuri, afi&#x219;&#x103;ri, cuvinte-cheie), trebuie o configurare unic&#x103;:</p>'
+          + '<ol style="color:var(--soft);font-size:.9rem;padding-left:20px;display:flex;flex-direction:column;gap:7px;">'
+          + '<li>În <b>Google Cloud Console</b> &rarr; creeaz&#x103; un proiect &rarr; activeaz&#x103; <b>Google Search Console API</b>.</li>'
+          + '<li>Creeaz&#x103; un <b>Service Account</b> &rarr; genereaz&#x103; o cheie <b>JSON</b> &rarr; descarc-o.</li>'
+          + '<li>În <b>Search Console</b> &rarr; Set&#x103;ri &rarr; Utilizatori &#x219;i permisiuni &rarr; adaug&#x103; emailul service account-ului (xxx@xxx.iam.gserviceaccount.com) ca utilizator.</li>'
+          + '<li>În <b>Cloudflare</b> &rarr; Worker-ul t&#x103;u &rarr; Settings &rarr; Variables &rarr; adaug&#x103; secret <code style="background:var(--bg3);padding:1px 5px;border-radius:4px;">GSC_SA_KEY</code> = con&#x21B;inutul fi&#x219;ierului JSON.</li>'
+          + '<li>(Op&#x21B;ional) <code style="background:var(--bg3);padding:1px 5px;border-radius:4px;">GSC_SITE_URL</code> = adresa propriet&#x103;&#x21B;ii (implicit https://www.c-design.ro/).</li>'
+          + '</ol>'
+          + '<p style="color:var(--muted);font-size:.84rem;margin-top:12px;">Dup&#x103; ce ad&#x103;ugi cheia &#x219;i se republic&#x103;, datele apar automat aici. Î&#x21B;i pot da pa&#x219;ii detalia&#x21B;i dac&#x103; \xEEmi spui.</p>'
+          + '</div>';
+        return;
+      }
+      if (d.error) {
+        box.innerHTML = '<div style="background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.4);border-radius:12px;padding:18px;color:var(--text);"><b>Eroare la conectarea cu Google:</b><br><span style="color:var(--soft);font-size:.88rem;">' + esc(d.error) + '</span><br><br><span style="color:var(--muted);font-size:.82rem;">Verific&#x103; c&#x103; ai ad&#x103;ugat emailul service account-ului ca utilizator în Search Console &#x219;i c&#x103; GSC_SITE_URL e corect.</span></div>';
+        return;
+      }
+      const t = d.totals || {};
+      const card = function (label, val) { return '<div style="background:var(--bg2);border:1px solid var(--border-soft);border-radius:11px;padding:16px 18px;flex:1;min-width:130px;"><div style="font-size:1.7rem;font-weight:700;color:var(--text);font-family:\'Share Tech Mono\',monospace;">' + val + '</div><div style="color:var(--muted);font-size:.78rem;margin-top:3px;">' + label + '</div></div>'; };
+      const tbl = function (title, rows, firstCol, mapFirst) {
+        var head = '<h3 style="margin:22px 0 10px;font-family:\'Share Tech Mono\',monospace;font-size:.9rem;color:var(--soft);">' + title + '</h3>';
+        if (!rows || !rows.length) return head + '<div style="color:var(--muted);font-size:.85rem;">Nu sunt date \xEEnc&#x103;.</div>';
+        var trs = rows.map(function (x) {
+          return '<tr style="border-bottom:1px solid var(--border-soft);">'
+            + '<td style="padding:8px 10px;color:var(--text);font-size:.86rem;word-break:break-word;">' + mapFirst(x) + '</td>'
+            + '<td style="padding:8px 10px;text-align:right;color:var(--text);">' + gscNum(x.clicks) + '</td>'
+            + '<td style="padding:8px 10px;text-align:right;color:var(--soft);">' + gscNum(x.impressions) + '</td>'
+            + '<td style="padding:8px 10px;text-align:right;color:var(--soft);">' + gscPct(x.ctr) + '</td>'
+            + '<td style="padding:8px 10px;text-align:right;color:var(--soft);">' + (x.position || 0).toFixed(1) + '</td></tr>';
+        }).join('');
+        return head + '<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:.85rem;"><thead><tr style="color:var(--muted);font-size:.74rem;text-transform:uppercase;">'
+          + '<th style="text-align:left;padding:6px 10px;">' + firstCol + '</th><th style="text-align:right;padding:6px 10px;">Clicuri</th><th style="text-align:right;padding:6px 10px;">Afi&#x219;&#x103;ri</th><th style="text-align:right;padding:6px 10px;">CTR</th><th style="text-align:right;padding:6px 10px;">Pozi&#x21B;ie</th></tr></thead><tbody>'
+          + trs + '</tbody></table></div>';
+      };
+      box.innerHTML = '<div style="color:var(--muted);font-size:.8rem;margin-bottom:12px;">' + esc(d.site || '') + ' &middot; ' + esc((d.range && d.range.startDate) || '') + ' → ' + esc((d.range && d.range.endDate) || '') + '</div>'
+        + '<div style="display:flex;gap:12px;flex-wrap:wrap;">'
+        + card('Clicuri', gscNum(t.clicks)) + card('Afi&#x219;&#x103;ri', gscNum(t.impressions)) + card('CTR mediu', gscPct(t.ctr)) + card('Pozi&#x21B;ie medie', (t.position || 0).toFixed(1))
+        + '</div>'
+        + tbl('&#x1F50D; Cuvinte-cheie (top 25)', d.queries, 'C&#x103;utare', function (x) { return esc(x.q || ''); })
+        + tbl('&#x1F4C4; Pagini (top 25)', d.pages, 'Pagin&#x103;', function (x) { return '<a href="' + esc(x.url || '') + '" target="_blank" style="color:var(--teal);">' + esc((x.url || '').replace('https://www.c-design.ro', '') || '/') + '</a>'; });
+    } catch (e) { box.innerHTML = '<div style="color:#f87171">Eroare la &icirc;ncărcare.</div>'; }
   }
 
   async function viewConversation(id) {
