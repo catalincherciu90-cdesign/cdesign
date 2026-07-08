@@ -2836,6 +2836,25 @@
           </div>
 
           <div id="hero-img-status" style="font-size:.75rem;color:var(--teal);margin-top:10px;min-height:16px;"></div>
+
+          <!-- HERO BACKGROUND VIDEO -->
+          <div style="margin-top:22px;padding-top:18px;border-top:1px dashed var(--border-soft);">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--teal);margin-bottom:8px;">🎬 Video fundal hero (opțional)</div>
+            <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;max-width:660px;">
+              <video id="hero-video-preview" muted loop playsinline style="width:160px;height:90px;border-radius:8px;border:1px solid var(--border-soft);background:var(--bg3);object-fit:cover;flex-shrink:0;"></video>
+              <div style="flex:1;min-width:200px;">
+                <div style="display:flex;gap:8px;margin-bottom:8px;">
+                  <input class="f-input" id="hero-video-url" placeholder="URL video (https://... .mp4)" style="flex:1;margin:0;">
+                  <button onclick="uploadHeroVideo()" style="background:var(--teal);color:#060f0f;border:none;border-radius:6px;padding:0 14px;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;height:42px;">⬆ Upload</button>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <button onclick="saveHeroVideo()" class="btn-save" style="flex:1;">💾 Salvează</button>
+                  <button onclick="clearHeroVideo()" style="background:none;border:1px solid var(--border-soft);color:var(--muted);border-radius:6px;padding:0 14px;font-size:.8rem;cursor:pointer;white-space:nowrap;height:36px;">✕ Șterge</button>
+                </div>
+                <div style="font-size:.72rem;color:var(--muted);margin-top:6px;">Format .mp4 sau .webm. Upload max 20MB (pentru clipuri mai mari folosește un URL găzduit). Videoul rulează silențios, în buclă, ca fundal al hero-ului.</div>
+              </div>
+            </div>
+          </div>
               <!-- Gradient + Text toggles -->
               <!-- Înălțime + Poziție + Size imagine -->
               <div style="margin-top:14px;margin-bottom:6px;">
@@ -4621,6 +4640,7 @@
       var hhEl = document.getElementById('hh-' + hh);
       if (hhEl) hhEl.checked = true;
     } catch {}
+    fetchHeroVideo();
   }
 
   const HEADING_FIELDS = [
@@ -4775,6 +4795,67 @@
   function applyHeroPreview(url) {
     var prev = document.getElementById('hero-img-preview');
     if (prev) prev.style.backgroundImage = "url('" + url + "')";
+  }
+
+  // ── HERO BACKGROUND VIDEO ─────────────────────────────────
+  function applyHeroVideoPreview(url) {
+    var v = document.getElementById('hero-video-preview');
+    if (!v) return;
+    if (url) { v.src = url; if (v.play) { var p = v.play(); if (p && p.catch) p.catch(function(){}); } }
+    else { v.removeAttribute('src'); if (v.load) v.load(); }
+  }
+
+  async function fetchHeroVideo() {
+    try {
+      var d = await fetch('/api/site-settings').then(function(r){ return r.json(); });
+      if (d && d.bgVideo) {
+        var el = document.getElementById('hero-video-url');
+        if (el) el.value = d.bgVideo;
+        applyHeroVideoPreview(d.bgVideo);
+      }
+    } catch (e) {}
+  }
+
+  function uploadHeroVideo() {
+    var inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'video/*';
+    inp.onchange = function() {
+      var file = inp.files[0]; if (!file) return;
+      var statusEl = document.getElementById('hero-img-status');
+      if (file.size > 20 * 1024 * 1024) { statusEl.textContent = '✕ Video prea mare (max 20MB). Comprimă-l sau folosește un URL găzduit.'; return; }
+      statusEl.textContent = 'Se încarcă videoul...';
+      var token = localStorage.getItem('cdAdmin');
+      fetch('/api/media?token=' + encodeURIComponent(token), {
+        method: 'POST', headers: { 'Content-Type': file.type || 'video/mp4' }, body: file
+      }).then(function(r){ return r.json(); }).then(function(d) {
+        if (d.url) {
+          document.getElementById('hero-video-url').value = d.url;
+          applyHeroVideoPreview(d.url);
+          statusEl.textContent = '✓ Video încărcat — apasă Salvează';
+        } else { statusEl.textContent = '✕ ' + (d.error || 'Eroare upload'); }
+      }).catch(function(){ statusEl.textContent = '✕ Eroare rețea'; });
+    };
+    inp.click();
+  }
+
+  async function saveHeroVideo() {
+    var url = document.getElementById('hero-video-url').value.trim();
+    var statusEl = document.getElementById('hero-img-status');
+    try {
+      await fetch('/api/site-settings?token=' + encodeURIComponent(adminToken), {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bgVideo: url })
+      });
+      applyHeroVideoPreview(url);
+      statusEl.textContent = url ? '✓ Video fundal salvat!' : '✓ Video fundal șters.';
+      setTimeout(function(){ statusEl.textContent = ''; }, 2500);
+    } catch (e) { statusEl.textContent = '✕ Eroare la salvare'; }
+  }
+
+  async function clearHeroVideo() {
+    document.getElementById('hero-video-url').value = '';
+    applyHeroVideoPreview('');
+    await saveHeroVideo();
   }
 
   function uploadHeroImage() {
