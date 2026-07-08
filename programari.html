@@ -365,7 +365,7 @@
     @media(max-width:768px){.theme-grid{grid-template-columns:1fr;}}
 
     /* ── MEDIA LIBRARY ───────────────────────────────────────── */
-    .media-card{background:var(--bg2);border:1px solid var(--border-soft);border-radius:10px;overflow:hidden;transition:border-color .2s;}
+    .media-card{position:relative;background:var(--bg2);border:1px solid var(--border-soft);border-radius:10px;overflow:hidden;transition:border-color .2s;}
     .media-card:hover{border-color:var(--teal-border);}
     .media-card.active-img{border-color:var(--teal);box-shadow:0 0 0 1px var(--teal);}
     .media-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--bg3);display:block;}
@@ -2547,14 +2547,14 @@
   <div class="tab-panel" id="panel-media">
     <div class="main">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
-        <h3 style="font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--soft);">// arhiva_media — imagini încărcate</h3>
+        <h3 style="font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--soft);">// arhiva_media — imagini &#x219;i video (video max 24MB)</h3>
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
           <span id="media-count" style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);"></span>
           <button onclick="mediaCleanRefs()" title="Elimină din site (hero, blocuri, blog) referințele către imagini care nu mai există — repară erorile 404" style="cursor:pointer;padding:8px 16px;font-size:.8rem;background:transparent;color:var(--soft);border:1px solid var(--border);border-radius:8px;font-family:inherit;">🧹 Curăță referințe moarte</button>
           <button id="media-opt-all" onclick="mediaOptimizeAll()" title="Redimensionează la max. 1920px și recodează WebP toate imaginile, păstrând aceleași URL-uri — recomandat pentru viteza site-ului (PageSpeed)" style="cursor:pointer;padding:8px 16px;font-size:.8rem;background:transparent;color:var(--soft);border:1px solid var(--border);border-radius:8px;font-family:inherit;">⚡ Optimizează imaginile</button>
           <label class="btn-save" style="cursor:pointer;padding:8px 18px;font-size:.85rem;">
-            ⬆ Upload imagine
-            <input type="file" accept="image/*" style="display:none" onchange="mediaUploadFile(this)">
+            ⬆ Upload imagine / video
+            <input type="file" accept="image/*,video/*" style="display:none" onchange="mediaUploadFile(this)">
           </label>
         </div>
       </div>
@@ -6712,7 +6712,7 @@
 
   function uploadMedia(file, onSuccess, onError) {
     var token = localStorage.getItem('cdAdmin');
-    compressImage(file, function(body) {
+    var send = function(body) {
       fetch('/api/media?token=' + encodeURIComponent(token), {
         method: 'POST',
         headers: { 'Content-Type': body.type || file.type },
@@ -6721,7 +6721,10 @@
         if (d.url) onSuccess(d.url);
         else onError(d.error || 'Eroare upload');
       }).catch(function(){ onError('Eroare rețea'); });
-    });
+    };
+    // Video: se trimite direct (fără compresie). Imagini: compresie ca înainte.
+    if ((file.type || '').indexOf('video/') === 0) send(file);
+    else compressImage(file, send);
   }
 
   function triggerImageUpload(ci, ei, field, statusElId) {
@@ -7043,17 +7046,28 @@
     }
     grid.innerHTML = mediaList.map(f => {
       const isActive = mediaActiveUrls.has(f.url) || mediaActiveUrls.has(location.origin + f.url);
+      const isVideo = /\.(mp4|webm|ogv|mov)$/i.test(f.filename);
       const isPortrait = f.filename.toLowerCase().includes('mobile') || f.filename.toLowerCase().includes('portrait');
+      const src = f.url + (mediaBust ? '?v=' + mediaBust : '');
+      const thumb = isVideo
+        ? `<video class="media-thumb" src="${src}" muted playsinline preload="metadata" style="background:#000;object-fit:cover;" onmouseover="try{this.play()}catch(e){}" onmouseout="try{this.pause()}catch(e){}"></video>`
+        : `<img class="media-thumb${isPortrait ? ' portrait' : ''}" src="${src}" alt="${f.filename}" loading="lazy" onerror="this.style.background='var(--bg3)';this.style.opacity='.3'">`;
+      const actions = isVideo
+        ? `<button class="media-btn" onclick="mediaCopyUrl('${f.url}')">📋 Copiază</button>
+            <button class="media-btn" onclick="window.open('${f.url}','_blank')">▶ Vezi</button>
+            <button class="media-btn del" onclick="mediaDelete('${f.filename}')">🗑</button>`
+        : `<button class="media-btn" onclick="mediaCopyUrl('${f.url}')">📋 Copiază</button>
+            <button class="media-btn" onclick="mediaSetHero('${f.url}')">🖼 Hero</button>
+            <button class="media-btn" onclick="mediaOptimize('${f.filename}')" title="Redimensionează la max. 1920px + WebP, același URL">⚡</button>
+            <button class="media-btn del" onclick="mediaDelete('${f.filename}')">🗑</button>`;
       return `<div class="media-card${isActive ? ' active-img' : ''}" id="mcard-${CSS.escape(f.filename)}">
-        <img class="media-thumb${isPortrait ? ' portrait' : ''}" src="${f.url}${mediaBust ? '?v=' + mediaBust : ''}" alt="${f.filename}" loading="lazy" onerror="this.style.background='var(--bg3)';this.style.opacity='.3'">
+        ${isVideo ? '<span style="position:absolute;top:6px;left:6px;background:rgba(0,0,0,.7);color:#fff;font-size:.62rem;padding:2px 7px;border-radius:20px;z-index:2;">🎬 VIDEO</span>' : ''}
+        ${thumb}
         <div class="media-info">
           ${isActive ? '<span class="media-badge" title="' + (mediaUsage[f.filename] || []).join(' • ').replace(/"/g, '&quot;') + '">✓ ACTIV</span>' : ''}
           <div class="media-name" title="${f.filename}">${f.filename}</div>
           <div class="media-actions">
-            <button class="media-btn" onclick="mediaCopyUrl('${f.url}')">📋 Copiază</button>
-            <button class="media-btn" onclick="mediaSetHero('${f.url}')">🖼 Hero</button>
-            <button class="media-btn" onclick="mediaOptimize('${f.filename}')" title="Redimensionează la max. 1920px + WebP, același URL">⚡</button>
-            <button class="media-btn del" onclick="mediaDelete('${f.filename}')">🗑</button>
+            ${actions}
           </div>
         </div>
       </div>`;
