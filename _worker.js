@@ -999,6 +999,7 @@ export default {
         { loc: '/blog',                       cf: 'weekly',  pr: '0.7' },
         { loc: '/demos',                      cf: 'monthly', pr: '0.7' },
         { loc: '/cere-oferta',                cf: 'monthly', pr: '0.8' },
+        { loc: '/promo',                      cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-bucuresti',       cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-cluj',            cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-timisoara',       cf: 'monthly', pr: '0.8' },
@@ -1045,6 +1046,13 @@ export default {
     if (path === '/cere-oferta' || path === '/cere-oferta/') {
       const assetUrl = new URL(request.url);
       assetUrl.pathname = '/cere-oferta.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
+    // ── PROMO (ofertă de lansare) ─────────────────────────────
+    if (path === '/promo' || path === '/promo/') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/promo.html';
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
 
