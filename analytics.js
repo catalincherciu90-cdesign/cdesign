@@ -52,13 +52,13 @@
     var box = document.createElement('div');
     box.className = 'cd-cc';
     box.setAttribute('role', 'dialog');
-    box.setAttribute('aria-label', 'Cookie consent');
+    box.setAttribute('aria-label', 'Consimțământ cookies');
     box.innerHTML =
-      '<h4>We value your privacy 🍪</h4>' +
-      '<p>We use cookies to understand how visitors use our site so we can improve it. ' +
-      'You can accept or decline analytics cookies. See our <a href="' + PRIVACY_URL + '">Privacy Policy</a>.</p>' +
+      '<h4>Îți respectăm confidențialitatea 🍪</h4>' +
+      '<p>Folosim cookies ca să înțelegem cum este folosit site-ul și să îl putem îmbunătăți. ' +
+      'Poți accepta sau refuza cookie-urile de analiză. Vezi <a href="' + PRIVACY_URL + '">Politica de confidențialitate</a>.</p>' +
       '<div class="cd-cc-row">' +
-      '<button class="cd-cc-btn cd-cc-reject" type="button">Decline</button>' +
+      '<button class="cd-cc-btn cd-cc-reject" type="button">Refuz</button>' +
       '<button class="cd-cc-btn cd-cc-accept" type="button">Accept</button>' +
       '</div>';
     document.body.appendChild(box);
@@ -87,7 +87,7 @@
       var a = document.createElement('a');
       a.href = '#';
       a.className = 'cd-cc-settings';
-      a.textContent = 'Cookie settings';
+      a.textContent = 'Setări cookies';
       a.addEventListener('click', function (e) { e.preventDefault(); showBanner(); });
       span.appendChild(a);
       bar.appendChild(span);
