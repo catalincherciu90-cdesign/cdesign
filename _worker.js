@@ -2372,18 +2372,29 @@ Cerințe titluri:
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
         const ct = request.headers.get('Content-Type') || '';
-        if (!ct.startsWith('image/')) return json({ error: 'Doar imagini acceptate' }, 400);
+        const isImage = ct.startsWith('image/');
+        const isVideo = ct.startsWith('video/');
+        if (!isImage && !isVideo) return json({ error: 'Doar imagini sau video acceptate' }, 400);
         const buf = await request.arrayBuffer();
-        if (buf.byteLength > 5 * 1024 * 1024) return json({ error: 'Fișier prea mare (max 5MB)' }, 400);
+        // Imagini: max 5MB. Video: max 20MB (sub plafonul KV de 25MB per valoare).
+        const maxBytes = isVideo ? 20 * 1024 * 1024 : 5 * 1024 * 1024;
+        if (buf.byteLength > maxBytes) {
+          return json({ error: isVideo ? 'Video prea mare (max 20MB — comprimă-l sau folosește un URL găzduit)' : 'Fișier prea mare (max 5MB)' }, 400);
+        }
         const overwrite = url.searchParams.get('name') || '';
         let filename;
         if (overwrite) {
           if (!/^[A-Za-z0-9._-]+$/.test(overwrite)) return json({ error: 'Nume invalid' }, 400);
           const existing = await env.PROGRAMARI.get('__media__' + overwrite);
-          if (existing === null) return json({ error: 'Imaginea nu există' }, 404);
+          if (existing === null) return json({ error: 'Fișierul nu există' }, 404);
           filename = overwrite;
         } else {
-          const ext = ct.includes('png') ? 'png' : ct.includes('gif') ? 'gif' : ct.includes('webp') ? 'webp' : 'jpg';
+          let ext;
+          if (isVideo) {
+            ext = ct.includes('webm') ? 'webm' : ct.includes('ogg') ? 'ogv' : ct.includes('quicktime') ? 'mov' : 'mp4';
+          } else {
+            ext = ct.includes('png') ? 'png' : ct.includes('gif') ? 'gif' : ct.includes('webp') ? 'webp' : 'jpg';
+          }
           filename = 'media_' + Date.now() + '.' + ext;
         }
         await env.PROGRAMARI.put('__media__' + filename, buf, { metadata: { ct } });
