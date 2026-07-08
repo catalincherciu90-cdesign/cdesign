@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel — Demo by C Design</title>
+<title>Panou Admin — Demo de la C Design</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -95,14 +95,14 @@
 </style>
 </head>
 <body>
-  <div class="demo-tagbar">✦ This is a demo admin panel by C Design — <a href="/#contact">Get a website with an easy dashboard like this</a></div>
+  <div class="demo-tagbar">✦ Acesta este un panou admin demo de la C Design — <a href="/#contact">Obține un website cu un panou de control ușor ca acesta</a></div>
   <div class="layout">
     <aside class="side" id="side"></aside>
     <div class="backdrop" id="bd"></div>
     <div class="main">
       <div class="topbar">
-        <div class="tt"><button class="burger" id="burger">☰</button><h1 id="pageTitle">Dashboard</h1></div>
-        <div class="right"><input class="search" placeholder="Search…" disabled><button class="btn">+ New</button></div>
+        <div class="tt"><button class="burger" id="burger">☰</button><h1 id="pageTitle">Panou</h1></div>
+        <div class="right"><input class="search" placeholder="Cauta..." disabled><button class="btn">+ Nou</button></div>
       </div>
       <div class="content" id="view"></div>
     </div>
@@ -110,61 +110,61 @@
 
 <script>
   var KINDS = {
-    ecommerce:{ nav:[['🛒','Orders'],['📦','Products'],['👥','Customers'],['🏷️','Discounts']],
-      kpis:[['💷','Revenue','£12,480','▲ 18% this month','up'],['🛒','Orders','326','▲ 12% this month','up'],['👥','New customers','89','▲ 7% this month','up'],['📈','Conversion','3.4%','▼ 0.3% this month','down']],
-      chart:'Revenue — last 7 days',
-      table:{title:'Recent orders',sub:'Manage every order from one place',cols:['Order','Customer','Total','Status'],
-        rows:[['#1042','Emma Watson','£128.00',['Paid','ok']],['#1041','David Jones','£64.50',['New','info']],['#1040','Sarah Lee','£242.00',['Paid','ok']],['#1039','Tom Baker','£19.99',['Pending','warn']],['#1038','Aisha Khan','£310.00',['Paid','ok']],['#1037','Liam Murphy','£88.00',['Paid','ok']]]},
-      cat:{title:'Products',emoji:'📦',items:[['Product One','£24.00'],['Product Two','£39.00'],['Product Three','£14.50'],['Product Four','£62.00'],['Product Five','£9.99'],['Product Six','£120.00']]} },
-    bookings:{ nav:[['📅','Reservations'],['🍽️','Tables'],['📖','Menu'],['👥','Guests']],
-      kpis:[['🍽️','Covers today','84','▲ 9% vs last week','up'],['📅','Reservations','42','▲ 15% this week','up'],['💷','Avg spend','£31','▲ 4% this month','up'],['⭐','Rating','4.8','▲ 0.1 this month','up']],
-      chart:'Covers — last 7 days',
-      table:{title:'Upcoming reservations',sub:'Tonight and tomorrow',cols:['Guest','Party','Time','Status'],
-        rows:[['Emma Watson','4','19:00',['Confirmed','ok']],['David Jones','2','19:30',['Confirmed','ok']],['Sarah Lee','6','20:00',['Pending','warn']],['Tom Baker','2','20:15',['Seated','info']],['Aisha Khan','3','20:45',['Confirmed','ok']],['Liam Murphy','5','21:00',['Confirmed','ok']]]},
-      cat:{title:'Menu',emoji:'🍽️',items:[['Starter','£7.50'],['Main Dish','£16.00'],['Pasta','£13.50'],['Dessert','£6.50'],['House Special','£19.00'],['Kids Menu','£8.00']]} },
-    appointments:{ nav:[['📅','Appointments'],['👥','Clients'],['🗓️','Schedule'],['💷','Payments']],
-      kpis:[['📅','Appointments today','18','▲ 5% vs last week','up'],['🗓️','This week','96','▲ 11% this week','up'],['👥','New clients','24','▲ 8% this month','up'],['📈','Utilisation','82%','▲ 3% this month','up']],
-      chart:'Appointments — last 7 days',
-      table:{title:"Today's appointments",sub:'Check in your clients',cols:['Client','Service','Time','Status'],
-        rows:[['Emma Watson','Consultation','09:30',['Checked in','info']],['David Jones','Treatment','10:15',['Confirmed','ok']],['Sarah Lee','Follow-up','11:00',['Confirmed','ok']],['Tom Baker','New client','11:45',['Pending','warn']],['Aisha Khan','Treatment','13:00',['Confirmed','ok']],['Liam Murphy','Check-up','14:30',['Confirmed','ok']]]},
-      cat:{title:'Services',emoji:'✨',items:[['Consultation','£30'],['Standard Treatment','£55'],['Premium Treatment','£90'],['Follow-up','£25'],['Package Deal','£150'],['Assessment','£40']]} },
-    jobs:{ nav:[['🧰','Jobs'],['📄','Quotes'],['👥','Customers'],['🗓️','Schedule']],
-      kpis:[['🧰','Open jobs','12','▲ 2 this week','up'],['📄','Quotes sent','27','▲ 6 this week','up'],['💷','Revenue','£9,320','▲ 14% this month','up'],['⭐','Rating','4.9','▲ 0.1 this month','up']],
-      chart:'Jobs completed — last 7 days',
-      table:{title:'Upcoming jobs',sub:'Your schedule at a glance',cols:['Job','Customer','Date','Status'],
-        rows:[['#J-210','Emma Watson','1 Jul',['Scheduled','info']],['#J-209','David Jones','1 Jul',['Quoted','warn']],['#J-208','Sarah Lee','2 Jul',['Scheduled','info']],['#J-207','Tom Baker','30 Jun',['Done','ok']],['#J-206','Aisha Khan','30 Jun',['Done','ok']],['#J-205','Liam Murphy','29 Jun',['Done','ok']]]},
-      cat:{title:'Services',emoji:'🧰',items:[['Call-out','£45'],['Standard Repair','£90'],['Installation','£180'],['Emergency','£120'],['Inspection','£60'],['Maintenance','£75']]} },
-    professional:{ nav:[['📨','Enquiries'],['👥','Clients'],['📄','Documents'],['🧾','Invoices']],
-      kpis:[['📨','New enquiries','14','▲ 4 this week','up'],['👥','Active clients','58','▲ 6% this month','up'],['💷','Revenue','£18,200','▲ 9% this month','up'],['🧾','Invoices due','5','▼ 2 this week','down']],
-      chart:'Enquiries — last 7 days',
-      table:{title:'Recent enquiries',sub:'Follow up with new clients',cols:['Client','Matter','Date','Status'],
-        rows:[['Emma Watson','New enquiry','1 Jul',['New','info']],['David Jones','Consultation','1 Jul',['In progress','warn']],['Sarah Lee','Case review','30 Jun',['In progress','warn']],['Tom Baker','Documents','30 Jun',['Closed','ok']],['Aisha Khan','New enquiry','29 Jun',['New','info']],['Liam Murphy','Advice','28 Jun',['Closed','ok']]]},
-      cat:{title:'Services',emoji:'📄',items:[['Initial Consultation','£0'],['Standard Service','£250'],['Full Package','£600'],['Document Review','£120'],['Ongoing Support','£90/mo'],['Priority Service','£400']]} },
-    leads:{ nav:[['📨','Enquiries'],['🗂️','Listings'],['👥','Clients'],['🗓️','Calendar']],
-      kpis:[['📨','New enquiries','21','▲ 7 this week','up'],['📸','Viewings','12','▲ 3 this week','up'],['📈','Conversion','28%','▲ 2% this month','up'],['💷','Revenue','£7,450','▲ 11% this month','up']],
-      chart:'Enquiries — last 7 days',
-      table:{title:'Recent enquiries',sub:'New leads to follow up',cols:['Name','Interest','Date','Status'],
-        rows:[['Emma Watson','Enquiry','1 Jul',['New','info']],['David Jones','Viewing','1 Jul',['Booked','ok']],['Sarah Lee','Enquiry','30 Jun',['Pending','warn']],['Tom Baker','Viewing','30 Jun',['Booked','ok']],['Aisha Khan','Enquiry','29 Jun',['New','info']],['Liam Murphy','Enquiry','28 Jun',['Booked','ok']]]},
-      cat:{title:'Listings',emoji:'🗂️',items:[['Listing One','£320,000'],['Listing Two','£450,000'],['Listing Three','£210,000'],['Listing Four','£675,000'],['Listing Five','£1,200/mo'],['Listing Six','£185,000']]} }
+    ecommerce:{ nav:[['🛒','Comenzi'],['📦','Produse'],['👥','Clienți'],['🏷️','Reduceri']],
+      kpis:[['💷','Venituri','62400 RON','▲ 18% luna aceasta','up'],['🛒','Comenzi','326','▲ 12% luna aceasta','up'],['👥','Clienți noi','89','▲ 7% luna aceasta','up'],['📈','Rata conversie','3.4%','▼ 0.3% luna aceasta','down']],
+      chart:'Venituri — ultimii 7 zile',
+      table:{title:'Comenzi recente',sub:'Gestionează fiecare comandă dintr-un singur loc',cols:['Comandă','Client','Total','Status'],
+        rows:[['#1042','Emma Watson','640 RON',['Plătit','ok']],['#1041','David Jones','322 RON',['Nou','info']],['#1040','Sarah Lee','1210 RON',['Plătit','ok']],['#1039','Tom Baker','100 RON',['În așteptare','warn']],['#1038','Aisha Khan','1550 RON',['Plătit','ok']],['#1037','Liam Murphy','440 RON',['Plătit','ok']]]},
+      cat:{title:'Produse',emoji:'📦',items:[['Produs Unu','120 RON'],['Produs Doi','195 RON'],['Produs Trei','72 RON'],['Produs Patru','310 RON'],['Produs Cinci','50 RON'],['Produs Șase','600 RON']]} },
+    bookings:{ nav:[['📅','Rezervări'],['🍽️','Mese'],['📖','Meniu'],['👥','Oaspeți']],
+      kpis:[['🍽️','Locuri astazi','84','▲ 9% vs saptamana trecuta','up'],['📅','Rezervări','42','▲ 15% aceasta saptamana','up'],['💷','Cheltuiala medie','155 RON','▲ 4% luna aceasta','up'],['⭐','Evaluare','4.8','▲ 0.1 luna aceasta','up']],
+      chart:'Locuri — ultimii 7 zile',
+      table:{title:'Rezervări viitoare',sub:'Azi si maine',cols:['Oaspete','Persoane','Ora','Status'],
+        rows:[['Emma Watson','4','19:00',['Confirmat','ok']],['David Jones','2','19:30',['Confirmat','ok']],['Sarah Lee','6','20:00',['În așteptare','warn']],['Tom Baker','2','20:15',['Asezat','info']],['Aisha Khan','3','20:45',['Confirmat','ok']],['Liam Murphy','5','21:00',['Confirmat','ok']]]},
+      cat:{title:'Meniu',emoji:'🍽️',items:[['Antreu','37 RON'],['Fel Principal','80 RON'],['Paste','67 RON'],['Desert','32 RON'],['Specialitate Casei','95 RON'],['Meniu Copii','40 RON']]} },
+    appointments:{ nav:[['📅','Programări'],['👥','Clienți'],['🗓️','Orar'],['💷','Plăți']],
+      kpis:[['📅','Programări astazi','18','▲ 5% vs saptamana trecuta','up'],['🗓️','Aceasta saptamana','96','▲ 11% aceasta saptamana','up'],['👥','Clienți noi','24','▲ 8% luna aceasta','up'],['📈','Utilizare','82%','▲ 3% luna aceasta','up']],
+      chart:'Programări — ultimii 7 zile',
+      table:{title:'Programări pentru astazi',sub:'Verifica-ti clientii',cols:['Client','Serviciu','Ora','Status'],
+        rows:[['Emma Watson','Consultatie','09:30',['Prezent','info']],['David Jones','Tratament','10:15',['Confirmat','ok']],['Sarah Lee','Follow-up','11:00',['Confirmat','ok']],['Tom Baker','Client nou','11:45',['În așteptare','warn']],['Aisha Khan','Tratament','13:00',['Confirmat','ok']],['Liam Murphy','Verificare','14:30',['Confirmat','ok']]]},
+      cat:{title:'Servicii',emoji:'✨',items:[['Consultatie','150 RON'],['Tratament Standard','275 RON'],['Tratament Premium','450 RON'],['Follow-up','125 RON'],['Pachet Promotional','750 RON'],['Evaluare','200 RON']]} },
+    jobs:{ nav:[['🧰','Lucrări'],['📄','Oferte'],['👥','Clienți'],['🗓️','Orar']],
+      kpis:[['🧰','Lucrări deschise','12','▲ 2 aceasta saptamana','up'],['📄','Oferte trimise','27','▲ 6 aceasta saptamana','up'],['💷','Venituri','46600 RON','▲ 14% luna aceasta','up'],['⭐','Evaluare','4.9','▲ 0.1 luna aceasta','up']],
+      chart:'Lucrări finalizate — ultimii 7 zile',
+      table:{title:'Lucrări viitoare',sub:'Orarul tau in privire de ansamblu',cols:['Lucrare','Client','Data','Status'],
+        rows:[['#J-210','Emma Watson','1 iul',['Programat','info']],['#J-209','David Jones','1 iul',['Cu oferta','warn']],['#J-208','Sarah Lee','2 iul',['Programat','info']],['#J-207','Tom Baker','30 iun',['Finalizat','ok']],['#J-206','Aisha Khan','30 iun',['Finalizat','ok']],['#J-205','Liam Murphy','29 iun',['Finalizat','ok']]]},
+      cat:{title:'Servicii',emoji:'🧰',items:[['Deplasare','225 RON'],['Reparatie Standard','450 RON'],['Instalare','900 RON'],['Urgenta','600 RON'],['Inspectie','300 RON'],['Intretinere','375 RON']]} },
+    professional:{ nav:[['📨','Intrebări'],['👥','Clienți'],['📄','Documente'],['🧾','Facturi']],
+      kpis:[['📨','Intrebări noi','14','▲ 4 aceasta saptamana','up'],['👥','Clienți activi','58','▲ 6% luna aceasta','up'],['💷','Venituri','91000 RON','▲ 9% luna aceasta','up'],['🧾','Facturi de plată','5','▼ 2 aceasta saptamana','down']],
+      chart:'Intrebări — ultimii 7 zile',
+      table:{title:'Intrebări recente',sub:'Urmareste clientii noi',cols:['Client','Subiect','Data','Status'],
+        rows:[['Emma Watson','Intrebare noua','1 iul',['Noua','info']],['David Jones','Consultatie','1 iul',['În curs','warn']],['Sarah Lee','Analiza caz','30 iun',['În curs','warn']],['Tom Baker','Documente','30 iun',['Inchisa','ok']],['Aisha Khan','Intrebare noua','29 iun',['Noua','info']],['Liam Murphy','Sfat','28 iun',['Inchisa','ok']]]},
+      cat:{title:'Servicii',emoji:'📄',items:[['Consultatie Initiala','0 RON'],['Serviciu Standard','1250 RON'],['Pachet Complet','3000 RON'],['Analiza Documente','600 RON'],['Suport Permanent','450 RON/luna'],['Serviciu Premium','2000 RON']]} },
+    leads:{ nav:[['📨','Intrebări'],['🗂️','Proprietati'],['👥','Clienți'],['🗓️','Calendar']],
+      kpis:[['📨','Intrebări noi','21','▲ 7 aceasta saptamana','up'],['📸','Vizionări','12','▲ 3 aceasta saptamana','up'],['📈','Rata conversie','28%','▲ 2% luna aceasta','up'],['💷','Venituri','37250 RON','▲ 11% luna aceasta','up']],
+      chart:'Intrebări — ultimii 7 zile',
+      table:{title:'Intrebări recente',sub:'Leaduri noi pentru urmarit',cols:['Nume','Interes','Data','Status'],
+        rows:[['Emma Watson','Intrebare','1 iul',['Noua','info']],['David Jones','Vizionare','1 iul',['Programata','ok']],['Sarah Lee','Intrebare','30 iun',['În așteptare','warn']],['Tom Baker','Vizionare','30 iun',['Programata','ok']],['Aisha Khan','Intrebare','29 iun',['Noua','info']],['Liam Murphy','Intrebare','28 iun',['Programata','ok']]]},
+      cat:{title:'Proprietati',emoji:'🗂️',items:[['Proprietate Unu','1600000 RON'],['Proprietate Doi','2250000 RON'],['Proprietate Trei','1050000 RON'],['Proprietate Patru','3375000 RON'],['Proprietate Cinci','6000 RON/luna'],['Proprietate Șase','925000 RON']]} }
   };
   var IND = {
-    restaurant:{n:'My Restaurant',e:'🍽️',c:'#B5342B',k:'bookings'}, cafe:{n:'My Café',e:'☕',c:'#6F4E37',k:'bookings'},
-    bakery:{n:'My Bakery',e:'🥐',c:'#C57A1E',k:'ecommerce'}, shop:{n:'My Shop',e:'🛍️',c:'#2f6cf6',k:'ecommerce'}, boutique:{n:'My Boutique',e:'👗',c:'#C2185B',k:'ecommerce'},
-    barber:{n:'My Barbershop',e:'💈',c:'#243046',k:'appointments'}, spa:{n:'My Spa',e:'🌸',c:'#2E8B8B',k:'appointments'}, dental:{n:'My Dental Clinic',e:'🦷',c:'#12A9A5',k:'appointments'}, clinic:{n:'My Clinic',e:'🩺',c:'#1E88E5',k:'appointments'}, gym:{n:'My Gym',e:'💪',c:'#E63946',k:'appointments'}, yoga:{n:'My Studio',e:'🧘',c:'#7C5CBF',k:'appointments'},
-    law:{n:'My Law Firm',e:'⚖️',c:'#1B2A44',k:'professional'}, accounting:{n:'My Accounting',e:'📊',c:'#1B7A5A',k:'professional'},
-    realestate:{n:'My Estate Agency',e:'🏠',c:'#0C7C59',k:'leads'}, photography:{n:'My Photography',e:'📷',c:'#2b2b2b',k:'leads'},
-    construction:{n:'My Construction Co.',e:'🏗️',c:'#E67E22',k:'jobs'}, plumbing:{n:'My Plumbing',e:'🔧',c:'#1565C0',k:'jobs'}, electrical:{n:'My Electrical',e:'⚡',c:'#E9A100',k:'jobs'}, garage:{n:'My Garage',e:'🚗',c:'#B5342B',k:'jobs'}, cleaning:{n:'My Cleaning Co.',e:'🧼',c:'#159AAD',k:'jobs'}
+    restaurant:{n:'Restaurantul Meu',e:'🍽️',c:'#B5342B',k:'bookings'}, cafe:{n:'Cafeneaua Mea',e:'☕',c:'#6F4E37',k:'bookings'},
+    bakery:{n:'Brutaria Mea',e:'🥐',c:'#C57A1E',k:'ecommerce'}, shop:{n:'Magazinul Meu',e:'🛍️',c:'#2f6cf6',k:'ecommerce'}, boutique:{n:'Buticul Meu',e:'👗',c:'#C2185B',k:'ecommerce'},
+    barber:{n:'Frizerul Meu',e:'💈',c:'#243046',k:'appointments'}, spa:{n:'Salonul Meu Spa',e:'🌸',c:'#2E8B8B',k:'appointments'}, dental:{n:'Clinica Dentara Mea',e:'🦷',c:'#12A9A5',k:'appointments'}, clinic:{n:'Clinica Mea',e:'🩺',c:'#1E88E5',k:'appointments'}, gym:{n:'Sala Mea',e:'💪',c:'#E63946',k:'appointments'}, yoga:{n:'Studioul Meu',e:'🧘',c:'#7C5CBF',k:'appointments'},
+    law:{n:'Biroul Meu Juridic',e:'⚖️',c:'#1B2A44',k:'professional'}, accounting:{n:'Contabilitatea Mea',e:'📊',c:'#1B7A5A',k:'professional'},
+    realestate:{n:'Agentia Mea Imobiliara',e:'🏠',c:'#0C7C59',k:'leads'}, photography:{n:'Fotografia Mea',e:'📷',c:'#2b2b2b',k:'leads'},
+    construction:{n:'Firma Mea Constructii',e:'🏗️',c:'#E67E22',k:'jobs'}, plumbing:{n:'Instalatia Mea',e:'🔧',c:'#1565C0',k:'jobs'}, electrical:{n:'Electricitatea Mea',e:'⚡',c:'#E9A100',k:'jobs'}, garage:{n:'Garajul Meu',e:'🚗',c:'#B5342B',k:'jobs'}, cleaning:{n:'Serviciul Meu Curatenie',e:'🧼',c:'#159AAD',k:'jobs'}
   };
   function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   var type=(new URLSearchParams(location.search).get('type')||'shop').toLowerCase();
-  var d=IND[type]||{n:'My Business',e:'📊',c:'#00AAAC',k:'ecommerce'};
+  var d=IND[type]||{n:'Afacerea Mea',e:'📊',c:'#00AAAC',k:'ecommerce'};
   var k=KINDS[d.k];
-  document.title=d.n+' — Admin Demo by C Design';
+  document.title=d.n+' — Panou Admin Demo de la C Design';
   document.documentElement.style.setProperty('--teal',d.c);
 
-  var bars=[52,68,44,80,63,95,74], days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  var PEOPLE=[['Emma Watson','emma@email.com','07700 900123',12,['Active','ok']],['David Jones','david@email.com','07700 900456',4,['Active','ok']],['Sarah Lee','sarah@email.com','07700 900789',9,['Active','ok']],['Tom Baker','tom@email.com','07700 900321',1,['New','info']],['Aisha Khan','aisha@email.com','07700 900654',7,['Active','ok']],['Liam Murphy','liam@email.com','07700 900987',3,['Active','ok']]];
-  var MESSAGES=[['🙂','Emma Watson','Hi, could I get some info about your services?','2m'],['😀','David Jones','Do you cover my area? I\'m in Leeds.','1h'],['🙋','Sarah Lee','Thank you, brilliant service — five stars!','3h'],['👨','Tom Baker','Can I change my details on my account?','5h'],['👩','Aisha Khan','What are your opening hours this week?','1d'],['🧑','Liam Murphy','Please could you call me back? Thanks.','1d']];
+  var bars=[52,68,44,80,63,95,74], days=['Lun','Mar','Mie','Joi','Vin','Sam','Dum'];
+  var PEOPLE=[['Emma Watson','emma@email.com','0700 123456',12,['Activ','ok']],['David Jones','david@email.com','0700 234567',4,['Activ','ok']],['Sarah Lee','sarah@email.com','0700 345678',9,['Activ','ok']],['Tom Baker','tom@email.com','0700 456789',1,['Nou','info']],['Aisha Khan','aisha@email.com','0700 567890',7,['Activ','ok']],['Liam Murphy','liam@email.com','0700 678901',3,['Activ','ok']]];
+  var MESSAGES=[['🙂','Emma Watson','Pot sa caut mai multe informatii despre serviciile tale?','2m'],['😀','David Jones','Acoperi si zona mea? Sunt din Bucuresti.','1h'],['🙋','Sarah Lee','Multumesc, serviciu excelent — cinci stele!','3h'],['👨','Tom Baker','Pot sa imi actualizez datele de pe cont?','5h'],['👩','Aisha Khan','Care sunt orele de deschidere in aceasta saptamana?','1d'],['🧑','Liam Murphy','Te rog sa ma suni inapoi? Multumesc.','1d']];
 
   function kpisHTML(){return '<div class="kpis">'+k.kpis.map(function(x){return '<div class="kpi"><div class="lbl"><span class="i">'+x[0]+'</span> '+esc(x[1])+'</div><div class="val">'+esc(x[2])+'</div><div class="tr '+x[4]+'">'+esc(x[3])+'</div></div>';}).join('')+'</div>';}
   function chartHTML(){return '<div class="chart">'+bars.map(function(h,i){return '<div class="bar-wrap"><div class="bar" style="height:'+h+'%"></div><div class="bar-lbl">'+days[i]+'</div></div>';}).join('')+'</div>';}
@@ -172,55 +172,55 @@
     var tb=t.rows.map(function(r){return '<tr>'+r.map(function(cell){return Array.isArray(cell)?'<td><span class="pill '+cell[1]+'">'+esc(cell[0])+'</span></td>':'<td>'+esc(cell)+'</td>';}).join('')+'</tr>';}).join('');
     return '<table><thead>'+thead+'</thead><tbody>'+tb+'</tbody></table>';}
   function msgsHTML(list){return list.map(function(m){return '<div class="msg"><div class="av">'+m[0]+'</div><div><div class="nm">'+esc(m[1])+'</div><div class="tx">'+esc(m[2])+'</div></div><div class="tm">'+esc(m[3])+'</div></div>';}).join('');}
-  function toolbar(title,btn){return '<div class="toolbar"><div class="chips"><span class="chip on">All</span><span class="chip">This week</span><span class="chip">Pending</span></div><button class="btn">+ '+esc(btn||'New')+'</button></div>';}
+  function toolbar(title,btn){return '<div class="toolbar"><div class="chips"><span class="chip on">Toate</span><span class="chip">Aceasta saptamana</span><span class="chip">În așteptare</span></div><button class="btn">+ '+esc(btn||'Nou')+'</button></div>';}
 
   function vDashboard(){
-    return '<span class="demo-badge">✦ Sample admin panel for '+esc(d.n)+' — click the menu on the left to explore</span>'
+    return '<span class="demo-badge">✦ Panou admin exemplu pentru '+esc(d.n)+' — dă clic pe meniul din stânga pentru a explora</span>'
       +kpisHTML()
       +'<div class="row">'
-        +'<div class="card"><h3>'+esc(k.chart)+'</h3><div class="sub">Live overview</div>'+chartHTML()+'</div>'
-        +'<div class="card"><h3>Recent messages</h3><div class="sub">From your website contact form</div>'+msgsHTML(MESSAGES.slice(0,4))+'</div>'
+        +'<div class="card"><h3>'+esc(k.chart)+'</h3><div class="sub">Vizualizare în timp real</div>'+chartHTML()+'</div>'
+        +'<div class="card"><h3>Mesaje recente</h3><div class="sub">De pe formularul de contact al website-ului</div>'+msgsHTML(MESSAGES.slice(0,4))+'</div>'
       +'</div>'
       +'<div class="card"><h3>'+esc(k.table.title)+'</h3><div class="sub">'+esc(k.table.sub)+'</div>'+tableHTML(k.table)+'</div>';
   }
   function vRecords(label){return toolbar(label,label.replace(/s$/,''))+'<div class="card"><h3>'+esc(label)+'</h3><div class="sub">'+esc(k.table.sub)+'</div>'+tableHTML(k.table)+'</div>';}
-  function vPeople(label){var t={cols:['Name','Email','Phone','Orders','Status'],rows:PEOPLE};return toolbar(label,label.replace(/s$/,''))+'<div class="card"><h3>'+esc(label)+'</h3><div class="sub">Everyone in one place</div>'+tableHTML(t)+'</div>';}
-  function vCatalog(label){var c=k.cat;return toolbar(label,'Item')+'<div class="grid-cards">'+c.items.map(function(it){return '<div class="pc"><div class="ph">'+c.emoji+'</div><div class="bd"><div class="nm">'+esc(it[0])+'</div><div class="pr">'+esc(it[1])+'</div></div></div>';}).join('')+'</div>';}
-  function vMessages(){return '<div class="card"><h3>Messages</h3><div class="sub">From your website contact form</div>'+msgsHTML(MESSAGES)+'</div>';}
-  function vAnalytics(){return kpisHTML()+'<div class="card"><h3>'+esc(k.chart)+'</h3><div class="sub">Performance overview</div>'+chartHTML()+'</div>';}
-  function vBlog(){var posts=[['5 tips to grow your business online','Published','1 Jul'],['Why every business needs a website','Published','28 Jun'],['Our summer opening hours','Draft','25 Jun'],['Meet the team','Published','20 Jun']];
-    var t={cols:['Title','Status','Date'],rows:posts.map(function(p){return [p[0],[p[1],p[1]==='Draft'?'warn':'ok'],p[2]];})};
-    return toolbar('Blog','Post')+'<div class="card"><h3>Blog posts</h3><div class="sub">Write and publish articles</div>'+tableHTML(t)+'</div>';}
+  function vPeople(label){var t={cols:['Nume','Email','Telefon','Comenzi','Status'],rows:PEOPLE};return toolbar(label,label.replace(/s$/,''))+'<div class="card"><h3>'+esc(label)+'</h3><div class="sub">Toti intr-un singur loc</div>'+tableHTML(t)+'</div>';}
+  function vCatalog(label){var c=k.cat;return toolbar(label,'Articol')+'<div class="grid-cards">'+c.items.map(function(it){return '<div class="pc"><div class="ph">'+c.emoji+'</div><div class="bd"><div class="nm">'+esc(it[0])+'</div><div class="pr">'+esc(it[1])+'</div></div></div>';}).join('')+'</div>';}
+  function vMessages(){return '<div class="card"><h3>Mesaje</h3><div class="sub">De pe formularul de contact al website-ului</div>'+msgsHTML(MESSAGES)+'</div>';}
+  function vAnalytics(){return kpisHTML()+'<div class="card"><h3>'+esc(k.chart)+'</h3><div class="sub">Privire de ansamblu asupra performantelor</div>'+chartHTML()+'</div>';}
+  function vBlog(){var posts=[['5 sfaturi pentru a-ti creste afacerea online','Publicat','1 iul'],['De ce fiecare afacere are nevoie de website','Publicat','28 iun'],['Orele noastre de deschidere de vara','Schiță','25 iun'],['Intalneste echipa','Publicat','20 iun']];
+    var t={cols:['Titlu','Status','Data'],rows:posts.map(function(p){return [p[0],[p[1],p[1]==='Schiță'?'warn':'ok'],p[2]];})};
+    return toolbar('Blog','Articol')+'<div class="card"><h3>Articole blog</h3><div class="sub">Scrie si publica articole</div>'+tableHTML(t)+'</div>';}
   function vSettings(){
-    return '<div class="card" style="max-width:620px"><h3>Business settings</h3><div class="sub">Update your details any time</div>'
-      +'<div class="fld"><label>Business name</label><input value="'+esc(d.n)+'"></div>'
-      +'<div class="fld"><label>Email</label><input value="hello@mybusiness.co.uk"></div>'
-      +'<div class="fld"><label>Phone</label><input value="+44 7700 900000"></div>'
-      +'<div class="fld"><label>Opening hours</label><input value="Mon–Fri 9:00–18:00"></div>'
-      +'<div class="toggle"><span class="sw"></span> Accept online bookings</div>'
-      +'<div class="toggle"><span class="sw"></span> Email me new messages</div>'
-      +'<div class="toggle"><span class="sw off"></span> Maintenance mode</div>'
-      +'<button class="btn" style="margin-top:8px">Save changes</button></div>';
+    return '<div class="card" style="max-width:620px"><h3>Setari afacere</h3><div class="sub">Actualizeaza-ti detaliile oricand</div>'
+      +'<div class="fld"><label>Denumirea afacerii</label><input value="'+esc(d.n)+'"></div>'
+      +'<div class="fld"><label>Email</label><input value="hello@afacerea-mea.ro"></div>'
+      +'<div class="fld"><label>Telefon</label><input value="+40 700 900000"></div>'
+      +'<div class="fld"><label>Ore de deschidere</label><input value="Lun–Vin 9:00–18:00"></div>'
+      +'<div class="toggle"><span class="sw"></span> Accepta programari online</div>'
+      +'<div class="toggle"><span class="sw"></span> Trimite-mi email pentru mesaje noi</div>'
+      +'<div class="toggle"><span class="sw off"></span> Mod intretinere</div>'
+      +'<button class="btn" style="margin-top:8px">Salveaza modificari</button></div>';
   }
   function viewFor(label){
     var l=label.toLowerCase();
-    if(l==='dashboard') return vDashboard();
-    if(/message/.test(l)) return vMessages();
-    if(/analytic/.test(l)) return vAnalytics();
-    if(/setting/.test(l)) return vSettings();
+    if(l==='panou') return vDashboard();
+    if(/mesaj/.test(l)) return vMessages();
+    if(/analiz/.test(l)) return vAnalytics();
+    if(/setari/.test(l)) return vSettings();
     if(/blog/.test(l)) return vBlog();
-    if(/product|menu|listing|service|table/.test(l)) return vCatalog(label);
-    if(/customer|client|guest|patient|member/.test(l)) return vPeople(label);
+    if(/produs|meniu|proprietat|serviciu|mas/.test(l)) return vCatalog(label);
+    if(/client|clien|oaspet|pacient|membru/.test(l)) return vPeople(label);
     return vRecords(label);
   }
 
   // build sidebar
-  var navItems=[['🏠','Dashboard']].concat(k.nav).concat([['💬','Messages'],['📈','Analytics'],['✍️','Blog'],['⚙️','Settings']]);
+  var navItems=[['🏠','Panou']].concat(k.nav).concat([['💬','Mesaje'],['📈','Analize'],['✍️','Blog'],['⚙️','Setari']]);
   var side=document.getElementById('side');
   side.innerHTML='<div class="side-logo"><span class="mk">'+d.e+'</span> '+esc(d.n)+'</div>'
-    +'<div class="side-sec">Main</div>'
-    +navItems.map(function(m,i){var grow=(i===1+k.nav.length);return (grow?'<div class="side-sec">Grow</div>':'')+'<a data-label="'+esc(m[1])+'"'+(i===0?' class="active"':'')+'><span class="ic">'+m[0]+'</span> '+esc(m[1])+'</a>';}).join('')
-    +'<div class="side-foot"><div class="av">JS</div><div><div class="nm">John Smith</div><div class="rl">Owner</div></div></div>';
+    +'<div class="side-sec">Principal</div>'
+    +navItems.map(function(m,i){var grow=(i===1+k.nav.length);return (grow?'<div class="side-sec">Creste</div>':'')+'<a data-label="'+esc(m[1])+'"'+(i===0?' class="active"':'')+'><span class="ic">'+m[0]+'</span> '+esc(m[1])+'</a>';}).join('')
+    +'<div class="side-foot"><div class="av">IS</div><div><div class="nm">Ioan Stoica</div><div class="rl">Proprietar</div></div></div>';
 
   var bd=document.getElementById('bd');
   function show(label){
@@ -235,7 +235,7 @@
   bd.addEventListener('click',function(){side.classList.remove('open');bd.classList.remove('open');});
   // chips are interactive (visual only)
   document.addEventListener('click',function(e){if(e.target.classList&&e.target.classList.contains('chip')){var p=e.target.parentNode;p.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});e.target.classList.add('on');}});
-  show('Dashboard');
+  show('Panou');
 </script>
 </body>
 </html>
