@@ -997,6 +997,7 @@ export default {
         { loc: '/pachet-startup',             cf: 'monthly', pr: '0.8' },
         { loc: '/abonament-lunar',            cf: 'monthly', pr: '0.8' },
         { loc: '/blog',                       cf: 'weekly',  pr: '0.7' },
+        { loc: '/demos',                      cf: 'monthly', pr: '0.7' },
         { loc: '/web-design-bucuresti',       cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-cluj',            cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-timisoara',       cf: 'monthly', pr: '0.8' },
@@ -1029,6 +1030,13 @@ export default {
     if (path === '/blog' || path === '/blog/') {
       const assetUrl = new URL(request.url);
       assetUrl.pathname = '/blog.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
+    // ── DEMO-URI (galerie de site-uri exemplu) ────────────────
+    if (path === '/demos' || path === '/demos/') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/demos.html';
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
 
