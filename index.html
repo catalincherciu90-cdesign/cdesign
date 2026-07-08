@@ -696,19 +696,23 @@
     })();
 
     // Setări din admin: video de fundal + carusel bannere About
+    function setHeroVideo(url){
+      if(!url) return;
+      var v = document.getElementById('heroBgVideo');
+      var hero = document.getElementById('hero');
+      if(v && hero){
+        v.src = url;
+        hero.classList.add('has-video');
+        var p = v.play(); if(p && p.catch) p.catch(function(){});
+      }
+    }
+    // Video implicit de fundal pentru hero (suprascriptibil din admin → Media → Video fundal hero)
+    setHeroVideo('https://c-designs.uk/media/media_1782135601243.mp4');
     fetch('/api/site-settings')
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(d){
         d = d || {};
-        if(d.bgVideo){
-          var v = document.getElementById('heroBgVideo');
-          var hero = document.getElementById('hero');
-          if(v && hero){
-            v.src = d.bgVideo;
-            hero.classList.add('has-video');
-            var p = v.play(); if(p && p.catch) p.catch(function(){});
-          }
-        }
+        if(d.bgVideo){ setHeroVideo(d.bgVideo); }
         setupAboutCarousel(d.aboutBanners);
       })
       .catch(function(){ setupAboutCarousel(null); });
