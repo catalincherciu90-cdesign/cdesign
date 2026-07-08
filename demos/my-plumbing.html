@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Plumbing — 24/7 Emergency Plumbers You Can Trust</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#1876f2;
+    --blue-dark:#0d5ad1;
+    --blue-deep:#0a3d8f;
+    --sky:#e8f2ff;
+    --sky-2:#f4f9ff;
+    --ink:#122036;
+    --slate:#5a6b82;
+    --amber:#ffb020;
+    --line:#dceafd;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Nunito Sans',sans-serif;
+    color:var(--ink);
+    background:#fff;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.head{font-family:'Poppins',sans-serif;line-height:1.15;letter-spacing:-.01em}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+
+  /* Header */
+  .site-header{position:sticky;top:0;z-index:50;background:#fff;box-shadow:0 2px 18px rgba(24,118,242,.08)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:76px}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Poppins',sans-serif;font-weight:800;font-size:1.35rem;color:var(--blue-deep)}
+  .logo .emoji{font-size:1.5rem}
+  .nav-links{display:flex;gap:28px;align-items:center}
+  .nav-links a{font-weight:700;color:var(--ink);font-size:.98rem;transition:color .2s}
+  .nav-links a:hover{color:var(--blue)}
+  .btn{
+    display:inline-block;font-family:'Poppins',sans-serif;font-weight:700;font-size:.98rem;
+    background:var(--blue);color:#fff;padding:12px 24px;border-radius:50px;
+    box-shadow:0 8px 20px rgba(24,118,242,.28);transition:transform .12s,background .2s;
+  }
+  .btn:hover{background:var(--blue-dark);transform:translateY(-2px)}
+  .btn-amber{background:var(--amber);color:var(--ink);box-shadow:0 8px 20px rgba(255,176,32,.35)}
+  .btn-amber:hover{background:#f5a200}
+  .btn-white{background:#fff;color:var(--blue);box-shadow:0 8px 20px rgba(0,0,0,.15)}
+  .btn-white:hover{background:var(--sky)}
+  .menu-toggle{display:none}
+
+  /* Hero */
+  .hero{
+    position:relative;color:#fff;
+    background:linear-gradient(120deg,rgba(10,61,143,.92),rgba(24,118,242,.82)),
+      url('https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=1600&q=80') center/cover;
+    padding:90px 0 100px;
+  }
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);padding:8px 16px;border-radius:50px;font-weight:700;font-size:.9rem;margin-bottom:22px}
+  .hero h1{font-size:clamp(2.3rem,5vw,3.6rem);font-weight:800;margin-bottom:16px}
+  .hero p{font-size:1.15rem;color:#eaf3ff;max-width:520px;margin-bottom:30px}
+  .hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+  /* Emergency call card */
+  .call-card{
+    background:#fff;color:var(--ink);border-radius:22px;padding:34px 30px;
+    box-shadow:0 30px 60px rgba(8,40,95,.35);text-align:center;
+  }
+  .call-card .pill{display:inline-block;background:#ffe9c2;color:#8a5a00;font-weight:800;font-size:.8rem;padding:6px 14px;border-radius:50px;letter-spacing:.04em}
+  .call-card .lbl{font-family:'Poppins',sans-serif;font-weight:600;color:var(--slate);margin-top:18px;font-size:.95rem}
+  .call-card .phone{font-family:'Poppins',sans-serif;font-weight:800;font-size:2.5rem;color:var(--blue-deep);margin:4px 0 6px;letter-spacing:-.02em}
+  .call-card .phone a{color:inherit}
+  .call-card small{color:var(--slate);display:block;margin-bottom:20px}
+  .call-card .btn{width:100%}
+
+  /* Trust strip */
+  .trust{background:var(--sky-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .trust-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;padding:26px 0}
+  .trust-item{display:flex;align-items:center;gap:10px;font-family:'Poppins',sans-serif;font-weight:600;color:var(--ink)}
+  .trust-item .ic{width:38px;height:38px;border-radius:10px;background:var(--sky);color:var(--blue);display:grid;place-items:center;font-size:1.1rem}
+
+  /* Sections */
+  section{padding:84px 0}
+  .kicker{color:var(--blue);font-family:'Poppins',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.82rem;margin-bottom:12px}
+  .sec-title{font-size:clamp(1.9rem,4vw,2.8rem);font-weight:800;margin-bottom:12px}
+  .sec-intro{color:var(--slate);max-width:600px;margin:0 auto 46px;font-size:1.05rem}
+  .center{text-align:center}
+
+  /* Services */
+  .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .svc{background:#fff;border:1px solid var(--line);border-radius:18px;padding:30px 26px;transition:transform .15s,box-shadow .2s}
+  .svc:hover{transform:translateY(-5px);box-shadow:0 20px 40px rgba(24,118,242,.14);border-color:transparent}
+  .svc .ic{width:56px;height:56px;border-radius:14px;background:var(--sky);color:var(--blue);display:grid;place-items:center;font-size:1.6rem;margin-bottom:16px}
+  .svc h3{font-size:1.25rem;font-weight:700;margin-bottom:8px}
+  .svc p{color:var(--slate);font-size:.98rem}
+
+  /* Reviews */
+  .reviews{background:var(--sky-2)}
+  .rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .rev{background:#fff;border-radius:18px;padding:28px;box-shadow:0 10px 30px rgba(8,40,95,.06)}
+  .stars{color:var(--amber);font-size:1.05rem;letter-spacing:2px;margin-bottom:12px}
+  .rev p{color:var(--ink);font-size:1rem;margin-bottom:16px}
+  .rev .who{display:flex;align-items:center;gap:12px}
+  .rev .av{width:42px;height:42px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-family:'Poppins',sans-serif;font-weight:700}
+  .rev .who b{display:block;font-family:'Poppins',sans-serif}
+  .rev .who span{color:var(--slate);font-size:.85rem}
+
+  /* Big CTA */
+  .cta-final{
+    background:linear-gradient(120deg,var(--blue-deep),var(--blue));color:#fff;text-align:center;
+  }
+  .cta-final h2{font-size:clamp(2rem,4.5vw,3rem);font-weight:800;color:#fff}
+  .cta-final p{color:#e6f0ff;max-width:520px;margin:16px auto 30px;font-size:1.12rem}
+  .cta-final .phone-big{font-family:'Poppins',sans-serif;font-weight:800;font-size:2.4rem;margin-bottom:24px;display:inline-block}
+  .cta-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+  /* Footer */
+  footer{background:var(--ink);color:#c6d4e8;padding:48px 0;text-align:center}
+  footer .flogo{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.3rem;color:#fff;margin-bottom:12px}
+  footer p{font-size:.92rem}
+  footer a{color:#8bb8ff;font-weight:700}
+
+  @media(max-width:900px){
+    .hero-grid{grid-template-columns:1fr}
+    .nav-links{display:none}
+    .nav-links.open{display:flex;position:absolute;top:76px;left:0;right:0;flex-direction:column;background:#fff;padding:20px 24px;gap:16px;box-shadow:0 12px 24px rgba(0,0,0,.1)}
+    .menu-toggle{display:inline-block;background:var(--sky);border:none;color:var(--blue);padding:9px 13px;border-radius:10px;font-size:1.1rem;cursor:pointer}
+    .svc-grid,.rev-grid{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:600px){
+    .svc-grid,.rev-grid{grid-template-columns:1fr}
+    .trust-grid{justify-content:center;text-align:center}
+  }
+</style>
+</head>
+<body>
+<div style="background:#141719;color:#fff;text-align:center;font-size:.8rem;padding:8px 12px;font-family:sans-serif">✦ This is a demo website by C Design — <a href="/#contact" style="color:#fff;text-decoration:underline;font-weight:600">Get one like this for your business</a> · <a href="/demos/admin-demo.html?type=plumbing" style="color:#fff;text-decoration:underline;font-weight:600">See the admin panel</a></div>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="#top" class="logo"><span class="emoji">🔧</span> My Plumbing</a>
+    <nav class="nav-links" id="menu">
+      <a href="#services">Services</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#areas">Areas</a>
+      <a href="tel:08001234567" class="btn btn-amber">📞 Call Now</a>
+    </nav>
+    <button class="menu-toggle" onclick="document.getElementById('menu').classList.toggle('open')">☰</button>
+  </div>
+</header>
+
+<a id="top"></a>
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="badge">⚡ 24/7 Emergency Call-Out</span>
+      <h1>Leaking? Blocked? We're On The Way.</h1>
+      <p>Friendly, Gas Safe registered plumbers covering your area around the clock. No call-out fee, upfront pricing, and a smile at the door.</p>
+      <div class="hero-actions">
+        <a href="tel:08001234567" class="btn btn-amber">📞 Call 0800 123 4567</a>
+        <a href="#services" class="btn btn-white">View Services</a>
+      </div>
+    </div>
+    <div class="call-card">
+      <span class="pill">🚨 24/7 EMERGENCY LINE</span>
+      <div class="lbl">Burst pipe or no hot water? Call now:</div>
+      <div class="phone"><a href="tel:08001234567">0800 123 4567</a></div>
+      <small>Average response time: under 60 minutes</small>
+      <a href="tel:08001234567" class="btn">Call Us Now</a>
+    </div>
+  </div>
+</section>
+
+<div class="trust">
+  <div class="wrap trust-grid">
+    <div class="trust-item"><span class="ic">✅</span> Gas Safe Registered</div>
+    <div class="trust-item"><span class="ic">💷</span> No Call-Out Fee</div>
+    <div class="trust-item"><span class="ic">⭐</span> 4.9/5 from 300+ Reviews</div>
+    <div class="trust-item"><span class="ic">🛡️</span> Fully Insured</div>
+  </div>
+</div>
+
+<section id="services">
+  <div class="wrap center">
+    <div class="kicker">What We Fix</div>
+    <h2 class="sec-title">Plumbing &amp; Heating Services</h2>
+    <p class="sec-intro">Whatever's gone wrong, our friendly local team can sort it — fast, tidy, and done right first time.</p>
+  </div>
+  <div class="wrap">
+    <div class="svc-grid">
+      <div class="svc"><div class="ic">💧</div><h3>Emergency Leaks</h3><p>Burst pipes, overflowing tanks and water damage — we'll stop the leak and dry you out fast.</p></div>
+      <div class="svc"><div class="ic">🚽</div><h3>Blocked Drains</h3><p>Toilets, sinks and outside drains cleared with high-pressure jetting. Gone in one visit.</p></div>
+      <div class="svc"><div class="ic">🔥</div><h3>Boilers &amp; Heating</h3><p>Boiler repairs, servicing and full installs from our Gas Safe engineers.</p></div>
+      <div class="svc"><div class="ic">🚿</div><h3>Bathrooms</h3><p>Taps, showers, toilets and complete bathroom fit-outs designed and installed.</p></div>
+      <div class="svc"><div class="ic">🌡️</div><h3>Radiators</h3><p>Cold radiators, sludge flushing, new rads and thermostat upgrades.</p></div>
+      <div class="svc"><div class="ic">🔧</div><h3>General Plumbing</h3><p>Dripping taps, ballcocks, waste pipes and all those little jobs on the list.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="reviews" id="reviews">
+  <div class="wrap center">
+    <div class="kicker">Happy Customers</div>
+    <h2 class="sec-title">What Your Neighbours Say</h2>
+    <p class="sec-intro">Rated 4.9 out of 5 across hundreds of local jobs — here's a few recent ones.</p>
+  </div>
+  <div class="wrap">
+    <div class="rev-grid">
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>"Pipe burst at 11pm and they were here within the hour. Calm, tidy and fixed it fast. Absolute lifesavers."</p>
+        <div class="who"><span class="av">SH</span><div><b>Sarah H.</b><span>Manchester</span></div></div>
+      </div>
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>"New boiler fitted in a day, no mess and a clear price up front. Wouldn't use anyone else now."</p>
+        <div class="who"><span class="av">DP</span><div><b>David P.</b><span>Stockport</span></div></div>
+      </div>
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>"Friendly, polite and explained everything. Cleared a blocked drain the others couldn't. Highly recommend."</p>
+        <div class="who"><span class="av">RK</span><div><b>Rachel K.</b><span>Salford</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-final" id="areas">
+  <div class="wrap">
+    <h2>Got A Plumbing Emergency?</h2>
+    <p>Don't wait for it to get worse. Our local engineers are on standby right now, day or night.</p>
+    <a href="tel:08001234567" class="phone-big">📞 0800 123 4567</a>
+    <div class="cta-actions">
+      <a href="tel:08001234567" class="btn btn-amber">Call Us Now</a>
+      <a href="/#contact" class="btn btn-white">Request a Callback</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="flogo">🔧 My Plumbing</div>
+    <p>© My Plumbing · A demo website crafted by <a href="/">C Design</a></p>
+  </div>
+</footer>
+</body>
+</html>
