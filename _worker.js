@@ -984,7 +984,7 @@ export default {
     // din KV. Înlocuiește sitemap.xml static (nu mai necesită întreținere).
     if (path === '/sitemap.xml' && request.method === 'GET') {
       const BASE = 'https://www.c-design.ro';
-      const SITE_LASTMOD = '2026-06-10';
+      const SITE_LASTMOD = '2026-07-08';
       const staticPages = [
         { loc: '/',                           cf: 'weekly',  pr: '1.0' },
         { loc: '/servicii',                   cf: 'monthly', pr: '0.9' },
