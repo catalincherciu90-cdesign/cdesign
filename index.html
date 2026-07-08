@@ -657,9 +657,9 @@
       if(!grid || !section) return;
       function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
       var FALLBACK_DEMOS = [
-        { emoji:'🍽️', businessName:'Restaurant Exemplo', industry:'Restaurant', tagline:'Meniu, rezervări și bucătăria casei.', url:'/demos/restaurant.html' },
-        { emoji:'☕', businessName:'Cafenea Exemplo', industry:'Cafenea', tagline:'Cafea de specialitate și prăjituri proaspete.', url:'/demos/cafe.html' },
-        { emoji:'🏪', businessName:'Magazin Exemplo', industry:'Vânzări', tagline:'Online și în magazin, produse de calitate.', url:'/demos/shop.html' },
+        { emoji:'🍽️', businessName:'Restaurant Demo', industry:'Restaurant', tagline:'Meniu, rezervări și bucătăria casei.', url:'/demos/restaurant.html' },
+        { emoji:'☕', businessName:'Cafenea Demo', industry:'Cafenea', tagline:'Cafea de specialitate și prăjituri proaspete.', url:'/demos/cafe.html' },
+        { emoji:'🏪', businessName:'Magazin Demo', industry:'Vânzări', tagline:'Online și în magazin, produse de calitate.', url:'/demos/shop.html' },
       ];
       var ADMIN_MAP = {'restaurant':'restaurant','cafe':'cafe','shop':'shop'};
       function adminHref(url){ var m = String(url||'').match(/\/demos\/([a-z0-9-]+)\.html/); return (m && ADMIN_MAP[m[1]]) ? '/demos/admin-demo.html?type=' + ADMIN_MAP[m[1]] : null; }
