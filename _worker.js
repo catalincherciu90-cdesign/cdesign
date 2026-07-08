@@ -1011,19 +1011,9 @@ export default {
       const urlXml = (loc, lastmod, cf, pr) =>
         `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${cf}</changefreq>\n    <priority>${pr}</priority>\n  </url>`;
       const parts = staticPages.map(p => urlXml(BASE + p.loc, SITE_LASTMOD, p.cf, p.pr));
-      // Pagini demo (galerie de site-uri exemplu) — prioritate mai mică.
-      // Excluse: admin-demo (panou intern) și copiile restaurant/cafe/shop
-      // (duplicate ale my-restaurant/my-cafe/my-shop).
-      const DEMO_SLUGS = [
-        'bella-cucina', 'brightsmile-dental', 'urban-threads',
-        'my-accounting', 'my-bakery', 'my-barbershop', 'my-boutique', 'my-cafe',
-        'my-cleaning', 'my-clinic', 'my-construction', 'my-dental-clinic',
-        'my-electrical', 'my-estate-agency', 'my-garage', 'my-gym', 'my-law-firm',
-        'my-photography', 'my-plumbing', 'my-restaurant', 'my-shop', 'my-spa', 'my-studio',
-      ];
-      for (const slug of DEMO_SLUGS) {
-        parts.push(urlXml(BASE + '/demos/' + slug + '.html', SITE_LASTMOD, 'yearly', '0.5'));
-      }
+      // Notă: paginile demo individuale (/demos/*.html) sunt intenționat
+      // EXCLUSE din sitemap și marcate noindex — sunt site-uri exemplu, nu
+      // conținut de indexat. Galeria /demos rămâne indexată.
       try {
         const raw = await env.PROGRAMARI.get('__blog__');
         if (raw) {
