@@ -998,6 +998,7 @@ export default {
         { loc: '/abonament-lunar',            cf: 'monthly', pr: '0.8' },
         { loc: '/blog',                       cf: 'weekly',  pr: '0.7' },
         { loc: '/demos',                      cf: 'monthly', pr: '0.7' },
+        { loc: '/cere-oferta',                cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-bucuresti',       cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-cluj',            cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-timisoara',       cf: 'monthly', pr: '0.8' },
@@ -1037,6 +1038,13 @@ export default {
     if (path === '/demos' || path === '/demos/') {
       const assetUrl = new URL(request.url);
       assetUrl.pathname = '/demos.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
+    // ── CERE OFERTĂ (formular de cerere ofertă) ───────────────
+    if (path === '/cere-oferta' || path === '/cere-oferta/') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/cere-oferta.html';
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
 
