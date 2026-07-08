@@ -1,349 +1,412 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Politică de Confidențialitate | C Design</title>
-  <meta name="description" content="Politica de confidențialitate C Design: ce date colectăm, de ce, cât timp le păstrăm și drepturile tale conform GDPR. Contact: office@c-design.ro.">
-  <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#c9a96e">
-  <link rel="canonical" href="https://www.c-design.ro/politica-confidentialitate">
-  <link rel="icon" type="image/png" href="/logo-c-design.png">
-  <link rel="apple-touch-icon" href="/logo-c-design.png">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.c-design.ro/politica-confidentialitate">
-  <meta property="og:title" content="Politică de Confidențialitate | C Design">
-  <meta property="og:description" content="Cum colectăm, folosim și protejăm datele tale personale, conform GDPR.">
-  <meta property="og:image" content="https://www.c-design.ro/cover.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:locale" content="ro_RO">
-  <meta property="og:site_name" content="C Design">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Politică de Confidențialitate | C Design">
-  <meta name="twitter:description" content="Cum colectăm, folosim și protejăm datele tale personale, conform GDPR.">
-  <meta name="twitter:image" content="https://www.c-design.ro/cover.jpg">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Politică de Confidențialitate | C Design</title>
+<meta name="description" content="Politica de confidențialitate C Design: ce date colectăm, de ce, cât timp le păstrăm și drepturile tale conform GDPR. Contact: office@c-design.ro.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#00AAAC">
+<link rel="canonical" href="https://www.c-design.ro/politica-confidentialitate">
+<link rel="icon" type="image/png" href="/logo-c-design.png">
+<link rel="apple-touch-icon" href="/logo-c-design.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.c-design.ro/politica-confidentialitate">
+<meta property="og:title" content="Politică de Confidențialitate | C Design">
+<meta property="og:description" content="Cum colectăm, folosim și protejăm datele tale personale, conform GDPR.">
+<meta property="og:image" content="https://www.c-design.ro/cover.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ro_RO">
+<meta property="og:site_name" content="C Design">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Politică de Confidențialitate | C Design">
+<meta name="twitter:description" content="Cum colectăm, folosim și protejăm datele tale personale, conform GDPR.">
+<meta name="twitter:image" content="https://www.c-design.ro/cover.jpg">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=DM+Sans:wght@400;500&family=Share+Tech+Mono&display=optional" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=DM+Sans:wght@400;500&family=Share+Tech+Mono&display=optional" rel="stylesheet"></noscript>
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --teal:#c9a96e;--teal-dk:#a8843d;--teal-lt:#dfc080;
-      --teal-dim:rgba(201,169,110,.10);--teal-border:rgba(201,169,110,.35);
-      --bg:#ffffff;--bg2:#f7f7f7;--bg3:#eeeeee;--bg4:#e5e5e5;
-      --text:#111111;--soft:#444444;--muted:#777777;
-      --border:rgba(0,0,0,.10);--border-soft:rgba(0,0,0,.16);--heading:#111111;--nav-text:#111111;--nav-phone:#111111;--nav-burger:#111111;
-      --nav-bg:rgba(255,255,255,.92);--nav-bg-solid:rgba(255,255,255,.97);
-    }
-    html{scroll-behavior:smooth}
-    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.65;overflow-x:hidden;}
-    a{color:inherit;text-decoration:none}
-    img{max-width:100%;display:block}
-    .container{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=optional" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=optional"></noscript>
 
-    /* NAV */
-    nav{position:sticky;top:0;z-index:100;background:var(--nav-bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-    @media(max-width:768px){nav{position:fixed;top:0;left:0;right:0;}body{padding-top:68px;}}
-    nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,168,168,.6) 40%,rgba(83,148,255,.4) 60%,transparent);pointer-events:none;}
-    .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px;}
-    .logo{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.35rem;color:#fff;letter-spacing:-.5px;display:flex;align-items:center;gap:6px;}
-    .nav-links{display:flex;align-items:center;gap:28px;list-style:none;}
-    .nav-links a{font-size:.875rem;color:var(--nav-text);font-weight:400;transition:color .2s;position:relative;}
-    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--teal);transform:scaleX(0);transition:transform .2s;}
-    .nav-links a:hover{color:var(--teal)}
-    .nav-links a:hover::after{transform:scaleX(1)}
-    .nav-phone{display:inline-flex;align-items:center;gap:5px;font-family:'Share Tech Mono',monospace;font-size:.9rem;font-weight:600;color:var(--nav-phone);padding:2px 0;transition:color .2s;}
-    .nav-phone::before{content:'📞';font-size:.8rem;}
-    .nav-phone:hover{color:var(--teal);}
-    .btn-nav{background:#fff;color:#111;font-weight:600;font-size:.875rem;font-family:'DM Sans',sans-serif;padding:9px 20px;border-radius:8px;border:1px solid var(--border-soft);cursor:pointer;transition:transform .15s;text-decoration:none;}
-    .btn-nav:hover{background:#f0f0f0;transform:translateY(-1px);}
-    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:6px;}
-    .hamburger span{display:block;width:22px;height:2px;background:var(--nav-burger);border-radius:2px;}
-    .mobile-menu{display:none;position:fixed;inset:68px 0 0 0;background:var(--nav-bg-solid);z-index:99;padding:32px 24px;flex-direction:column;gap:8px;border-top:1px solid var(--border);backdrop-filter:blur(20px);}
-    .mobile-menu.open{display:flex}
-    .mobile-menu a{font-size:1rem;font-weight:500;color:var(--soft);padding:13px 0;border-bottom:1px solid var(--border);transition:color .2s}
-    .mobile-menu a:hover{color:var(--teal)}.mobile-menu .btn-nav{margin-top:12px;text-align:center;width:100%}
+<style>
+  :root{
+    --blue:#00AAAC;
+    --blue-dk:#008587;
+    --sky:#12BEC0;
+    --sage:#CCDDCB;
+    --ink:#2E3436;
+    --body:#5b6472;
+    --muted:#8b94a3;
+    --line:#e6ecec;
+    --bg:#ffffff;
+    --bg-soft:#f3f8f8;
+    --red:#2E3436;
+    --red2:#434b4d;
+    --black:#2E3436;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;color:var(--body);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{text-decoration:none;color:inherit}
+  img{max-width:100%;display:block}
 
-    /* LEGAL PAGE */
-    .legal-hero{padding:72px 0 40px;border-bottom:1px solid var(--border);background:var(--bg2);}
-    .legal-eyebrow{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--teal);background:var(--teal-dim);border:1px solid var(--teal-border);padding:5px 14px;border-radius:4px;letter-spacing:.08em;display:inline-block;margin-bottom:18px;}
-    .legal-hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;line-height:1.1;letter-spacing:-.03em;color:var(--heading);margin-bottom:14px;}
-    .legal-hero p{font-size:1.02rem;color:var(--soft);font-weight:300;max-width:640px;}
-    .legal-updated{display:inline-block;margin-top:20px;font-family:'Share Tech Mono',monospace;font-size:.8rem;color:var(--muted);}
+  /* ---------- TOP PROMO BAR ---------- */
+  .topbar{background:linear-gradient(90deg,var(--red),var(--red2));color:#fff;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:500}
+  .topbar-inner{max-width:1400px;margin:0 auto;min-height:42px;display:flex;align-items:center;justify-content:center;position:relative;padding:6px 24px;gap:8px;flex-wrap:wrap}
+  .promo{display:inline-flex;align-items:center;gap:8px;letter-spacing:.01em;text-align:center;flex-wrap:wrap;justify-content:center}
+  .promo b{font-weight:700}
+  .promo .view-deal{color:#7fe4e5;font-weight:700;text-decoration:underline;text-underline-offset:2px}
+  .promo .view-deal:hover{color:#fff}
+  .topbar-right{position:absolute;right:24px;display:flex;align-items:center;gap:20px}
+  .topbar-right a{display:inline-flex;align-items:center;gap:6px;color:#fff;opacity:.92;font-weight:500}
+  .topbar-right a:hover{opacity:1}
 
-    .legal-body{padding:56px 0 80px;}
-    .legal-wrap{max-width:820px;margin:0 auto;}
-    .legal-body h2{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;color:var(--heading);letter-spacing:-.02em;margin:44px 0 14px;padding-top:12px;}
-    .legal-body h2:first-child{margin-top:0;padding-top:0;}
-    .legal-body h2 .num{color:var(--teal);font-family:'Share Tech Mono',monospace;font-size:1rem;margin-right:10px;}
-    .legal-body h3{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;color:var(--heading);margin:24px 0 10px;}
-    .legal-body p{font-size:1rem;color:var(--soft);line-height:1.8;margin-bottom:16px;}
-    .legal-body ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin:0 0 18px;}
-    .legal-body ul li{font-size:1rem;color:var(--soft);line-height:1.7;display:flex;align-items:flex-start;gap:11px;}
-    .legal-body ul li::before{content:'›';color:var(--teal);font-weight:700;flex-shrink:0;font-size:1.1rem;line-height:1.5;}
-    .legal-body a{color:var(--teal-dk);font-weight:500;border-bottom:1px solid var(--teal-border);transition:opacity .2s;}
-    .legal-body a:hover{opacity:.7;}
-    .legal-body strong{color:var(--text);font-weight:600;}
-    .legal-card{background:var(--bg2);border:1px solid var(--border-soft);border-radius:14px;padding:26px 28px;margin:0 0 18px;}
-    .legal-card p:last-child{margin-bottom:0;}
-    table.legal-table{width:100%;border-collapse:collapse;margin:0 0 22px;font-size:.95rem;}
-    table.legal-table th,table.legal-table td{text-align:left;padding:13px 16px;border:1px solid var(--border-soft);vertical-align:top;color:var(--soft);}
-    table.legal-table th{background:var(--bg2);color:var(--text);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.9rem;}
-    .legal-toc{background:var(--bg2);border:1px solid var(--border-soft);border-radius:14px;padding:24px 28px;margin-bottom:44px;}
-    .legal-toc h4{font-family:'Space Grotesk',sans-serif;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text);margin-bottom:14px;}
-    .legal-toc ol{margin:0;padding-left:20px;display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;}
-    .legal-toc ol li{font-size:.92rem;color:var(--soft);}
-    .legal-toc ol li a{color:var(--soft);border:none;}
-    .legal-toc ol li a:hover{color:var(--teal);}
-    @media(max-width:640px){.legal-toc ol{grid-template-columns:1fr;}}
+  /* ---------- NAV ---------- */
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav-inner{max-width:1400px;margin:0 auto;height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;gap:24px}
+  .logo{display:inline-flex;align-items:center;gap:10px;font-family:'Poppins',sans-serif;font-weight:700;font-size:1.22rem;color:var(--ink);letter-spacing:-.02em}
+  .nav-menu{display:flex;align-items:center;gap:34px}
+  .nav-menu a{font-family:'Poppins',sans-serif;font-weight:500;font-size:.98rem;color:var(--ink);display:inline-flex;align-items:center;gap:5px;transition:color .15s}
+  .nav-menu a:hover{color:var(--blue)}
+  .nav-menu a .caret{font-size:.62rem;color:var(--muted);margin-top:2px}
+  .nav-right{display:flex;align-items:center;gap:22px}
+  .nav-right .contact-link{font-family:'Poppins',sans-serif;font-weight:500;font-size:.98rem;color:var(--ink)}
+  .nav-right .contact-link:hover{color:var(--blue)}
+  .btn-quote{background:var(--black);color:#fff;font-family:'Poppins',sans-serif;font-weight:600;font-size:.95rem;padding:12px 26px;border-radius:999px;transition:transform .15s,background .2s}
+  .btn-quote:hover{background:#1f2426;transform:translateY(-1px)}
+  .burger{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:6px}
+  .burger span{width:26px;height:2.5px;background:var(--ink);border-radius:2px;transition:.25s}
 
-    /* FOOTER */
-    footer{background:var(--bg2);border-top:1px solid var(--border);padding:52px 0 28px;}
-    .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;gap:24px;margin-bottom:40px;}
-    .footer-logo{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.25rem;color:var(--heading);display:flex;align-items:center;gap:5px;margin-bottom:12px;}
-    .footer-logo .fc{color:var(--teal);text-shadow:0 0 10px rgba(0,168,168,.5);}
-    .footer-about{font-size:.875rem;color:var(--muted);line-height:1.7;margin-bottom:20px;}
-    .footer-col h3{font-family:'Space Grotesk',sans-serif;font-size:.825rem;font-weight:700;color:var(--text);margin-bottom:14px;letter-spacing:.04em;text-transform:uppercase;}
-    .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:8px;}
-    .footer-col a{font-size:.875rem;color:var(--muted);transition:color .2s}.footer-col a:hover{color:var(--teal)}
-    .footer-bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--muted);flex-wrap:wrap;gap:10px;}
-    .footer-bottom .teal{color:var(--teal)}
-    .footer-bottom-links{display:flex;gap:18px;flex-wrap:wrap;}
-    .footer-bottom-links a{color:var(--muted);transition:color .2s;}
-    .footer-bottom-links a:hover{color:var(--teal);}
+  /* ---------- LEGAL PAGE HERO ---------- */
+  .legal-hero{padding:80px 24px 60px;background:#fff;text-align:center}
+  .legal-hero h1{font-family:'Poppins',sans-serif;font-weight:300;color:var(--ink);font-size:clamp(2.2rem,5vw,4rem);line-height:1.05;letter-spacing:-.02em;margin-bottom:24px}
+  .legal-hero p{font-family:'Inter',sans-serif;font-size:1.05rem;color:var(--body);max-width:780px;margin:0 auto 20px;line-height:1.7}
+  .legal-updated{display:inline-block;font-family:'Poppins',sans-serif;font-size:.85rem;color:var(--muted);font-weight:500}
 
-    @media(max-width:1024px){.footer-grid{grid-template-columns:1fr 1fr 1fr}}
-    @media(max-width:768px){
-      .nav-links{display:none}
-      .nav-phone,.btn-nav{display:none}
-      .hamburger{display:flex}
-      .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
-      .legal-body{padding:40px 0 64px;}
-    }
-    @media(max-width:480px){.footer-grid{grid-template-columns:1fr}}
-  </style>
-<link rel="stylesheet" href="/theme.css">
-<link rel="stylesheet" href="/effects.css">
-<script src="/effects.js" defer></script>
-<script src="/assistant.js" defer></script>
+  /* ---------- LEGAL BODY ---------- */
+  .legal-body{padding:60px 24px 100px;background:#fff}
+  .legal-wrap{max-width:900px;margin:0 auto}
+  .legal-toc{background:var(--bg-soft);border:1px solid var(--line);border-radius:16px;padding:32px;margin-bottom:60px}
+  .legal-toc h4{font-family:'Poppins',sans-serif;font-size:.9rem;font-weight:700;text-transform:uppercase;color:var(--ink);letter-spacing:.12em;margin-bottom:20px}
+  .legal-toc ol{margin:0;padding-left:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:12px 30px}
+  .legal-toc ol li{font-size:.95rem;color:var(--body)}
+  .legal-toc ol li a{color:var(--blue);font-weight:500;transition:color .15s}
+  .legal-toc ol li a:hover{color:var(--blue-dk)}
+
+  .legal-body h2{font-family:'Poppins',sans-serif;font-size:1.5rem;font-weight:700;color:var(--ink);letter-spacing:-.01em;margin:52px 0 20px;padding-top:8px;line-height:1.2}
+  .legal-body h2:first-child{margin-top:0;padding-top:0}
+  .legal-body h2 .num{color:var(--blue);font-family:'Poppins',sans-serif;font-size:.95rem;margin-right:12px}
+  .legal-body h3{font-family:'Poppins',sans-serif;font-size:1.1rem;font-weight:600;color:var(--ink);margin:28px 0 14px;letter-spacing:-.01em}
+  .legal-body p{font-family:'Inter',sans-serif;font-size:1rem;color:var(--body);line-height:1.8;margin-bottom:18px}
+  .legal-body ul{list-style:none;margin:0 0 20px;padding-left:0;display:flex;flex-direction:column;gap:12px}
+  .legal-body ul li{font-size:1rem;color:var(--body);line-height:1.7;display:flex;gap:12px;align-items:flex-start}
+  .legal-body ul li::before{content:'•';color:var(--blue);font-weight:700;flex-shrink:0;font-size:1.2rem}
+  .legal-body a{color:var(--blue);font-weight:500;border-bottom:1px solid rgba(0,170,172,.3);transition:color .15s}
+  .legal-body a:hover{color:var(--blue-dk);border-color:var(--blue)}
+  .legal-body strong{color:var(--ink);font-weight:600}
+  .legal-card{background:var(--bg-soft);border:1px solid var(--line);border-radius:12px;padding:24px;margin:18px 0;font-size:.98rem;line-height:1.7;color:var(--body)}
+  .legal-card p:last-child{margin-bottom:0}
+  .legal-card a{color:var(--blue)}
+  .legal-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:.95rem}
+  .legal-table th,.legal-table td{text-align:left;padding:14px;border:1px solid var(--line);vertical-align:top}
+  .legal-table th{background:var(--bg-soft);color:var(--ink);font-family:'Poppins',sans-serif;font-weight:600;font-size:.9rem}
+  .legal-table td{color:var(--body)}
+
+  @media(max-width:880px){
+    .legal-toc ol{grid-template-columns:1fr}
+    .legal-body{padding:50px 20px 80px}
+    .nav-menu{display:none}
+    .nav-right .contact-link{display:none}
+    .burger{display:flex}
+    .topbar-right{display:none}
+    .topbar-inner{justify-content:center}
+  }
+  @media(max-width:520px){
+    .legal-hero{padding:60px 20px 40px}
+    .legal-hero h1{font-size:clamp(1.8rem,7vw,2.8rem)}
+  }
+
+  /* ---------- FOOTER ---------- */
+  .site-footer{background:#0c1016;color:#9aa6b2;padding:70px 24px 34px}
+  .footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1.1fr;gap:44px}
+  .f-brand img{height:40px;width:auto;filter:brightness(0) invert(1);margin-bottom:18px}
+  .f-brand p{font-size:.94rem;line-height:1.7;max-width:300px}
+  .f-social{display:flex;gap:11px;margin-top:22px}
+  .f-social a{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;color:#c3ccd6;transition:background .2s,color .2s,transform .2s}
+  .f-social a:hover{background:var(--blue);color:#fff;transform:translateY(-2px)}
+  .f-social svg{width:18px;height:18px;fill:currentColor}
+  .f-col h4{color:#fff;font-family:'Poppins',sans-serif;font-weight:600;font-size:1rem;margin-bottom:15px}
+  .f-col a,.f-col .fi{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:.94rem;color:#9aa6b2}
+  .f-col a:hover{color:#fff}
+  .topbar-right a svg,.f-col a svg,.f-col .fi svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  .footer-bottom{max-width:1200px;margin:46px auto 0;padding-top:24px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:.88rem}
+  .footer-bottom a:hover{color:#fff}
+  @media(max-width:820px){.footer-inner{grid-template-columns:1fr 1fr;gap:34px}.f-brand{grid-column:1/-1}}
+  @media(max-width:480px){.footer-inner{grid-template-columns:1fr}.footer-bottom{justify-content:center;text-align:center}}
+
+  /* ---------- MOBILE ---------- */
+  .mobile-menu{position:fixed;top:0;right:0;width:min(84vw,340px);height:100vh;background:#fff;box-shadow:-10px 0 40px rgba(0,0,0,.12);z-index:60;padding:88px 30px 30px;transform:translateX(100%);transition:transform .28s ease}
+  .mobile-menu.open{transform:translateX(0)}
+  .mobile-menu a{display:block;font-family:'Poppins',sans-serif;font-weight:500;font-size:1.1rem;color:var(--ink);padding:15px 0;border-bottom:1px solid var(--line)}
+  .mobile-menu .btn-quote{display:block;text-align:center;margin-top:22px;border-bottom:0}
+  .mm-close{position:absolute;top:24px;right:26px;font-size:1.8rem;color:var(--ink);background:none;border:0;cursor:pointer;line-height:1}
+  .backdrop{display:none;position:fixed;inset:0;background:rgba(10,15,25,.4);z-index:55}
+  .backdrop.open{display:block}
+</style>
 </head>
-<body data-fx>
+<body>
 
-<nav aria-label="Navigare principală">
-  <div class="container">
-    <div class="nav-inner">
-      <a href="/" class="logo" aria-label="C Design – Pagina principală"><img src="/logo-c-design.png" alt="C Design" width="168" height="42" style="height:42px;width:auto;display:block;"></a>
-      <ul class="nav-links" role="list">
-        <li><a href="/servicii">Servicii</a></li><li><a href="/despre-noi">Despre noi</a></li><li><a href="/parteneri">Parteneri</a></li>
-        <li><a href="/#portofoliu">Portofoliu</a></li>
-        <li><a href="/despre-noi#proces">Cum lucrăm</a></li>
-        <li><a href="/contact">Contact</a></li>
-        <li><a href="/blog">Blog</a></li>
-      </ul>
-      <a href="tel:+40753116155" class="nav-phone" aria-label="Sună: 0753 116 155">0753 116 155</a>
-      <a href="/programare" class="btn-nav">Programează acum</a>
-      <button class="hamburger" id="hamburger" aria-label="Deschide meniu" aria-expanded="false"><span></span><span></span><span></span></button>
+<!-- TOP PROMO BAR -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <span class="promo">
+      <b>Confidențialitate GDPR:</b> Datele tale sunt protejate conform legilor UE.
+    </span>
+    <div class="topbar-right">
+      <a href="tel:+40753116155"><svg viewBox="0 0 24 24"><path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 4.5 5.7 2 2 0 0 1 6.5 3.5Z"/></svg> 0753 116 155</a>
     </div>
   </div>
-</nav>
-
-<div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Meniu mobil">
-  <a href="/servicii">Servicii</a>
-  <a href="/despre-noi">Despre noi</a>
-  <a href="/#portofoliu">Portofoliu</a>
-  <a href="/despre-noi#proces">Cum lucrăm</a>
-  <a href="/contact">Contact</a>
-  <a href="/blog">Blog</a>
-  <a href="tel:+40753116155">0753 116 155</a>
-  <a href="/programare" class="btn-nav">Programează acum</a>
 </div>
 
-<main>
-
-<section class="legal-hero">
-  <div class="container">
-    <div class="legal-wrap">
-      <span class="legal-eyebrow">PROTECȚIA DATELOR · GDPR</span>
-      <h1>Politică de Confidențialitate</h1>
-      <p>Confidențialitatea ta este importantă pentru noi. Acest document explică ce date personale colectăm prin site-ul c-design.ro, de ce le folosim, cât timp le păstrăm și ce drepturi ai conform Regulamentului General privind Protecția Datelor (Regulamentul UE 2016/679 – „GDPR”).</p>
-      <span class="legal-updated">Ultima actualizare: Mai 2026</span>
+<!-- NAV -->
+<header class="nav">
+  <div class="nav-inner">
+    <a href="/" class="logo" aria-label="C Design acasă">
+      <img src="/logo-c-design.webp" alt="C Design" width="176" height="44" style="height:44px;width:auto;display:block;">
+    </a>
+    <nav class="nav-menu">
+      <a href="/servicii">Servicii</a>
+      <a href="/#portofoliu">Portofoliu</a>
+      <a href="/#testimoniale">Recenzii</a>
+      <a href="/blog">Blog</a>
+    </nav>
+    <div class="nav-right">
+      <a href="#contact" class="contact-link">Contact</a>
+      <a href="/contact" class="btn-quote">Contactează-ne</a>
+      <button class="burger" id="burger" aria-label="Deschide meniu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
+  </div>
+</header>
+
+<!-- MOBILE MENU -->
+<div class="backdrop" id="backdrop"></div>
+<nav class="mobile-menu" id="mobileMenu">
+  <button class="mm-close" id="mmClose" aria-label="Închide meniu">&times;</button>
+  <a href="/servicii">Servicii</a>
+  <a href="/#portofoliu">Portofoliu</a>
+  <a href="/#testimoniale">Recenzii</a>
+  <a href="/blog">Blog</a>
+  <a href="#contact">Contact</a>
+  <a href="/contact" class="btn-quote">Contactează-ne</a>
+</nav>
+
+<!-- LEGAL CONTENT -->
+<section class="legal-hero">
+  <div class="legal-wrap">
+    <h1>Politică de Confidențialitate</h1>
+    <p>Confidențialitatea ta este importantă pentru noi. Acest document explică ce date personale colectăm prin site-ul c-design.ro, de ce le folosim, cât timp le păstrăm și ce drepturi ai conform Regulamentului General privind Protecția Datelor (Regulamentul UE 2016/679 – „GDPR").</p>
+    <span class="legal-updated">Ultima actualizare: Mai 2026</span>
   </div>
 </section>
 
 <section class="legal-body">
-  <div class="container">
-    <div class="legal-wrap">
+  <div class="legal-wrap">
 
-      <nav class="legal-toc" aria-label="Cuprins">
-        <h4>Cuprins</h4>
-        <ol>
-          <li><a href="#cine-suntem">Cine suntem</a></li>
-          <li><a href="#ce-date">Ce date colectăm</a></li>
-          <li><a href="#de-ce">De ce colectăm datele</a></li>
-          <li><a href="#temei-legal">Temeiul legal</a></li>
-          <li><a href="#perioada">Cât timp păstrăm datele</a></li>
-          <li><a href="#partajare">Cu cine împărtășim datele</a></li>
-          <li><a href="#drepturi">Drepturile tale</a></li>
-          <li><a href="#cookies">Cookies</a></li>
-          <li><a href="#contact-gdpr">Contact pentru solicitări GDPR</a></li>
-          <li><a href="#modificari">Modificări ale politicii</a></li>
-        </ol>
-      </nav>
+    <nav class="legal-toc" aria-label="Cuprins">
+      <h4>Cuprins</h4>
+      <ol>
+        <li><a href="#cine-suntem">Cine suntem</a></li>
+        <li><a href="#ce-date">Ce date colectăm</a></li>
+        <li><a href="#de-ce">De ce colectăm datele</a></li>
+        <li><a href="#temei-legal">Temeiul legal</a></li>
+        <li><a href="#perioada">Cât timp păstrăm datele</a></li>
+        <li><a href="#partajare">Cu cine împărtășim datele</a></li>
+        <li><a href="#drepturi">Drepturile tale</a></li>
+        <li><a href="#cookies">Cookies</a></li>
+        <li><a href="#contact-gdpr">Contact pentru solicitări GDPR</a></li>
+        <li><a href="#modificari">Modificări ale politicii</a></li>
+      </ol>
+    </nav>
 
-      <h2 id="cine-suntem"><span class="num">01</span>Cine suntem</h2>
-      <p>Operatorul de date responsabil pentru prelucrarea datelor tale personale este:</p>
-      <div class="legal-card">
-        <p><strong>C Design</strong><br>
-        Județul Ilfov, România<br>
-        Email: <a href="mailto:office@c-design.ro">office@c-design.ro</a><br>
-        Telefon: <a href="tel:+40753116155">0753 116 155</a><br>
-        Website: <a href="https://www.c-design.ro">c-design.ro</a></p>
-      </div>
-      <p>Suntem o agenție de web design care oferă servicii de creare de site-uri, redesign, design grafic și mentenanță pentru afaceri mici din România. Prin acest site poți solicita o consultanță gratuită și o programare.</p>
-
-      <h2 id="ce-date"><span class="num">02</span>Ce date colectăm</h2>
-      <p>Colectăm doar datele pe care le introduci voluntar în formularul de programare/contact de pe site. Concret, acestea sunt:</p>
-      <ul>
-        <li><strong>Nume</strong> – pentru a ști cum să te contactăm și să ne adresăm corect;</li>
-        <li><strong>Număr de telefon</strong> – pentru a confirma programarea și a discuta detaliile cererii;</li>
-        <li><strong>Adresă de email</strong> – pentru corespondență și trimiterea ofertei sau confirmării;</li>
-        <li><strong>Data și ora preferată</strong> – pentru a stabili momentul consultanței;</li>
-        <li><strong>Mesajul / detaliile cererii</strong> – informațiile pe care alegi să le incluzi despre proiectul tău (opțional).</li>
-      </ul>
-      <p>Nu îți solicităm și nu colectăm date sensibile (precum date despre sănătate, opinii politice, religioase etc.) și nu îți cerem date de plată prin acest formular.</p>
-
-      <h2 id="de-ce"><span class="num">03</span>De ce colectăm datele</h2>
-      <p>Folosim datele tale exclusiv pentru a:</p>
-      <ul>
-        <li>răspunde la cererile tale de consultanță și informații;</li>
-        <li>confirma și gestiona programările solicitate prin site;</li>
-        <li>te contacta pentru a discuta detaliile proiectului și a-ți transmite o ofertă.</li>
-      </ul>
-      <p>Nu folosim datele tale în alte scopuri și nu le vindem niciodată către terți.</p>
-
-      <h2 id="temei-legal"><span class="num">04</span>Temeiul legal</h2>
-      <p>Prelucrarea datelor tale personale se bazează pe <strong>consimțământul tău</strong>, exprimat în momentul în care completezi și trimiți formularul de programare, conform <strong>art. 6 alin. (1) lit. (a) din GDPR</strong>.</p>
-      <p>Îți poți retrage consimțământul în orice moment, fără a afecta legalitatea prelucrării efectuate înainte de retragere. Pentru aceasta, ne poți scrie la <a href="mailto:office@c-design.ro">office@c-design.ro</a>.</p>
-
-      <h2 id="perioada"><span class="num">05</span>Cât timp păstrăm datele</h2>
-      <p>Păstrăm datele tale personale pentru o perioadă de <strong>12 luni de la ultima interacțiune</strong> avută cu tine (de exemplu, ultimul mesaj, apel sau programare). După expirarea acestei perioade, datele sunt șterse sau anonimizate în siguranță.</p>
-      <p>Dacă devii client și încheiem un contract, este posibil să păstrăm anumite date pe o perioadă mai lungă, în măsura impusă de obligațiile legale (de exemplu, cele fiscale și contabile). Te vom informa separat în acest caz.</p>
-
-      <h2 id="partajare"><span class="num">06</span>Cu cine împărtășim datele</h2>
-      <p>Pentru a putea funcționa, site-ul nostru folosește câțiva furnizori de servicii (persoane împuternicite). Aceștia pot procesa date în numele nostru, strict pentru scopurile descrise:</p>
-      <table class="legal-table">
-        <thead>
-          <tr><th>Furnizor</th><th>Scop</th><th>Date implicate</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>Resend</strong></td><td>Serviciu de trimitere a emailurilor (livrarea formularului către noi)</td><td>Nume, email, telefon, mesaj</td></tr>
-          <tr><td><strong>Google Analytics</strong></td><td>Statistici de trafic agregat, pentru a înțelege cum este folosit site-ul (doar cu consimțământul tău)</td><td>Identificatori de analiză (cookies), date de trafic agregate</td></tr>
-          <tr><td><strong>Meta Pixel</strong></td><td>Remarketing și măsurarea eficienței campaniilor publicitare</td><td>Identificatori pentru publicitate (cookies)</td></tr>
-        </tbody>
-      </table>
-      <p>Acești furnizori au propriile politici de confidențialitate și pot procesa date în afara României. Nu transmitem datele tale altor părți în scopuri comerciale și nu le vindem.</p>
-
-      <h2 id="drepturi"><span class="num">07</span>Drepturile tale</h2>
-      <p>Conform GDPR, în legătură cu datele tale personale ai următoarele drepturi:</p>
-      <ul>
-        <li><strong>Dreptul de acces</strong> – să afli ce date deținem despre tine și să primești o copie a acestora;</li>
-        <li><strong>Dreptul la rectificare</strong> – să corectezi datele inexacte sau incomplete;</li>
-        <li><strong>Dreptul la ștergere</strong> („dreptul de a fi uitat”) – să ne ceri să îți ștergem datele;</li>
-        <li><strong>Dreptul la portabilitate</strong> – să primești datele tale într-un format structurat, care poate fi citit automat;</li>
-        <li><strong>Dreptul la restricționarea prelucrării</strong> – să ne ceri să limităm modul în care îți folosim datele;</li>
-        <li><strong>Dreptul de opoziție</strong> – să te opui prelucrării datelor tale în anumite situații.</li>
-      </ul>
-      <p>Pentru a-ți exercita oricare dintre aceste drepturi, ne poți scrie la <a href="mailto:office@c-design.ro">office@c-design.ro</a>. Vom răspunde solicitării tale în termenele prevăzute de lege (de regulă, în maximum 30 de zile).</p>
-      <p>Dacă apreciezi că drepturile tale nu au fost respectate, ai dreptul de a depune o plângere la <strong>Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal (ANSPDCP)</strong> – <a href="https://www.dataprotection.ro" target="_blank" rel="noopener noreferrer">www.dataprotection.ro</a>.</p>
-
-      <h2 id="cookies"><span class="num">08</span>Cookies</h2>
-      <p>Site-ul nostru folosește cookies (fișiere mici stocate în browserul tău) pentru a măsura performanța și a evalua eficiența campaniilor noastre. Folosim două categorii de cookies, ambele <strong>neesențiale</strong> pentru funcționarea de bază a site-ului:</p>
-      <ul>
-        <li><strong>Cookies de analiză (Google Analytics 4)</strong> – ne ajută să înțelegem, în mod agregat, cum este folosit site-ul (pagini vizitate, durată, sursă de trafic);</li>
-        <li><strong>Cookies de marketing (Meta Pixel)</strong> – folosite pentru remarketing și pentru a măsura eficiența campaniilor publicitare.</li>
-      </ul>
-
-      <h3>Temeiul legal și consimțământul</h3>
-      <p>Aceste cookies se instalează <strong>exclusiv pe baza consimțământului tău</strong>, conform <strong>art. 6 alin. (1) lit. (a) din GDPR</strong>. La prima ta vizită afișăm un banner de consimțământ, iar <strong>niciun cookie de analiză sau de marketing nu se încarcă și niciun script de tracking nu rulează până când nu apeși explicit pe „Accept”</strong>. Dacă refuzi sau ignori bannerul, Google Analytics și Meta Pixel rămân blocate, iar site-ul rămâne complet funcțional.</p>
-
-      <h3>Ce cookies folosim</h3>
-      <p>Mai jos găsești lista cookies-urilor concrete care pot fi instalate <em>după</em> acordarea consimțământului:</p>
-      <table class="legal-table">
-        <thead>
-          <tr><th>Cookie</th><th>Furnizor</th><th>Scop</th><th>Tip</th><th>Durată</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>_ga</strong></td><td>Google Analytics</td><td>Distinge utilizatorii unici</td><td>Analiză</td><td>2 ani</td></tr>
-          <tr><td><strong>_ga_&lt;ID&gt;</strong></td><td>Google Analytics</td><td>Menține starea sesiunii</td><td>Analiză</td><td>2 ani</td></tr>
-          <tr><td><strong>_gid</strong></td><td>Google Analytics</td><td>Distinge utilizatorii</td><td>Analiză</td><td>24 de ore</td></tr>
-          <tr><td><strong>_fbp</strong></td><td>Meta (Facebook) Pixel</td><td>Remarketing și măsurarea campaniilor</td><td>Marketing</td><td>3 luni</td></tr>
-        </tbody>
-      </table>
-
-      <h3>Cum îți retragi consimțământul</h3>
-      <p>Îți poți retrage sau modifica oricând consimțământul, fără a fi nevoie să justifici decizia:</p>
-      <ul>
-        <li>apasă pe linkul <strong>„Setări cookies”</strong> din subsolul (footer) oricărei pagini, pentru a redeschide bannerul de consimțământ și a-ți schimba opțiunile;</li>
-        <li>sau șterge și blochează cookies-urile direct din setările browserului tău.</li>
-      </ul>
-      <p>După retragere, cookies-urile de analiză și marketing nu se mai instalează. <strong>Retragerea consimțământului nu afectează în niciun fel accesul tău la conținutul site-ului</strong> și nu influențează legalitatea prelucrărilor efectuate înainte de retragere.</p>
-
-      <h3>Furnizori terți și transferuri în afara UE</h3>
-      <p>Cookies-urile de mai sus sunt setate de furnizori terți (Google și Meta), care acționează ca operatori independenți pentru datele colectate prin propriile tehnologii. Aceștia pot transfera și prelucra date <strong>în afara Uniunii Europene</strong> (de exemplu, în Statele Unite), pe baza mecanismelor de transfer prevăzute de GDPR. Modul în care prelucrează aceste date este reglementat de propriile lor politici de confidențialitate:</p>
-      <ul>
-        <li>Google: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">policies.google.com/privacy</a></li>
-        <li>Meta: <a href="https://www.facebook.com/privacy/policy" target="_blank" rel="noopener noreferrer">facebook.com/privacy/policy</a></li>
-      </ul>
-
-      <h2 id="contact-gdpr"><span class="num">09</span>Contact pentru solicitări GDPR</h2>
-      <p>Pentru orice întrebare legată de această politică sau pentru a-ți exercita drepturile privind protecția datelor, ne poți contacta la:</p>
-      <div class="legal-card">
-        <p>Email: <a href="mailto:office@c-design.ro">office@c-design.ro</a><br>
-        Telefon: <a href="tel:+40753116155">0753 116 155</a></p>
-      </div>
-
-      <h2 id="modificari"><span class="num">10</span>Modificări ale politicii</h2>
-      <p>Putem actualiza periodic această politică de confidențialitate pentru a reflecta modificări ale serviciilor noastre sau ale cerințelor legale. Versiunea actualizată va fi publicată întotdeauna pe această pagină, cu data ultimei revizuiri.</p>
-      <p><strong>Ultima actualizare: Mai 2026.</strong></p>
-
+    <h2 id="cine-suntem"><span class="num">01</span>Cine suntem</h2>
+    <p>Operatorul de date responsabil pentru prelucrarea datelor tale personale este:</p>
+    <div class="legal-card">
+      <p><strong>C Design</strong><br>
+      Județul Ilfov, România<br>
+      Email: <a href="mailto:office@c-design.ro">office@c-design.ro</a><br>
+      Telefon: <a href="tel:+40753116155">0753 116 155</a><br>
+      Website: <a href="https://www.c-design.ro">c-design.ro</a></p>
     </div>
+    <p>Suntem o agenție de web design care oferă servicii de creare de site-uri, redesign, design grafic și mentenanță pentru afaceri mici din România. Prin acest site poți solicita o consultanță gratuită și o programare.</p>
+
+    <h2 id="ce-date"><span class="num">02</span>Ce date colectăm</h2>
+    <p>Colectăm doar datele pe care le introduci voluntar în formularul de programare/contact de pe site. Concret, acestea sunt:</p>
+    <ul>
+      <li><strong>Nume</strong> – pentru a ști cum să te contactăm și să ne adresăm corect;</li>
+      <li><strong>Număr de telefon</strong> – pentru a confirma programarea și a discuta detaliile cererii;</li>
+      <li><strong>Adresă de email</strong> – pentru corespondență și trimiterea ofertei sau confirmării;</li>
+      <li><strong>Data și ora preferată</strong> – pentru a stabili momentul consultanței;</li>
+      <li><strong>Mesajul / detaliile cererii</strong> – informațiile pe care alegi să le incluzi despre proiectul tău (opțional).</li>
+    </ul>
+    <p>Nu îți solicităm și nu colectăm date sensibile (precum date despre sănătate, opinii politice, religioase etc.) și nu îți cerem date de plată prin acest formular.</p>
+
+    <h2 id="de-ce"><span class="num">03</span>De ce colectăm datele</h2>
+    <p>Folosim datele tale exclusiv pentru a:</p>
+    <ul>
+      <li>răspunde la cererile tale de consultanță și informații;</li>
+      <li>confirma și gestiona programările solicitate prin site;</li>
+      <li>te contacta pentru a discuta detaliile proiectului și a-ți transmite o ofertă.</li>
+    </ul>
+    <p>Nu folosim datele tale în alte scopuri și nu le vindem niciodată către terți.</p>
+
+    <h2 id="temei-legal"><span class="num">04</span>Temeiul legal</h2>
+    <p>Prelucrarea datelor tale personale se bazează pe <strong>consimțământul tău</strong>, exprimat în momentul în care completezi și trimiți formularul de programare, conform <strong>art. 6 alin. (1) lit. (a) din GDPR</strong>.</p>
+    <p>Îți poți retrage consimțământul în orice moment, fără a afecta legalitatea prelucrării efectuate înainte de retragere. Pentru aceasta, ne poți scrie la <a href="mailto:office@c-design.ro">office@c-design.ro</a>.</p>
+
+    <h2 id="perioada"><span class="num">05</span>Cât timp păstrăm datele</h2>
+    <p>Păstrăm datele tale personale pentru o perioadă de <strong>12 luni de la ultima interacțiune</strong> avută cu tine (de exemplu, ultimul mesaj, apel sau programare). După expirarea acestei perioade, datele sunt șterse sau anonimizate în siguranță.</p>
+    <p>Dacă devii client și încheiem un contract, este posibil să păstrăm anumite date pe o perioadă mai lungă, în măsura impusă de obligațiile legale (de exemplu, cele fiscale și contabile). Te vom informa separat în acest caz.</p>
+
+    <h2 id="partajare"><span class="num">06</span>Cu cine împărtășim datele</h2>
+    <p>Pentru a putea funcționa, site-ul nostru folosește câțiva furnizori de servicii (persoane împuternicite). Aceștia pot procesa date în numele nostru, strict pentru scopurile descrise:</p>
+    <table class="legal-table">
+      <thead>
+        <tr><th>Furnizor</th><th>Scop</th><th>Date implicate</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Resend</strong></td><td>Serviciu de trimitere a emailurilor (livrarea formularului către noi)</td><td>Nume, email, telefon, mesaj</td></tr>
+        <tr><td><strong>Google Analytics</strong></td><td>Statistici de trafic agregat, pentru a înțelege cum este folosit site-ul (doar cu consimțământul tău)</td><td>Identificatori de analiză (cookies), date de trafic agregate</td></tr>
+        <tr><td><strong>Meta Pixel</strong></td><td>Remarketing și măsurarea eficienței campaniilor publicitare</td><td>Identificatori pentru publicitate (cookies)</td></tr>
+      </tbody>
+    </table>
+    <p>Acești furnizori au propriile politici de confidențialitate și pot procesa date în afara României. Nu transmitem datele tale altor părți în scopuri comerciale și nu le vindem.</p>
+
+    <h2 id="drepturi"><span class="num">07</span>Drepturile tale</h2>
+    <p>Conform GDPR, în legătură cu datele tale personale ai următoarele drepturi:</p>
+    <ul>
+      <li><strong>Dreptul de acces</strong> – să afli ce date deținem despre tine și să primești o copie a acestora;</li>
+      <li><strong>Dreptul la rectificare</strong> – să corectezi datele inexacte sau incomplete;</li>
+      <li><strong>Dreptul la ștergere</strong> („dreptul de a fi uitat") – să ne ceri să îți ștergem datele;</li>
+      <li><strong>Dreptul la portabilitate</strong> – să primești datele tale într-un format structurat, care poate fi citit automat;</li>
+      <li><strong>Dreptul la restricționarea prelucrării</strong> – să ne ceri să limităm modul în care îți folosim datele;</li>
+      <li><strong>Dreptul de opoziție</strong> – să te opui prelucrării datelor tale în anumite situații.</li>
+    </ul>
+    <p>Pentru a-ți exercita oricare dintre aceste drepturi, ne poți scrie la <a href="mailto:office@c-design.ro">office@c-design.ro</a>. Vom răspunde solicitării tale în termenele prevăzute de lege (de regulă, în maximum 30 de zile).</p>
+    <p>Dacă apreciezi că drepturile tale nu au fost respectate, ai dreptul de a depune o plângere la <strong>Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal (ANSPDCP)</strong> – <a href="https://www.dataprotection.ro" target="_blank" rel="noopener noreferrer">www.dataprotection.ro</a>.</p>
+
+    <h2 id="cookies"><span class="num">08</span>Cookies</h2>
+    <p>Site-ul nostru folosește cookies (fișiere mici stocate în browserul tău) pentru a măsura performanța și a evalua eficiența campaniilor noastre. Folosim două categorii de cookies, ambele <strong>neesențiale</strong> pentru funcționarea de bază a site-ului:</p>
+    <ul>
+      <li><strong>Cookies de analiză (Google Analytics 4)</strong> – ne ajută să înțelegem, în mod agregat, cum este folosit site-ul (pagini vizitate, durată, sursă de trafic);</li>
+      <li><strong>Cookies de marketing (Meta Pixel)</strong> – folosite pentru remarketing și pentru a măsura eficiența campaniilor publicitare.</li>
+    </ul>
+
+    <h3>Temeiul legal și consimțământul</h3>
+    <p>Aceste cookies se instalează <strong>exclusiv pe baza consimțământului tău</strong>, conform <strong>art. 6 alin. (1) lit. (a) din GDPR</strong>. La prima ta vizită afișăm un banner de consimțământ, iar <strong>niciun cookie de analiză sau de marketing nu se încarcă și niciun script de tracking nu rulează până când nu apeși explicit pe „Accept"</strong>. Dacă refuzi sau ignori bannerul, Google Analytics și Meta Pixel rămân blocate, iar site-ul rămâne complet funcțional.</p>
+
+    <h3>Ce cookies folosim</h3>
+    <p>Mai jos găsești lista cookies-urilor concrete care pot fi instalate <em>după</em> acordarea consimțământului:</p>
+    <table class="legal-table">
+      <thead>
+        <tr><th>Cookie</th><th>Furnizor</th><th>Scop</th><th>Tip</th><th>Durată</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>_ga</strong></td><td>Google Analytics</td><td>Distinge utilizatorii unici</td><td>Analiză</td><td>2 ani</td></tr>
+        <tr><td><strong>_ga_&lt;ID&gt;</strong></td><td>Google Analytics</td><td>Menține starea sesiunii</td><td>Analiză</td><td>2 ani</td></tr>
+        <tr><td><strong>_gid</strong></td><td>Google Analytics</td><td>Distinge utilizatorii</td><td>Analiză</td><td>24 de ore</td></tr>
+        <tr><td><strong>_fbp</strong></td><td>Meta (Facebook) Pixel</td><td>Remarketing și măsurarea campaniilor</td><td>Marketing</td><td>3 luni</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Cum îți retragi consimțământul</h3>
+    <p>Îți poți retrage sau modifica oricând consimțământul, fără a fi nevoie să justifici decizia:</p>
+    <ul>
+      <li>apasă pe linkul <strong>„Setări cookies"</strong> din subsolul (footer) oricărei pagini, pentru a redeschide bannerul de consimțământ și a-ți schimba opțiunile;</li>
+      <li>sau șterge și blochează cookies-urile direct din setările browserului tău.</li>
+    </ul>
+    <p>După retragere, cookies-urile de analiză și marketing nu se mai instalează. <strong>Retragerea consimțământului nu afectează în niciun fel accesul tău la conținutul site-ului</strong> și nu influențează legalitatea prelucrărilor efectuate înainte de retragere.</p>
+
+    <h3>Furnizori terți și transferuri în afara UE</h3>
+    <p>Cookies-urile de mai sus sunt setate de furnizori terți (Google și Meta), care acționează ca operatori independenți pentru datele colectate prin propriile tehnologii. Aceștia pot transfera și prelucra date <strong>în afara Uniunii Europene</strong> (de exemplu, în Statele Unite), pe baza mecanismelor de transfer prevăzute de GDPR. Modul în care prelucrează aceste date este reglementat de propriile lor politici de confidențialitate:</p>
+    <ul>
+      <li>Google: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">policies.google.com/privacy</a></li>
+      <li>Meta: <a href="https://www.facebook.com/privacy/policy" target="_blank" rel="noopener noreferrer">facebook.com/privacy/policy</a></li>
+    </ul>
+
+    <h2 id="contact-gdpr"><span class="num">09</span>Contact pentru solicitări GDPR</h2>
+    <p>Pentru orice întrebare legată de această politică sau pentru a-ți exercita drepturile privind protecția datelor, ne poți contacta la:</p>
+    <div class="legal-card">
+      <p>Email: <a href="mailto:office@c-design.ro">office@c-design.ro</a><br>
+      Telefon: <a href="tel:+40753116155">0753 116 155</a></p>
+    </div>
+
+    <h2 id="modificari"><span class="num">10</span>Modificări ale politicii</h2>
+    <p>Putem actualiza periodic această politică de confidențialitate pentru a reflecta modificări ale serviciilor noastre sau ale cerințelor legale. Versiunea actualizată va fi publicată întotdeauna pe această pagină, cu data ultimei revizuiri.</p>
+    <p><strong>Ultima actualizare: Mai 2026.</strong></p>
+
   </div>
 </section>
 
-</main>
-
-<footer>
-  <div class="container">
-    <div class="footer-grid">
-      <div>
-        <div class="footer-logo"><img src="/logo-c-design.png" alt="C Design" width="144" height="36" style="height:36px;width:auto;"></div>
-        <p class="footer-about">Web design profesional pentru afaceri mici din toată România. Construim site-uri care aduc clienți reali.</p>
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="f-brand">
+      <img src="/logo-c-design.webp" alt="C Design">
+      <p>Studio web din România care construiește site-uri moderne, rapide și care transformă vizitatori în clienți — cu prețuri honeste și fixe.</p>
+      <div class="f-social">
+        <a href="https://www.facebook.com/cdesignro" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M13 22v-8h2.7l.4-3H13V9.2c0-.9.3-1.5 1.6-1.5H16V5.1C15.7 5 14.7 5 13.6 5 11.2 5 9.7 6.4 9.7 9v2H7v3h2.7v8z"/></svg></a>
+        <a href="https://www.instagram.com/cdesignro" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.3 2.2.4.5.2.9.5 1.3.9.4.4.7.8.9 1.3.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 1.8-.4 2.2-.2.5-.5.9-.9 1.3-.4.4-.8.7-1.3.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.3-2.2-.4a3.5 3.5 0 0 1-1.3-.9 3.5 3.5 0 0 1-.9-1.3c-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-1.8.4-2.2.2-.5.5-.9.9-1.3.4-.4.8-.7 1.3-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 3.2A6.6 6.6 0 1 0 12 18.6 6.6 6.6 0 0 0 12 5.4zm0 10.9a4.3 4.3 0 1 1 0-8.6 4.3 4.3 0 0 1 0 8.6zm6.8-11.2a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg></a>
+        <a href="https://www.linkedin.com/company/c-design-romania" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M6.9 8.4H3.6V21h3.3zM5.2 3.5a1.9 1.9 0 1 0 0 3.8 1.9 1.9 0 0 0 0-3.8zM21 21h-3.3v-6.2c0-1.5 0-3.4-2-3.4s-2.4 1.6-2.4 3.3V21h-3.3V8.4h3.2v1.7h.1c.4-.8 1.5-1.7 3.1-1.7 3.3 0 3.9 2.2 3.9 5z"/></svg></a>
       </div>
-      <div class="footer-col"><h3>Servicii</h3><ul><li><a href="/servicii">Site de prezentare</a></li><li><a href="/pachet-startup">Pachet Start-Up</a></li><li><a href="/servicii">Redesign site</a></li><li><a href="/servicii">Design grafic</a></li><li><a href="/abonament-lunar">Abonament lunar</a></li></ul></div>
-      <div class="footer-col"><h3>Industrii</h3><ul><li><a href="/web-design-auto">Web Design Auto</a></li><li><a href="/web-design-restaurante">Web Design Restaurante</a></li><li><a href="/web-design-afaceri-mici">Web Design Afaceri Mici</a></li></ul></div>
-      <div class="footer-col"><h3>Companie</h3><ul><li><a href="/despre-noi">Despre noi</a></li><li><a href="/#portofoliu">Portofoliu</a></li><li><a href="/#testimoniale">Recenzii</a></li><li><a href="/despre-noi#proces">Cum lucrăm</a></li><li><a href="/blog">Blog</a></li></ul></div>
-      <div class="footer-col"><h3>Contact</h3><ul><li><a href="tel:+40753116155">0753 116 155</a></li><li><a href="mailto:office@c-design.ro">office@c-design.ro</a></li><li><a href="https://wa.me/40753116155" rel="noopener noreferrer">WhatsApp</a></li><li><a href="/programare">Programează gratuit</a></li></ul></div>
     </div>
-    <div class="footer-bottom">
-      <span>© 2026 C Design · Toate drepturile rezervate</span>
-      <span class="footer-bottom-links"><a href="/politica-confidentialitate">Politică de Confidențialitate</a></span>
+    <div class="f-col">
+      <h4>Servicii</h4>
+      <a href="/servicii">Site de prezentare</a>
+      <a href="/pachet-startup">Pachet Start-Up</a>
+      <a href="/servicii">Redesign site</a>
+      <a href="/servicii">Design grafic</a>
+      <a href="/servicii">Mentenanță</a>
     </div>
+    <div class="f-col">
+      <h4>Industrii</h4>
+      <a href="/web-design-restaurante">Web Design Restaurante</a>
+      <a href="/web-design-auto">Web Design Auto</a>
+      <a href="/web-design-afaceri-mici">Web Design Afaceri Mici</a>
+    </div>
+    <div class="f-col">
+      <h4>Companie</h4>
+      <a href="/despre-noi">Despre noi</a>
+      <a href="/#portofoliu">Portofoliu</a>
+      <a href="/blog">Blog</a>
+      <a href="/#testimoniale">Recenzii</a>
+    </div>
+    <div class="f-col">
+      <h4>Contact</h4>
+      <a href="tel:+40753116155"><svg viewBox="0 0 24 24"><path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 4.5 5.7 2 2 0 0 1 6.5 3.5Z"/></svg> 0753 116 155</a>
+      <a href="#contact"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4V5Z"/></svg> Trimite mesaj</a>
+      <a href="mailto:office@c-design.ro"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg> office@c-design.ro</a>
+      <div class="fi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg> Luni–Vineri · 9:00–18:00</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 C Design. Toate drepturile rezervate.</span>
+    <span><a href="/politica-confidentialitate">Politică de Confidențialitate</a></span>
   </div>
 </footer>
 
 <script>
-  (function(){
-    var h=document.getElementById('hamburger'),m=document.getElementById('mobileMenu');
-    if(h&&m){h.addEventListener('click',function(){
-      var open=m.classList.toggle('open');
-      h.setAttribute('aria-expanded',open?'true':'false');
-      h.setAttribute('aria-label',open?'Închide meniu':'Deschide meniu');
-    });}
-  })();
+  var burger = document.getElementById('burger');
+  var mm = document.getElementById('mobileMenu');
+  var bd = document.getElementById('backdrop');
+  function openMenu(){ mm.classList.add('open'); bd.classList.add('open'); }
+  function closeMenu(){ mm.classList.remove('open'); bd.classList.remove('open'); }
+  burger.addEventListener('click', openMenu);
+  document.getElementById('mmClose').addEventListener('click', closeMenu);
+  bd.addEventListener('click', closeMenu);
+  mm.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
 </script>
 
 </body>
