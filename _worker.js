@@ -1102,13 +1102,6 @@ export default {
       return serveContentPage(request, env, 'parteneri');
     }
 
-    // Pagină de test (noindex) — variantă animată a homepage-ului
-    if (path === '/test-home') {
-      const assetUrl = new URL(request.url);
-      assetUrl.pathname = '/test-home.html';
-      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
-    }
-
     // ── CITY LANDING PAGES ───────────────────────────────────
 
     if (path === '/web-design-bucuresti') {
