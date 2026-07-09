@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta name="robots" content="noindex, follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurantul Meu · Gastronomie Fină</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --charcoal: #16161a;
+    --charcoal-2: #1e1e24;
+    --gold: #c9a24b;
+    --gold-light: #e0c583;
+    --cream: #f4efe6;
+    --muted: #a8a29a;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--charcoal);
+    color: var(--cream);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 600; line-height: 1.1; }
+  a { color: inherit; }
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 28px; }
+
+  /* Header */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(22,22,26,0.82);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,162,75,0.18);
+  }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 76px;
+  }
+  .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 700; letter-spacing: .5px; display: flex; align-items: center; gap: 10px; }
+  .logo .mark { color: var(--gold); }
+  nav.links { display: flex; gap: 34px; align-items: center; }
+  nav.links a { font-size: .82rem; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); text-decoration: none; transition: color .25s; }
+  nav.links a:hover { color: var(--gold-light); }
+  .btn {
+    display: inline-block; font-family: 'Jost', sans-serif;
+    font-size: .78rem; text-transform: uppercase; letter-spacing: 2.5px;
+    padding: 13px 26px; border: 1px solid var(--gold);
+    color: var(--gold-light); text-decoration: none;
+    transition: all .3s ease; background: transparent;
+  }
+  .btn:hover { background: var(--gold); color: var(--charcoal); }
+  .menu-toggle { display: none; background: none; border: none; color: var(--cream); font-size: 1.6rem; cursor: pointer; }
+
+  /* Hero */
+  .hero {
+    position: relative; height: 92vh; min-height: 560px;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    background: linear-gradient(rgba(16,16,20,.55), rgba(16,16,20,.78)),
+      url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+  }
+  .hero-inner { max-width: 760px; padding: 0 24px; }
+  .eyebrow { text-transform: uppercase; letter-spacing: 5px; font-size: .8rem; color: var(--gold); margin-bottom: 22px; }
+  .hero h1 { font-size: clamp(3rem, 8vw, 6rem); font-weight: 600; color: #fff; margin-bottom: 18px; }
+  .hero p { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.5rem; color: var(--cream); margin-bottom: 36px; }
+  .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn-solid { background: var(--gold); color: var(--charcoal); border-color: var(--gold); }
+  .btn-solid:hover { background: var(--gold-light); border-color: var(--gold-light); }
+
+  section { padding: 100px 0; }
+  .section-head { text-align: center; margin-bottom: 60px; }
+  .section-head .eyebrow { margin-bottom: 14px; }
+  .section-head h2 { font-size: clamp(2.4rem, 5vw, 3.6rem); color: #fff; }
+  .divider { width: 60px; height: 1px; background: var(--gold); margin: 20px auto 0; }
+
+  /* About */
+  .about { background: var(--charcoal-2); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .about-img { border-radius: 2px; overflow: hidden; position: relative; }
+  .about-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .about-text h2 { font-size: clamp(2.2rem, 4vw, 3.2rem); color: #fff; margin-bottom: 24px; }
+  .about-text p { color: var(--muted); margin-bottom: 18px; }
+  .about-text .signature { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.6rem; color: var(--gold-light); margin-top: 12px; }
+
+  /* Menu */
+  .menu-list { max-width: 820px; margin: 0 auto; }
+  .dish {
+    display: flex; align-items: baseline; gap: 18px;
+    padding: 26px 0; border-bottom: 1px solid rgba(201,162,75,0.15);
+  }
+  .dish:last-child { border-bottom: none; }
+  .dish-name { font-family: 'Cormorant Garamond', serif; font-size: 1.75rem; color: #fff; }
+  .dish-dots { flex: 1; border-bottom: 1px dotted rgba(168,162,154,0.4); transform: translateY(-4px); }
+  .dish-desc { display: block; font-family: 'Jost', sans-serif; font-size: .9rem; color: var(--muted); margin-top: 4px; }
+  .dish-price { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: var(--gold); white-space: nowrap; }
+  .dish-info { flex: 1; }
+
+  /* Reservation CTA */
+  .reserve {
+    text-align: center;
+    background: linear-gradient(rgba(16,16,20,.82), rgba(16,16,20,.9)),
+      url('https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=1600&q=80') center/cover fixed no-repeat;
+  }
+  .reserve h2 { font-size: clamp(2.6rem, 6vw, 4.4rem); color: #fff; margin-bottom: 18px; }
+  .reserve p { color: var(--cream); font-size: 1.15rem; margin-bottom: 34px; max-width: 520px; margin-left: auto; margin-right: auto; }
+  .hours-strip { display: flex; gap: 48px; justify-content: center; flex-wrap: wrap; margin-top: 44px; color: var(--muted); font-size: .9rem; letter-spacing: 1px; }
+  .hours-strip strong { color: var(--gold-light); display: block; font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 4px; }
+
+  /* Footer */
+  footer { background: #0f0f12; padding: 48px 0; text-align: center; border-top: 1px solid rgba(201,162,75,0.15); }
+  footer .logo { justify-content: center; margin-bottom: 16px; }
+  footer p { color: var(--muted); font-size: .85rem; }
+  footer a { color: var(--gold-light); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 820px) {
+    nav.links { display: none; }
+    .header-cta { display: none; }
+    .menu-toggle { display: block; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .about-img { max-height: 420px; }
+    section { padding: 70px 0; }
+    .dish { flex-wrap: wrap; }
+    .dish-dots { display: none; }
+    .reserve { background-attachment: scroll; }
+  }
+</style>
+</head>
+<body>
+<div style="background:#141719;color:#fff;text-align:center;font-size:.8rem;padding:8px 12px;font-family:sans-serif">✦ Acesta este un site demo de C Design — <a href="/#contact" style="color:#fff;text-decoration:underline;font-weight:600">Obțineți un site similar pentru afacerea voastră</a> · <a href="/demos/admin-demo.html?type=restaurant" style="color:#fff;text-decoration:underline;font-weight:600">Vedeți panoul de administrare</a></div>
+
+<header>
+  <div class="container nav">
+    <div class="logo"><span class="mark">🍽️</span> Restaurantul Meu</div>
+    <nav class="links">
+      <a href="#about">Povestea Noastră</a>
+      <a href="#menu">Meniu</a>
+      <a href="#reserve">Orarul</a>
+    </nav>
+    <a href="#reserve" class="btn header-cta">Rezervă o Masă</a>
+    <button class="menu-toggle" aria-label="Meniu">☰</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">Gastronomie Fină Modernă Britanică</p>
+    <h1>Restaurantul Meu</h1>
+    <p>O masă la lumina lumânării, un meniu sezonier, și o seară de neuitat.</p>
+    <div class="hero-actions">
+      <a href="#reserve" class="btn btn-solid">Rezervă o Masă</a>
+      <a href="#menu" class="btn">Vezi Meniul</a>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="container about-grid">
+    <div class="about-img">
+      <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80" alt="Sala noastră de mese">
+    </div>
+    <div class="about-text">
+      <p class="eyebrow">Povestea Noastră</p>
+      <h2>Înrădăcinat în anotimpuri, gătit cu intenție.</h2>
+      <p>De când ne-am deschis ușile, Restaurantul Meu a fost o liniștită celebrare a produselor britanice. Colaborez cu o mână de ferme de încredere și pescari de barcă, lăsând ingredientele să-și decidă locul pe meniu mult înainte ca noi să facem orice.</p>
+      <p>Bucătăria noastră se schimbă cu calendarul — sparanghel primăvara, vânat toamna — deci nicio două vizite nu sunt niciodată exact la fel. Așteptați-vă la service caldă, la o cină negrabă, și la o carte de vinuri aleasă cu grijă.</p>
+      <p class="signature">— Șef Bucătar &amp; Echipa</p>
+    </div>
+  </div>
+</section>
+
+<section id="menu">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">À La Carte</p>
+      <h2>Preparate Semnătură</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="menu-list">
+      <div class="dish">
+        <div class="dish-info">
+          <span class="dish-name">Cărtiță de Crevete Prăjite</span>
+          <span class="dish-desc">Piure de conopidă, unt brun, alun tos, măr.</span>
+        </div>
+        <span class="dish-dots"></span>
+        <span class="dish-price">88 RON</span>
+      </div>
+      <div class="dish">
+        <div class="dish-info">
+          <span class="dish-name">Risotto cu Ciuperci Sălbatice</span>
+          <span class="dish-desc">Parmezanul vârstnic, ulei de trufe, salvie crocantă, arpagic de grădină.</span>
+        </div>
+        <span class="dish-dots"></span>
+        <span class="dish-price">105 RON</span>
+      </div>
+      <div class="dish">
+        <div class="dish-info">
+          <span class="dish-name">Ribeye Vârstnic</span>
+          <span class="dish-desc">Vită uscată 28 zile, cartofi triple-gătit, sos piperiu.</span>
+        </div>
+        <span class="dish-dots"></span>
+        <span class="dish-price">187 RON</span>
+      </div>
+      <div class="dish">
+        <div class="dish-info">
+          <span class="dish-name">Cod Prăjit în Tigaie</span>
+          <span class="dish-desc">Unt de caracatiță, samphire, cartofi proaspeți mărunți.</span>
+        </div>
+        <span class="dish-dots"></span>
+        <span class="dish-price">150 RON</span>
+      </div>
+      <div class="dish">
+        <div class="dish-info">
+          <span class="dish-name">Deliciu de Ciocolată Neagră</span>
+          <span class="dish-desc">Caramel sărat, fagure, sorbetă de frișcă acră.</span>
+        </div>
+        <span class="dish-dots"></span>
+        <span class="dish-price">66 RON</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="reserve" id="reserve">
+  <div class="container">
+    <p class="eyebrow">Alătură-te Nouă Seara Aceasta</p>
+    <h2>Rezervă-ți Masa</h2>
+    <p>Rezervările sunt recomandate, în special în weekend. Mese private și meniuri de degustare disponibile la cerere.</p>
+    <a href="/#contact" class="btn btn-solid">Rezervă o Masă</a>
+    <div class="hours-strip">
+      <div><strong>Mar – Joi</strong> 18:00 – 22:00</div>
+      <div><strong>Vin – Sâm</strong> 12:00 – 23:00</div>
+      <div><strong>Duminică</strong> 12:00 – 16:00</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo"><span class="mark">🍽️</span> Restaurantul Meu</div>
+  <p>© Restaurantul Meu · Un site demo creat de <a href="/">C Design</a></p>
+</footer>
+</body>
+</html>

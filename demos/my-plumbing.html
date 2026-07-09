@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta name="robots" content="noindex, follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Plumbing — Instalatori 24/7 de Încredere</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#1876f2;
+    --blue-dark:#0d5ad1;
+    --blue-deep:#0a3d8f;
+    --sky:#e8f2ff;
+    --sky-2:#f4f9ff;
+    --ink:#122036;
+    --slate:#5a6b82;
+    --amber:#ffb020;
+    --line:#dceafd;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Nunito Sans',sans-serif;
+    color:var(--ink);
+    background:#fff;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.head{font-family:'Poppins',sans-serif;line-height:1.15;letter-spacing:-.01em}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+
+  /* Header */
+  .site-header{position:sticky;top:0;z-index:50;background:#fff;box-shadow:0 2px 18px rgba(24,118,242,.08)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:76px}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Poppins',sans-serif;font-weight:800;font-size:1.35rem;color:var(--blue-deep)}
+  .logo .emoji{font-size:1.5rem}
+  .nav-links{display:flex;gap:28px;align-items:center}
+  .nav-links a{font-weight:700;color:var(--ink);font-size:.98rem;transition:color .2s}
+  .nav-links a:hover{color:var(--blue)}
+  .btn{
+    display:inline-block;font-family:'Poppins',sans-serif;font-weight:700;font-size:.98rem;
+    background:var(--blue);color:#fff;padding:12px 24px;border-radius:50px;
+    box-shadow:0 8px 20px rgba(24,118,242,.28);transition:transform .12s,background .2s;
+  }
+  .btn:hover{background:var(--blue-dark);transform:translateY(-2px)}
+  .btn-amber{background:var(--amber);color:var(--ink);box-shadow:0 8px 20px rgba(255,176,32,.35)}
+  .btn-amber:hover{background:#f5a200}
+  .btn-white{background:#fff;color:var(--blue);box-shadow:0 8px 20px rgba(0,0,0,.15)}
+  .btn-white:hover{background:var(--sky)}
+  .menu-toggle{display:none}
+
+  /* Hero */
+  .hero{
+    position:relative;color:#fff;
+    background:linear-gradient(120deg,rgba(10,61,143,.92),rgba(24,118,242,.82)),
+      url('https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=1600&q=80') center/cover;
+    padding:90px 0 100px;
+  }
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);padding:8px 16px;border-radius:50px;font-weight:700;font-size:.9rem;margin-bottom:22px}
+  .hero h1{font-size:clamp(2.3rem,5vw,3.6rem);font-weight:800;margin-bottom:16px}
+  .hero p{font-size:1.15rem;color:#eaf3ff;max-width:520px;margin-bottom:30px}
+  .hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+  /* Emergency call card */
+  .call-card{
+    background:#fff;color:var(--ink);border-radius:22px;padding:34px 30px;
+    box-shadow:0 30px 60px rgba(8,40,95,.35);text-align:center;
+  }
+  .call-card .pill{display:inline-block;background:#ffe9c2;color:#8a5a00;font-weight:800;font-size:.8rem;padding:6px 14px;border-radius:50px;letter-spacing:.04em}
+  .call-card .lbl{font-family:'Poppins',sans-serif;font-weight:600;color:var(--slate);margin-top:18px;font-size:.95rem}
+  .call-card .phone{font-family:'Poppins',sans-serif;font-weight:800;font-size:2.5rem;color:var(--blue-deep);margin:4px 0 6px;letter-spacing:-.02em}
+  .call-card .phone a{color:inherit}
+  .call-card small{color:var(--slate);display:block;margin-bottom:20px}
+  .call-card .btn{width:100%}
+
+  /* Trust strip */
+  .trust{background:var(--sky-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .trust-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;padding:26px 0}
+  .trust-item{display:flex;align-items:center;gap:10px;font-family:'Poppins',sans-serif;font-weight:600;color:var(--ink)}
+  .trust-item .ic{width:38px;height:38px;border-radius:10px;background:var(--sky);color:var(--blue);display:grid;place-items:center;font-size:1.1rem}
+
+  /* Sections */
+  section{padding:84px 0}
+  .kicker{color:var(--blue);font-family:'Poppins',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.82rem;margin-bottom:12px}
+  .sec-title{font-size:clamp(1.9rem,4vw,2.8rem);font-weight:800;margin-bottom:12px}
+  .sec-intro{color:var(--slate);max-width:600px;margin:0 auto 46px;font-size:1.05rem}
+  .center{text-align:center}
+
+  /* Services */
+  .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .svc{background:#fff;border:1px solid var(--line);border-radius:18px;padding:30px 26px;transition:transform .15s,box-shadow .2s}
+  .svc:hover{transform:translateY(-5px);box-shadow:0 20px 40px rgba(24,118,242,.14);border-color:transparent}
+  .svc .ic{width:56px;height:56px;border-radius:14px;background:var(--sky);color:var(--blue);display:grid;place-items:center;font-size:1.6rem;margin-bottom:16px}
+  .svc h3{font-size:1.25rem;font-weight:700;margin-bottom:8px}
+  .svc p{color:var(--slate);font-size:.98rem}
+
+  /* Reviews */
+  .reviews{background:var(--sky-2)}
+  .rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .rev{background:#fff;border-radius:18px;padding:28px;box-shadow:0 10px 30px rgba(8,40,95,.06)}
+  .stars{color:var(--amber);font-size:1.05rem;letter-spacing:2px;margin-bottom:12px}
+  .rev p{color:var(--ink);font-size:1rem;margin-bottom:16px}
+  .rev .who{display:flex;align-items:center;gap:12px}
+  .rev .av{width:42px;height:42px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-family:'Poppins',sans-serif;font-weight:700}
+  .rev .who b{display:block;font-family:'Poppins',sans-serif}
+  .rev .who span{color:var(--slate);font-size:.85rem}
+
+  /* Big CTA */
+  .cta-final{
+    background:linear-gradient(120deg,var(--blue-deep),var(--blue));color:#fff;text-align:center;
+  }
+  .cta-final h2{font-size:clamp(2rem,4.5vw,3rem);font-weight:800;color:#fff}
+  .cta-final p{color:#e6f0ff;max-width:520px;margin:16px auto 30px;font-size:1.12rem}
+  .cta-final .phone-big{font-family:'Poppins',sans-serif;font-weight:800;font-size:2.4rem;margin-bottom:24px;display:inline-block}
+  .cta-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+  /* Footer */
+  footer{background:var(--ink);color:#c6d4e8;padding:48px 0;text-align:center}
+  footer .flogo{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.3rem;color:#fff;margin-bottom:12px}
+  footer p{font-size:.92rem}
+  footer a{color:#8bb8ff;font-weight:700}
+
+  @media(max-width:900px){
+    .hero-grid{grid-template-columns:1fr}
+    .nav-links{display:none}
+    .nav-links.open{display:flex;position:absolute;top:76px;left:0;right:0;flex-direction:column;background:#fff;padding:20px 24px;gap:16px;box-shadow:0 12px 24px rgba(0,0,0,.1)}
+    .menu-toggle{display:inline-block;background:var(--sky);border:none;color:var(--blue);padding:9px 13px;border-radius:10px;font-size:1.1rem;cursor:pointer}
+    .svc-grid,.rev-grid{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:600px){
+    .svc-grid,.rev-grid{grid-template-columns:1fr}
+    .trust-grid{justify-content:center;text-align:center}
+  }
+</style>
+</head>
+<body>
+<div style="background:#141719;color:#fff;text-align:center;font-size:.8rem;padding:8px 12px;font-family:sans-serif">✦ Acesta este un site demo de C Design — <a href="/#contact" style="color:#fff;text-decoration:underline;font-weight:600">Obțineți unul similar pentru afacerea dvs</a> · <a href="/demos/admin-demo.html?type=plumbing" style="color:#fff;text-decoration:underline;font-weight:600">Vedeți panoul de administrare</a></div>
+
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="#top" class="logo"><span class="emoji">🔧</span> My Plumbing</a>
+    <nav class="nav-links" id="menu">
+      <a href="#services">Servicii</a>
+      <a href="#reviews">Recenzii</a>
+      <a href="#areas">Acoperire</a>
+      <a href="tel:0212345678" class="btn btn-amber">📞 Sună Acum</a>
+    </nav>
+    <button class="menu-toggle" onclick="document.getElementById('menu').classList.toggle('open')">☰</button>
+  </div>
+</header>
+
+<a id="top"></a>
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="badge">⚡ Urgență 24/7</span>
+      <h1>Scurgere? Tub blocat? Suntem în drum.</h1>
+      <p>Instalatori certificați și prietenoși care vă acoperă zona nonstop. Fără taxă de vizită, preț transparent din start și zâsmete la ușă.</p>
+      <div class="hero-actions">
+        <a href="tel:0212345678" class="btn btn-amber">📞 Sună 021 234 5678</a>
+        <a href="#services" class="btn btn-white">Vedeți Serviciile</a>
+      </div>
+    </div>
+    <div class="call-card">
+      <span class="pill">🚨 LINIA DE URGENȚĂ 24/7</span>
+      <div class="lbl">Țeavă spartă sau fără apă caldă? Sunați acum:</div>
+      <div class="phone"><a href="tel:0212345678">021 234 5678</a></div>
+      <small>Timp mediu de răspuns: sub 60 de minute</small>
+      <a href="tel:0212345678" class="btn">Sunați Acum</a>
+    </div>
+  </div>
+</section>
+
+<div class="trust">
+  <div class="wrap trust-grid">
+    <div class="trust-item"><span class="ic">✅</span> Certificat și Autorizat</div>
+    <div class="trust-item"><span class="ic">💷</span> Fără Taxă de Vizită</div>
+    <div class="trust-item"><span class="ic">⭐</span> 4.9/5 din 300+ Recenzii</div>
+    <div class="trust-item"><span class="ic">🛡️</span> Complet Asigurat</div>
+  </div>
+</div>
+
+<section id="services">
+  <div class="wrap center">
+    <div class="kicker">Ce Reparăm</div>
+    <h2 class="sec-title">Servicii Instalații și Încălzire</h2>
+    <p class="sec-intro">Orice se-ntâmplă, echipa noastră locală poate rezolva rapid — curat, profesional și bine din prima.</p>
+  </div>
+  <div class="wrap">
+    <div class="svc-grid">
+      <div class="svc"><div class="ic">💧</div><h3>Urgență Scurgeri</h3><p>Țevi sparte, rezervoare care se revarsă și daunele cauzate de apă — stopez scurgerea și vă usuc rapid.</p></div>
+      <div class="svc"><div class="ic">🚽</div><h3>Tub Blocat</h3><p>Toalete, chiuvete și drenuri exterioare desfundate cu jet de înaltă presiune. Gata în o singură vizită.</p></div>
+      <div class="svc"><div class="ic">🔥</div><h3>Cazane și Încălzire</h3><p>Reparații cazan, revizie și instalări complete de la inginerii noștri certificați.</p></div>
+      <div class="svc"><div class="ic">🚿</div><h3>Băi</h3><p>Robinete, dușuri, toalete și amenajări complete de baie proiectate și instalate.</p></div>
+      <div class="svc"><div class="ic">🌡️</div><h3>Radiatoare</h3><p>Radiatoare reci, spălare de murdărie, radiatoare noi și upgrade termostati.</p></div>
+      <div class="svc"><div class="ic">🔧</div><h3>Instalații Generale</h3><p>Robinete care-nchid, opritori de apă, țevi de scurgere și alte lucrări mici de pe listă.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="reviews" id="reviews">
+  <div class="wrap center">
+    <div class="kicker">Clienți Mulțumiți</div>
+    <h2 class="sec-title">Ce Spun Vecinii Dvs</h2>
+    <p class="sec-intro">Notație 4.9 din 5 în sute de lucrări locale — iată câteva recent.</p>
+  </div>
+  <div class="wrap">
+    <div class="rev-grid">
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>"Țeavă spartă la 23:00 și au venit în mai puțin de o oră. Calmi, curaști și-au rezolvat rapid. Salvatori absoluți."</p>
+        <div class="who"><span class="av">SM</span><div><b>Simona M.</b><span>București</span></div></div>
+      </div>
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>"Cazan nou instalat într-o zi, fără mizerie și preț clar de la început. Nu aș folosi pe nimeni altcineva acum."</p>
+        <div class="who"><span class="av">CP</span><div><b>Cristian P.</b><span>Ilfov</span></div></div>
+      </div>
+      <div class="rev">
+        <div class="stars">★★★★★</div>
+        <p>"Prietenoși, politicoși și mi-au explicat tot. Au deschis un dren blocat pe care alții nu l-au putut. Recomand cu plăcere."</p>
+        <div class="who"><span class="av">AG</span><div><b>Alina G.</b><span>Ploiești</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-final" id="areas">
+  <div class="wrap">
+    <h2>Aveți o Urgență la Instalații?</h2>
+    <p>Nu așteptați să se-ntâmple ceva mai rău. Inginerii noștri locali stau la standby acum, zi și noapte.</p>
+    <a href="tel:0212345678" class="phone-big">📞 021 234 5678</a>
+    <div class="cta-actions">
+      <a href="tel:0212345678" class="btn btn-amber">Sunați Acum</a>
+      <a href="/#contact" class="btn btn-white">Cereți Apel Înapoi</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="flogo">🔧 My Plumbing</div>
+    <p>© My Plumbing · Un site demo creat de <a href="/">C Design</a></p>
+  </div>
+</footer>
+</body>
+</html>

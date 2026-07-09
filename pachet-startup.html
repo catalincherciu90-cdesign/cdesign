@@ -121,7 +121,7 @@ fbq('init','893560673744618');fbq('track','PageView');
     --black:#2E3436;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;overflow-x:hidden}
   body{font-family:'Inter',sans-serif;color:var(--body);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:hidden}
   a{text-decoration:none;color:inherit}
   img{max-width:100%;display:block}
@@ -225,6 +225,7 @@ fbq('init','893560673744618');fbq('track','PageView');
   .mobile-menu{position:fixed;top:0;right:0;width:min(84vw,340px);height:100vh;background:#fff;box-shadow:-10px 0 40px rgba(0,0,0,.12);z-index:60;padding:88px 30px 30px;transform:translateX(100%);transition:transform .28s ease}
   .mobile-menu.open{transform:translateX(0)}
   .mobile-menu a{display:block;font-family:'Poppins',sans-serif;font-weight:500;font-size:1.1rem;color:var(--ink);padding:15px 0;border-bottom:1px solid var(--line)}
+  .mobile-menu .btn-quote{color:#fff;border-bottom:0}
   .mm-close{position:absolute;top:24px;right:26px;font-size:1.8rem;color:var(--ink);background:none;border:0;cursor:pointer;line-height:1}
   .backdrop{display:none;position:fixed;inset:0;background:rgba(10,15,25,.4);z-index:55}
   .backdrop.open{display:block}
@@ -259,14 +260,16 @@ fbq('init','893560673744618');fbq('track','PageView');
   <div class="nav-inner">
     <a href="/" class="logo" aria-label="C Design acasă"><img src="/logo-c-design.png" alt="C Design" style="height:42px;width:auto;display:block;"></a>
     <nav class="nav-menu">
-      <a href="/servicii">Servicii</a>
+      <a href="/">Acasă</a>
+        <a href="/servicii">Servicii</a>
       <a href="/#portofoliu">Portofoliu</a>
       <a href="/#testimoniale">Recenzii</a>
       <a href="/blog">Blog</a>
+        <a href="/demos">Demo-uri</a>
     </nav>
     <div class="nav-right">
       <a href="#contact" class="contact-link">Contact</a>
-      <a href="/contact" class="btn-quote">Contactează-ne</a>
+      <a href="/cere-oferta" class="btn-quote">Cere ofertă</a>
       <button class="burger" id="burger" aria-label="Deschide meniu"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -275,12 +278,14 @@ fbq('init','893560673744618');fbq('track','PageView');
 <div class="backdrop" id="backdrop"></div>
 <nav class="mobile-menu" id="mobileMenu">
   <button class="mm-close" id="mmClose" aria-label="Închide meniu">&times;</button>
-  <a href="/servicii">Servicii</a>
+  <a href="/">Acasă</a>
+    <a href="/servicii">Servicii</a>
   <a href="/#portofoliu">Portofoliu</a>
   <a href="/#testimoniale">Recenzii</a>
   <a href="/blog">Blog</a>
+        <a href="/demos">Demo-uri</a>
   <a href="#contact">Contact</a>
-  <a href="/contact" class="btn-quote">Contactează-ne</a>
+  <a href="/cere-oferta" class="btn-quote">Cere ofertă</a>
 </nav>
 
 <section class="hero">
@@ -477,6 +482,7 @@ fbq('init','893560673744618');fbq('track','PageView');
       <a href="/#portofoliu">Portofoliu</a>
       <a href="/#testimoniale">Recenzii</a>
       <a href="/blog">Blog</a>
+        <a href="/demos">Demo-uri</a>
     </div>
     <div class="f-col">
       <h4>Contact</h4>

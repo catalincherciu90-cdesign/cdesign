@@ -54,7 +54,7 @@
     --black:#2E3436;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;overflow-x:hidden}
   body{font-family:'Inter',sans-serif;color:var(--body);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:hidden}
   a{text-decoration:none;color:inherit}
   img{max-width:100%;display:block}
@@ -235,7 +235,7 @@
   .mobile-menu{position:fixed;top:0;right:0;width:min(84vw,340px);height:100vh;background:#fff;box-shadow:-10px 0 40px rgba(0,0,0,.12);z-index:60;padding:88px 30px 30px;transform:translateX(100%);transition:transform .28s ease}
   .mobile-menu.open{transform:translateX(0)}
   .mobile-menu a{display:block;font-family:'Poppins',sans-serif;font-weight:500;font-size:1.1rem;color:var(--ink);padding:15px 0;border-bottom:1px solid var(--line)}
-  .mobile-menu .btn-quote{display:block;text-align:center;margin-top:22px;border-bottom:0}
+  .mobile-menu .btn-quote{display:block;text-align:center;margin-top:22px;border-bottom:0;color:#fff}
   .mm-close{position:absolute;top:24px;right:26px;font-size:1.8rem;color:var(--ink);background:none;border:0;cursor:pointer;line-height:1}
   .backdrop{display:none;position:fixed;inset:0;background:rgba(10,15,25,.4);z-index:55}
   .backdrop.open{display:block}
@@ -265,7 +265,7 @@
     <div class="topbar-inner">
       <span class="promo" data-edit="eticheta-hero-1">
         <b>OFERTĂ LIMITATĂ:</b> Site + SEO + Google Business — totul de la 300€.
-        <a href="#contact" class="view-deal">Vezi OFERTA</a>
+        <a href="/promo" class="view-deal">Vezi OFERTA</a>
       </span>
       <div class="topbar-right">
         <a href="#contact"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4V5Z"/></svg> Suport</a>
@@ -281,14 +281,16 @@
         <img src="/logo-c-design.webp" alt="C Design" width="176" height="44" style="height:44px;width:auto;display:block;">
       </a>
       <nav class="nav-menu">
+        <a href="/">Acasă</a>
         <a href="/servicii">Servicii</a>
         <a href="/despre-noi">Despre noi</a>
         <a href="/#portofoliu">Portofoliu</a>
         <a href="/blog">Blog</a>
+        <a href="/demos">Demo-uri</a>
       </nav>
       <div class="nav-right">
         <a href="#contact" class="contact-link">Contact</a>
-        <a href="/contact" class="btn-quote">Contactează-ne</a>
+        <a href="/cere-oferta" class="btn-quote">Cere ofertă</a>
         <button class="burger" id="burger" aria-label="Deschide meniu">
           <span></span><span></span><span></span>
         </button>
@@ -300,12 +302,14 @@
   <div class="backdrop" id="backdrop"></div>
   <nav class="mobile-menu" id="mobileMenu">
     <button class="mm-close" id="mmClose" aria-label="Închide meniu">&times;</button>
+    <a href="/">Acasă</a>
     <a href="/servicii">Servicii</a>
     <a href="/despre-noi">Despre noi</a>
     <a href="/#portofoliu">Portofoliu</a>
     <a href="/blog">Blog</a>
+        <a href="/demos">Demo-uri</a>
     <a href="#contact">Contact</a>
-    <a href="/contact" class="btn-quote">Contactează-ne</a>
+    <a href="/cere-oferta" class="btn-quote">Cere ofertă</a>
   </nav>
 
   <!-- HERO -->
@@ -335,7 +339,7 @@
         <span class="eyebrow" data-edit="titlu-sectiune-1">Cine suntem</span>
         <h2 id="hero-heading" style="font-weight:300;margin-bottom:24px"><span style="font-weight:700" data-edit="paragraf-despre-1">O echipă mică, care răspunde direct și știe ce construiește.</span></h2>
         <div class="about-copy">
-          <p data-edit="paragraf-despre-2">Cu peste 10 ani de experiență în web design, lucrăm atât cu afaceri mici și antreprenori la început de drum, cât și cu companii consacrate care vor să-și modernizeze prezența online. Am livrat peste 120 de proiecte pentru antreprenori, meșteri, firme de servicii, magazine și companii din toată România. Nu suntem o agenție mare cu zeci de conturi — suntem o echipă care răspunde direct și știe ce construiește.</p>
+          <p data-edit="paragraf-despre-2">Cu o experiență de peste 10 ani în web design, lucrăm atât cu afaceri mici și antreprenori la început de drum, cât și cu companii consacrate care vor să-și modernizeze prezența online. Am livrat peste 120 de proiecte pentru antreprenori, meșteri, firme de servicii, magazine și companii din toată România. Nu suntem o agenție mare cu zeci de conturi — suntem o echipă care răspunde direct și știe ce construiește. Și, mai presus de toate, ne facem treaba cu drag și plăcere — ne place cu adevărat ceea ce construim, iar lucrul ăsta se vede în fiecare proiect pe care îl predăm.</p>
           <p data-edit="paragraf-despre-3">Colaborăm online sau cu vizită la client — tu alegi cum e mai comod. Indiferent de format, fiecare proiect vine cu termen garantat de 14 zile, preț stabilit din start și zero costuri ascunse — ce stabilim la început, aia plătești la final. Livrăm site, branding, SEO local sau setup social media gata de folosit, nu o schiță pe care să o termini tu.</p>
         </div>
         <a href="#contact" class="btn-primary about-cta" data-edit="buton-2">Hai să vorbim gratuit <span class="arr">→</span></a>
@@ -497,7 +501,7 @@
     <div class="footer-inner">
       <div class="f-brand">
         <img src="/logo-c-design.webp" alt="C Design">
-        <p>Studio web din România care construiește site-uri moderne, rapide și care transformă vizitatori în clienți — cu prețuri oneste și fixe.</p>
+        <p>Agenție web din România care construiește site-uri moderne, rapide și care transformă vizitatori în clienți — cu prețuri oneste și fixe.</p>
         <div class="f-social">
           <a href="https://www.facebook.com/cdesignro" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M13 22v-8h2.7l.4-3H13V9.2c0-.9.3-1.5 1.6-1.5H16V5.1C15.7 5 14.7 5 13.6 5 11.2 5 9.7 6.4 9.7 9v2H7v3h2.7v8z"/></svg></a>
           <a href="https://www.instagram.com/cdesignro" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.3 2.2.4.5.2.9.5 1.3.9.4.4.7.8.9 1.3.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 1.8-.4 2.2-.2.5-.5.9-.9 1.3-.4.4-.8.7-1.3.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.3-2.2-.4a3.5 3.5 0 0 1-1.3-.9 3.5 3.5 0 0 1-.9-1.3c-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-1.8.4-2.2.2-.5.5-.9.9-1.3.4-.4.8-.7 1.3-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 3.2A6.6 6.6 0 1 0 12 18.6 6.6 6.6 0 0 0 12 5.4zm0 10.9a4.3 4.3 0 1 1 0-8.6 4.3 4.3 0 0 1 0 8.6zm6.8-11.2a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg></a>
@@ -523,6 +527,7 @@
         <a href="/despre-noi">Despre noi</a>
         <a href="/#portofoliu">Portofoliu</a>
         <a href="/blog">Blog</a>
+        <a href="/demos">Demo-uri</a>
         <a href="/#testimoniale">Recenzii</a>
       </div>
       <div class="f-col">

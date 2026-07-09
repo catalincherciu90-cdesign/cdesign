@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta name="robots" content="noindex, follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cabinet Juridic · Consilieri de Încredere</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0e1c33;
+    --navy-800:#132542;
+    --navy-700:#1b3159;
+    --gold:#c8a557;
+    --gold-soft:#d8bd7e;
+    --paper:#f5f3ef;
+    --ink:#1c2430;
+    --muted:#5c6675;
+    --line:#e2ddd3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Source Sans 3',sans-serif;
+    color:var(--ink);
+    background:#fff;
+    line-height:1.7;
+    font-weight:400;
+  }
+  h1,h2,h3,h4{font-family:'Playfair Display',serif;font-weight:600;line-height:1.2;letter-spacing:.2px}
+  a{color:inherit}
+  img{max-width:100%;display:block}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 28px}
+
+  /* Header */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:var(--navy);
+    border-bottom:1px solid rgba(200,165,87,.25);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;max-width:1160px;margin:0 auto}
+  .logo{display:flex;align-items:center;gap:12px;font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:#fff;letter-spacing:.4px}
+  .logo span{font-size:1.5rem;color:var(--gold)}
+  .nav-links{display:flex;gap:34px;align-items:center;list-style:none}
+  .nav-links a{text-decoration:none;font-size:.9rem;color:rgba(255,255,255,.82);text-transform:uppercase;letter-spacing:1px;font-weight:600;transition:color .2s}
+  .nav-links a:hover{color:var(--gold)}
+  .btn{
+    display:inline-block;background:var(--gold);color:var(--navy);text-decoration:none;
+    padding:13px 28px;font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;
+    border:1px solid var(--gold);transition:all .25s;
+  }
+  .btn:hover{background:transparent;color:var(--gold)}
+  .btn-ghost{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+  .btn-ghost:hover{background:var(--gold);color:var(--navy)}
+
+  /* Hero */
+  .hero{position:relative;min-height:88vh;display:flex;align-items:center;background:var(--navy)}
+  .hero-img{position:absolute;inset:0;z-index:0}
+  .hero-img img{width:100%;height:100%;object-fit:cover;opacity:.32}
+  .hero-img::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--navy) 8%,rgba(14,28,51,.72) 55%,rgba(14,28,51,.4) 100%)}
+  .hero-content{position:relative;z-index:1;max-width:680px;padding:0 28px;margin-left:max(28px,calc((100vw - 1160px)/2))}
+  .rule{display:inline-flex;align-items:center;gap:14px;color:var(--gold);text-transform:uppercase;letter-spacing:3px;font-size:.75rem;font-weight:700;margin-bottom:26px}
+  .rule::before{content:"";width:46px;height:1px;background:var(--gold)}
+  .hero h1{font-size:clamp(2.6rem,5.5vw,4.4rem);color:#fff;margin-bottom:24px}
+  .hero p{font-size:1.18rem;color:rgba(255,255,255,.82);margin-bottom:38px;max-width:540px;font-weight:300}
+  .hero-actions{display:flex;gap:18px;flex-wrap:wrap}
+
+  /* Sections */
+  section{padding:104px 0}
+  .section-head{max-width:720px;margin:0 auto 64px;text-align:center}
+  .kicker{color:var(--gold);text-transform:uppercase;letter-spacing:2.5px;font-size:.78rem;font-weight:700;margin-bottom:16px}
+  .kicker.dark{color:var(--navy-700)}
+  .section-head h2{font-size:clamp(2rem,4vw,3rem);color:var(--navy)}
+  .section-head p{color:var(--muted);margin-top:18px;font-size:1.08rem}
+
+  /* Practice areas */
+  .practice{background:var(--paper)}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--line);border:1px solid var(--line)}
+  .area{background:#fff;padding:44px 36px;transition:background .3s}
+  .area:hover{background:var(--navy);color:#fff}
+  .area:hover h3,.area:hover .anum{color:var(--gold)}
+  .area:hover p{color:rgba(255,255,255,.75)}
+  .anum{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);font-weight:600;margin-bottom:18px}
+  .area h3{font-size:1.55rem;color:var(--navy);margin-bottom:14px;transition:color .3s}
+  .area p{color:var(--muted);font-size:.98rem;transition:color .3s}
+
+  /* Credibility */
+  .cred{background:var(--navy);color:#fff}
+  .cred-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+  .cred-text .kicker{color:var(--gold)}
+  .cred-text h2{font-size:clamp(2rem,4vw,3rem);color:#fff;margin-bottom:22px}
+  .cred-text p{color:rgba(255,255,255,.78);margin-bottom:18px;font-weight:300}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:rgba(200,165,87,.25);border:1px solid rgba(200,165,87,.25)}
+  .stat{background:var(--navy-800);padding:40px 32px;text-align:center}
+  .stat strong{display:block;font-family:'Playfair Display',serif;font-size:3rem;color:var(--gold);line-height:1}
+  .stat span{display:block;margin-top:10px;font-size:.82rem;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.7)}
+
+  /* Testimonial */
+  .testi{background:#fff;text-align:center}
+  .testi .wrap{max-width:840px}
+  .quotemark{font-family:'Playfair Display',serif;font-size:5rem;color:var(--gold);line-height:.5;height:40px}
+  .testi blockquote{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2.1rem);color:var(--navy);font-style:italic;line-height:1.4;margin:24px 0 28px}
+  .testi cite{font-style:normal;color:var(--muted);font-size:.95rem;letter-spacing:.5px}
+  .testi cite strong{display:block;color:var(--navy);font-family:'Playfair Display',serif;font-size:1.1rem;font-style:normal}
+
+  /* CTA */
+  .cta{background:var(--navy-800);color:#fff;text-align:center;padding:96px 0;border-top:3px solid var(--gold)}
+  .cta h2{font-size:clamp(2rem,4.5vw,3.2rem);color:#fff;margin-bottom:18px}
+  .cta p{color:rgba(255,255,255,.78);margin-bottom:34px;font-size:1.1rem;max-width:560px;margin-left:auto;margin-right:auto;font-weight:300}
+
+  /* Footer */
+  footer{background:var(--navy);color:rgba(255,255,255,.6);padding:52px 0;text-align:center;font-size:.9rem;border-top:1px solid rgba(200,165,87,.2)}
+  footer .logo{justify-content:center;margin-bottom:18px}
+  footer a{color:var(--gold);text-decoration:none}
+  footer a:hover{text-decoration:underline}
+
+  @media(max-width:860px){
+    .nav-links{display:none}
+    .grid{grid-template-columns:1fr}
+    .cred-grid{grid-template-columns:1fr;gap:44px}
+    .hero-content{margin-left:0}
+    section{padding:76px 0}
+  }
+</style>
+</head>
+<body>
+<div style="background:#141719;color:#fff;text-align:center;font-size:.8rem;padding:8px 12px;font-family:sans-serif">✦ Acesta este un site demo de C Design — <a href="/#contact" style="color:#fff;text-decoration:underline;font-weight:600">Obțineți unul similar pentru afacerea voastră</a> · <a href="/demos/admin-demo.html?type=law" style="color:#fff;text-decoration:underline;font-weight:600">Vizualizați panoul de administrare</a></div>
+
+<header>
+  <div class="nav">
+    <a href="#top" class="logo"><span>⚖️</span> Cabinet Juridic</a>
+    <ul class="nav-links">
+      <li><a href="#practice">Arii de Practică</a></li>
+      <li><a href="#experience">Experiență</a></li>
+      <li><a href="#clients">Clienți</a></li>
+      <li><a href="#consultation">Contact</a></li>
+    </ul>
+    <a href="#consultation" class="btn">Consultație Gratuită</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="hero-img">
+      <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1600&q=80" alt="Grand law library with rows of legal volumes">
+    </div>
+    <div class="hero-content">
+      <span class="rule">Înființat 1998 · București</span>
+      <h1>Consilieri de încredere în momentele care contează cu adevărat</h1>
+      <p>Cabinet Juridic oferă reprezentare legală clară și decisivă pentru persoane și companii din România. Riguros, discret și neabătut de la parte.</p>
+      <div class="hero-actions">
+        <a href="#consultation" class="btn">Consultație Gratuită</a>
+        <a href="#practice" class="btn btn-ghost">Our Practice Areas</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="practice" id="practice">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="kicker dark">Ce facem noi</p>
+        <h2>Arii de Practică</h2>
+        <p>Expertiză juridică comprehensivă în domenii care contează pentru clienții noștri, oferită cu precizie și atenție.</p>
+      </div>
+      <div class="grid">
+        <div class="area">
+          <div class="anum">01</div>
+          <h3>Drept Corporate și Comercial</h3>
+          <p>Fuziuni, achiziții, acorduri între acționari și consiliere comercială zilnică pentru afacerile în creștere.</p>
+        </div>
+        <div class="area">
+          <div class="anum">02</div>
+          <h3>Dreptul Proprietății și Tranzacții Imobiliare</h3>
+          <p>Tranzacții rezidențiale și comerciale gestionate cu diligență, de la oferta inițială până la finalizare.</p>
+        </div>
+        <div class="area">
+          <div class="anum">03</div>
+          <h3>Dreptul Familiei</h3>
+          <p>Consiliere sensibilă și pragmatică privind divorțul, reglementările financiare și chestiuni legate de copii.</p>
+        </div>
+        <div class="area">
+          <div class="anum">04</div>
+          <h3>Testamente și Moșteniri</h3>
+          <p>Planificarea moștenirii, trusturi și administrarea moștenirii pentru a proteja ceea ce ați construit.</p>
+        </div>
+        <div class="area">
+          <div class="anum">05</div>
+          <h3>Dreptul Muncii</h3>
+          <p>Reprezentarea angajatorilor și angajaților în litigii, contracte și proceduri tribunalului.</p>
+        </div>
+        <div class="area">
+          <div class="anum">06</div>
+          <h3>Rezolvarea Litigiilor</h3>
+          <p>Strategii robuste de litigiu și mediere concepute pentru a rezolva conflictele eficient.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cred" id="experience">
+    <div class="wrap">
+      <div class="cred-grid">
+        <div class="cred-text">
+          <p class="kicker">Un istoric pe care vă puteți baza</p>
+          <h2>Douăzeci și cinci de ani de rezultate dovedite</h2>
+          <p>Incepând cu 1998, Cabinet Juridic a reprezentat clienți în chestiunile juridice cele mai importante. Reputația noastră se bazează pe pregătire meticuloasă, judecată sănătoasă și integritate neclintită.</p>
+          <p>Fiecare instrucțiune este condusă de un avocat senior, asigurând că primiți consiliere experimentată de la prima întâlnire până la rezolvarea finală.</p>
+        </div>
+        <div class="stats">
+          <div class="stat"><strong>25+</strong><span>Ani de Activitate</span></div>
+          <div class="stat"><strong>3.400</strong><span>Cazuri Reprezentate</span></div>
+          <div class="stat"><strong>18</strong><span>Avocați Experți</span></div>
+          <div class="stat"><strong>98%</strong><span>Satisfacția Clienților</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="testi" id="clients">
+    <div class="wrap">
+      <div class="quotemark">&ldquo;</div>
+      <blockquote>Cabinet Juridic ne-a ghidat compania prin achiziția complexă cu claritate și calm. Consiliul lor a fost de preț — și chiar mai mult.</blockquote>
+      <cite><strong>Jonathan Reeve</strong>Managing Director, Reeve &amp; Co. Ltd</cite>
+    </div>
+  </section>
+
+  <section class="cta" id="consultation">
+    <div class="wrap">
+      <h2>Vorbiți cu un avocat astazi</h2>
+      <p>Prima voastră consultație este gratuită și complet confidențială. Spuneți-ne despre situația voastră și vă vom sfătui cu privire la drumul de urmat.</p>
+      <a href="#top" class="btn">Consultație Gratuită</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="logo"><span>⚖️</span> Cabinet Juridic</div>
+    <p>© Cabinet Juridic · Un site demo creat de C Design</p>
+    <p style="margin-top:8px"><a href="/">Înapoi la C Design</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

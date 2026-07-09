@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta name="robots" content="noindex, follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Spa — Retragere Spa & Wellness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --sage: #8ba888;
+    --sage-deep: #5f7a5c;
+    --beige: #f4efe6;
+    --beige-warm: #e9e1d3;
+    --cream: #fbf9f4;
+    --ink: #3a3f38;
+    --muted: #7c847a;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Jost', sans-serif;
+    color: var(--ink);
+    background: var(--cream);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 400; letter-spacing: .5px; }
+  a { color: inherit; }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 28px; }
+
+  /* Header */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(251, 249, 244, 0.82);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(139,168,136,.18);
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 74px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-family: 'Cormorant Garamond', serif; font-size: 1.55rem; letter-spacing: 1px; }
+  .logo .emoji { font-size: 1.35rem; }
+  nav ul { display: flex; gap: 34px; list-style: none; align-items: center; }
+  nav a { text-decoration: none; font-size: .82rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); transition: color .25s; }
+  nav a:hover { color: var(--sage-deep); }
+  .btn {
+    display: inline-block; text-decoration: none;
+    background: var(--sage-deep); color: #fff;
+    padding: 11px 26px; border-radius: 40px;
+    font-size: .78rem; letter-spacing: 1.5px; text-transform: uppercase;
+    transition: background .25s, transform .25s;
+  }
+  .btn:hover { background: var(--sage); transform: translateY(-1px); }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    min-height: 88vh;
+    display: flex; align-items: center;
+    background:
+      linear-gradient(120deg, rgba(244,239,230,.92) 0%, rgba(244,239,230,.55) 42%, rgba(139,168,136,.35) 100%),
+      url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+  }
+  .hero-inner { max-width: 640px; padding: 60px 0; }
+  .eyebrow { font-size: .78rem; letter-spacing: 4px; text-transform: uppercase; color: var(--sage-deep); margin-bottom: 22px; }
+  .hero h1 { font-size: clamp(2.8rem, 6vw, 4.6rem); line-height: 1.08; font-weight: 300; margin-bottom: 24px; color: #2f342d; }
+  .hero p { font-size: 1.12rem; color: #545a50; max-width: 480px; margin-bottom: 36px; }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-ghost {
+    display: inline-block; text-decoration: none;
+    padding: 11px 26px; border-radius: 40px; border: 1px solid var(--sage);
+    color: var(--sage-deep); font-size: .78rem; letter-spacing: 1.5px; text-transform: uppercase;
+    transition: background .25s;
+  }
+  .btn-ghost:hover { background: rgba(139,168,136,.12); }
+
+  /* Section basics */
+  section { padding: 96px 0; }
+  .section-head { text-align: center; max-width: 620px; margin: 0 auto 60px; }
+  .section-head .eyebrow { text-align: center; }
+  .section-head h2 { font-size: clamp(2.2rem, 4vw, 3rem); margin-bottom: 14px; }
+  .section-head p { color: var(--muted); }
+
+  /* Treatments */
+  #treatments { background: var(--beige); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 26px; }
+  .card {
+    background: var(--cream); border-radius: 18px; padding: 38px 32px;
+    box-shadow: 0 18px 40px -28px rgba(95,122,92,.5);
+    border: 1px solid rgba(139,168,136,.12);
+    transition: transform .3s, box-shadow .3s;
+  }
+  .card:hover { transform: translateY(-6px); box-shadow: 0 30px 55px -30px rgba(95,122,92,.6); }
+  .card .ico { font-size: 2rem; margin-bottom: 18px; }
+  .card h3 { font-size: 1.7rem; margin-bottom: 10px; }
+  .card p { color: var(--muted); font-size: .95rem; margin-bottom: 20px; }
+  .price { display: flex; align-items: baseline; justify-content: space-between; border-top: 1px solid rgba(139,168,136,.2); padding-top: 16px; }
+  .price .amt { font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; color: var(--sage-deep); }
+  .price .dur { font-size: .78rem; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+
+  /* Quote */
+  #quote {
+    text-align: center;
+    background: linear-gradient(160deg, var(--sage) 0%, var(--sage-deep) 100%);
+    color: #fdfdfb;
+  }
+  #quote .q-mark { font-family: 'Cormorant Garamond', serif; font-size: 4rem; line-height: .3; opacity: .5; }
+  #quote blockquote { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 300; max-width: 820px; margin: 30px auto; line-height: 1.35; }
+  #quote cite { font-style: normal; font-size: .82rem; letter-spacing: 3px; text-transform: uppercase; opacity: .85; }
+
+  /* Rituals / two column */
+  #rituals { background: var(--cream); }
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+  .split img { width: 100%; border-radius: 20px; height: 460px; object-fit: cover; box-shadow: 0 30px 60px -30px rgba(95,122,92,.55); }
+  .split h2 { font-size: clamp(2rem, 4vw, 2.8rem); margin-bottom: 20px; }
+  .split p { color: var(--muted); margin-bottom: 18px; }
+  .feats { list-style: none; margin-top: 26px; }
+  .feats li { padding: 12px 0; border-bottom: 1px solid var(--beige-warm); display: flex; gap: 14px; align-items: center; }
+  .feats li::before { content: '❀'; color: var(--sage); }
+
+  /* Booking CTA */
+  #book {
+    text-align: center;
+    background:
+      linear-gradient(rgba(244,239,230,.9), rgba(244,239,230,.9)),
+      url('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1600&q=80') center/cover;
+  }
+  #book h2 { font-size: clamp(2.4rem, 5vw, 3.4rem); margin-bottom: 18px; }
+  #book p { color: var(--muted); max-width: 520px; margin: 0 auto 34px; }
+
+  /* Footer */
+  footer { background: #2f342d; color: #d8ddd3; padding: 46px 0; text-align: center; }
+  footer .logo { justify-content: center; color: #fff; margin-bottom: 14px; }
+  footer p { font-size: .88rem; color: #a7ad9f; }
+  footer a { color: #cdd6c6; }
+
+  @media (max-width: 820px) {
+    nav ul { display: none; }
+    .split { grid-template-columns: 1fr; gap: 34px; }
+    .split img { height: 320px; }
+    section { padding: 70px 0; }
+  }
+</style>
+</head>
+<body>
+<div style="background:#141719;color:#fff;text-align:center;font-size:.8rem;padding:8px 12px;font-family:sans-serif">✦ Acesta este un website demo de la C Design — <a href="/#contact" style="color:#fff;text-decoration:underline;font-weight:600">Obține unul similar pentru afacerea ta</a> · <a href="/demos/admin-demo.html?type=spa" style="color:#fff;text-decoration:underline;font-weight:600">Vezi panoul de administrare</a></div>
+
+<header>
+  <div class="wrap nav">
+    <div class="logo"><span class="emoji">🌸</span> My Spa</div>
+    <nav>
+      <ul>
+        <li><a href="#treatments">Tratamente</a></li>
+        <li><a href="#rituals">Ritualuri</a></li>
+        <li><a href="#quote">Filozofie</a></li>
+        <li><a href="#book">Vizită</a></li>
+      </ul>
+    </nav>
+    <a href="#book" class="btn">Rezervă o sesiune</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div class="eyebrow">Retragere Spa &amp; Wellness</div>
+    <h1>Respiră ușor. Ai ajuns.</h1>
+    <p>Un sanctuar liniștit în inima campaniei, unde fiecare tratament este o invitație ușoară să încetinești, să te detensionezi și să te regenerezi.</p>
+    <div class="hero-actions">
+      <a href="#book" class="btn">Rezervă-ți fuga</a>
+      <a href="#treatments" class="btn-ghost">Vezi tratamente</a>
+    </div>
+  </div>
+</section>
+
+<section id="treatments">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Meniu nostru</div>
+      <h2>Tratamente semnătură</h2>
+      <p>Fiecare ritual este creat cu botanicale organice și livrat de echipa noastră de terapeuti ușuratici și experimentați.</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="ico">🌿</div>
+        <h3>Masaj Aromaterapeie</h3>
+        <p>Un masaj corporal calmant cu uleiuri esențiale calde, ușurând tensiunea de la cap până la picioare.</p>
+        <div class="price"><span class="amt">375 RON</span><span class="dur">60 min</span></div>
+      </div>
+      <div class="card">
+        <div class="ico">💧</div>
+        <h3>Facial Hidratant</h3>
+        <p>Un facial calmant care reîncarcă umiditatea și lasă pielea rouată, luminoasă și odihnită.</p>
+        <div class="price"><span class="amt">340 RON</span><span class="dur">50 min</span></div>
+      </div>
+      <div class="card">
+        <div class="ico">🪷</div>
+        <h3>Ritual Pietre Fierbinți</h3>
+        <p>Pietre de bazalt netedă și încălzită topesc stresul adânc și restabilesc tăcut echilibrul tău.</p>
+        <div class="price"><span class="amt">450 RON</span><span class="dur">75 min</span></div>
+      </div>
+      <div class="card">
+        <div class="ico">🌾</div>
+        <h3>Retragere de jumătate de zi</h3>
+        <p>Masaj, facial, ceai de plante și acces nelimitat la bazinul termal și grădina liniștit.</p>
+        <div class="price"><span class="amt">825 RON</span><span class="dur">3 ore</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="quote">
+  <div class="wrap">
+    <div class="q-mark">"</div>
+    <blockquote>Aproape totul va funcționa din nou dacă o deconectezi pentru câteva minute — inclusiv tu.</blockquote>
+    <cite>— Filozofia My Spa</cite>
+  </div>
+</section>
+
+<section id="rituals">
+  <div class="wrap split">
+    <img src="https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=1000&q=80" alt="Interior liniștit de spa cu lumânări">
+    <div>
+      <div class="eyebrow">Experiența</div>
+      <h2>Un fel mai lent de lux</h2>
+      <p>Din momentul în care treci ușa noastră, lumea devine mai liniștit. Lumina moale, piatra caldă și mirosul slab de eucalipt te ghidează înăuntru.</p>
+      <p>Îi păstrăm spațiile noastre fără aglomerație și ritmul nostru neîngrabă, deci timpul tău aici este cu adevărat al tău.</p>
+      <ul class="feats">
+        <li>Suite private de tratament și lounge de relaxare încălzit</li>
+        <li>Bazin termal, saună și cameră de aburi cu plante</li>
+        <li>Produse botanice organice și fără cruzime</li>
+        <li>Ceaiuri de plante gratuite și acces la grădina liniștit</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="book">
+  <div class="wrap">
+    <div class="eyebrow">Gata când ești tu</div>
+    <h2>Rezervă-ți momentul de calm</h2>
+    <p>Rezervă un tratament sau o zi de retragere completă. Vom confirma în câteva ore ușoare — fără grăbire, fără presiune.</p>
+    <a href="#book" class="btn">Cere o rezervare</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="logo"><span class="emoji">🌸</span> My Spa</div>
+    <p>© My Spa · Un website demo creat de C Design · <a href="/">Întoarce-te acasă</a></p>
+  </div>
+</footer>
+</body>
+</html>

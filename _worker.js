@@ -984,7 +984,7 @@ export default {
     // din KV. Înlocuiește sitemap.xml static (nu mai necesită întreținere).
     if (path === '/sitemap.xml' && request.method === 'GET') {
       const BASE = 'https://www.c-design.ro';
-      const SITE_LASTMOD = '2026-06-10';
+      const SITE_LASTMOD = '2026-07-08';
       const staticPages = [
         { loc: '/',                           cf: 'weekly',  pr: '1.0' },
         { loc: '/servicii',                   cf: 'monthly', pr: '0.9' },
@@ -997,6 +997,9 @@ export default {
         { loc: '/pachet-startup',             cf: 'monthly', pr: '0.8' },
         { loc: '/abonament-lunar',            cf: 'monthly', pr: '0.8' },
         { loc: '/blog',                       cf: 'weekly',  pr: '0.7' },
+        { loc: '/demos',                      cf: 'monthly', pr: '0.7' },
+        { loc: '/cere-oferta',                cf: 'monthly', pr: '0.8' },
+        { loc: '/promo',                      cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-bucuresti',       cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-cluj',            cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-timisoara',       cf: 'monthly', pr: '0.8' },
@@ -1008,6 +1011,9 @@ export default {
       const urlXml = (loc, lastmod, cf, pr) =>
         `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${cf}</changefreq>\n    <priority>${pr}</priority>\n  </url>`;
       const parts = staticPages.map(p => urlXml(BASE + p.loc, SITE_LASTMOD, p.cf, p.pr));
+      // Notă: paginile demo individuale (/demos/*.html) sunt intenționat
+      // EXCLUSE din sitemap și marcate noindex — sunt site-uri exemplu, nu
+      // conținut de indexat. Galeria /demos rămâne indexată.
       try {
         const raw = await env.PROGRAMARI.get('__blog__');
         if (raw) {
@@ -1029,6 +1035,27 @@ export default {
     if (path === '/blog' || path === '/blog/') {
       const assetUrl = new URL(request.url);
       assetUrl.pathname = '/blog.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
+    // ── DEMO-URI (galerie de site-uri exemplu) ────────────────
+    if (path === '/demos' || path === '/demos/') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/demos.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
+    // ── CERE OFERTĂ (formular de cerere ofertă) ───────────────
+    if (path === '/cere-oferta' || path === '/cere-oferta/') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/cere-oferta.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
+    // ── PROMO (ofertă de lansare) ─────────────────────────────
+    if (path === '/promo' || path === '/promo/') {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/promo.html';
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
 

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta name="robots" content="noindex, follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Barbershop · Tunsuri și Bărbierit Tradițional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --black: #0d0d0d;
+    --panel: #161514;
+    --gold: #c8992e;
+    --gold-bright: #e8b93d;
+    --cream: #ece3d4;
+    --muted: #9a938a;
+    --line: rgba(200,153,46,.22);
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--black);
+    color: var(--cream);
+    line-height: 1.7;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .cond { font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 600; letter-spacing: .02em; line-height: 1.02; }
+  a { color: inherit; }
+  img { display: block; max-width: 100%; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 30px; }
+  .eyebrow { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .35em; font-size: .74rem; color: var(--gold); font-weight: 500; }
+  section { position: relative; }
+
+  /* Header */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(13,13,13,.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 74px; }
+  .logo { font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 700; font-size: 1.35rem; letter-spacing: .06em; text-decoration: none; display: flex; align-items: center; gap: 9px; color: var(--cream); }
+  .logo .em { font-size: 1.3rem; }
+  .logo span.n { color: var(--gold); }
+  nav.links { display: flex; gap: 34px; }
+  nav.links a { text-decoration: none; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: .82rem; font-weight: 400; color: var(--cream); transition: color .2s; }
+  nav.links a:hover { color: var(--gold-bright); }
+  .btn {
+    display: inline-block; text-decoration: none; cursor: pointer;
+    font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: .82rem; font-weight: 600;
+    padding: 12px 24px; background: var(--gold); color: var(--black); border: 2px solid var(--gold);
+    transition: all .2s;
+  }
+  .btn:hover { background: transparent; color: var(--gold-bright); }
+  .btn-outline { background: transparent; color: var(--gold-bright); border: 2px solid var(--gold); }
+  .btn-outline:hover { background: var(--gold); color: var(--black); }
+  .menu-toggle { display: none; background: none; border: none; color: var(--cream); font-size: 1.5rem; cursor: pointer; }
+
+  /* Hero */
+  .hero { position: relative; min-height: 90vh; display: flex; align-items: center; overflow: hidden; }
+  .hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(.3) contrast(1.05); }
+  .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(13,13,13,.92) 0%, rgba(13,13,13,.75) 45%, rgba(13,13,13,.35) 100%); }
+  .hero-inner { position: relative; z-index: 2; padding: 60px 0; }
+  .hero h1 { font-size: clamp(3rem, 9vw, 7rem); font-weight: 700; margin: 16px 0 20px; }
+  .hero h1 span { color: var(--gold); display: block; }
+  .hero p { max-width: 420px; font-size: 1.08rem; color: rgba(236,227,212,.85); margin-bottom: 32px; }
+  .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+  .est { font-family: 'Oswald', sans-serif; letter-spacing: .3em; font-size: .7rem; color: var(--muted); margin-top: 40px; text-transform: uppercase; }
+
+  /* Strip */
+  .strip { background: var(--gold); color: var(--black); }
+  .strip .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; padding: 22px 30px; }
+  .strip div { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .1em; font-weight: 500; font-size: .92rem; display: flex; align-items: center; gap: 10px; }
+
+  /* Services */
+  .services { padding: 110px 0; background: var(--black); }
+  .sec-head { text-align: center; margin-bottom: 60px; }
+  .sec-head h2 { font-size: clamp(2.4rem, 6vw, 4rem); margin-top: 12px; }
+  .price-list { max-width: 760px; margin: 0 auto; }
+  .price-item { display: flex; align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--line); gap: 16px; }
+  .price-item .name { font-family: 'Oswald', sans-serif; text-transform: uppercase; font-size: 1.25rem; font-weight: 500; white-space: nowrap; }
+  .price-item .desc { color: var(--muted); font-size: .92rem; flex: 1; }
+  .price-item .dots { flex: 1; border-bottom: 1px dotted rgba(200,153,46,.4); transform: translateY(-5px); min-width: 24px; }
+  .price-item .price { font-family: 'Oswald', sans-serif; font-size: 1.4rem; font-weight: 600; color: var(--gold-bright); white-space: nowrap; }
+
+  /* Gallery */
+  .gallery { padding: 110px 0; background: var(--panel); }
+  .g-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .g-grid .g { position: relative; overflow: hidden; aspect-ratio: 3/4; background: #000; }
+  .g-grid .g.wide { grid-column: span 2; aspect-ratio: 3/2; }
+  .g-grid img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(.15); transition: transform .8s ease, filter .4s; }
+  .g-grid .g:hover img { transform: scale(1.07); filter: grayscale(0); }
+
+  /* Booking CTA */
+  .booking { padding: 130px 0; text-align: center; position: relative; overflow: hidden; }
+  .booking::before { content: ''; position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=1600&q=80') center/cover; filter: grayscale(.5) brightness(.3); }
+  .booking .wrap { position: relative; z-index: 2; }
+  .booking h2 { font-size: clamp(2.6rem, 7vw, 5rem); margin: 14px 0 18px; }
+  .booking h2 span { color: var(--gold); }
+  .booking p { max-width: 480px; margin: 0 auto 34px; color: rgba(236,227,212,.8); font-size: 1.05rem; }
+  .booking .hours { margin-top: 44px; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: .82rem; color: var(--muted); }
+  .booking .hours b { color: var(--cream); }
+
+  /* Footer */
+  footer { padding: 56px 0; text-align: center; background: var(--black); border-top: 1px solid var(--line); }
+  footer .logo { justify-content: center; margin-bottom: 14px; }
+  footer p { font-size: .84rem; letter-spacing: .04em; color: var(--muted); }
+  footer a { color: var(--gold); }
+
+  @media (max-width: 900px) {
+    nav.links, .nav > .btn { display: none; }
+    .menu-toggle { display: block; }
+    .g-grid { grid-template-columns: repeat(2, 1fr); }
+    .g-grid .g.wide { grid-column: span 2; }
+    .hero::after { background: linear-gradient(180deg, rgba(13,13,13,.75), rgba(13,13,13,.9)); }
+  }
+  @media (max-width: 560px) {
+    .wrap { padding: 0 20px; }
+    .services, .gallery, .booking { padding: 70px 0; }
+    .price-item .desc { display: none; }
+    .g-grid { grid-template-columns: 1fr; }
+    .g-grid .g.wide { grid-column: span 1; }
+  }
+</style>
+</head>
+<body>
+<div style="background:#141719;color:#fff;text-align:center;font-size:.8rem;padding:8px 12px;font-family:sans-serif">✦ Acesta este un site demo de C Design — <a href="/#contact" style="color:#fff;text-decoration:underline;font-weight:600">Obții un site la fel pentru afacerea ta</a> · <a href="/demos/admin-demo.html?type=barber" style="color:#fff;text-decoration:underline;font-weight:600">Vezi panoul de administrare</a></div>
+
+<header>
+  <div class="wrap nav">
+    <a href="#" class="logo"><span class="em">💈</span> My <span class="n">Barbershop</span></a>
+    <nav class="links">
+      <a href="#services">Servicii</a>
+      <a href="#gallery">Galerie</a>
+      <a href="#book">Rezervă</a>
+    </nav>
+    <a href="#book" class="btn">Rezervă Acum</a>
+    <button class="menu-toggle" aria-label="Meniu">☰</button>
+  </div>
+</header>
+
+<section class="hero">
+  <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=1600&q=80" alt="Frizer la lucru">
+  <div class="wrap hero-inner">
+    <span class="eyebrow">Înf. 2011 · Frizer Tradițional</span>
+    <h1>Tunsuri Impecabile.<span>Fără Compromis.</span></h1>
+    <p>Meserie veche întâlnește stilul modern. Fade-uri profesionale, bărbierit cu prosop cald și tunsuri clasice — făcute bine, de fiecare dată.</p>
+    <div class="hero-cta">
+      <a href="#book" class="btn">Rezervă Scaunul Tău</a>
+      <a href="#services" class="btn btn-outline">Vezi Prețuri</a>
+    </div>
+    <div class="est">Intrări libere · Frizeri maistri · Evaluare 5 stele</div>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="wrap">
+    <div>✂ Frizeri Maistri</div>
+    <div>🔥 Bărbierit cu Prosoape Calde</div>
+    <div>⭐ 4.9 / 5 · 800+ Recenzii</div>
+    <div>💈 Intrări Libere Binevenite</div>
+  </div>
+</div>
+
+<section class="services" id="services">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Meniul</span>
+      <h2>Servicii și Prețuri</h2>
+    </div>
+    <div class="price-list">
+      <div class="price-item">
+        <span class="name">Tunsură Clasică</span>
+        <span class="desc">Tunsură cu foarfeca sau mașinuță, coafat la finalizare.</span>
+        <span class="dots"></span>
+        <span class="price">130 RON</span>
+      </div>
+      <div class="price-item">
+        <span class="name">Fade Total</span>
+        <span class="desc">Fade de precizie, estompat manual.</span>
+        <span class="dots"></span>
+        <span class="price">155 RON</span>
+      </div>
+      <div class="price-item">
+        <span class="name">Tuns și Sculptor Barbă</span>
+        <span class="desc">Conturare, tuns și finisare cu ulei de barbă.</span>
+        <span class="dots"></span>
+        <span class="price">90 RON</span>
+      </div>
+      <div class="price-item">
+        <span class="name">Bărbierit cu Prosop Cald</span>
+        <span class="desc">Bărbierit tradițional cu brici.</span>
+        <span class="dots"></span>
+        <span class="price">165 RON</span>
+      </div>
+      <div class="price-item">
+        <span class="name">Pachetul Complet</span>
+        <span class="desc">Tunsură, sculptură barbă și bărbierit cu prosop cald.</span>
+        <span class="dots"></span>
+        <span class="price">270 RON</span>
+      </div>
+      <div class="price-item">
+        <span class="name">Tunsură Copii (Sub 12 ani)</span>
+        <span class="desc">Rapid, prietenos și fără stres.</span>
+        <span class="dots"></span>
+        <span class="price">85 RON</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="gallery" id="gallery">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Lucrările Noastre</span>
+      <h2>Galerie de Tunsuri</h2>
+    </div>
+    <div class="g-grid">
+      <div class="g wide"><img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=900&q=80" alt="Fade proaspăt"></div>
+      <div class="g"><img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=600&q=80" alt="Frizer tunzând păr"></div>
+      <div class="g"><img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=600&q=80" alt="Tuns barbă"></div>
+      <div class="g"><img src="https://images.unsplash.com/photo-1596728325488-58c87691e9af?auto=format&fit=crop&w=600&q=80" alt="Tunsură clasică"></div>
+      <div class="g"><img src="https://images.unsplash.com/photo-1521490683712-35a1cb235d1c?auto=format&fit=crop&w=600&q=80" alt="Păr coafat"></div>
+      <div class="g wide"><img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=900&q=80" alt="Interior frizerie"></div>
+    </div>
+  </div>
+</section>
+
+<section class="booking" id="book">
+  <div class="wrap">
+    <span class="eyebrow">Rezervă-ți Locul</span>
+    <h2>Rezervă <span>Online</span> în Secunde</h2>
+    <p>Evită coada. Alege frizerul, selectează ora și rezervă scaunul — fără apeluri telefonice.</p>
+    <a href="#book" class="btn">Rezervă o Programare</a>
+    <div class="hours">
+      Lun–Vin <b>09:00 – 19:00</b> &nbsp;·&nbsp; Sâm <b>08:00 – 18:00</b> &nbsp;·&nbsp; Dum <b>Închis</b>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a href="#" class="logo"><span class="em">💈</span> My <span class="n">Barbershop</span></a>
+    <p>© My Barbershop · Un site demo creat de <a href="/">C Design</a></p>
+  </div>
+</footer>
+</body>
+</html>

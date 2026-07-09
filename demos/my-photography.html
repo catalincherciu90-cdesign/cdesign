@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta name="robots" content="noindex, follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Fotografie · Portofoliu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --ink: #1a1a1a;
+    --muted: #6b6b6b;
+    --line: #e6e3de;
+    --bg: #f7f5f1;
+    --accent: #b08d57;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 500; line-height: 1.1; }
+  a { color: inherit; }
+  img { display: block; width: 100%; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 28px; }
+
+  /* Header */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(247,245,241,.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 72px;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; letter-spacing: .5px; }
+  .logo .em { font-size: 1.2rem; }
+  nav.links { display: flex; gap: 30px; }
+  nav.links a { font-size: .82rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); text-decoration: none; transition: color .2s; }
+  nav.links a:hover { color: var(--ink); }
+  .btn {
+    display: inline-block;
+    background: var(--ink); color: #fff;
+    padding: 11px 22px; font-size: .78rem; letter-spacing: 1.5px; text-transform: uppercase;
+    text-decoration: none; border-radius: 2px; transition: background .25s;
+  }
+  .btn:hover { background: var(--accent); }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+  .btn-ghost:hover { background: var(--ink); color: #fff; }
+
+  /* Hero */
+  .hero {
+    position: relative; height: 88vh; min-height: 560px;
+    display: flex; align-items: flex-end;
+    background: url('https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    color: #fff;
+  }
+  .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,.05) 55%); }
+  .hero-inner { position: relative; z-index: 2; padding-bottom: 60px; }
+  .hero .eyebrow { font-size: .78rem; letter-spacing: 3px; text-transform: uppercase; opacity: .85; margin-bottom: 18px; }
+  .hero h1 { font-size: clamp(3rem, 8vw, 6rem); font-weight: 400; }
+  .hero h1 em { font-style: italic; color: #f0e2cf; }
+  .hero p { max-width: 480px; margin-top: 18px; font-weight: 300; opacity: .9; }
+
+  /* Marquee strip */
+  .strip { background: var(--ink); color: #cfc9bf; padding: 16px 0; overflow: hidden; }
+  .strip .wrap { display: flex; gap: 40px; flex-wrap: wrap; justify-content: center; font-size: .78rem; letter-spacing: 2px; text-transform: uppercase; }
+
+  /* Section */
+  section { padding: 100px 0; }
+  .sec-head { text-align: center; max-width: 620px; margin: 0 auto 56px; }
+  .sec-head .kicker { font-size: .78rem; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+  .sec-head h2 { font-size: clamp(2.2rem, 5vw, 3.4rem); }
+  .sec-head p { color: var(--muted); margin-top: 14px; }
+
+  /* Gallery masonry */
+  .gallery { columns: 3; column-gap: 16px; }
+  .gallery figure { break-inside: avoid; margin-bottom: 16px; position: relative; overflow: hidden; border-radius: 3px; }
+  .gallery img { transition: transform .6s ease; }
+  .gallery figure:hover img { transform: scale(1.06); }
+  .gallery figcaption {
+    position: absolute; left: 0; bottom: 0; right: 0;
+    padding: 16px; color: #fff; font-size: .78rem; letter-spacing: 1.5px; text-transform: uppercase;
+    background: linear-gradient(to top, rgba(0,0,0,.65), transparent);
+    opacity: 0; transition: opacity .3s;
+  }
+  .gallery figure:hover figcaption { opacity: 1; }
+
+  /* About */
+  .about { background: #fff; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .about-grid img { border-radius: 3px; }
+  .about h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 20px; }
+  .about p { color: var(--muted); margin-bottom: 16px; }
+  .signature { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.6rem; margin-top: 20px; color: var(--accent); }
+
+  /* Packages */
+  .packages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .pkg {
+    background: #fff; border: 1px solid var(--line); padding: 40px 32px; border-radius: 3px;
+    display: flex; flex-direction: column; transition: transform .3s, box-shadow .3s;
+  }
+  .pkg:hover { transform: translateY(-6px); box-shadow: 0 24px 48px rgba(0,0,0,.07); }
+  .pkg.featured { border-color: var(--accent); }
+  .pkg .tag { font-size: .72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+  .pkg h3 { font-size: 1.9rem; margin: 12px 0 4px; }
+  .pkg .price { font-family: 'Cormorant Garamond', serif; font-size: 2.6rem; margin: 10px 0 20px; }
+  .pkg .price span { font-size: .9rem; color: var(--muted); font-family: 'Inter'; }
+  .pkg ul { list-style: none; margin-bottom: 28px; }
+  .pkg li { padding: 9px 0; border-bottom: 1px solid var(--line); font-size: .92rem; color: #4a4a4a; }
+  .pkg .btn { margin-top: auto; text-align: center; }
+
+  /* CTA */
+  .cta {
+    background: url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80') center/cover fixed no-repeat;
+    position: relative; text-align: center; color: #fff;
+  }
+  .cta::after { content: ''; position: absolute; inset: 0; background: rgba(20,15,10,.62); }
+  .cta .wrap { position: relative; z-index: 2; }
+  .cta h2 { font-size: clamp(2.4rem, 6vw, 4rem); margin-bottom: 20px; }
+  .cta p { max-width: 500px; margin: 0 auto 32px; opacity: .9; font-weight: 300; }
+  .cta .btn { background: #fff; color: var(--ink); }
+  .cta .btn:hover { background: var(--accent); color: #fff; }
+
+  /* Footer */
+  footer { background: var(--ink); color: #a9a29a; padding: 56px 0; text-align: center; }
+  footer .logo { justify-content: center; color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  footer p { font-size: .85rem; }
+  footer a { color: #fff; text-decoration: underline; }
+
+  @media (max-width: 900px) {
+    .gallery { columns: 2; }
+    .about-grid { grid-template-columns: 1fr; gap: 32px; }
+    .packages { grid-template-columns: 1fr; }
+    nav.links, .nav .btn { display: none; }
+  }
+  @media (max-width: 560px) {
+    .gallery { columns: 1; }
+    section { padding: 64px 0; }
+  }
+</style>
+</head>
+<body>
+<div style="background:#141719;color:#fff;text-align:center;font-size:.8rem;padding:8px 12px;font-family:sans-serif">✦ Aceasta este o pagină demo de Studio Fotografie — <a href="/#contact" style="color:#fff;text-decoration:underline;font-weight:600">Obține o pagină ca aceasta pentru afacerea ta</a> · <a href="/demos/admin-demo.html?type=photography" style="color:#fff;text-decoration:underline;font-weight:600">Vezi panoul de administrare</a></div>
+
+<header>
+  <div class="wrap nav">
+    <div class="logo"><span class="em">📷</span> Studio Fotografie</div>
+    <nav class="links">
+      <a href="#work">Lucrări</a>
+      <a href="#about">Despre</a>
+      <a href="#packages">Pachete</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a href="#contact" class="btn">Contactează-mă</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <p class="eyebrow">Portret · Nuntă · Editorial</p>
+    <h1>Momente făcute <em>nemuritori</em></h1>
+    <p>Fotograf din București care capturează povești sincere și naturale sub lumina potrivită — pentru oamenii și zilele pe care nu vrei să le uiți niciodată.</p>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="wrap">
+    <span>Apărut în Revista Bridal Elegance</span>
+    <span>200+ nunți fotografiate</span>
+    <span>Sediu în București, România</span>
+    <span>Disponibil la nivel internațional</span>
+  </div>
+</div>
+
+<section id="work">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker">Lucrări selectate</p>
+      <h2>Galerie de momente</h2>
+      <p>O selecție curatoriată din lucrări recente — portrete, nunți și micile detalii care fac povestea.</p>
+    </div>
+    <div class="gallery">
+      <figure><img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" alt="Nuntă"><figcaption>Ioana &amp; Radu — Conacul</figcaption></figure>
+      <figure><img src="https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=800&q=80" alt="Portret"><figcaption>Portret în studio</figcaption></figure>
+      <figure><img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80" alt="Cuplu"><figcaption>Lumina de aur</figcaption></figure>
+      <figure><img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80" alt="Ceremonie"><figcaption>Prima privire</figcaption></figure>
+      <figure><img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=800&q=80" alt="Mireasă"><figcaption>Detalii</figcaption></figure>
+      <figure><img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=80" alt="Recepție"><figcaption>Recepția</figcaption></figure>
+      <figure><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80" alt="Portret profesional"><figcaption>Portret editorial</figcaption></figure>
+      <figure><img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=800&q=80" alt="Familie"><figcaption>Sesiune de familie</figcaption></figure>
+      <figure><img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80" alt="Modă"><figcaption>Editorial de modă</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="about">
+  <div class="wrap about-grid">
+    <img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?auto=format&fit=crop&w=800&q=80" alt="Fotograf la lucru">
+    <div>
+      <p class="kicker" style="color:var(--accent);font-size:.78rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;">Fotograf</p>
+      <h2>Eu sunt din spatele aparatului</h2>
+      <p>De peste un deceniu urmăresc lumina naturală și emoțiile sincere în toată România și peste hotare. Cred că cele mai frumoase fotografii nu sunt puse în scenă — sunt observate. O privire, un râs, o mână strânsă puțin mai tare.</p>
+      <p>Abordarea mea este calmă și discretă. Mă voi încadra perfect în ziua ta, pentru ca tu să o trăiești pe deplin, iar eu voi culege tăcută imaginile pe care le vei prețui o viață întreagă.</p>
+      <p class="signature">— captate cu grijă</p>
+    </div>
+  </div>
+</section>
+
+<section id="packages">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker">Investiție</p>
+      <h2>Pachete simple și transparente</h2>
+      <p>Fiecare sesiune include consultație pre-nuntă, editare profesională și galeriecă online privată.</p>
+    </div>
+    <div class="packages">
+      <div class="pkg">
+        <span class="tag">Portret</span>
+        <h3>Sesiunea</h3>
+        <div class="price">1.770<span> RON / 1 oră</span></div>
+        <ul>
+          <li>Sesiune de 1 oră în exterior</li>
+          <li>25 imagini editate</li>
+          <li>Galerie online</li>
+          <li>Permisiune de tipar</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost">Contactează</a>
+      </div>
+      <div class="pkg featured">
+        <span class="tag">Cel mai popular</span>
+        <h3>Nunta</h3>
+        <div class="price">9.900<span> RON / zi</span></div>
+        <ul>
+          <li>Acoperire de zi completă</li>
+          <li>400+ imagini editate</li>
+          <li>Sesiune de logodnă</li>
+          <li>Album de colecție</li>
+        </ul>
+        <a href="#contact" class="btn">Contactează</a>
+      </div>
+      <div class="pkg">
+        <span class="tag">Editorial</span>
+        <h3>Brand</h3>
+        <div class="price">2.880<span> RON / jumătate zi</span></div>
+        <ul>
+          <li>Timp de studio pentru jumătate de zi</li>
+          <li>40 imagini editate</li>
+          <li>Licență comercială</li>
+          <li>Livrare în aceeași săptămână</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost">Contactează</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="cta">
+  <div class="wrap">
+    <h2>Să creăm ceva frumos</h2>
+    <p>Povestește-mi despre ziua ta, viziunea ta, sau povestea pe care vrei s-o aud. Am un număr limitat de sesiuni disponibile lunar.</p>
+    <a href="mailto:hello@studiofotografie.ro" class="btn">Contactează-mă</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="logo"><span class="em">📷</span> Studio Fotografie</div>
+    <p>© Studio Fotografie · O pagină demo creată de Studio Fotografie</p>
+  </div>
+</footer>
+</body>
+</html>
