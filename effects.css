@@ -27,41 +27,8 @@ body[data-fx] main,body[data-fx] footer{position:relative;z-index:2;}
 /* nav-ul rămâne sticky (scroll normal) și mereu deasupra conținutului */
 body[data-fx] nav{z-index:300;}
 
-/* ── CASETĂ NEON ───────────────────────────────────────────── */
-body.fx-slide .fx-neon{background:rgba(var(--teal-glow-rgb,0,200,180),.04);
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  border:1px solid rgba(var(--teal-glow-rgb,0,200,180),.4);border-radius:22px;
-  padding:48px 44px!important;
-  box-shadow:0 0 14px rgba(var(--teal-glow-rgb,0,200,180),.3),0 0 56px rgba(var(--teal-glow-rgb,0,200,180),.14),inset 0 0 26px rgba(var(--teal-glow-rgb,0,200,180),.05);
-  max-height:100%;overflow-y:auto;
-  touch-action:pan-y;-webkit-overflow-scrolling:touch;
-  scrollbar-width:thin;scrollbar-color:rgba(var(--teal-glow-rgb,0,200,180),.4) transparent;}
-/* glow static — animarea box-shadow nu e compusă pe GPU și apărea
-   în PageSpeed la «Evită animațiile necompuse» */
-
-/* ── MOD SLIDE ─────────────────────────────────────────────── */
-body.fx-slide{overflow:hidden;height:100vh;height:100dvh;overscroll-behavior:none;}
-body.fx-slide main{height:100vh;height:100dvh;}
-body.fx-slide .fx-panel{position:fixed;inset:0;min-height:0;margin:0;
-  padding:84px 24px 64px;display:flex!important;align-items:center;justify-content:center;
-  background:transparent!important;border:none!important;
-  transition:transform 1.4s cubic-bezier(.65,0,.35,1),opacity 1.4s cubic-bezier(.65,0,.35,1);
-  will-change:transform,opacity;pointer-events:none;opacity:0;z-index:2;}
-body.fx-slide .fx-panel>*{width:100%;}
-body.fx-slide .fx-notrans{transition:none!important;}
-body.fx-slide .fx-off-left{transform:translateX(-100vw);}
-body.fx-slide .fx-off-right{transform:translateX(100vw);}
-body.fx-slide .fx-active{transform:none;opacity:1;pointer-events:auto;z-index:3;}
-/* plasă de siguranță: orice element din main netransformat încă în slide
-   (ex. injectat dinamic între două re-scanări) nu rămâne plutind peste
-   slide-ul activ */
-body.fx-slide main>*:not(.fx-panel){display:none!important;}
-/* în mod slide, nav-ul e fix sus, deasupra slide-urilor — mereu clicabil */
-body.fx-slide nav{position:fixed!important;top:0;left:0;right:0;z-index:300;}
-body.fx-slide .mobile-menu{z-index:290;}
-body.fx-slide .mobile-menu.open{display:flex;}
-/* în mod slide, animațiile reveal existente nu mai țin elementele ascunse */
-body.fx-slide .reveal{opacity:1!important;transform:none!important;}
+/* NOTĂ: modul vechi „fx-slide" (fullscreen, panouri glisante) a fost înlocuit
+   de „fx-scroll" (derulare normală). Regulile fx-slide au fost eliminate. */
 /* suprapunerile decorative din designul vechi (modelul punctat de pe
    hero-uri) sunt redundante peste fundalul animat al temei noi */
 body[data-fx] .hero::before{display:none;}
@@ -127,7 +94,6 @@ body.fx-scroll .fx-foot-social{display:inline-flex;gap:8px;align-items:center;}
 
 /* ── PUNCTE DE NAVIGARE (stânga) ───────────────────────────── */
 .fx-dots{display:none;position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:220;flex-direction:column;gap:4px;}
-body.fx-slide .fx-dots{display:flex;}
 /* țintă de atins de 26px (cerință accesibilitate), punct vizual de 11px */
 .fx-dots button{width:26px;height:26px;border:none;background:transparent;cursor:pointer;padding:0;position:relative;}
 .fx-dots button::after{content:'';position:absolute;inset:7.5px;border-radius:50%;border:1px solid rgba(var(--teal-glow-rgb,0,200,180),.5);transition:background .3s,box-shadow .3s,transform .3s;}
@@ -155,7 +121,6 @@ body.fx-scroll .floating-bar{z-index:210;}
 .fx-scrollhint{position:fixed;left:50%;bottom:66px;transform:translateX(-50%);z-index:160;
   display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;
   opacity:0;visibility:hidden;transition:opacity .7s ease,visibility .7s;}
-body.fx-slide .fx-scrollhint.show{opacity:1;visibility:visible;}
 .fx-sh-label{font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.22em;
   text-transform:uppercase;color:var(--teal,#00c8b4);opacity:.85;}
 .fx-sh-mouse{width:24px;height:38px;border:2px solid rgba(var(--teal-glow-rgb,0,200,180),.75);
@@ -176,8 +141,6 @@ body.fx-slide .fx-scrollhint.show{opacity:1;visibility:visible;}
 
 /* ── MOBIL: slide-uri compacte ─────────────────────────────── */
 @media(max-width:900px){
-  body.fx-slide .fx-panel{padding:78px 12px 78px;}
-  body.fx-slide .fx-neon{padding:26px 18px!important;border-radius:16px;}
   .fx-dots{left:4px;gap:2px;}
   .fx-dots button::after{inset:8.5px;}
   body.fx-scroll footer .footer-bottom-bar span:last-child,
@@ -193,7 +156,6 @@ body.fx-slide .fx-scrollhint.show{opacity:1;visibility:visible;}
 /* ── REDUCED MOTION ────────────────────────────────────────── */
 @media(prefers-reduced-motion:reduce){
   .fx-tri-slow,.fx-tri-med,.fx-plus,.fx-diamond,.fx-glow,.fx-dotswave{animation:none;}
-  body.fx-slide .fx-neon{animation:none;}
   .fx-dots button.on::after{animation:none;}
   body[data-fx] nav .logo img{animation:none;}
 }
