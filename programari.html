@@ -4634,9 +4634,9 @@
         method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(socialAccounts)
       });
       const data = await res.json();
-      btn.textContent = data.success ? '&#x2713; Salvat!' : '&#x2715; Eroare';
-      setTimeout(() => { btn.textContent = '&#x2713; Salveaz&#259;'; btn.disabled = false; }, 2000);
-    } catch { btn.textContent = '&#x2715; Eroare'; btn.disabled = false; }
+      btn.textContent = data.success ? '✓ Salvat!' : '✕ Eroare';
+      setTimeout(() => { btn.textContent = '✓ Salveaz&#259;'; btn.disabled = false; }, 2000);
+    } catch { btn.textContent = '✕ Eroare'; btn.disabled = false; }
   }
 
   // -- SETTINGS --
@@ -8063,10 +8063,10 @@
     var isImg = /^image\//.test(file.type);
     if (!isImg && !isVid) { alert('Alege o imagine sau un video MP4/WebM.'); return; }
     if (file.size > (isVid ? 25 : 5)*1024*1024) { alert('Fișier prea mare (max ' + (isVid ? '25MB video' : '5MB imagine') + ').'); return; }
-    var msg = document.getElementById('givBannerMsg'); if (msg) { msg.style.color = 'var(--teal)'; msg.textContent = 'se &icirc;ncarc&#x103;&#x2026;'; }
+    var msg = document.getElementById('givBannerMsg'); if (msg) { msg.style.color = 'var(--teal)'; msg.textContent = 'se &icirc;ncarcă&#x2026;'; }
     uploadMedia(file, function(url){
       givBannerSave(url).then(function(d){
-        if (d && d.success) { renderGivBanner(url); if (msg) { msg.textContent = '&#x2713; salvat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
+        if (d && d.success) { renderGivBanner(url); if (msg) { msg.textContent = '✓ salvat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
         else if (msg) { msg.style.color = '#e5484d'; msg.textContent = 'salvare eșuată'; }
       });
     }, function(err){ if (msg) { msg.style.color = '#e5484d'; msg.textContent = err || 'eroare upload'; } });
@@ -8076,7 +8076,7 @@
     if (!confirm('Elimini banner-ul giveaway? Se va reveni la gradientul implicit.')) return;
     var msg = document.getElementById('givBannerMsg');
     givBannerSave('').then(function(d){
-      if (d && d.success) { renderGivBanner(''); if (msg) { msg.style.color = 'var(--teal)'; msg.textContent = '&#x2713; eliminat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
+      if (d && d.success) { renderGivBanner(''); if (msg) { msg.style.color = 'var(--teal)'; msg.textContent = '✓ eliminat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
       else if (msg) { msg.style.color = '#e5484d'; msg.textContent = 'eroare'; }
     });
   }
@@ -8095,7 +8095,7 @@
         body: JSON.stringify({ endDate: inp.value, entrantPct: pct })
       });
       var d = await res.json();
-      if (d && d.success) { if (msg) { msg.textContent = '&#x2713; Salvat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
+      if (d && d.success) { if (msg) { msg.textContent = '✓ Salvat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
       else { alert((d && d.error) || 'Salvarea a eșuat.'); }
     } catch(e) { alert('Eroare de rețea la salvare.'); }
   }
@@ -8136,7 +8136,7 @@
         body: JSON.stringify({ referrerPct: rp, friendPct: fp, cap: cp })
       });
       var d = await res.json();
-      if (d && d.success) { if (msg) { msg.textContent = '&#x2713; Salvat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
+      if (d && d.success) { if (msg) { msg.textContent = '✓ Salvat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
       else { alert((d && d.error) || 'Salvarea a eșuat.'); }
     } catch(e) { alert('Eroare de rețea la salvare.'); }
   }
@@ -8176,10 +8176,10 @@
     var isImg = /^image\//.test(file.type);
     if (!isImg && !isVid) { alert('Alege o imagine sau un video MP4/WebM.'); return; }
     if (file.size > (isVid ? 25 : 5)*1024*1024) { alert('Fișier prea mare (max ' + (isVid ? '25MB video' : '5MB imagine') + ').'); return; }
-    var msg = document.getElementById('refBannerMsg'); if (msg) { msg.style.color = 'var(--teal)'; msg.textContent = 'se &icirc;ncarc&#x103;&#x2026;'; }
+    var msg = document.getElementById('refBannerMsg'); if (msg) { msg.style.color = 'var(--teal)'; msg.textContent = 'se &icirc;ncarcă&#x2026;'; }
     uploadMedia(file, function(url){
       refBannerSave(url).then(function(d){
-        if (d && d.success) { renderRefBanner(url); if (msg) { msg.textContent = '&#x2713; salvat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
+        if (d && d.success) { renderRefBanner(url); if (msg) { msg.textContent = '✓ salvat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
         else if (msg) { msg.style.color = '#e5484d'; msg.textContent = 'salvare eșuată'; }
       });
     }, function(err){ if (msg) { msg.style.color = '#e5484d'; msg.textContent = err || 'eroare upload'; } });
@@ -8189,7 +8189,7 @@
     if (!confirm('Elimini banner-ul referral? Se va reveni la gradientul implicit.')) return;
     var msg = document.getElementById('refBannerMsg');
     refBannerSave('').then(function(d){
-      if (d && d.success) { renderRefBanner(''); if (msg) { msg.style.color = 'var(--teal)'; msg.textContent = '&#x2713; eliminat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
+      if (d && d.success) { renderRefBanner(''); if (msg) { msg.style.color = 'var(--teal)'; msg.textContent = '✓ eliminat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
       else if (msg) { msg.style.color = '#e5484d'; msg.textContent = 'eroare'; }
     });
   }
@@ -8199,12 +8199,12 @@
     var badge = document.getElementById('vis-' + page + '-badge');
     var btn = document.getElementById('vis-' + page + '-btn');
     if (badge) {
-      badge.textContent = pub ? '&#x25CF; Publicat' : '&#x25CF; Draft';
+      badge.textContent = pub ? '● Publicat' : '● Draft';
       badge.style.background = pub ? 'rgba(18,161,80,.12)' : 'rgba(139,148,163,.15)';
       badge.style.color = pub ? '#12a150' : '#8b94a3';
     }
     if (btn) {
-      btn.textContent = pub ? 'Retrage' : 'Public&#x103;';
+      btn.textContent = pub ? 'Retrage' : 'Publică';
       btn.style.background = pub ? 'rgba(229,72,77,.1)' : 'var(--teal)';
       btn.style.color = pub ? '#e5484d' : '#fff';
       btn.style.border = pub ? '1px solid #e5484d' : '1px solid var(--teal)';

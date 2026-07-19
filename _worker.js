@@ -946,6 +946,17 @@ async function promoPagePublished(env, key) {
 function promoDraft404() {
   return new Response('<!DOCTYPE html><meta charset="utf-8"><title>Pagina nu a fost găsită</title><body style="font-family:system-ui,sans-serif;text-align:center;padding:80px 20px;color:#334155;"><h1>Pagina nu a fost găsită</h1><p><a href="https://www.c-design.ro" style="color:#00AAAC;">Înapoi la C Design →</a></p></body>', { status: 404, headers: { 'Content-Type': 'text/html;charset=utf-8' } });
 }
+// Verifică un token de previzualizare (?pt=...) valabil (setat de admin, TTL scurt în KV).
+async function validPreviewToken(env, url) {
+  try {
+    const pt = url.searchParams.get('pt');
+    if (!pt) return false;
+    const raw = await env.PROGRAMARI.get('__pv__' + pt);
+    if (!raw) return false;
+    const p = JSON.parse(raw);
+    return !p.expires || p.expires > Date.now();
+  } catch { return false; }
+}
 
 // Cod de reducere scurt, prietenos și fără ambiguități (fără 0/O/1/I/L).
 function genDiscountCode(prefix) {
@@ -1222,14 +1233,14 @@ export default {
     }
 
     if (path === '/referral' || path === '/referral/') {
-      if (!isAdmin(url, env) && !(await promoPagePublished(env, 'referral'))) return promoDraft404();
+      if (!isAdmin(url, env) && !(await validPreviewToken(env, url)) && !(await promoPagePublished(env, 'referral'))) return promoDraft404();
       const assetUrl = new URL(request.url);
       assetUrl.pathname = '/referral.html';
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
 
     if (path === '/giveaway' || path === '/giveaway/') {
-      if (!isAdmin(url, env) && !(await promoPagePublished(env, 'giveaway'))) return promoDraft404();
+      if (!isAdmin(url, env) && !(await validPreviewToken(env, url)) && !(await promoPagePublished(env, 'giveaway'))) return promoDraft404();
       const assetUrl = new URL(request.url);
       assetUrl.pathname = '/giveaway.html';
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
@@ -3640,6 +3651,14 @@ Cerințe titluri:
     }
 
     // ── PROMO VISIBILITY (publică / ascunde pagina referral sau giveaway) ──
+    // Token scurt de previzualizare pentru paginile draft (referral/giveaway)
+    if (path === '/api/preview-token' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      const pt = 'pv_' + (crypto.randomUUID() + crypto.randomUUID()).replace(/-/g, '');
+      await env.PROGRAMARI.put('__pv__' + pt, JSON.stringify({ expires: Date.now() + 120000 }), { expirationTtl: 120 });
+      return json({ pt });
+    }
+
     if (path === '/api/promo-visibility' && request.method === 'PUT') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
