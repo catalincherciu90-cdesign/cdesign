@@ -1129,6 +1129,14 @@ export default {
       const staticPages = [
         { loc: '/',                           cf: 'weekly',  pr: '1.0' },
         { loc: '/servicii',                   cf: 'monthly', pr: '0.9' },
+        { loc: '/servicii/website-design',        cf: 'monthly', pr: '0.7' },
+        { loc: '/servicii/ecommerce',        cf: 'monthly', pr: '0.7' },
+        { loc: '/servicii/web-apps',        cf: 'monthly', pr: '0.7' },
+        { loc: '/servicii/ai-integration',        cf: 'monthly', pr: '0.7' },
+        { loc: '/servicii/seo',        cf: 'monthly', pr: '0.7' },
+        { loc: '/servicii/social-media',        cf: 'monthly', pr: '0.7' },
+        { loc: '/servicii/hosting-maintenance',        cf: 'monthly', pr: '0.7' },
+        { loc: '/servicii/branding',        cf: 'monthly', pr: '0.7' },
         { loc: '/despre-noi',                 cf: 'monthly', pr: '0.8' },
         { loc: '/contact',                    cf: 'monthly', pr: '0.8' },
         { loc: '/parteneri',                  cf: 'monthly', pr: '0.6' },
@@ -1200,6 +1208,17 @@ export default {
       const assetUrl = new URL(request.url);
       assetUrl.pathname = '/promo.html';
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
+    // ── SERVICII — pagini dedicate /servicii/<slug> ───────────
+    if (path.startsWith('/servicii/')) {
+      const SERVICE_PAGES = ['website-design', 'ecommerce', 'web-apps', 'ai-integration', 'seo', 'social-media', 'hosting-maintenance', 'branding'];
+      const slug = path.replace('/servicii/', '').replace(/\/$/, '');
+      if (SERVICE_PAGES.includes(slug)) {
+        const assetUrl = new URL(request.url);
+        assetUrl.pathname = '/servicii/' + slug + '.html';
+        return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      }
     }
 
     if (path === '/referral' || path === '/referral/') {
