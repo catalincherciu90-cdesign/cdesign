@@ -518,7 +518,7 @@
         }
         btn.disabled = true; btn.textContent = 'Se trimite…';
         fetch('/api/messages', { method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ name:name, phone:phone, service: f.getAttribute('data-service') || 'PACHET PROMO 300€', message: body }) })
+          body: JSON.stringify({ name:name, phone:phone, email:email, service: f.getAttribute('data-service') || 'PACHET PROMO 300€', message: body }) })
           .then(function(r){ return r.json(); })
           .then(function(d){
             if(d && d.success){

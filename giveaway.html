@@ -548,7 +548,7 @@
         body += '\nConsimțământ: da';
         btn.disabled = true; btn.textContent = 'Se completează...';
         fetch('/api/messages', { method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ name:name, phone:phone, service: f.getAttribute('data-service') || 'GIVEAWAY', message: body }) })
+          body: JSON.stringify({ name:name, phone:phone, email:email, service: f.getAttribute('data-service') || 'GIVEAWAY', message: body }) })
           .then(function(r){ return r.json(); })
           .then(function(d){
             if(d && d.success){
