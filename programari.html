@@ -63,6 +63,15 @@
 
     .main{max-width:1200px;margin:0 auto;padding:32px 24px;}
 
+    /* Navbar admin ca sidebar pe stânga (desktop); pe mobil rămâne bară orizontală sus */
+    @media(min-width:901px){
+      .tabs{position:fixed;top:60px;left:0;bottom:0;width:210px;flex-direction:column;align-items:stretch;gap:3px;padding:12px 10px;background:var(--bg2);border-bottom:none;border-right:1px solid var(--border);overflow-y:auto;overflow-x:hidden;z-index:9;}
+      .tab{border-bottom:none;border-left:3px solid transparent;text-align:left;border-radius:8px;padding:11px 12px;white-space:normal;flex-shrink:0;}
+      .tab:hover{background:rgba(255,255,255,.03);}
+      .tab.active{border-bottom-color:transparent;border-left-color:var(--teal);background:rgba(0,200,180,.10);}
+      .tab-panel{padding-left:210px;}
+    }
+
     /* STATS */
     .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;}
     .stat-box{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:20px 24px;}
