@@ -63,6 +63,15 @@
 
     .main{max-width:1200px;margin:0 auto;padding:32px 24px;}
 
+    /* Navbar admin ca sidebar pe stânga (desktop); pe mobil rămâne bară orizontală sus */
+    @media(min-width:901px){
+      .tabs{position:fixed;top:60px;left:0;bottom:0;width:210px;flex-direction:column;align-items:stretch;gap:3px;padding:12px 10px;background:var(--bg2);border-bottom:none;border-right:1px solid var(--border);overflow-y:auto;overflow-x:hidden;z-index:9;}
+      .tab{border-bottom:none;border-left:3px solid transparent;text-align:left;border-radius:8px;padding:11px 12px;white-space:normal;flex-shrink:0;}
+      .tab:hover{background:rgba(255,255,255,.03);}
+      .tab.active{border-bottom-color:transparent;border-left-color:var(--teal);background:rgba(0,200,180,.10);}
+      .tab-panel{padding-left:210px;}
+    }
+
     /* STATS */
     .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;}
     .stat-box{background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:20px 24px;}
@@ -1843,6 +1852,7 @@
     <button class="tab" onclick="switchTab('settings',this)">&#x2699; Set&#x103;ri</button>
     <button class="tab" onclick="switchTab('cheltuieli',this)">&#x1F4B8; Cheltuieli</button>
     <button class="tab" onclick="switchTab('oferte',this)">&#x1F4CB; Oferte</button>
+    <button class="tab" onclick="switchTab('promotions',this)">&#x1F381; Promo&#x21B;ii<span id="promoTabBadge" class="tab-badge" style="display:none;"></span></button>
   </div>
 
   <!-- TAB: GIBILAN -->
@@ -3831,6 +3841,108 @@
   </div>
 </div>
 
+  <!-- TAB: PROMOȚII -->
+  <div class="tab-panel" id="panel-promotions">
+    <div class="main">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
+        <h2 style="margin:0;">&#x1F381; Promo&#x21B;ii</h2>
+        <button onclick="loadPromotions()" style="background:none;border:1px solid var(--border-soft);color:var(--muted);border-radius:6px;padding:7px 14px;font-size:.8rem;cursor:pointer;">&#x21BB; Re&icirc;ncarc&#x103;</button>
+      </div>
+      <p style="font-size:.82rem;color:var(--muted);margin:0 0 16px;">Participan&#x21B;i la Giveaway/Concurs (din <b>/giveaway</b>) &#x219;i cereri de recomandare (din <b>/referral</b>), &icirc;n sub-tab-uri separate.</p>
+
+      <!-- SUB-TABS -->
+      <div style="display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border-soft);margin-bottom:20px;">
+        <button id="subtab-giveaway" onclick="switchPromoSub('giveaway')" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--soft);font-size:.92rem;font-weight:600;padding:9px 16px;cursor:pointer;">&#x1F389; Giveaway/Concurs <span id="subCountGiv" style="color:var(--muted);font-weight:400;"></span></button>
+        <button id="subtab-referral" onclick="switchPromoSub('referral')" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--soft);font-size:.92rem;font-weight:600;padding:9px 16px;cursor:pointer;">&#x1F91D; Recomand&#x103;ri <span id="subCountRef" style="color:var(--muted);font-weight:400;"></span></button>
+      </div>
+
+      <!-- ===== GIVEAWAY SUB-PANEL ===== -->
+      <div id="promoSub-giveaway">
+        <div style="background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:16px 18px;margin-bottom:16px;">
+          <div style="font-weight:600;color:var(--heading);margin-bottom:8px;">&#x1F441; Vizibilitate pagin&#x103;</div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <span style="min-width:110px;font-size:.85rem;color:var(--soft);">/giveaway</span>
+            <span id="vis-giveaway-badge" style="font-size:.72rem;font-weight:700;border-radius:999px;padding:3px 10px;">&#x2026;</span>
+            <button onclick="openPreview('/giveaway')" style="font-size:.78rem;background:none;border:1px solid var(--border-soft);color:var(--soft);border-radius:6px;padding:6px 12px;cursor:pointer;">&#x1F441; Previzualizare</button>
+            <button id="vis-giveaway-btn" onclick="togglePromoVisibility('giveaway')" style="font-size:.78rem;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;">&#x2026;</button>
+          </div>
+          <p style="font-size:.74rem;color:var(--muted);margin:8px 0 0;">Pe <b>Draft</b> publicul prime&#x219;te 404; doar tu o po&#x21B;i vedea cu <b>Previzualizare</b>.</p>
+        </div>
+
+        <div style="background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:16px 18px;margin-bottom:20px;">
+          <div style="font-weight:600;color:var(--heading);margin-bottom:2px;">&#x2699;&#xFE0F; Set&#x103;ri Giveaway/Concurs</div>
+          <p style="font-size:.78rem;color:var(--muted);margin:0 0 12px;">Seteaz&#x103; countdown-ul &#x219;i data de &icirc;nchidere afi&#x219;ate pe pagina <b>/giveaway</b>.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+            <label style="font-size:.82rem;color:var(--soft);">&Icirc;nscrieri p&acirc;n&#x103; la:
+              <input type="datetime-local" id="givEndInput" style="margin-left:8px;padding:8px 10px;border:1px solid var(--border-soft);border-radius:8px;background:var(--bg);color:var(--text);font-size:.85rem;">
+            </label>
+            <label style="font-size:.82rem;color:var(--soft);">Fiecare participant prime&#x219;te
+              <input type="number" id="givEntrantPct" min="0" max="100" style="width:66px;margin:0 4px;padding:8px 10px;border:1px solid var(--border-soft);border-radius:8px;background:var(--bg);color:var(--text);font-size:.85rem;"> % reducere
+            </label>
+            <button onclick="saveGiveawaySettings()" style="font-size:.8rem;background:var(--teal);border:1px solid var(--teal);color:#fff;border-radius:8px;padding:8px 16px;cursor:pointer;">Salveaz&#x103;</button>
+            <span id="givSaveMsg" style="font-size:.8rem;color:var(--teal);"></span>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px;padding-top:12px;border-top:1px dashed var(--border-soft);">
+            <span style="font-size:.82rem;color:var(--soft);">Banner hero:</span>
+            <img id="givBannerPreview" src="" alt="" style="display:none;height:42px;width:auto;max-width:120px;object-fit:cover;border-radius:6px;border:1px solid var(--border-soft);">
+            <span id="givBannerVid" style="display:none;font-size:.78rem;color:var(--teal);font-weight:600;">&#x1F3AC; video setat</span>
+            <span id="givBannerEmpty" style="font-size:.78rem;color:var(--muted);">niciunul (gradient implicit)</span>
+            <button onclick="givBannerPick()" style="font-size:.8rem;background:none;border:1px solid var(--border-soft);color:var(--soft);border-radius:8px;padding:8px 14px;cursor:pointer;">&#x2B06; &Icirc;ncarc&#x103; imagine / video</button>
+            <button id="givBannerRemoveBtn" onclick="givBannerRemove()" style="display:none;font-size:.8rem;background:none;border:1px solid #e5484d;color:#e5484d;border-radius:8px;padding:8px 14px;cursor:pointer;">Elimin&#x103;</button>
+            <input type="file" id="givBannerInput" accept="image/*,video/mp4,video/webm" style="display:none;" onchange="givBannerUpload(this)">
+            <span id="givBannerMsg" style="font-size:.8rem;color:var(--teal);"></span>
+          </div>
+        </div>
+
+        <div id="giveawayList" style="display:flex;flex-direction:column;gap:12px;"></div>
+      </div>
+
+      <!-- ===== REFERRAL SUB-PANEL ===== -->
+      <div id="promoSub-referral" style="display:none;">
+        <div style="background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:16px 18px;margin-bottom:20px;">
+          <div style="font-weight:600;color:var(--heading);margin-bottom:8px;">&#x1F441; Vizibilitate pagin&#x103;</div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <span style="min-width:110px;font-size:.85rem;color:var(--soft);">/referral</span>
+            <span id="vis-referral-badge" style="font-size:.72rem;font-weight:700;border-radius:999px;padding:3px 10px;">&#x2026;</span>
+            <button onclick="openPreview('/referral')" style="font-size:.78rem;background:none;border:1px solid var(--border-soft);color:var(--soft);border-radius:6px;padding:6px 12px;cursor:pointer;">&#x1F441; Previzualizare</button>
+            <button id="vis-referral-btn" onclick="togglePromoVisibility('referral')" style="font-size:.78rem;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;">&#x2026;</button>
+          </div>
+          <p style="font-size:.74rem;color:var(--muted);margin:8px 0 0;">Pe <b>Draft</b> publicul prime&#x219;te 404; doar tu o po&#x21B;i vedea cu <b>Previzualizare</b>.</p>
+        </div>
+
+        <div style="background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:16px 18px;margin-bottom:20px;">
+          <div style="font-weight:600;color:var(--heading);margin-bottom:2px;">&#x1F381; Recompense recomandare</div>
+          <p style="font-size:.78rem;color:var(--muted);margin:0 0 12px;">Procentele de reducere afi&#x219;ate pe pagina <b>/referral</b>.</p>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
+            <label style="font-size:.82rem;color:var(--soft);">Referentul prime&#x219;te
+              <input type="number" id="refReferrerPct" min="0" max="100" style="width:66px;margin:0 4px;padding:8px 10px;border:1px solid var(--border-soft);border-radius:8px;background:var(--bg);color:var(--text);font-size:.85rem;"> % reducere
+            </label>
+            <label style="font-size:.82rem;color:var(--soft);">Prietenul prime&#x219;te
+              <input type="number" id="refFriendPct" min="0" max="100" style="width:66px;margin:0 4px;padding:8px 10px;border:1px solid var(--border-soft);border-radius:8px;background:var(--bg);color:var(--text);font-size:.85rem;"> % reducere
+            </label>
+            <label style="font-size:.82rem;color:var(--soft);">Maxim cumulat
+              <input type="number" id="refCap" min="0" max="100" style="width:66px;margin:0 4px;padding:8px 10px;border:1px solid var(--border-soft);border-radius:8px;background:var(--bg);color:var(--text);font-size:.85rem;"> % maxim
+            </label>
+            <button onclick="saveReferralSettings()" style="font-size:.8rem;background:var(--teal);border:1px solid var(--teal);color:#fff;border-radius:8px;padding:8px 16px;cursor:pointer;">Salveaz&#x103;</button>
+            <span id="refSaveMsg" style="font-size:.8rem;color:var(--teal);"></span>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px;padding-top:12px;border-top:1px dashed var(--border-soft);">
+            <span style="font-size:.82rem;color:var(--soft);">Banner hero:</span>
+            <img id="refBannerPreview" src="" alt="" style="display:none;height:42px;width:auto;max-width:120px;object-fit:cover;border-radius:6px;border:1px solid var(--border-soft);">
+            <span id="refBannerVid" style="display:none;font-size:.78rem;color:var(--teal);font-weight:600;">&#x1F3AC; video setat</span>
+            <span id="refBannerEmpty" style="font-size:.78rem;color:var(--muted);">niciunul (gradient implicit)</span>
+            <button onclick="refBannerPick()" style="font-size:.8rem;background:none;border:1px solid var(--border-soft);color:var(--soft);border-radius:8px;padding:8px 14px;cursor:pointer;">&#x2B06; &Icirc;ncarc&#x103; imagine / video</button>
+            <button id="refBannerRemoveBtn" onclick="refBannerRemove()" style="display:none;font-size:.8rem;background:none;border:1px solid #e5484d;color:#e5484d;border-radius:8px;padding:8px 14px;cursor:pointer;">Elimin&#x103;</button>
+            <input type="file" id="refBannerInput" accept="image/*,video/mp4,video/webm" style="display:none;" onchange="refBannerUpload(this)">
+            <span id="refBannerMsg" style="font-size:.8rem;color:var(--teal);"></span>
+          </div>
+        </div>
+
+        <div id="referralList" style="display:flex;flex-direction:column;gap:12px;"></div>
+      </div>
+    </div>
+  </div>
+
 <script>
   let adminToken = '';
   let allBookings = [];
@@ -3903,6 +4015,7 @@
     if (tab === 'chatai') loadConversations();
     if (tab === 'mesaje') loadMessages();
     if (tab === 'gsc') loadGsc();
+    if (tab === 'promotions') { loadPromotions(); loadGiveawaySettings(); loadPromoVisibility(); }
   }
 
   function refreshCurrent() {
@@ -3919,6 +4032,7 @@
     else if (currentTab === 'continut') fetchContent();
     else if (currentTab === 'tema') fetchTheme();
     else if (currentTab === 'media') fetchMedia();
+    else if (currentTab === 'promotions') { loadPromotions(); loadGiveawaySettings(); loadPromoVisibility(); }
     else fetchProjects();
   }
 
@@ -4520,9 +4634,9 @@
         method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(socialAccounts)
       });
       const data = await res.json();
-      btn.textContent = data.success ? '&#x2713; Salvat!' : '&#x2715; Eroare';
-      setTimeout(() => { btn.textContent = '&#x2713; Salveaz&#259;'; btn.disabled = false; }, 2000);
-    } catch { btn.textContent = '&#x2715; Eroare'; btn.disabled = false; }
+      btn.textContent = data.success ? '✓ Salvat!' : '✕ Eroare';
+      setTimeout(() => { btn.textContent = '✓ Salveaz&#259;'; btn.disabled = false; }, 2000);
+    } catch { btn.textContent = '✕ Eroare'; btn.disabled = false; }
   }
 
   // -- SETTINGS --
@@ -7636,6 +7750,479 @@
       const badge = document.getElementById('mesaje-tab-badge');
       if (badge) { if (newCount > 0) { badge.textContent = newCount; badge.classList.add('on'); } else { badge.textContent = ''; badge.classList.remove('on'); } }
     } catch (e) {}
+  }
+
+  // ── PROMOȚII (giveaway/concurs & recomandări) ─────────────
+  function isPromoMsg(m) {
+    var s = String((m && m.service) || '').toUpperCase();
+    return s === 'REFERRAL' || s === 'GIVEAWAY';
+  }
+
+  // Deschide o pagină de previzualizare cu token temporar (fără să expunem adminToken în URL)
+  async function openPreview(path) {
+    var w = window.open('about:blank', '_blank');
+    try {
+      var res = await fetch('/api/preview-token?token=' + encodeURIComponent(adminToken), { method: 'POST' });
+      var d = await res.json().catch(function () { return {}; });
+      if (!res.ok || !d.pt) { if (w) w.close(); alert('Nu s-a putut deschide previzualizarea. Încearcă din nou.'); return; }
+      var u = path + (path.indexOf('?') === -1 ? '?' : '&') + 'pt=' + encodeURIComponent(d.pt);
+      if (w) w.location = u; else window.open(u, '_blank');
+    } catch (e) { if (w) w.close(); alert('Nu s-a putut deschide previzualizarea. Încearcă din nou.'); }
+  }
+
+  window.__promoSub = 'giveaway';
+
+  function updatePromoBadge(msgs) {
+    var badge = document.getElementById('promoTabBadge');
+    if (!badge) return;
+    var n = (Array.isArray(msgs) ? msgs : []).filter(function(m){ return m && !m.read && isPromoMsg(m); }).length;
+    if (n > 0) { badge.textContent = n > 99 ? '99+' : n; badge.style.display = 'inline-block'; }
+    else { badge.style.display = 'none'; }
+  }
+
+  async function refreshPromoBadge() {
+    try {
+      var res = await fetch('/api/messages?token=' + encodeURIComponent(adminToken));
+      var data = await res.json();
+      var msgs = Array.isArray(data) ? data : (Array.isArray(data.messages) ? data.messages : []);
+      updatePromoBadge(msgs);
+    } catch(e) {}
+  }
+
+  function switchPromoSub(sub) {
+    window.__promoSub = (sub === 'referral') ? 'referral' : 'giveaway';
+    ['giveaway','referral'].forEach(function(s){
+      var panel = document.getElementById('promoSub-' + s);
+      var btn = document.getElementById('subtab-' + s);
+      var on = (s === window.__promoSub);
+      if (panel) panel.style.display = on ? 'block' : 'none';
+      if (btn) { btn.style.borderBottomColor = on ? 'var(--teal)' : 'transparent'; btn.style.color = on ? 'var(--teal)' : 'var(--soft)'; }
+    });
+  }
+
+  function promoCardHtml(m) {
+    var when = '';
+    try { when = new Date(m.createdAt).toLocaleString('ro-RO'); } catch(e){}
+    var isGiv = String(m.service).toUpperCase() === 'GIVEAWAY';
+    var chip = isGiv
+      ? '<span style="font-size:.68rem;font-weight:700;letter-spacing:.04em;color:#7a35c4;background:#f3e8ff;border:1px solid #e2ccf7;padding:3px 9px;border-radius:999px;">&#x1F389; GIVEAWAY</span>'
+      : '<span style="font-size:.68rem;font-weight:700;letter-spacing:.04em;color:#1c7a43;background:#e4f7ea;border:1px solid #b8e8c8;padding:3px 9px;border-radius:999px;">&#x1F91D; RECOMANDARE</span>';
+    return '<div style="background:var(--bg2);border:1px solid ' + (m.read ? 'var(--border-soft)' : 'var(--teal-border)') + ';border-radius:12px;padding:16px 18px;" data-id="' + esc(m.id) + '">' +
+      '<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;">' +
+        '<div style="display:flex;align-items:center;gap:10px;">' + chip +
+          '<strong style="font-size:1rem;color:var(--heading);">' + esc(m.name) + (m.read ? '' : ' <span style="color:var(--teal);font-size:.7rem;">● NOU</span>') + '</strong>' +
+        '</div>' +
+        '<span style="font-size:.72rem;color:var(--muted);">' + esc(when) + '</span>' +
+      '</div>' +
+      '<div style="font-size:.88rem;color:var(--soft);margin-top:8px;">&#x1F4DE; <a href="tel:' + esc(m.phone) + '" style="color:var(--teal);">' + esc(m.phone) + '</a></div>' +
+      (m.message ? '<div style="font-size:.9rem;color:var(--text);margin-top:10px;line-height:1.55;white-space:pre-wrap;">' + esc(m.message) + '</div>' : '') +
+      '<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">' +
+        '<a href="https://wa.me/' + esc(String(m.phone).replace(/[^0-9]/g,'')) + '" target="_blank" rel="noopener" style="font-size:.76rem;background:rgba(43,229,255,.1);border:1px solid var(--teal-border);color:var(--teal);border-radius:6px;padding:5px 12px;text-decoration:none;">WhatsApp</a>' +
+        '<button onclick="togglePromoRead(\'' + esc(m.id) + '\',' + (m.read ? 'false' : 'true') + ')" style="font-size:.76rem;background:none;border:1px solid var(--border-soft);color:var(--muted);border-radius:6px;padding:5px 12px;cursor:pointer;">' + (m.read ? 'Marchează necitit' : 'Marchează citit') + '</button>' +
+        '<button onclick="deletePromoEntry(\'' + esc(m.id) + '\')" style="font-size:.76rem;background:none;border:1px solid #e74c3c;color:#e74c3c;border-radius:6px;padding:5px 12px;cursor:pointer;">&#x218;terge</button>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function renderPromoInto(id, rows, emptyMsg) {
+    var list = document.getElementById(id);
+    if (!list) return;
+    if (!rows.length) { list.innerHTML = '<div style="color:var(--muted);font-size:.9rem;padding:20px 0;">' + emptyMsg + '</div>'; return; }
+    list.innerHTML = rows.map(promoCardHtml).join('');
+  }
+
+  function renderPromotions() {
+    var giv = (window.__promoMsgsCache || []).filter(function(m){ return isPromoMsg(m) && String(m.service).toUpperCase() === 'GIVEAWAY'; });
+    var cg = document.getElementById('subCountGiv');
+    if (cg) cg.textContent = '(' + giv.length + ')';
+    renderPromoInto('giveawayList', giv, 'Niciun participant la giveaway/concurs.');
+    switchPromoSub(window.__promoSub || 'giveaway');
+  }
+
+  async function loadPromotions() {
+    try {
+      var res = await fetch('/api/messages?token=' + encodeURIComponent(adminToken));
+      var data = await res.json();
+      var msgs = Array.isArray(data) ? data : (Array.isArray(data.messages) ? data.messages : []);
+      window.__promoMsgsCache = msgs;
+      updatePromoBadge(msgs);
+      renderPromotions();
+    } catch(e) {
+      var g = document.getElementById('giveawayList');
+      if (g) g.innerHTML = '<div style="color:#e74c3c;font-size:.85rem;">Eroare la &icirc;ncărcarea datelor.</div>';
+    }
+    loadReferralLedger();
+  }
+
+  async function togglePromoRead(id, read) {
+    try { await fetch('/api/messages/' + encodeURIComponent(id) + '?token=' + encodeURIComponent(adminToken), { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ read: read }) }); } catch(e) {}
+    loadPromotions();
+  }
+
+  async function deletePromoEntry(id) {
+    if (!confirm('Ștergi această intrare?')) return;
+    try { await fetch('/api/messages/' + encodeURIComponent(id) + '?token=' + encodeURIComponent(adminToken), { method: 'DELETE' }); } catch(e) {}
+    loadPromotions();
+  }
+
+  // ── Registru recomandări (cine a recomandat pe cine + reducere acumulată) ──
+  window.__refLedger = [];
+  async function loadReferralLedger() {
+    var box = document.getElementById('referralList');
+    if (!box) return;
+    try {
+      var res = await fetch('/api/referrals?token=' + encodeURIComponent(adminToken));
+      var list = await res.json();
+      window.__refLedger = Array.isArray(list) ? list : [];
+      renderReferralLedger();
+    } catch(e) { box.innerHTML = '<div style="color:#e74c3c;font-size:.85rem;">Eroare la &icirc;ncărcarea recomandărilor.</div>'; }
+  }
+
+  function refReferrerKey(r) {
+    return (String(r.referrerEmail || '').trim().toLowerCase()) || String(r.referrerPhone || '').trim() || String(r.referrerName || '').trim().toLowerCase();
+  }
+
+  function renderReferralLedger() {
+    var box = document.getElementById('referralList');
+    if (!box) return;
+    var recs = window.__refLedger || [];
+    var cr = document.getElementById('subCountRef');
+    if (cr) cr.textContent = '(' + recs.length + ')';
+    if (!recs.length) { box.innerHTML = '<div style="color:var(--muted);font-size:.9rem;padding:20px 0;">Nicio recomandare &icirc;ncă.</div>'; return; }
+    var cfg = window.__refCfg || { referrerPct: 20, cap: 50 };
+    // grupăm după referent
+    var groups = {};
+    recs.forEach(function(r){
+      var k = refReferrerKey(r);
+      if (!groups[k]) groups[k] = { name: r.referrerName, email: r.referrerEmail, phone: r.referrerPhone, items: [] };
+      groups[k].items.push(r);
+    });
+    box.innerHTML = Object.keys(groups).map(function(k){
+      var g = groups[k];
+      var made = g.items.length;
+      var confirmed = g.items.filter(function(r){ return r.status === 'signed_up'; }).length;
+      var discount = Math.min(cfg.cap, confirmed * cfg.referrerPct);
+      var rcode = (g.items.find(function(x){ return x.referrerCode; }) || {}).referrerCode || '';
+      var firstId = g.items[0].id;
+      var contact = [g.email, g.phone].filter(Boolean).map(esc).join(' &middot; ');
+      var friends = g.items.map(function(r){
+        var isUp = r.status === 'signed_up';
+        var badge = isUp
+          ? '<span style="font-size:.68rem;font-weight:700;color:#12a150;background:#e4f7ea;border:1px solid #b8e8c8;padding:2px 8px;border-radius:999px;">&#x2713; &Icirc;nregistrat</span>'
+          : '<span style="font-size:.68rem;font-weight:700;color:#b7791f;background:#fdf3e2;border:1px solid #f2ddb4;padding:2px 8px;border-radius:999px;">&#x23F3; &Icirc;n a&#x219;teptare</span>';
+        var when = ''; try { when = new Date(r.createdAt).toLocaleDateString('ro-RO'); } catch(e){}
+        var code = r.friendCode || '';
+        var emailed = r.friendEmailed
+          ? '<span style="font-size:.68rem;color:#12a150;">&#x2709; email trimis</span>'
+          : '<span style="font-size:.68rem;color:var(--muted);">email netrimis</span>';
+        var codeLine = code
+          ? '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:2px 0 8px;">' +
+              '<span style="font-size:.68rem;color:var(--muted);">Cod prieten (' + (r.friendPct != null ? r.friendPct : '') + '% reducere):</span>' +
+              '<code style="font-family:monospace;font-size:.82rem;font-weight:700;color:var(--teal);background:rgba(0,168,168,.1);border:1px solid var(--teal-border);border-radius:6px;padding:2px 8px;">' + esc(code) + '</code>' +
+              '<button onclick="refCopyCode(\'' + esc(code) + '\')" style="font-size:.68rem;background:none;border:1px solid var(--border-soft);color:var(--soft);border-radius:5px;padding:3px 8px;cursor:pointer;">&#x1F4CB; Copiaz&#x103;</button>' +
+              '<button onclick="refResendCode(\'' + esc(r.id) + '\')" style="font-size:.68rem;background:none;border:1px solid var(--teal-border);color:var(--teal);border-radius:5px;padding:3px 8px;cursor:pointer;">&#x2709; Trimite cod</button>' +
+              emailed +
+            '</div>'
+          : '';
+        return '<div style="padding:8px 0;border-top:1px solid var(--border);">' +
+          '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">' +
+            '<span style="flex:1;min-width:160px;font-size:.85rem;color:var(--text);"><b>' + esc(r.friendName) + '</b>' +
+              '<span style="color:var(--muted);"> &middot; ' + esc(r.friendContact) + (r.friendBusiness ? ' &middot; ' + esc(r.friendBusiness) : '') + '</span></span>' +
+            '<span style="font-size:.7rem;color:var(--muted);">' + esc(when) + '</span>' + badge +
+            '<button onclick="refToggleStatus(\'' + esc(r.id) + '\',' + (isUp ? 'false' : 'true') + ')" style="font-size:.72rem;background:none;border:1px solid var(--border-soft);color:var(--soft);border-radius:6px;padding:4px 10px;cursor:pointer;">' + (isUp ? 'Marchează &icirc;n a&#x219;teptare' : 'Marchează &icirc;nregistrat') + '</button>' +
+            '<button onclick="refDeleteRecord(\'' + esc(r.id) + '\')" style="font-size:.72rem;background:none;border:1px solid #e5484d;color:#e5484d;border-radius:6px;padding:4px 10px;cursor:pointer;">&#x2715;</button>' +
+          '</div>' + codeLine +
+        '</div>';
+      }).join('');
+      var codeRow = rcode
+        ? '<div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
+            '<span style="font-size:.7rem;color:var(--muted);">Cod referent:</span>' +
+            '<code style="font-family:monospace;font-size:.85rem;font-weight:700;color:var(--teal);background:rgba(0,168,168,.1);border:1px solid var(--teal-border);border-radius:6px;padding:2px 9px;">' + esc(rcode) + '</code>' +
+            '<button onclick="refCopyCode(\'' + esc(rcode) + '\')" style="font-size:.68rem;background:none;border:1px solid var(--border-soft);color:var(--soft);border-radius:5px;padding:3px 8px;cursor:pointer;">&#x1F4CB; Copiaz&#x103;</button>' +
+            '<button onclick="refResendReferrerCode(\'' + esc(firstId) + '\')" style="font-size:.68rem;background:none;border:1px solid var(--teal-border);color:var(--teal);border-radius:5px;padding:3px 8px;cursor:pointer;">&#x2709; Email referent</button>' +
+          '</div>'
+        : '';
+      return '<div style="background:var(--bg2);border:1px solid var(--border-soft);border-radius:12px;padding:14px 16px;margin-bottom:12px;">' +
+          '<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;">' +
+            '<div><strong style="font-size:1rem;color:var(--heading);">' + esc(g.name || '—') + '</strong>' +
+              (contact ? '<div style="font-size:.78rem;color:var(--muted);">' + contact + '</div>' : '') + codeRow + '</div>' +
+            '<div style="text-align:right;">' +
+              '<div style="font-weight:700;font-size:1.25rem;color:var(--teal);">' + discount + '% reducere</div>' +
+              '<div style="font-size:.72rem;color:var(--muted);">' + made + ' recomandat &middot; ' + confirmed + ' &icirc;nregistrat</div>' +
+            '</div>' +
+          '</div>' + friends +
+        '</div>';
+    }).join('');
+  }
+
+  async function refToggleStatus(id, toSignedUp) {
+    try {
+      await fetch('/api/referrals/' + encodeURIComponent(id) + '?token=' + encodeURIComponent(adminToken),
+        { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ status: toSignedUp ? 'signed_up' : 'pending' }) });
+      var r = (window.__refLedger || []).find(function(x){ return x.id === id; });
+      if (r) r.status = toSignedUp ? 'signed_up' : 'pending';
+      renderReferralLedger();
+    } catch(e) { alert('Nu s-a putut actualiza.'); }
+  }
+
+  async function refDeleteRecord(id) {
+    if (!confirm('Ștergi această înregistrare de recomandare?')) return;
+    try {
+      await fetch('/api/referrals/' + encodeURIComponent(id) + '?token=' + encodeURIComponent(adminToken), { method: 'DELETE' });
+      window.__refLedger = (window.__refLedger || []).filter(function(x){ return x.id !== id; });
+      renderReferralLedger();
+    } catch(e) { alert('Nu s-a putut șterge.'); }
+  }
+
+  function refCopyCode(code) {
+    try { if (navigator.clipboard) navigator.clipboard.writeText(code); } catch(e) {}
+    alert('Cod copiat: ' + code);
+  }
+
+  async function refResendCode(id) {
+    try {
+      var res = await fetch('/api/referrals/' + encodeURIComponent(id) + '/resend-code?token=' + encodeURIComponent(adminToken), { method: 'POST' });
+      var d = await res.json();
+      if (d && d.success) {
+        var r = (window.__refLedger || []).find(function(x){ return x.id === id; });
+        if (r) r.friendEmailed = true;
+        renderReferralLedger();
+        alert('&#x2713; Cod trimis prietenului pe email.');
+      } else { alert((d && d.error) || 'Nu s-a putut trimite codul.'); }
+    } catch(e) { alert('Eroare de rețea.'); }
+  }
+
+  async function refResendReferrerCode(id) {
+    try {
+      var res = await fetch('/api/referrals/' + encodeURIComponent(id) + '/resend-referrer-code?token=' + encodeURIComponent(adminToken), { method: 'POST' });
+      var d = await res.json();
+      if (d && d.success) { alert('&#x2713; Cod de referent trimis pe email.'); }
+      else { alert((d && d.error) || 'Nu s-a putut trimite codul.'); }
+    } catch(e) { alert('Eroare de rețea.'); }
+  }
+
+  // Convertește o valoare dată stocată în formatul 'YYYY-MM-DDTHH:MM' necesar de datetime-local.
+  function toLocalInput(v) {
+    if (!v) return '';
+    var d = new Date(v);
+    if (isNaN(d.getTime())) return '';
+    var p = function(n){ return (n < 10 ? '0' : '') + n; };
+    return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()) + 'T' + p(d.getHours()) + ':' + p(d.getMinutes());
+  }
+
+  async function loadGiveawaySettings() {
+    var inp = document.getElementById('givEndInput');
+    if (!inp) return;
+    try {
+      var res = await fetch('/api/site-settings');
+      var d = await res.json();
+      var v = (d && d.giveaway && d.giveaway.endDate) ? d.giveaway.endDate : '';
+      inp.value = toLocalInput(v);
+      renderGivBanner((d && d.giveaway && d.giveaway.banner) ? d.giveaway.banner : '');
+      var pctEl = document.getElementById('givEntrantPct');
+      if (pctEl) pctEl.value = (d && d.giveaway && d.giveaway.entrantPct != null) ? d.giveaway.entrantPct : 15;
+    } catch(e) {}
+  }
+
+  function renderGivBanner(url) {
+    var img = document.getElementById('givBannerPreview');
+    var vid = document.getElementById('givBannerVid');
+    var empty = document.getElementById('givBannerEmpty');
+    var rm = document.getElementById('givBannerRemoveBtn');
+    var isVid = url && /\.(mp4|webm)(\?|$)/i.test(url);
+    if (url) {
+      if (isVid) {
+        if (img) { img.src = ''; img.style.display = 'none'; }
+        if (vid) vid.style.display = 'inline';
+      } else {
+        if (img) { img.src = url; img.style.display = 'inline-block'; }
+        if (vid) vid.style.display = 'none';
+      }
+      if (empty) empty.style.display = 'none';
+      if (rm) rm.style.display = 'inline-block';
+    } else {
+      if (img) { img.src = ''; img.style.display = 'none'; }
+      if (vid) vid.style.display = 'none';
+      if (empty) empty.style.display = 'inline';
+      if (rm) rm.style.display = 'none';
+    }
+  }
+
+  function givBannerPick() { var inp = document.getElementById('givBannerInput'); if (inp) { inp.value = ''; inp.click(); } }
+
+  function givBannerSave(url) {
+    return fetch('/api/giveaway-settings?token=' + encodeURIComponent(adminToken), {
+      method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ banner: url })
+    }).then(function(r){ return r.json(); });
+  }
+
+  function givBannerUpload(input) {
+    var file = input && input.files && input.files[0];
+    if (!file) return;
+    var isVid = file.type === 'video/mp4' || file.type === 'video/webm';
+    var isImg = /^image\//.test(file.type);
+    if (!isImg && !isVid) { alert('Alege o imagine sau un video MP4/WebM.'); return; }
+    if (file.size > (isVid ? 25 : 5)*1024*1024) { alert('Fișier prea mare (max ' + (isVid ? '25MB video' : '5MB imagine') + ').'); return; }
+    var msg = document.getElementById('givBannerMsg'); if (msg) { msg.style.color = 'var(--teal)'; msg.textContent = 'se &icirc;ncarcă&#x2026;'; }
+    uploadMedia(file, function(url){
+      givBannerSave(url).then(function(d){
+        if (d && d.success) { renderGivBanner(url); if (msg) { msg.textContent = '✓ salvat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
+        else if (msg) { msg.style.color = '#e5484d'; msg.textContent = 'salvare eșuată'; }
+      });
+    }, function(err){ if (msg) { msg.style.color = '#e5484d'; msg.textContent = err || 'eroare upload'; } });
+  }
+
+  function givBannerRemove() {
+    if (!confirm('Elimini banner-ul giveaway? Se va reveni la gradientul implicit.')) return;
+    var msg = document.getElementById('givBannerMsg');
+    givBannerSave('').then(function(d){
+      if (d && d.success) { renderGivBanner(''); if (msg) { msg.style.color = 'var(--teal)'; msg.textContent = '✓ eliminat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
+      else if (msg) { msg.style.color = '#e5484d'; msg.textContent = 'eroare'; }
+    });
+  }
+
+  async function saveGiveawaySettings() {
+    var inp = document.getElementById('givEndInput');
+    var msg = document.getElementById('givSaveMsg');
+    if (!inp) return;
+    if (!inp.value) { alert('Alege mai &icirc;ntâi data și ora de &icirc;nchidere.'); return; }
+    var pctEl = document.getElementById('givEntrantPct');
+    var pct = pctEl ? parseInt(pctEl.value, 10) : 15;
+    if (isNaN(pct) || pct < 0 || pct > 100) { alert('Reducerea trebuie să fie &icirc;ntre 0 și 100.'); return; }
+    try {
+      var res = await fetch('/api/giveaway-settings?token=' + encodeURIComponent(adminToken), {
+        method: 'PUT', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ endDate: inp.value, entrantPct: pct })
+      });
+      var d = await res.json();
+      if (d && d.success) { if (msg) { msg.textContent = '✓ Salvat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
+      else { alert((d && d.error) || 'Salvarea a eșuat.'); }
+    } catch(e) { alert('Eroare de rețea la salvare.'); }
+  }
+
+  // ── Vizibilitate pagini promo (draft / publicat) ──────────
+  var __promoVis = { giveaway: false, referral: false };
+
+  async function loadPromoVisibility() {
+    try {
+      var res = await fetch('/api/site-settings');
+      var d = await res.json();
+      __promoVis.giveaway = !!(d && d.giveaway && d.giveaway.published);
+      __promoVis.referral = !!(d && d.referral && d.referral.published);
+      var rp = (d && d.referral && d.referral.referrerPct != null) ? d.referral.referrerPct : 20;
+      var fp = (d && d.referral && d.referral.friendPct != null) ? d.referral.friendPct : 10;
+      var cp = (d && d.referral && d.referral.cap != null) ? d.referral.cap : 50;
+      var ri = document.getElementById('refReferrerPct'); if (ri) ri.value = rp;
+      var fi = document.getElementById('refFriendPct'); if (fi) fi.value = fp;
+      var ci = document.getElementById('refCap'); if (ci) ci.value = cp;
+      window.__refCfg = { referrerPct: rp, friendPct: fp, cap: cp };
+      renderRefBanner((d && d.referral && d.referral.banner) ? d.referral.banner : '');
+      if (typeof renderReferralLedger === 'function') renderReferralLedger();
+    } catch(e) {}
+    renderPromoVis('giveaway'); renderPromoVis('referral');
+  }
+
+  async function saveReferralSettings() {
+    var ri = document.getElementById('refReferrerPct');
+    var fi = document.getElementById('refFriendPct');
+    var msg = document.getElementById('refSaveMsg');
+    if (!ri || !fi) return;
+    var ci = document.getElementById('refCap');
+    var rp = parseInt(ri.value, 10), fp = parseInt(fi.value, 10), cp = ci ? parseInt(ci.value, 10) : 50;
+    if (isNaN(rp) || rp < 0 || rp > 100 || isNaN(fp) || fp < 0 || fp > 100 || isNaN(cp) || cp < 0 || cp > 100) { alert('Introdu procente &icirc;ntre 0 și 100.'); return; }
+    try {
+      var res = await fetch('/api/referral-settings?token=' + encodeURIComponent(adminToken), {
+        method: 'PUT', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ referrerPct: rp, friendPct: fp, cap: cp })
+      });
+      var d = await res.json();
+      if (d && d.success) { if (msg) { msg.textContent = '✓ Salvat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
+      else { alert((d && d.error) || 'Salvarea a eșuat.'); }
+    } catch(e) { alert('Eroare de rețea la salvare.'); }
+  }
+
+  // Banner hero referral (oglindă cu giveaway)
+  function renderRefBanner(url) {
+    var img = document.getElementById('refBannerPreview');
+    var vid = document.getElementById('refBannerVid');
+    var empty = document.getElementById('refBannerEmpty');
+    var rm = document.getElementById('refBannerRemoveBtn');
+    var isVid = url && /\.(mp4|webm)(\?|$)/i.test(url);
+    if (url) {
+      if (isVid) { if (img) { img.src = ''; img.style.display = 'none'; } if (vid) vid.style.display = 'inline'; }
+      else { if (img) { img.src = url; img.style.display = 'inline-block'; } if (vid) vid.style.display = 'none'; }
+      if (empty) empty.style.display = 'none';
+      if (rm) rm.style.display = 'inline-block';
+    } else {
+      if (img) { img.src = ''; img.style.display = 'none'; }
+      if (vid) vid.style.display = 'none';
+      if (empty) empty.style.display = 'inline';
+      if (rm) rm.style.display = 'none';
+    }
+  }
+
+  function refBannerPick() { var inp = document.getElementById('refBannerInput'); if (inp) { inp.value = ''; inp.click(); } }
+
+  function refBannerSave(url) {
+    return fetch('/api/referral-settings?token=' + encodeURIComponent(adminToken), {
+      method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ banner: url })
+    }).then(function(r){ return r.json(); });
+  }
+
+  function refBannerUpload(input) {
+    var file = input && input.files && input.files[0];
+    if (!file) return;
+    var isVid = file.type === 'video/mp4' || file.type === 'video/webm';
+    var isImg = /^image\//.test(file.type);
+    if (!isImg && !isVid) { alert('Alege o imagine sau un video MP4/WebM.'); return; }
+    if (file.size > (isVid ? 25 : 5)*1024*1024) { alert('Fișier prea mare (max ' + (isVid ? '25MB video' : '5MB imagine') + ').'); return; }
+    var msg = document.getElementById('refBannerMsg'); if (msg) { msg.style.color = 'var(--teal)'; msg.textContent = 'se &icirc;ncarcă&#x2026;'; }
+    uploadMedia(file, function(url){
+      refBannerSave(url).then(function(d){
+        if (d && d.success) { renderRefBanner(url); if (msg) { msg.textContent = '✓ salvat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
+        else if (msg) { msg.style.color = '#e5484d'; msg.textContent = 'salvare eșuată'; }
+      });
+    }, function(err){ if (msg) { msg.style.color = '#e5484d'; msg.textContent = err || 'eroare upload'; } });
+  }
+
+  function refBannerRemove() {
+    if (!confirm('Elimini banner-ul referral? Se va reveni la gradientul implicit.')) return;
+    var msg = document.getElementById('refBannerMsg');
+    refBannerSave('').then(function(d){
+      if (d && d.success) { renderRefBanner(''); if (msg) { msg.style.color = 'var(--teal)'; msg.textContent = '✓ eliminat'; setTimeout(function(){ if(msg) msg.textContent = ''; }, 2500); } }
+      else if (msg) { msg.style.color = '#e5484d'; msg.textContent = 'eroare'; }
+    });
+  }
+
+  function renderPromoVis(page) {
+    var pub = __promoVis[page];
+    var badge = document.getElementById('vis-' + page + '-badge');
+    var btn = document.getElementById('vis-' + page + '-btn');
+    if (badge) {
+      badge.textContent = pub ? '● Publicat' : '● Draft';
+      badge.style.background = pub ? 'rgba(18,161,80,.12)' : 'rgba(139,148,163,.15)';
+      badge.style.color = pub ? '#12a150' : '#8b94a3';
+    }
+    if (btn) {
+      btn.textContent = pub ? 'Retrage' : 'Publică';
+      btn.style.background = pub ? 'rgba(229,72,77,.1)' : 'var(--teal)';
+      btn.style.color = pub ? '#e5484d' : '#fff';
+      btn.style.border = pub ? '1px solid #e5484d' : '1px solid var(--teal)';
+    }
+  }
+
+  async function togglePromoVisibility(page) {
+    var target = !__promoVis[page];
+    if (target && !confirm('Publici pagina /' + page + '? Va deveni vizibilă pentru toți vizitatorii.')) return;
+    try {
+      var res = await fetch('/api/promo-visibility?token=' + encodeURIComponent(adminToken), {
+        method: 'PUT', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ page: page, published: target })
+      });
+      var d = await res.json();
+      if (d && d.success) { __promoVis[page] = target; renderPromoVis(page); }
+      else alert((d && d.error) || 'Nu s-a putut actualiza.');
+    } catch(e) { alert('Eroare de rețea.'); }
   }
 
   // -- SEARCH CONSOLE --

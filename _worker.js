@@ -935,6 +935,158 @@ async function gscQuery(token, site, payload) {
 }
 function gscDateStr(d) { return d.toISOString().slice(0, 10); }
 
+// ── PROMO PAGE VISIBILITY ─────────────────────────────────
+async function promoPagePublished(env, key) {
+  try {
+    const raw = await env.PROGRAMARI.get('__site_settings__');
+    const s = raw ? JSON.parse(raw) : {};
+    return !!(s && s[key] && s[key].published);
+  } catch { return false; }
+}
+function promoDraft404() {
+  return new Response('<!DOCTYPE html><meta charset="utf-8"><title>Pagina nu a fost găsită</title><body style="font-family:system-ui,sans-serif;text-align:center;padding:80px 20px;color:#334155;"><h1>Pagina nu a fost găsită</h1><p><a href="https://www.c-design.ro" style="color:#00AAAC;">Înapoi la C Design →</a></p></body>', { status: 404, headers: { 'Content-Type': 'text/html;charset=utf-8' } });
+}
+// Verifică un token de previzualizare (?pt=...) valabil (setat de admin, TTL scurt în KV).
+async function validPreviewToken(env, url) {
+  try {
+    const pt = url.searchParams.get('pt');
+    if (!pt) return false;
+    const raw = await env.PROGRAMARI.get('__pv__' + pt);
+    if (!raw) return false;
+    const p = JSON.parse(raw);
+    return !p.expires || p.expires > Date.now();
+  } catch { return false; }
+}
+
+// Cod de reducere scurt, prietenos și fără ambiguități (fără 0/O/1/I/L).
+function genDiscountCode(prefix) {
+  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  const arr = new Uint8Array(6);
+  crypto.getRandomValues(arr);
+  let s = '';
+  for (let i = 0; i < 6; i++) s += chars[arr[i] % chars.length];
+  return (prefix || 'CD') + '-' + s;
+}
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Construiește și trimite emailul cu reducerea de bun venit prietenului recomandat.
+async function sendFriendDiscountEmail(env, rec) {
+  if (!EMAIL_RE.test(rec.friendContact)) return { ok: false, skipped: true };
+  const replyTo = (await getOwnerEmail(env)) || (env.NOTIFY_EMAIL || NOTIFY_EMAIL);
+  const html =
+    '<div style="font-family:system-ui,Arial,sans-serif;max-width:520px;margin:0 auto;color:#2E3436;">' +
+      '<h2 style="color:#008587;">Ai primit un cadou de bun venit!</h2>' +
+      '<p>Salut ' + escHtml(rec.friendName) + ',</p>' +
+      '<p><strong>' + escHtml(rec.referrerName) + '</strong> crede că C Design îți poate ajuta afacerea online și te-a recomandat — și asta vine cu un cadou.</p>' +
+      '<p style="font-size:1rem;">Iată reducerea ta de <strong>' + escHtml(String(rec.friendPct)) + '% pentru primul tău proiect</strong>:</p>' +
+      '<p style="text-align:center;margin:22px 0;"><span style="display:inline-block;font-family:monospace;font-size:1.5rem;font-weight:700;letter-spacing:2px;color:#008587;background:#e9f6f6;border:1px dashed #00AAAC;border-radius:10px;padding:14px 26px;">' + escHtml(rec.friendCode) + '</span></p>' +
+      '<p>Menționează acest cod când ceri o ofertă la <a href="https://www.c-design.ro/cere-oferta" style="color:#008587;">www.c-design.ro/cere-oferta</a> sau răspunde direct la acest email.</p>' +
+      '<p style="color:#8b94a3;font-size:.85rem;">Fără presiune — suntem aici când ești gata. — Echipa C Design</p>' +
+    '</div>';
+  return sendEmail(env, { to: rec.friendContact, replyTo, subject: 'Reducerea ta de ' + rec.friendPct + '% de la C Design', html });
+}
+
+// Cheie stabilă de identitate pentru un referent (un om = un cod persistent).
+function referrerKeyOf(r) {
+  return (String((r && r.referrerEmail) || '').trim().toLowerCase()) || String((r && r.referrerPhone) || '').trim() || String((r && r.referrerName) || '').trim().toLowerCase();
+}
+
+// Trimite referentului codul său PERSISTENT (o singură dată, la primul referral).
+async function sendReferrerCodeEmail(env, rec, pct, cap) {
+  if (!EMAIL_RE.test(rec.referrerEmail)) return { ok: false, skipped: true };
+  const replyTo = (await getOwnerEmail(env)) || (env.NOTIFY_EMAIL || NOTIFY_EMAIL);
+  const html =
+    '<div style="font-family:system-ui,Arial,sans-serif;max-width:520px;margin:0 auto;color:#2E3436;">' +
+      '<h2 style="color:#008587;">Mulțumim că răspândești vestea!</h2>' +
+      '<p>Salut ' + escHtml(rec.referrerName) + ',</p>' +
+      '<p>Iată codul tău personal de referral — este al tău și rămâne mereu același:</p>' +
+      '<p style="text-align:center;margin:22px 0;"><span style="display:inline-block;font-family:monospace;font-size:1.5rem;font-weight:700;letter-spacing:2px;color:#008587;background:#e9f6f6;border:1px dashed #00AAAC;border-radius:10px;padding:14px 26px;">' + escHtml(rec.referrerCode) + '</span></p>' +
+      '<p>Fiecare prieten pe care îl recomanzi și care se înscrie adaugă <strong>' + escHtml(String(pct)) + '%</strong> la el — cumulând până la <strong>' + escHtml(String(cap)) + '%</strong> reducere la proiectul tău următor. Codul rămâne același; valoarea lui crește pe măsură ce mai mulți prieteni se alătură.</p>' +
+      '<p>Recomandă mai mulți prieteni oricând la <a href="https://www.c-design.ro/referral" style="color:#008587;">www.c-design.ro/referral</a> și menționează codul când ești gata să folosești reducerea.</p>' +
+      '<p style="color:#8b94a3;font-size:.85rem;">— Echipa C Design</p>' +
+    '</div>';
+  return sendEmail(env, { to: rec.referrerEmail, replyTo, subject: 'Codul tău de referral C Design', html });
+}
+
+// Emailează referentul când unul dintre prietenii recomandați devine client.
+async function sendReferrerConversionEmail(env, rec, value, cap) {
+  if (!EMAIL_RE.test(rec.referrerEmail)) return { ok: false, skipped: true };
+  const replyTo = (await getOwnerEmail(env)) || (env.NOTIFY_EMAIL || NOTIFY_EMAIL);
+  const atCap = value >= cap;
+  const html =
+    '<div style="font-family:system-ui,Arial,sans-serif;max-width:520px;margin:0 auto;color:#2E3436;">' +
+      '<h2 style="color:#008587;">Reducerea ta a crescut!</h2>' +
+      '<p>Salut ' + escHtml(rec.referrerName) + ',</p>' +
+      '<p>Vești bune — <strong>' + escHtml(rec.friendName) + '</strong> a devenit client C Design. Mulțumim pentru recomandare!</p>' +
+      '<p>Codul tău de referral valorează acum:</p>' +
+      '<p style="text-align:center;margin:20px 0;"><span style="display:inline-block;font-family:\'Poppins\',system-ui,sans-serif;font-size:2rem;font-weight:700;color:#008587;">' + escHtml(String(value)) + '% reducere</span><br>' +
+        '<span style="font-family:monospace;font-size:1.05rem;font-weight:700;letter-spacing:2px;color:#2E3436;background:#e9f6f6;border:1px dashed #00AAAC;border-radius:8px;padding:6px 16px;display:inline-block;margin-top:8px;">' + escHtml(rec.referrerCode || '') + '</span></p>' +
+      '<p>' + (atCap
+        ? 'Ai atins maximul — felicitări! Menționează codul când ești gata să îl folosești.'
+        : 'Continuă să crească pe măsură ce mai mulți prieteni se înscriu (până la ' + escHtml(String(cap)) + '%). Menționează codul când ești gata să folosești reducerea.') + '</p>' +
+      '<p style="color:#8b94a3;font-size:.85rem;">— Echipa C Design</p>' +
+    '</div>';
+  return sendEmail(env, { to: rec.referrerEmail, replyTo, subject: 'Reducerea ta de referral este acum de ' + value + '%', html });
+}
+
+// Trimitere email robustă via Resend. Nu face nimic (și spune asta) când nu e configurat.
+async function sendEmail(env, opts) {
+  const apiKey = env.RESEND_API_KEY || RESEND_API_KEY;
+  if (!apiKey) return { ok: false, skipped: true, reason: 'RESEND_API_KEY not configured' };
+  const to = (Array.isArray(opts.to) ? opts.to : [opts.to]).filter(Boolean);
+  if (!to.length) return { ok: false, skipped: true, reason: 'no recipient' };
+  try {
+    const payload = { from: opts.from || 'C Design <office@c-design.ro>', to, subject: opts.subject, html: opts.html };
+    if (opts.text) payload.text = String(opts.text).slice(0, 20000);
+    else if (opts.html) payload.text = String(opts.html).replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim().slice(0, 20000);
+    const replyTo = (Array.isArray(opts.replyTo) ? opts.replyTo : [opts.replyTo]).filter(Boolean);
+    if (replyTo.length) payload.reply_to = replyTo;
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      let detail = ''; try { detail = await res.text(); } catch {}
+      console.error('sendEmail failed', res.status, detail.slice(0, 300));
+      return { ok: false, status: res.status, error: detail };
+    }
+    return { ok: true, status: res.status };
+  } catch (e) {
+    console.error('sendEmail network error', e && e.message);
+    return { ok: false, error: String((e && e.message) || e) };
+  }
+}
+
+// Adresele email ale conturilor sub-admin (doar cele valide).
+async function getAdminEmails(env) {
+  try {
+    const raw = await env.PROGRAMARI.get('__admins__');
+    const admins = raw ? JSON.parse(raw) : [];
+    return admins.map(a => String(a.email || '').trim()).filter(e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
+  } catch { return []; }
+}
+
+// Email-ul proprietarului, stocat separat în KV.
+async function getOwnerEmail(env) {
+  try {
+    const e = String((await env.PROGRAMARI.get('__owner_email__')) || '').trim();
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e) ? e : '';
+  } catch { return ''; }
+}
+
+// Destinatari pentru notificările de admin: NOTIFY_EMAIL + email proprietar + email-urile adminilor, deduplicat.
+async function notifyRecipients(env) {
+  const isEmail = e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+  const list = [];
+  const base = String(env.NOTIFY_EMAIL || NOTIFY_EMAIL || '').trim();
+  if (isEmail(base)) list.push(base);
+  const owner = await getOwnerEmail(env);
+  if (owner) list.push(owner);
+  for (const e of await getAdminEmails(env)) list.push(e);
+  return [...new Set(list.map(e => e.toLowerCase()))];
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -988,6 +1140,14 @@ export default {
       const staticPages = [
         { loc: '/',                           cf: 'weekly',  pr: '1.0' },
         { loc: '/servicii',                   cf: 'monthly', pr: '0.9' },
+        { loc: '/servicii/website-design',        cf: 'monthly', pr: '0.7' },
+        { loc: '/servicii/ecommerce',        cf: 'monthly', pr: '0.7' },
+        { loc: '/servicii/web-apps',        cf: 'monthly', pr: '0.7' },
+        { loc: '/servicii/ai-integration',        cf: 'monthly', pr: '0.7' },
+        { loc: '/servicii/seo',        cf: 'monthly', pr: '0.7' },
+        { loc: '/servicii/social-media',        cf: 'monthly', pr: '0.7' },
+        { loc: '/servicii/hosting-maintenance',        cf: 'monthly', pr: '0.7' },
+        { loc: '/servicii/branding',        cf: 'monthly', pr: '0.7' },
         { loc: '/despre-noi',                 cf: 'monthly', pr: '0.8' },
         { loc: '/contact',                    cf: 'monthly', pr: '0.8' },
         { loc: '/parteneri',                  cf: 'monthly', pr: '0.6' },
@@ -1000,6 +1160,8 @@ export default {
         { loc: '/demos',                      cf: 'monthly', pr: '0.7' },
         { loc: '/cere-oferta',                cf: 'monthly', pr: '0.8' },
         { loc: '/promo',                      cf: 'monthly', pr: '0.8' },
+        { loc: '/referral',                   cf: 'monthly', pr: '0.6' },
+        { loc: '/giveaway',                   cf: 'monthly', pr: '0.6' },
         { loc: '/web-design-bucuresti',       cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-cluj',            cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-timisoara',       cf: 'monthly', pr: '0.8' },
@@ -1056,6 +1218,31 @@ export default {
     if (path === '/promo' || path === '/promo/') {
       const assetUrl = new URL(request.url);
       assetUrl.pathname = '/promo.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
+    // ── SERVICII — pagini dedicate /servicii/<slug> ───────────
+    if (path.startsWith('/servicii/')) {
+      const SERVICE_PAGES = ['website-design', 'ecommerce', 'web-apps', 'ai-integration', 'seo', 'social-media', 'hosting-maintenance', 'branding'];
+      const slug = path.replace('/servicii/', '').replace(/\/$/, '');
+      if (SERVICE_PAGES.includes(slug)) {
+        const assetUrl = new URL(request.url);
+        assetUrl.pathname = '/servicii/' + slug + '.html';
+        return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      }
+    }
+
+    if (path === '/referral' || path === '/referral/') {
+      if (!isAdmin(url, env) && !(await validPreviewToken(env, url)) && !(await promoPagePublished(env, 'referral'))) return promoDraft404();
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/referral.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
+    if (path === '/giveaway' || path === '/giveaway/') {
+      if (!isAdmin(url, env) && !(await validPreviewToken(env, url)) && !(await promoPagePublished(env, 'giveaway'))) return promoDraft404();
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/giveaway.html';
       return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
     }
 
@@ -3294,6 +3481,195 @@ Cerințe titluri:
           headers: { 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'no-store' }
         });
       } catch { return new Response('Eroare la generare contract', { status: 500 }); }
+    }
+
+    // ── REFERRAL LEDGER (cine a recomandat pe cine + discount acumulat) ──
+    if (path === '/api/referrals' && request.method === 'POST') {
+      const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+      const allowed = await checkRateLimit(env, 'referral_' + ip, 6, 3600);
+      if (!allowed) return json({ error: 'Prea multe cereri. Încearcă din nou mai târziu.' }, 429, request);
+      try {
+        const b = await request.json();
+        const referrerName = String(b.referrerName || '').trim().slice(0, 120);
+        const friendName = String(b.friendName || '').trim().slice(0, 120);
+        const friendContact = String(b.friendContact || '').trim().slice(0, 160);
+        if (referrerName.length < 2 || friendName.length < 2 || !friendContact) return json({ error: 'Câmpuri obligatorii lipsă' }, 400);
+        const rec = {
+          id: 'ref_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+          referrerName,
+          referrerEmail: String(b.referrerEmail || '').trim().slice(0, 160),
+          referrerPhone: String(b.referrerPhone || '').trim().slice(0, 40),
+          friendName,
+          friendContact,
+          friendBusiness: String(b.friendBusiness || '').trim().slice(0, 160),
+          note: String(b.note || '').trim().slice(0, 1000),
+          status: 'pending',
+          createdAt: new Date().toISOString()
+        };
+        let friendPct = 10, referrerPct = 20, refCap = 50;
+        try { const rawS = await env.PROGRAMARI.get('__site_settings__'); const s = rawS ? JSON.parse(rawS) : {}; if (s.referral) { if (s.referral.friendPct != null) friendPct = s.referral.friendPct; if (s.referral.referrerPct != null) referrerPct = s.referral.referrerPct; if (s.referral.cap != null) refCap = s.referral.cap; } } catch {}
+        rec.friendPct = friendPct;
+        rec.friendCode = genDiscountCode('CD');
+        rec.friendEmailed = false;
+        try { const r = await sendFriendDiscountEmail(env, rec); rec.friendEmailed = !!(r && r.ok); } catch {}
+        const raw = await env.PROGRAMARI.get('__referrals__');
+        const list = raw ? JSON.parse(raw) : [];
+        const rkey = referrerKeyOf(rec);
+        let referrerCode = '', isFirst = true;
+        for (const x of list) {
+          if (referrerKeyOf(x) === rkey) { isFirst = false; if (x.referrerCode && !referrerCode) referrerCode = x.referrerCode; }
+        }
+        if (!referrerCode) referrerCode = genDiscountCode('REF');
+        rec.referrerCode = referrerCode;
+        rec.referrerEmailed = false;
+        if (isFirst && EMAIL_RE.test(rec.referrerEmail)) {
+          try { const rr = await sendReferrerCodeEmail(env, rec, referrerPct, refCap); rec.referrerEmailed = !!(rr && rr.ok); } catch {}
+        }
+        list.unshift(rec);
+        await env.PROGRAMARI.put('__referrals__', JSON.stringify(list.slice(0, 2000)));
+        try {
+          await sendEmail(env, {
+            to: await notifyRecipients(env),
+            subject: 'Referral nou — ' + referrerName,
+            html: '<p><strong>' + escHtml(referrerName) + '</strong> a recomandat pe <strong>' + escHtml(friendName) + '</strong>.</p>'
+              + '<p>Referent: ' + escHtml(rec.referrerEmail || '—') + ' · ' + escHtml(rec.referrerPhone || '—') + '<br>'
+              + 'Prieten: ' + escHtml(friendContact) + (rec.friendBusiness ? ' · ' + escHtml(rec.friendBusiness) : '') + '</p>'
+              + (rec.note ? '<p>Notă: ' + escHtml(rec.note) + '</p>' : '')
+          });
+        } catch {}
+        return json({ success: true, id: rec.id });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+    if (path === '/api/referrals' && request.method === 'GET') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const raw = await env.PROGRAMARI.get('__referrals__');
+        return json(raw ? JSON.parse(raw) : []);
+      } catch { return json([]); }
+    }
+    if (path.startsWith('/api/referrals/') && path.endsWith('/resend-code') && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/referrals/', '').replace('/resend-code', '');
+        const raw = await env.PROGRAMARI.get('__referrals__');
+        const list = raw ? JSON.parse(raw) : [];
+        const r = list.find(x => x.id === id);
+        if (!r) return json({ error: 'Nu a fost găsit' }, 404);
+        if (!EMAIL_RE.test(r.friendContact)) return json({ error: 'Contactul prietenului nu este un email — copiază codul și trimite-l manual.' }, 400);
+        if (!r.friendCode) { r.friendCode = genDiscountCode('CD'); }
+        const sent = await sendFriendDiscountEmail(env, r);
+        if (sent && sent.ok) { r.friendEmailed = true; await env.PROGRAMARI.put('__referrals__', JSON.stringify(list)); return json({ success: true }); }
+        return json({ error: (sent && sent.skipped) ? 'Trimiterea email-urilor nu este configurată.' : 'Nu s-a putut trimite email-ul.' }, 500);
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+    if (path.startsWith('/api/referrals/') && path.endsWith('/resend-referrer-code') && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/referrals/', '').replace('/resend-referrer-code', '');
+        const raw = await env.PROGRAMARI.get('__referrals__');
+        const list = raw ? JSON.parse(raw) : [];
+        const r = list.find(x => x.id === id);
+        if (!r) return json({ error: 'Nu a fost găsit' }, 404);
+        if (!EMAIL_RE.test(r.referrerEmail)) return json({ error: 'Referentul nu are email înregistrat — copiază codul și trimite-l manual.' }, 400);
+        if (!r.referrerCode) r.referrerCode = genDiscountCode('REF');
+        let pct = 20, cap = 50;
+        try { const rawS = await env.PROGRAMARI.get('__site_settings__'); const s = rawS ? JSON.parse(rawS) : {}; if (s.referral) { if (s.referral.referrerPct != null) pct = s.referral.referrerPct; if (s.referral.cap != null) cap = s.referral.cap; } } catch {}
+        const sent = await sendReferrerCodeEmail(env, r, pct, cap);
+        if (sent && sent.ok) { r.referrerEmailed = true; await env.PROGRAMARI.put('__referrals__', JSON.stringify(list)); return json({ success: true }); }
+        return json({ error: (sent && sent.skipped) ? 'Trimiterea email-urilor nu este configurată.' : 'Nu s-a putut trimite email-ul.' }, 500);
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+    if (path.startsWith('/api/referrals/') && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/referrals/', '');
+        const b = await request.json();
+        const raw = await env.PROGRAMARI.get('__referrals__');
+        const list = raw ? JSON.parse(raw) : [];
+        const r = list.find(x => x.id === id);
+        if (!r) return json({ error: 'Nu a fost găsit' }, 404);
+        const prevStatus = r.status;
+        if (b.status !== undefined && ['pending', 'signed_up'].includes(b.status)) r.status = b.status;
+        await env.PROGRAMARI.put('__referrals__', JSON.stringify(list));
+        if (prevStatus !== 'signed_up' && r.status === 'signed_up' && EMAIL_RE.test(r.referrerEmail)) {
+          let pct = 20, cap = 50;
+          try { const rawS = await env.PROGRAMARI.get('__site_settings__'); const s = rawS ? JSON.parse(rawS) : {}; if (s.referral) { if (s.referral.referrerPct != null) pct = s.referral.referrerPct; if (s.referral.cap != null) cap = s.referral.cap; } } catch {}
+          const rkey = referrerKeyOf(r);
+          const confirmed = list.filter(x => referrerKeyOf(x) === rkey && x.status === 'signed_up').length;
+          const value = Math.min(cap, confirmed * pct);
+          try { await sendReferrerConversionEmail(env, r, value, cap); } catch {}
+        }
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+    if (path.startsWith('/api/referrals/') && request.method === 'DELETE') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.replace('/api/referrals/', '');
+        const raw = await env.PROGRAMARI.get('__referrals__');
+        const list = raw ? JSON.parse(raw) : [];
+        await env.PROGRAMARI.put('__referrals__', JSON.stringify(list.filter(x => x.id !== id)));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    // ── GIVEAWAY SETTINGS ─────────────────────────────────────
+    if (path === '/api/giveaway-settings' && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const body = await request.json();
+        const raw = await env.PROGRAMARI.get('__site_settings__');
+        const existing = raw ? JSON.parse(raw) : {};
+        const cur = existing.giveaway || {};
+        if (body.endDate !== undefined) cur.endDate = String(body.endDate || '').slice(0, 40);
+        if (body.published !== undefined) cur.published = !!body.published;
+        if (body.banner !== undefined) cur.banner = String(body.banner || '').slice(0, 300);
+        if (body.entrantPct !== undefined) { const n = parseInt(String(body.entrantPct).replace(/[^0-9]/g, ''), 10); if (!isNaN(n)) cur.entrantPct = Math.max(0, Math.min(100, n)); }
+        existing.giveaway = cur;
+        await env.PROGRAMARI.put('__site_settings__', JSON.stringify(existing));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare' }, 500); }
+    }
+
+    // ── REFERRAL SETTINGS ─────────────────────────────────────
+    if (path === '/api/referral-settings' && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const body = await request.json();
+        const raw = await env.PROGRAMARI.get('__site_settings__');
+        const existing = raw ? JSON.parse(raw) : {};
+        const cur = existing.referral || {};
+        const clampPct = (v) => { const n = parseInt(String(v).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? undefined : Math.max(0, Math.min(100, n)); };
+        if (body.referrerPct !== undefined) { const n = clampPct(body.referrerPct); if (n !== undefined) cur.referrerPct = n; }
+        if (body.friendPct !== undefined) { const n = clampPct(body.friendPct); if (n !== undefined) cur.friendPct = n; }
+        if (body.cap !== undefined) { const n = clampPct(body.cap); if (n !== undefined) cur.cap = n; }
+        if (body.banner !== undefined) cur.banner = String(body.banner || '').slice(0, 300);
+        existing.referral = cur;
+        await env.PROGRAMARI.put('__site_settings__', JSON.stringify(existing));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare' }, 500); }
+    }
+
+    // ── PROMO VISIBILITY (publică / ascunde pagina referral sau giveaway) ──
+    // Token scurt de previzualizare pentru paginile draft (referral/giveaway)
+    if (path === '/api/preview-token' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      const pt = 'pv_' + (crypto.randomUUID() + crypto.randomUUID()).replace(/-/g, '');
+      await env.PROGRAMARI.put('__pv__' + pt, JSON.stringify({ expires: Date.now() + 120000 }), { expirationTtl: 120 });
+      return json({ pt });
+    }
+
+    if (path === '/api/promo-visibility' && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const body = await request.json();
+        const page = body.page === 'referral' ? 'referral' : 'giveaway';
+        const raw = await env.PROGRAMARI.get('__site_settings__');
+        const existing = raw ? JSON.parse(raw) : {};
+        existing[page] = Object.assign({}, existing[page] || {}, { published: !!body.published });
+        await env.PROGRAMARI.put('__site_settings__', JSON.stringify(existing));
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare' }, 500); }
     }
 
     // SSR: injectează setările salvate în index.html pentru a evita flash-ul de conținut hardcodat
