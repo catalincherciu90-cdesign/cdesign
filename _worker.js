@@ -2504,6 +2504,30 @@ Cerințe titluri:
       }
     }
 
+    // Lead-uri publice din formulare (concurs, promo, cere-ofertă, contact)
+    // → salvate ca mesaje în admin (tab Mesaje) + notificare email.
+    if (path === '/api/messages' && request.method === 'POST') {
+      const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+      const allowed = await checkRateLimit(env, 'msgpost_' + ip, 8, 3600);
+      if (!allowed) return json({ error: 'Prea multe cereri. Reîncearcă mai târziu.' }, 429, request);
+      try {
+        const b = await request.json().catch(() => ({}));
+        const name = String(b.name || '').trim();
+        const phone = String(b.phone || '').trim();
+        const email = String(b.email || '').trim();
+        const service = String(b.service || 'Formular').trim();
+        const message = String(b.message || '').trim();
+        if (!name || !message || (!phone && !email)) return json({ error: 'Câmpuri obligatorii lipsă' }, 400);
+        const mid = 'msg_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+        const rec = { id: mid, name: name.slice(0, 120), phone: phone.slice(0, 40), email: email.slice(0, 160), service: service.slice(0, 80), message: message.slice(0, 5000), createdAt: Date.now(), status: 'nou', ip };
+        try {
+          await env.PROGRAMARI.put('msg:' + mid, JSON.stringify(rec), { metadata: { name: rec.name, email: rec.email, createdAt: rec.createdAt, status: 'nou', preview: (service + ' — ' + message).replace(/\n/g, ' ').slice(0, 90) } });
+        } catch (e) {}
+        try { await sendContactNotification({ name: rec.name, phone: rec.phone || '-', email: rec.email || '-', service: rec.service, message: rec.message }, env); } catch (e) {}
+        return json({ success: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
     // Mesaje contact (admin) — listă
     if (path === '/api/messages' && request.method === 'GET') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);

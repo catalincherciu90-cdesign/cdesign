@@ -299,7 +299,7 @@
       } else if(company){ parts.push('Firmă: '+company); }
       var message=parts.join('\n');
       fetch('/api/messages',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({name:name,phone:phone,service:'Cerere de ofertă'+(selected.length?' ('+selected.length+' servicii)':''),message:message})})
+        body:JSON.stringify({name:name,phone:phone,email:email,service:'Cerere de ofertă'+(selected.length?' ('+selected.length+' servicii)':''),message:message})})
         .then(function(r){return r.json().catch(function(){return{};});})
         .then(function(res){
           if(res&&res.error){btn.disabled=false;btn.style.opacity='1';alert(res.error);return;}
