@@ -10,14 +10,14 @@
 <script>gtag('js',new Date());gtag('config','G-TB9SZT1PVZ',{anonymize_ip:true});</script>
 <script src="/analytics.js" defer></script>
 <title>Ofertă de lansare: Site + SEO + Google Business — C Design</title>
-<meta name="description" content="Afacerea ta online cu 300€: site profesional, SEO, Google Business Profile și conturi social media — totul gata pentru tine, live în zile.">
+<meta name="description" content="Afacerea ta online cu 400€: site profesional, SEO, Google Business Profile și conturi social media — totul gata pentru tine, live în zile.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://www.c-design.ro/promo">
 <link rel="icon" type="image/png" href="/logo-c-design.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.c-design.ro/promo">
 <meta property="og:title" content="Ofertă de lansare: Site + SEO + Google Business — C Design">
-<meta property="og:description" content="Afacerea ta online — totul gata pentru tine. Site profesional, SEO, Google Business Profile și conturi social, totul de la 300€.">
+<meta property="og:description" content="Afacerea ta online — totul gata pentru tine. Site profesional, SEO, Google Business Profile și conturi social, totul de la 400€.">
 <meta property="og:site_name" content="C Design">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -230,7 +230,7 @@
   <div class="topbar">
     <div class="topbar-inner">
       <span class="promo">
-        <b>OFERTĂ LIMITATĂ:</b> Site + SEO + Google Business — totul de la 300€.
+        <b>OFERTĂ LIMITATĂ:</b> Site + SEO + Google Business — totul de la 400€.
         <a href="/promo" class="view-deal">Vezi OFERTA</a>
       </span>
       <div class="topbar-right">
@@ -292,7 +292,7 @@
       </div>
       <div class="price-card">
         <div class="pc-label">Pachet complet</div>
-        <div class="pc-price">300€</div>
+        <div class="pc-price">400€</div>
         <div class="pc-was"><s>Normal 750€</s> &nbsp;— preț de lansare</div>
         <ul>
           <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Site de prezentare (până la 5 pagini)</li>
@@ -405,7 +405,7 @@
   <section class="promo-form" id="claim">
     <div class="pf-inner">
       <div class="pf-info">
-        <span class="eyebrow">Cere pachetul de 300€</span>
+        <span class="eyebrow">Cere pachetul de 400€</span>
         <h2>Gata să-ți pui afacerea <b>online?</b></h2>
         <p>Completează formularul și o să te contactez în maximum 1 zi lucrătoare. Fără presiune, fără jargon — doar o discuție onestă despre afacerea ta.</p>
         <ul class="pf-points">
@@ -415,7 +415,7 @@
         </ul>
         <a class="pf-phone" href="tel:+40753116155">📞 0753 116 155</a>
       </div>
-      <form class="pf-form" id="promoForm" data-service="PACHET PROMO 300€">
+      <form class="pf-form" id="promoForm" data-service="PACHET PROMO 400€">
         <h3>Cere oferta de lansare</h3>
         <p class="pf-lead">Spune-ne puțin despre afacerea ta și o luăm de-acolo.</p>
         <input type="text" name="name" placeholder="Numele tău *" required>
@@ -432,7 +432,7 @@
         <textarea name="message" placeholder="Spune-ne despre afacerea ta (opțional)"></textarea>
         <button type="submit" class="btn-primary">Cere oferta <span>&rarr;</span></button>
         <div class="pf-note">Nu vom partaja datele. Răspundem în maxim 1 zi lucrătoare.</div>
-        <div class="pf-success" style="display:none">✅ Mulțumim — am primit cererea pentru pachetul de 300€ și o să vorbim curând.</div>
+        <div class="pf-success" style="display:none">✅ Mulțumim — am primit cererea pentru pachetul de 400€ și o să vorbim curând.</div>
       </form>
     </div>
   </section>
@@ -508,7 +508,7 @@
         var btn = f.querySelector('button[type=submit]');
         var name=g('name'), phone=g('phone'), email=g('email'), business=g('business'), area=g('area'), message=g('message');
         if(!name || !phone || !email){ alert('Te rog introdu nume, telefon și email.'); return; }
-        var body = 'CERERE PACHET PROMO 300€';
+        var body = 'CERERE PACHET PROMO 400€';
         body += '\n\nAfacere: ' + (business || '(nu s-a spus)');
         body += '\nEmail: ' + email;
         if(area) body += '\nZona / oraș: ' + area;
@@ -518,7 +518,7 @@
         }
         btn.disabled = true; btn.textContent = 'Se trimite…';
         fetch('/api/messages', { method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ name:name, phone:phone, email:email, service: f.getAttribute('data-service') || 'PACHET PROMO 300€', message: body }) })
+          body: JSON.stringify({ name:name, phone:phone, email:email, service: f.getAttribute('data-service') || 'PACHET PROMO 400€', message: body }) })
           .then(function(r){ return r.json(); })
           .then(function(d){
             if(d && d.success){
