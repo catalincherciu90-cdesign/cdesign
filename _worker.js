@@ -890,7 +890,90 @@ p{color:#8bbaba;font-size:1.05rem;line-height:1.75;margin-bottom:12px}
 </body></html>`;
 }
 
-const AGENT_PERSONAS = {"alex":{"label":"Alex","role":"Mobile App Developer. Expert în React Native și Flutter pentru iOS și Android."},"alina":{"label":"Alina","role":"Manager de proiect și coordonator echipe. Planuri de proiect, breakdown de task-uri, timelines, deadline-uri, prioritizare backlog și rapoarte de progres."},"ana-pm":{"label":"Ana-pm","role":"Project manager general. Coordonează task-uri, planifică implementări."},"ana":{"label":"Ana","role":"COO & Chief of Staff. Coordonează întreaga echipă, descompune task-uri, planificare strategică."},"anca":{"label":"Anca","role":"Asistent academic pentru învățătoare cls. I-IV, masterandă."},"andrei":{"label":"Andrei","role":"Content Strategist & Senior Copywriter. Content strategy, storytelling de brand, long-form content."},"clara":{"label":"Clara","role":"Specialist Copyright, Proprietate Intelectuală și Anti-Plagiat. Originalitate conținut, mărci, drepturi de autor, conformitate legală."},"cosmin":{"label":"Cosmin","role":"Full-stack web developer. Expert în GitHub, Cloudflare Pages și dezvoltare web modernă."},"cristina":{"label":"Cristina","role":"PR Manager & Specialist Comunicare. Relații publice, comunicare de criză, media relations, brand reputation."},"danbastan":{"label":"Danbastan","role":"Senior Platform & AI Engineer. Full-stack, AI/LLM, Cloudflare avansat, auth & payments, arhitecturi complexe, code review senior."},"daniela":{"label":"Daniela","role":"Project Coordinator & Traffic Manager. Coordonare zilnică, planificare task-uri, time tracking."},"diana":{"label":"Diana","role":"UI/UX Designer. Design de interfețe, experiență utilizator, prototipuri Figma, design systems."},"elena":{"label":"Elena","role":"SEO & Content Strategist. Optimizare pentru motoare de căutare, strategie de conținut, content marketing."},"emma":{"label":"Emma","role":"Account Director & Client Success Manager. Relația cu clienții, retention, upsell, comunicare client-agenție."},"george":{"label":"George","role":"Specialist Google Ads & PPC. Campanii Search, Display, Shopping, YouTube, Performance Max."},"gogu":{"label":"Gogu","role":"Expert marketing online, social media și manager agenție. Strategie de marketing digital, planuri editoriale, campanii Meta/Google Ads, SEO local."},"ioana":{"label":"Ioana","role":"Pricing & Sales Operations. Construcția ofertelor, pricing strategy, contracte, calcul de marjă."},"ion":{"label":"Ion","role":"Social media manager și marketing specialist. Facebook, LinkedIn, Instagram, TikTok, copywriting."},"irina":{"label":"Irina","role":"Senior UX Designer & Design Lead. User research, information architecture, design systems, UX strategy."},"laura":{"label":"Laura","role":"Performance Marketing Manager. Paid advertising — Google Ads, Meta Ads, TikTok, optimizare ROAS."},"lucian":{"label":"Lucian","role":"Expert programare web și dezvoltare software. Cod, buguri, arhitectură, deployment, baze de date, securitate."},"marian":{"label":"Marian","role":"Visual & Graphic Designer. Identitate vizuală, materiale print & digital, motion graphics, creative ads."},"mihai":{"label":"Mihai","role":"Copywriter & Content Writer. Texte persuasive pentru web, ads, emailuri și materiale de vânzare."},"radu":{"label":"Radu","role":"Specialist implantologie și estetică dentară. Conținut medical stomatologic, educație pacienți, personal branding medical."},"rares":{"label":"Rares","role":"Manager Academie de Rugby pentru copii. Social media rugby, comunicare cu părinți, organizare turnee."},"robert":{"label":"Robert","role":"Head of Analytics & Strategic Advisor. Analytics, conversion rate optimization, atribuire, decizii bazate pe date."},"stefan":{"label":"Stefan","role":"Senior Project Manager & Operations Lead. Delivery management, planificare, resource allocation, optimizare procese."},"victor":{"label":"Victor","role":"VR/XR Developer. Meta Quest, Unity XR, Unreal Engine, mixed reality, avatare 3D."},"victoria":{"label":"Victoria","role":"Chief Marketing Officer & Strategy Director. Strategie de marketing integrată, brand positioning, GTM, leadership."}};
+const AGENT_PERSONAS = {"alex":{"label":"Alex","role":"Mobile App Developer. Expert în React Native și Flutter pentru iOS și Android."},"alina":{"label":"Alina","role":"Manager de proiect și coordonator echipe. Planuri de proiect, breakdown de task-uri, timelines, deadline-uri, prioritizare backlog și rapoarte de progres."},"ana-pm":{"label":"Ana-pm","role":"Project manager general. Coordonează task-uri, planifică implementări."},"ana":{"label":"Ana","role":"COO & Chief of Staff. Coordonează întreaga echipă, descompune task-uri, planificare strategică."},"anca":{"label":"Anca","role":"Asistent academic pentru învățătoare cls. I-IV, masterandă."},"andrei":{"label":"Andrei","role":"Content Strategist & Senior Copywriter. Content strategy, storytelling de brand, long-form content."},"clara":{"label":"Clara","role":"Specialist Copyright, Proprietate Intelectuală și Anti-Plagiat. Originalitate conținut, mărci, drepturi de autor, conformitate legală."},"cosmin":{"label":"Cosmin","role":"Full-stack web developer. Expert în GitHub, Cloudflare Pages și dezvoltare web modernă."},"cristina":{"label":"Cristina","role":"PR Manager & Specialist Comunicare. Relații publice, comunicare de criză, media relations, brand reputation."},"danbastan":{"label":"Danbastan","role":"Senior Platform & AI Engineer. Full-stack, AI/LLM, Cloudflare avansat, auth & payments, arhitecturi complexe, code review senior."},"daniela":{"label":"Daniela","role":"Project Coordinator & Traffic Manager. Coordonare zilnică, planificare task-uri, time tracking."},"diana":{"label":"Diana","role":"UI/UX Designer. Design de interfețe, experiență utilizator, prototipuri Figma, design systems."},"elena":{"label":"Elena","role":"SEO & Content Strategist. Optimizare pentru motoare de căutare, strategie de conținut, content marketing."},"emma":{"label":"Emma","role":"Account Director & Client Success Manager. Relația cu clienții, retention, upsell, comunicare client-agenție."},"george":{"label":"George","role":"Specialist Google Ads & PPC. Campanii Search, Display, Shopping, YouTube, Performance Max."},"gogu":{"label":"Gogu","role":"Expert marketing online, social media și manager agenție. Strategie de marketing digital, planuri editoriale, campanii Meta/Google Ads, SEO local."},"ioana":{"label":"Ioana","role":"Pricing & Sales Operations. Construcția ofertelor, pricing strategy, contracte, calcul de marjă."},"ion":{"label":"Ion","role":"Social media manager și marketing specialist. Facebook, LinkedIn, Instagram, TikTok, copywriting."},"irina":{"label":"Irina","role":"Senior UX Designer & Design Lead. User research, information architecture, design systems, UX strategy."},"laura":{"label":"Laura","role":"Performance Marketing Manager. Paid advertising — Google Ads, Meta Ads, TikTok, optimizare ROAS."},"lucian":{"label":"Lucian","role":"Expert programare web și dezvoltare software. Cod, buguri, arhitectură, deployment, baze de date, securitate."},"marian":{"label":"Marian","role":"Visual & Graphic Designer. Identitate vizuală, materiale print & digital, motion graphics, creative ads."},"mihai":{"label":"Mihai","role":"Copywriter & Content Writer. Texte persuasive pentru web, ads, emailuri și materiale de vânzare."},"radu":{"label":"Radu","role":"Specialist implantologie și estetică dentară. Conținut medical stomatologic, educație pacienți, personal branding medical."},"rares":{"label":"Rares","role":"Manager Academie de Rugby pentru copii. Social media rugby, comunicare cu părinți, organizare turnee."},"robert":{"label":"Robert","role":"Head of Analytics & Strategic Advisor. Analytics, conversion rate optimization, atribuire, decizii bazate pe date."},"stefan":{"label":"Stefan","role":"Senior Project Manager & Operations Lead. Delivery management, planificare, resource allocation, optimizare procese."},"victor":{"label":"Victor","role":"VR/XR Developer. Meta Quest, Unity XR, Unreal Engine, mixed reality, avatare 3D."},"victoria":{"label":"Victoria","role":"Chief Marketing Officer & Strategy Director. Strategie de marketing integrată, brand positioning, GTM, leadership."},"router":{"label":"Router","role":"Orchestrator & Dispatcher. Monitorizează task-urile, le descompune, le rutează automat către agenții potriviți și le rulează în paralel. Urmărește statusul și consolidează rezultatele."},"pixel":{"label":"Pixel","role":"Generator de imagini AI. Creează imagini din prompturi text — vizualuri pentru social, blog, ads, mockup-uri, concepte."},"tanti-geta":{"label":"Tanti Geta","role":"Analistă de website-uri. Cercetează orice site și extrage cum arată (paletă, layout) și ce conține — audit rapid de site, analiză de competitori, research vizual și de conținut."},"gary":{"label":"Gary","role":"Dungeon Master & creator de jocuri D&D 5e. Lume, aventuri, NPC-uri, întâlniri, monștri, homebrew și conducerea sesiunilor (conținut gratuit și legal: SRD 5.1)."}};
+
+// ── SNAPSHOT DATE PLATFORMĂ (pentru asistentul intern Gibilan) ──
+// Citește STRICT din KV-ul nostru (programări, clienți, oferte, CRM, cheltuieli,
+// mesaje, conversații). Fără surse externe, fără token de consolă.
+async function buildPlatformSnapshot(env) {
+  const g = async (k, d) => { try { const r = await env.PROGRAMARI.get(k); return r ? JSON.parse(r) : d; } catch { return d; } };
+  const now = new Date();
+  const ym = now.toISOString().slice(0, 7);          // YYYY-MM (luna curentă)
+  const today = now.toISOString().slice(0, 10);
+  const ago30 = new Date(now.getTime() - 30 * 86400000).toISOString();
+  const num = (v) => { const n = parseFloat(String(v).replace(/[^\d.,-]/g, '').replace(',', '.')); return isNaN(n) ? 0 : n; };
+
+  // Programări (comenzi) — cele mai recente 80 din index
+  const index = await g('__index__', []);
+  const bIds = (Array.isArray(index) ? index : []).slice(0, 80);
+  const bookings = (await Promise.all(bIds.map(x => g(x && x.id, null)))).filter(Boolean);
+  const bkNoi = bookings.filter(b => (b.status || 'nou') === 'nou').length;
+  const bkRecente = bookings.filter(b => (b.createdAt || '') >= ago30).length;
+  const bkViitoare = bookings.filter(b => (b.date || '') >= today).length;
+  const recent = bookings.slice(0, 12).map(b =>
+    `- ${b.date || '?'} ${b.time || ''} · ${b.name || 'fără nume'} · ${b.service || 'serviciu nespecificat'} · status: ${b.status || 'nou'}`
+  ).join('\n');
+
+  const clients = await g('__clients__', []);
+  const projects = await g('__projects__', []);
+  const crm = await g('__crm__', []);
+  const oferte = await g('__oferte__', []);
+  const cheltuieli = await g('__cheltuieli__', []);
+
+  // CRM (pipeline) — grupat pe status + valoare totală estimată
+  const crmByStatus = {};
+  let crmVal = 0;
+  for (const e of (Array.isArray(crm) ? crm : [])) { const s = e.status || 'oferta'; crmByStatus[s] = (crmByStatus[s] || 0) + 1; crmVal += num(e.valoare); }
+
+  // Oferte — grupat pe status + valoare totală (suma serviciilor)
+  const offByStatus = {};
+  let offEUR = 0, offRON = 0;
+  for (const o of (Array.isArray(oferte) ? oferte : [])) {
+    const s = o.status || 'trimisă'; offByStatus[s] = (offByStatus[s] || 0) + 1;
+    const tot = (o.servicii || []).reduce((a, sv) => a + num(sv.pret), 0);
+    if ((o.moneda || 'EUR') === 'RON') offRON += tot; else offEUR += tot;
+  }
+
+  // Cheltuieli — luna curentă, pe monedă
+  let chLunaRON = 0, chLunaEUR = 0, chTotalRON = 0, chTotalEUR = 0;
+  for (const c of (Array.isArray(cheltuieli) ? cheltuieli : [])) {
+    const s = num(c.suma), m = (c.moneda || 'RON');
+    if (m === 'EUR') chTotalEUR += s; else chTotalRON += s;
+    if ((c.data || '').startsWith(ym)) { if (m === 'EUR') chLunaEUR += s; else chLunaRON += s; }
+  }
+
+  // Mesaje + conversații asistent (doar numărători, din listă)
+  let msgCount = 0, chatCount = 0;
+  try { const l = await env.PROGRAMARI.list({ prefix: 'msg:', limit: 1000 }); msgCount = (l.keys || []).length; } catch {}
+  try { const l = await env.PROGRAMARI.list({ prefix: 'chat:', limit: 1000 }); chatCount = (l.keys || []).length; } catch {}
+
+  const fmt = (eur, ron) => {
+    const p = []; if (eur) p.push(eur.toLocaleString('ro-RO') + ' EUR'); if (ron) p.push(ron.toLocaleString('ro-RO') + ' RON');
+    return p.length ? p.join(' + ') : '0';
+  };
+  const grp = (o) => Object.keys(o).length ? Object.entries(o).map(([k, v]) => `${k}: ${v}`).join(', ') : 'niciuna';
+
+  return [
+    `Data curentă: ${today}. Luna curentă: ${ym}.`,
+    ``,
+    `PROGRAMĂRI (comenzi/cereri clienți): ${Array.isArray(index) ? index.length : 0} în total.`,
+    `  · noi (nestatuate): ${bkNoi}`,
+    `  · venite în ultimele 30 de zile: ${bkRecente}`,
+    `  · programate de azi înainte (viitoare): ${bkViitoare}`,
+    recent ? `  Ultimele programări:\n${recent}` : `  (nicio programare înregistrată)`,
+    ``,
+    `CLIENȚI în baza de date: ${Array.isArray(clients) ? clients.length : 0}.`,
+    `PORTOFOLIU (proiecte afișate pe site): ${Array.isArray(projects) ? projects.length : 0}.`,
+    ``,
+    `CRM / PIPELINE: ${Array.isArray(crm) ? crm.length : 0} intrări (${grp(crmByStatus)}). Valoare estimată cumulată: ${crmVal ? crmVal.toLocaleString('ro-RO') : 0}.`,
+    `OFERTE trimise: ${Array.isArray(oferte) ? oferte.length : 0} (${grp(offByStatus)}). Valoare totală oferte: ${fmt(offEUR, offRON)}.`,
+    ``,
+    `CHELTUIELI luna aceasta (${ym}): ${fmt(chLunaEUR, chLunaRON)}. Cheltuieli înregistrate în total: ${fmt(chTotalEUR, chTotalRON)}.`,
+    ``,
+    `MESAJE primite (formulare contact): ${msgCount}.`,
+    `CONVERSAȚII asistent site (lead-uri din chat): ${chatCount}.`,
+  ].join('\n');
+}
 
 // ── GOOGLE SEARCH CONSOLE (service account → JWT → access token) ──
 function gscB64urlBytes(bytes) { let s = ''; for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
@@ -2359,6 +2442,37 @@ Cerințe titluri:
           }
         }
         const out = await env.AI.run('@cf/meta/llama-3.3-70b-instruct-fp8-fast', { messages, max_tokens: 800 });
+        const reply = (out && (out.response || out.result)) || '';
+        return json({ reply: String(reply).trim() || 'Nu am putut genera un răspuns.' });
+      } catch (e) { return json({ error: 'Eroare: ' + String((e && e.message) || e) }, 500); }
+    }
+
+    // Asistent intern „Gibilan" pe DATELE PLATFORMEI — doar admin, Workers AI.
+    // Răspunde STRICT din KV-ul nostru (programări, clienți, oferte, CRM, cheltuieli,
+    // mesaje, conversații). NU folosește surse externe sau token-uri de consolă.
+    if (path === '/api/admin-assistant' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      if (!env.AI) return json({ error: 'Workers AI nu este activat. Adaugă binding-ul AI în Cloudflare Pages → Settings → Functions → AI bindings.' }, 503);
+      try {
+        const body = await request.json();
+        const userMsgs = Array.isArray(body.messages) ? body.messages.slice(-10) : [];
+        const snapshot = await buildPlatformSnapshot(env);
+        const system =
+          'Ești „Gibilan", asistentul intern al platformei agenției de web design C Design. ' +
+          'Răspunzi EXCLUSIV pe baza datelor platformei furnizate mai jos (programări, clienți, oferte, CRM, cheltuieli, mesaje, conversații). ' +
+          'Reguli stricte:\n' +
+          '1. Folosești DOAR cifrele și informațiile din secțiunea „DATE PLATFORMĂ". Nu inventezi nimic.\n' +
+          '2. Dacă răspunsul nu se află în date, spui clar: „Nu am această informație în datele platformei." și, dacă e util, din ce tab din admin s-ar putea afla.\n' +
+          '3. Nu folosești surse externe, nu estimezi, nu completezi cu presupuneri.\n' +
+          '4. Răspunzi în română, scurt și la obiect, cu cifrele exacte din date.\n\n' +
+          '=== DATE PLATFORMĂ (la zi) ===\n' + snapshot + '\n=== SFÂRȘIT DATE ===';
+        const messages = [{ role: 'system', content: system }];
+        for (const m of userMsgs) {
+          if (m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string') {
+            messages.push({ role: m.role, content: m.content.slice(0, 2000) });
+          }
+        }
+        const out = await env.AI.run('@cf/meta/llama-3.3-70b-instruct-fp8-fast', { messages, max_tokens: 700 });
         const reply = (out && (out.response || out.result)) || '';
         return json({ reply: String(reply).trim() || 'Nu am putut genera un răspuns.' });
       } catch (e) { return json({ error: 'Eroare: ' + String((e && e.message) || e) }, 500); }
