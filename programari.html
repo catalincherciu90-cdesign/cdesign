@@ -2010,26 +2010,31 @@
 
       <!-- ORGANIGRAMA AGENTI AI -->
       <div class="jvs-card" id="gib-org-panel" style="margin-top:24px;">
-        <div class="jvs-card-head">ORGANIGRAM&#x102; ECHIPA AI &mdash; 29 agen&#x21B;i</div>
+        <div class="jvs-card-head">ORGANIGRAM&#x102; ECHIPA AI &mdash; 33 agen&#x21B;i</div>
         <div class="jvs-bracket jvs-bracket-tr"></div>
         <div class="jvs-bracket jvs-bracket-bl"></div>
         <div class="jvs-bracket jvs-bracket-br"></div>
         <div class="jvs-card-body">
-          <div class="org-hint">// click pe orice agent ca s&#x103; deschizi chat-ul cu el</div>
+          <div class="org-hint">// click pe orice agent ca s&#x103; deschizi chat-ul cu el &middot; click pe GIBILAN &rarr; asistentul pe datele platformei</div>
+          <div class="org-hint" style="margin-top:2px;opacity:.75;">// reguli echip&#x103;: owner <b>@ana</b> &middot; orchestrare <b>@router</b> &middot; comunicare peer-to-peer &middot; economie de tokeni &middot; delegare &amp; escaladare</div>
           <div class="org-wrap">
             <!-- Root: Gibilan -->
             <div class="org-level">
-              <div class="org-node org-root" onclick="orgPickAgent('ana')">
+              <div class="org-node org-root" onclick="orgPickAgent('__data__')">
                 <div class="org-name">&#x1F916; GIBILAN</div>
-                <div class="org-role">Orchestrator AI</div>
+                <div class="org-role">Asistent date platform&#x103;</div>
               </div>
             </div>
             <div class="org-spine org-spine-amber"></div>
-            <!-- COO -->
-            <div class="org-level">
+            <!-- COO + Orchestrator -->
+            <div class="org-level" style="gap:14px;">
               <div class="org-node org-coo" onclick="orgPickAgent('ana')">
                 <div class="org-name">ANA</div>
                 <div class="org-role">COO &amp; Chief of Staff</div>
+              </div>
+              <div class="org-node org-coo" onclick="orgPickAgent('router')">
+                <div class="org-name">ROUTER</div>
+                <div class="org-role">Orchestrator &amp; Dispatcher</div>
               </div>
             </div>
             <div class="org-spine"></div>
@@ -2041,6 +2046,7 @@
                 <div class="org-head" onclick="orgPickAgent('victoria')"><div class="org-name">Victoria</div><div class="org-role">CMO &amp; Strategy</div></div>
                 <div class="org-members">
                   <div class="org-chip" onclick="orgPickAgent('robert')"><span class="org-cn">Robert</span><span class="org-cr">Head of Analytics</span></div>
+                  <div class="org-chip" onclick="orgPickAgent('tanti-geta')"><span class="org-cn">Tanti Geta</span><span class="org-cr">Audit &amp; research site</span></div>
                 </div>
               </div>
 
@@ -2071,6 +2077,7 @@
                 <div class="org-members">
                   <div class="org-chip" onclick="orgPickAgent('diana')"><span class="org-cn">Diana</span><span class="org-cr">UI/UX Designer</span></div>
                   <div class="org-chip" onclick="orgPickAgent('marian')"><span class="org-cn">Marian</span><span class="org-cr">Grafic&#x103; &amp; Motion</span></div>
+                  <div class="org-chip" onclick="orgPickAgent('pixel')"><span class="org-cn">Pixel</span><span class="org-cr">Imagini AI</span></div>
                 </div>
               </div>
 
@@ -2108,6 +2115,7 @@
                   <div class="org-chip" onclick="orgPickAgent('radu')"><span class="org-cn">Radu</span><span class="org-cr">Medical / Stomatologie</span></div>
                   <div class="org-chip" onclick="orgPickAgent('rares')"><span class="org-cn">Rares</span><span class="org-cr">Academie Rugby</span></div>
                   <div class="org-chip" onclick="orgPickAgent('anca')"><span class="org-cn">Anca</span><span class="org-cr">Academic</span></div>
+                  <div class="org-chip" onclick="orgPickAgent('gary')"><span class="org-cn">Gary</span><span class="org-cr">D&amp;D Game Master</span></div>
                 </div>
               </div>
 
@@ -6001,13 +6009,14 @@
 
   // --- CHAT ECHIPA AI (Workers AI, gratuit) ---
   const AI_AGENTS = [
-    ['ana','Ana — COO'],['alina','Alina — PM'],['stefan','Stefan — PM Operations'],['daniela','Daniela — Coordonare'],
+    ['__data__','📊 Gibilan — Date platformă'],
+    ['ana','Ana — COO'],['router','Router — Orchestrator'],['alina','Alina — PM'],['stefan','Stefan — PM Operations'],['daniela','Daniela — Coordonare'],['ana-pm','Ana — PM general'],
     ['cosmin','Cosmin — Web Dev'],['lucian','Lucian — Programare'],['danbastan','Danbastan — AI/Platform'],['alex','Alex — Mobile'],['victor','Victor — VR/XR'],
     ['elena','Elena — SEO'],['mihai','Mihai — Copywriter'],['andrei','Andrei — Content'],['clara','Clara — Copyright/Legal'],
     ['gogu','Gogu — Marketing'],['laura','Laura — Performance Ads'],['george','George — Google Ads'],['ion','Ion — Social Media'],['cristina','Cristina — PR'],
-    ['diana','Diana — UI/UX'],['irina','Irina — UX Lead'],['marian','Marian — Grafică'],
-    ['emma','Emma — Account'],['ioana','Ioana — Pricing/Oferte'],['robert','Robert — Analytics'],['victoria','Victoria — CMO'],
-    ['radu','Radu — Medical'],['rares','Rares — Rugby'],['anca','Anca — Academic'],['ana-pm','Ana — PM general']
+    ['diana','Diana — UI/UX'],['irina','Irina — UX Lead'],['marian','Marian — Grafică'],['pixel','Pixel — Imagini AI'],
+    ['emma','Emma — Account'],['ioana','Ioana — Pricing/Oferte'],['robert','Robert — Analytics'],['victoria','Victoria — CMO'],['tanti-geta','Tanti Geta — Audit site'],
+    ['radu','Radu — Medical'],['rares','Rares — Rugby'],['anca','Anca — Academic'],['gary','Gary — D&D Game Master']
   ];
   let aiChatHistory = {};
   let aiChatBusy = false;
@@ -6031,6 +6040,10 @@
     const agent = aiCurrentAgent();
     const hist = aiChatHistory[agent] || [];
     if (!hist.length) {
+      if (agent === '__data__') {
+        log.innerHTML = '<div style="color:var(--muted);font-style:italic;line-height:1.6;">📊 <strong>Asistent date platformă.</strong> Răspunde doar din datele tale din admin (programări, clienți, oferte, CRM, cheltuieli, mesaje). Încearcă:<br>• „Câte programări noi am?"<br>• „Cât am cheltuit luna asta?"<br>• „Care e valoarea totală a ofertelor trimise?"<br>• „Câte mesaje și lead-uri am primit?"</div>';
+        return;
+      }
       const label = (AI_AGENTS.find(a => a[0] === agent) || [, agent])[1];
       log.innerHTML = '<div style="color:var(--muted);font-style:italic;">Vorbește cu ' + label + '. Întreabă orice ține de rolul lui.</div>';
       return;
@@ -6076,9 +6089,10 @@
     wait.textContent = 'scrie...';
     if (log) { log.appendChild(wait); log.scrollTop = log.scrollHeight; }
     try {
-      const r = await fetch('/api/agent-chat?token=' + encodeURIComponent(adminToken), {
+      const isData = (agent === '__data__');
+      const r = await fetch((isData ? '/api/admin-assistant?token=' : '/api/agent-chat?token=') + encodeURIComponent(adminToken), {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ agent: agent, messages: aiChatHistory[agent] })
+        body: JSON.stringify(isData ? { messages: aiChatHistory[agent] } : { agent: agent, messages: aiChatHistory[agent] })
       });
       const d = await r.json();
       if (d.reply) aiChatHistory[agent].push({ role: 'assistant', content: d.reply });
