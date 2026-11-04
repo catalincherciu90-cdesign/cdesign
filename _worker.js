@@ -1214,6 +1214,25 @@ export default {
       return Response.redirect('https://www.c-design.ro/', 301);
     }
 
+    // ── CANONICAL: .html brut → URL curat (301) ─────────────────
+    // Fiecare pagină are un URL curat (/despre-noi) + un geamăn .html servit
+    // direct din ASSETS (/despre-noi.html). Ambele întorceau 200, ceea ce
+    // genera în Search Console statusul „alternate page with proper canonical".
+    // Redirecționăm .html → URL curat ca să consolidăm semnalele SEO.
+    // Excepții: adminul (/programari.html) și site-urile demo (/demos/*.html).
+    if ((request.method === 'GET' || request.method === 'HEAD')
+        && path.endsWith('.html')
+        && path !== '/programari.html'
+        && !path.startsWith('/demos/')) {
+      const HTML_CLEAN = {
+        '/index.html': '/',
+        '/partener-hosting.html': '/parteneri/hosting',
+        '/partener-print.html': '/parteneri/print',
+      };
+      const clean = HTML_CLEAN[path] || path.slice(0, -5); // scoate ".html"
+      return Response.redirect('https://www.c-design.ro' + clean + url.search, 301);
+    }
+
     // ── SITEMAP DINAMIC ───────────────────────────────────────
     // Generat la cerere: paginile statice + articolele de blog publicate
     // din KV. Înlocuiește sitemap.xml static (nu mai necesită întreținere).
