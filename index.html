@@ -728,9 +728,10 @@
         var tag = p.tag ? '<span class="demo-tag">' + esc(p.tag) + '</span>' : '';
         var desc = p.description ? '<p>' + esc(p.description) + '</p>' : '<p></p>';
         var link = p.link || p.url;
-        var btn = link
-          ? '<div class="demo-actions"><a class="demo-btn" href="' + esc(link) + '" target="_blank" rel="noopener">Vezi site live →</a></div>'
-          : '';
+        var btns = '';
+        if(p.detail){ btns += '<a class="demo-btn" href="' + esc(p.detail) + '">Vezi proiectul →</a>'; }
+        if(link){ btns += '<a class="demo-btn' + (p.detail ? ' admin' : '') + '" href="' + esc(link) + '" target="_blank" rel="noopener">Site live ↗</a>'; }
+        var btn = btns ? '<div class="demo-actions">' + btns + '</div>' : '';
         return '<div class="demo-card proj-card">' + thumb
           + '<div class="proj-body">' + tag
           + '<h3>' + esc(p.title || 'Proiect') + '</h3>' + desc + btn + '</div></div>';

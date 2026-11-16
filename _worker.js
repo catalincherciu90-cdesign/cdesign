@@ -840,8 +840,157 @@ async function sendContactNotification(contact, env) {
 }
 
 const DEFAULT_PROJECTS = [
-  { id: 'expotigla', emoji: '🏠', tag: 'Magazin acoperișuri', title: 'ExpoTigla — magazin online acoperișuri', description: 'Magazin online pentru un furnizor de sisteme complete de acoperiș: țiglă metalică, tablă fălțuită, panouri sandwich, sisteme pluviale și accesorii. Catalog cu prețuri, configurator „Sistem complet", cerere de ofertă și consultanță tehnică — tot ce îi trebuie clientului ca să ajungă rapid la o ofertă.', image: '/portofoliu/expotigla.jpg', link: 'https://expotigla.ro', order: 0 },
+  { id: 'expotigla', emoji: '🏠', tag: 'Magazin acoperișuri', title: 'ExpoTigla — magazin online acoperișuri', description: 'Magazin online pentru un furnizor de sisteme complete de acoperiș: țiglă metalică, tablă fălțuită, panouri sandwich, sisteme pluviale și accesorii. Catalog cu prețuri, configurator „Sistem complet", cerere de ofertă și consultanță tehnică — tot ce îi trebuie clientului ca să ajungă rapid la o ofertă.', image: '/portofoliu/expotigla.jpg', link: 'https://expotigla.ro', detail: '/portofoliu/expotigla', order: 0 },
+  { id: 'cosmin-tatulescu', emoji: '📷', tag: 'Fotografie', title: 'Cosmin Tătulescu — ședințe foto de Crăciun', description: 'Site de prezentare și rezervare pentru ședințele foto de Crăciun ale unui fotograf din Brașov. Explică pe scurt experiența, afișează prețurile pe perioade și arată în calendar câte locuri libere mai sunt în fiecare zi.', image: '/portofoliu/cosmin-tatulescu.jpg', link: 'https://cosmintatulescu.ro', detail: '/portofoliu/cosmin-tatulescu', order: 1 },
 ];
+
+// ── STUDII DE CAZ (pagina-profil a fiecărui proiect) ─────────
+// Conținut complet pentru fiecare proiect: meta, descriere, secțiuni
+// (imagine + text) și lista de funcționalități. Folosit de renderCaseStudy.
+const PROJECT_CASE_STUDIES = {
+  'expotigla': {
+    title: 'ExpoTigla', subtitle: 'Magazin online pentru sisteme complete de acoperiș',
+    tag: 'Magazin online', link: 'https://expotigla.ro', cover: '/portofoliu/expotigla/01-hero-pagina-principala.jpg',
+    meta: [['Client', 'ExpoTigla'], ['Domeniu', 'Materiale pentru acoperișuri'], ['Tip proiect', 'Design & dezvoltare magazin online']],
+    about: [
+      'ExpoTigla vinde materiale pentru acoperișuri rezidențiale și industriale, plus servicii de consultanță, calcul de necesar și montaj. Scopul site-ului a fost să arate că firma nu vinde doar tablă, ci tot sistemul, și să ducă vizitatorul cât mai repede spre o ofertă sau o comandă.',
+      'Am construit o identitate vizuală sobră, în tonuri de auriu și gri antracit, cu fotografii mari de acoperișuri și o structură ușor de parcurs, de la categorii la produse, apoi la cererea de ofertă.'
+    ],
+    sections: [
+      ['/portofoliu/expotigla/01-hero-pagina-principala.jpg', 'Pagina principală', 'Primul ecran arată direct ce face firma: sisteme complete de acoperiș. Imagine mare, mesaj scurt și un singur buton principal. Sub hero, o bandă cu patru argumente: consultanță tehnică, calcul de necesar, transport asigurat și produse cu garanție.'],
+      ['/portofoliu/expotigla/02-categorii-produse.jpg', 'Categorii de produse', 'Gama este împărțită în categorii vizuale (țiglă metalică, tablă fălțuită, panouri sandwich, sisteme pluviale, tinichigerie, ventilații, folii, șuruburi și altele). Fiecare card are fotografie, titlu și o descriere de un rând, ca vizitatorul să își găsească rapid categoria potrivită.'],
+      ['/portofoliu/expotigla/03-produse-cele-mai-vandute.jpg', 'Cele mai vândute produse', 'Carusel cu produse populare: etichetă de variantă, categorie, preț afișat ca interval („de la… lei / buc”) și două acțiuni clare, Detalii și În coș.'],
+      ['/portofoliu/expotigla/04-montaj-si-consultanta.jpg', 'Montaj și consultanță', 'Secțiune dedicată serviciilor: consultanță gratuită, calcul de necesar, montaj la cerere și recomandări de finisaj. Două butoane duc spre pagina de servicii și spre configurator.'],
+      ['/portofoliu/expotigla/05-sistem-complet-home.jpg', 'Sistem complet', 'O ilustrație cu acoperișul „desfăcut” în componente explică ideea de sistem complet și trimite spre configurator.'],
+      ['/portofoliu/expotigla/06-pagina-sistem-complet.jpg', 'Pagina Sistem complet', 'Pagină separată pentru configurator, cu schema acoperișului strat cu strat și mesajul „1 proiect, 1 ofertă, 1 consultant”. Sub hero apar brandurile partenere și avantajele ofertei integrate.'],
+      ['/portofoliu/expotigla/07-ce-include-sistemul.jpg', 'Ce include un sistem complet', 'Grilă cu 8 componente numerotate (învelitoare, tinichigerie, sistem pluvial, membrane, ventilație, fixare, transport, montaj), fiecare cu opțiunea de a fi inclusă în ofertă.'],
+      ['/portofoliu/expotigla/08-garantii-si-recenzii.jpg', 'Garanții și recenzii', 'Patru carduri cu garanțiile firmei (calitate certificată, livrare în 24–72h, garanție până la 30 de ani, suport tehnic), urmate de un carusel cu recenzii Google.'],
+      ['/portofoliu/expotigla/09-cta-oferta-si-footer.jpg', 'Cerere de ofertă și footer', 'Bandă aurie cu îndemn clar: trimiți dimensiunile acoperișului și primești o ofertă gratuită în maxim 24 de ore. Footer-ul grupează produsele, paginile companiei, datele de contact, zonele deservite și linkurile ANPC/SOL.']
+    ],
+    features: ['Catalog de produse cu variante și prețuri cu TVA', 'Coș de cumpărături și cont de client', 'Configurator „Sistem complet” pentru cerere de ofertă', 'Formular de cerere ofertă gratuită', 'Chat pe site pentru întrebări rapide', 'Căutare în catalog', 'Secțiune de ghiduri']
+  },
+  'cosmin-tatulescu': {
+    title: 'Cosmin Tătulescu', subtitle: 'Site de prezentare și rezervări pentru ședințe foto de Crăciun',
+    tag: 'Site cu rezervări', link: 'https://cosmintatulescu.ro', cover: '/portofoliu/cosmin-tatulescu/01-hero.jpg',
+    meta: [['Client', 'Cosmin Tătulescu, fotograf de familie'], ['Locație', 'Sânpetru, Brașov'], ['Tip proiect', 'Site de prezentare cu rezervări']],
+    about: [
+      'Ședințele de Crăciun sunt un serviciu sezonier, cu o perioadă scurtă de rezervare și multe întrebări repetitive din partea părinților. Site-ul trebuia să răspundă la ele înainte să fie puse: ce primesc, cât costă, când e liber și unde e studioul.',
+      'Am ales un design aerisit, cu fundal alb și crem, titluri serif elegante și accente discrete de roșu de Crăciun. Totul stă pe o singură pagină lungă, cu meniu fix, ca vizitatorul să poată sări direct la prețuri, calendar sau galerie. Site-ul are și versiune în engleză.'
+    ],
+    sections: [
+      ['/portofoliu/cosmin-tatulescu/01-hero.jpg', 'Hero', 'O fotografie reală din decorul studioului, alături de titlul „Ședințe foto de Crăciun 2026 în Brașov” și un text cald despre atmosfera ședinței. Butonul principal duce direct la zilele libere.'],
+      ['/portofoliu/cosmin-tatulescu/02-voi-asa-cum-sunteti.jpg', 'Mesajul principal', 'O secțiune scurtă care fixează tonul: fără zâmbete la comandă, doar familia așa cum este.'],
+      ['/portofoliu/cosmin-tatulescu/03-ce-include.jpg', 'Ce include', 'Patru coloane cu cifre mari și ușor de citit: 45 de minute, 35–50 de fotografii, 3 decoruri și livrare în aproximativ o săptămână, în galerie online privată. Dedesubt, oferta de tablouri și canvasuri, prezentată ca un cadou pentru rude.'],
+      ['/portofoliu/cosmin-tatulescu/04-preturi-pe-perioade.jpg', 'Prețuri pe perioade', 'Prețul crește cu cât te apropii de Crăciun (450, 500 și 550 lei), ceea ce încurajează rezervările din timp. Fiecare perioadă are o etichetă scurtă, unele cu umor.'],
+      ['/portofoliu/cosmin-tatulescu/05-calendar-disponibilitate.jpg', 'Calendar de disponibilitate', 'Calendar împărțit pe perioadele de preț, cu numărul de locuri libere pentru fiecare zi. Două opțiuni clare: rezervă o ședință sau oferă o ședință cadou.'],
+      ['/portofoliu/cosmin-tatulescu/06-galerie.jpg', 'Galerie', 'O selecție de fotografii din ședințele anterioare, cu link spre galeria completă.'],
+      ['/portofoliu/cosmin-tatulescu/07-locatie.jpg', 'Locație', 'Adresa, reperul, programul și localitățile din apropiere. Harta Google se încarcă doar la cerere, iar vizitatorul este informat că Google primește astfel adresa lui IP.'],
+      ['/portofoliu/cosmin-tatulescu/08-intrebari-frecvente.jpg', 'Întrebări frecvente', 'Nouă întrebări puse des de părinți (îmbrăcăminte, plată, anulare, livrarea pozelor, ședință cadou), grupate într-un acordeon compact.'],
+      ['/portofoliu/cosmin-tatulescu/09-contact-si-final.jpg', 'Contact și final', 'Formular simplu cu acord pentru prelucrarea datelor, telefon, email și rețele sociale. Pagina se încheie cu un mesaj de sărbători și încă un buton spre zilele libere.']
+    ],
+    features: ['Calendar de rezervări cu locuri libere pe zi', 'Prețuri diferite în funcție de perioadă', 'Opțiune de ședință cadou', 'Versiune în română și engleză', 'Hartă Google încărcată doar cu acordul vizitatorului', 'FAQ în acordeon', 'Formular de contact cu acord GDPR']
+  }
+};
+
+function renderCaseStudy(id, cs) {
+  const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const metaRows = cs.meta.map(m => `<div class="cs-meta-item"><span class="cs-meta-k">${esc(m[0])}</span><span class="cs-meta-v">${esc(m[1])}</span></div>`).join('');
+  const about = cs.about.map(p => `<p>${esc(p)}</p>`).join('');
+  const sections = cs.sections.map((s, i) => `
+    <div class="cs-row${i % 2 ? ' rev' : ''}">
+      <div class="cs-row-img"><img src="${esc(s[0])}" alt="${esc(s[1])}" loading="lazy"></div>
+      <div class="cs-row-txt"><span class="cs-num">${String(i + 1).padStart(2, '0')}</span><h3>${esc(s[1])}</h3><p>${esc(s[2])}</p></div>
+    </div>`).join('');
+  const features = cs.features.map(f => `<li>${esc(f)}</li>`).join('');
+  return `<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(cs.title)} — Proiect C Design</title>
+<meta name="description" content="${esc(cs.subtitle)} — proiect realizat de C Design.">
+<link rel="canonical" href="https://www.c-design.ro/portofoliu/${esc(id)}">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="${esc(cs.title)} — Proiect C Design">
+<meta property="og:description" content="${esc(cs.subtitle)}">
+<meta property="og:image" content="https://www.c-design.ro${esc(cs.cover)}">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#00AAAC;--blue-dk:#088d8f;--sky:#12BEC0;--ink:#1a2325;--body:#44555a;--line:#e3ebeb;--soft:#f4f8f8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;color:var(--body);background:#fff;line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+h1,h2,h3{font-family:'Poppins',sans-serif;color:var(--ink);letter-spacing:-.02em;line-height:1.15}
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:66px}
+.topbar .logo{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.15rem;color:var(--ink)}
+.topbar .logo b{color:var(--blue)}
+.topbar nav{display:flex;align-items:center;gap:18px;font-weight:500;font-size:.92rem}
+.btn{display:inline-block;font-family:'Poppins',sans-serif;font-weight:600;border-radius:999px;padding:11px 22px;transition:.2s;font-size:.92rem}
+.btn-p{background:var(--blue);color:#fff}.btn-p:hover{background:var(--blue-dk)}
+.btn-o{border:1.5px solid var(--line);color:var(--ink)}.btn-o:hover{border-color:var(--blue);color:var(--blue)}
+.back{color:var(--body);font-weight:500}.back:hover{color:var(--blue)}
+.hero{padding:64px 0 40px;background:linear-gradient(180deg,var(--soft),#fff)}
+.hero .tag{display:inline-block;font-size:.74rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--blue);background:rgba(0,170,172,.1);padding:5px 13px;border-radius:999px;margin-bottom:18px}
+.hero h1{font-weight:300;font-size:clamp(2.1rem,5vw,3.4rem)}
+.hero h1 b{font-weight:700}
+.hero .lead{margin:16px 0 0;font-size:1.12rem;max-width:720px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.cs-meta{display:flex;flex-wrap:wrap;gap:28px;margin-top:30px;padding-top:26px;border-top:1px solid var(--line)}
+.cs-meta-item{display:flex;flex-direction:column;gap:3px}
+.cs-meta-k{font-size:.74rem;text-transform:uppercase;letter-spacing:.04em;color:var(--blue);font-weight:600}
+.cs-meta-v{font-weight:500;color:var(--ink)}
+.cover{margin:36px 0}
+.cover img{width:100%;border-radius:18px;border:1px solid var(--line);box-shadow:0 30px 60px -30px rgba(20,40,60,.3)}
+.about{padding:40px 0}
+.about h2{font-weight:300;font-size:clamp(1.6rem,3vw,2.2rem);margin-bottom:18px}
+.about h2 b{font-weight:700}
+.about p{margin-bottom:14px;font-size:1.05rem;max-width:780px}
+.sections{padding:20px 0 40px}
+.cs-row{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:34px 0;border-top:1px solid var(--line)}
+.cs-row.rev .cs-row-img{order:2}
+.cs-row-img img{width:100%;border-radius:14px;border:1px solid var(--line);box-shadow:0 18px 40px -24px rgba(20,40,60,.35)}
+.cs-num{font-family:'Poppins',sans-serif;font-weight:700;color:var(--sky);font-size:.9rem}
+.cs-row-txt h3{font-size:1.4rem;margin:6px 0 10px}
+.feat{background:var(--soft);padding:56px 0}
+.feat h2{font-weight:300;font-size:clamp(1.6rem,3vw,2.2rem);margin-bottom:26px;text-align:center}
+.feat h2 b{font-weight:700}
+.feat ul{list-style:none;max-width:860px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.feat li{position:relative;background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px 16px 48px;font-weight:500;color:var(--ink)}
+.feat li::before{content:'✓';position:absolute;left:16px;top:50%;transform:translateY(-50%);width:22px;height:22px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;margin-top:0}
+.cta{text-align:center;padding:72px 24px;background:var(--ink);color:#fff}
+.cta h2{color:#fff;font-weight:300;font-size:clamp(1.7rem,3.4vw,2.5rem)}
+.cta h2 b{font-weight:700}
+.cta p{margin:14px auto 26px;max-width:540px;color:#c7d3d3}
+.foot{padding:30px 24px;text-align:center;font-size:.88rem;color:var(--body);border-top:1px solid var(--line)}
+@media(max-width:780px){.cs-row{grid-template-columns:1fr;gap:20px}.cs-row.rev .cs-row-img{order:0}.feat ul{grid-template-columns:1fr}.topbar nav .btn-o{display:none}}
+</style></head><body>
+<header class="topbar"><div class="wrap">
+  <a href="/" class="logo">C <b>Design</b></a>
+  <nav><a href="/#proiecte" class="back">← Portofoliu</a><a href="/cere-oferta" class="btn btn-p">Cere ofertă</a></nav>
+</div></header>
+<section class="hero"><div class="wrap">
+  <span class="tag">${esc(cs.tag)}</span>
+  <h1>${esc(cs.title)}</h1>
+  <p class="lead">${esc(cs.subtitle)}.</p>
+  <div class="hero-actions">
+    <a href="${esc(cs.link)}" target="_blank" rel="noopener" class="btn btn-p">Vezi site-ul live ↗</a>
+    <a href="/cere-oferta" class="btn btn-o">Vreau un site similar</a>
+  </div>
+  <div class="cs-meta">${metaRows}</div>
+</div></section>
+<div class="wrap"><div class="cover"><img src="${esc(cs.cover)}" alt="${esc(cs.title)}"></div></div>
+<section class="about"><div class="wrap"><h2>Despre <b>proiect</b></h2>${about}</div></section>
+<section class="sections"><div class="wrap">${sections}</div></section>
+<section class="feat"><div class="wrap"><h2>Ce poate face <b>site-ul</b></h2><ul>${features}</ul></div></section>
+<section class="cta">
+  <h2>Vrei un site <b>ca acesta</b>?</h2>
+  <p>Îți construim un site clar, rapid și făcut să aducă clienți — preț fix, livrat în 14 zile.</p>
+  <a href="/cere-oferta" class="btn btn-p">Cere o ofertă gratuită</a>
+</section>
+<footer class="foot">© C Design · <a href="/" style="color:var(--blue)">c-design.ro</a> · <a href="${esc(cs.link)}" target="_blank" rel="noopener" style="color:var(--blue)">${esc(cs.link.replace(/^https?:\/\//, ''))}</a></footer>
+</body></html>`;
+}
 
 function isAdmin(url, env) {
   return url.searchParams.get('token') === (env.ADMIN_TOKEN || ADMIN_TOKEN);
@@ -1228,6 +1377,19 @@ export default {
       return Response.redirect('https://www.c-design.ro' + clean + url.search, 301);
     }
 
+    // ── PAGINĂ PROFIL PROIECT (studiu de caz) ─────────────────
+    // /portofoliu/<slug> (fără extensie) → pagina detaliată a proiectului.
+    // Fișierele imagine /portofoliu/<slug>/*.jpg conțin punct → servite de ASSETS.
+    if (path.startsWith('/portofoliu/') && !path.slice(1).includes('.') && (request.method === 'GET' || request.method === 'HEAD')) {
+      const slug = path.replace('/portofoliu/', '').replace(/\/$/, '');
+      const cs = PROJECT_CASE_STUDIES[slug];
+      if (cs) {
+        return new Response(renderCaseStudy(slug, cs), {
+          headers: { ...SEC_HEADERS, 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'public,max-age=600' }
+        });
+      }
+    }
+
     // ── SITEMAP DINAMIC ───────────────────────────────────────
     // Generat la cerere: paginile statice + articolele de blog publicate
     // din KV. Înlocuiește sitemap.xml static (nu mai necesită întreținere).
@@ -1253,6 +1415,8 @@ export default {
         { loc: '/programare',                 cf: 'monthly', pr: '0.6' },
         { loc: '/pachet-startup',             cf: 'monthly', pr: '0.8' },
         { loc: '/abonament-lunar',            cf: 'monthly', pr: '0.8' },
+        { loc: '/portofoliu/expotigla',       cf: 'monthly', pr: '0.7' },
+        { loc: '/portofoliu/cosmin-tatulescu', cf: 'monthly', pr: '0.7' },
         { loc: '/blog',                       cf: 'weekly',  pr: '0.7' },
         { loc: '/demos',                      cf: 'monthly', pr: '0.7' },
         { loc: '/cere-oferta',                cf: 'monthly', pr: '0.8' },
