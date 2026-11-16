@@ -840,12 +840,7 @@ async function sendContactNotification(contact, env) {
 }
 
 const DEFAULT_PROJECTS = [
-  { id: 'p1', emoji: '🚗', tag: 'Auto', title: 'Tractări Auto Teleorman', description: 'Site de prezentare cu zone de acoperire: Dâmbovița, Ilfov, București, Argeș, Giurgiu.', problema: 'Clientul nu era găsit online — toți clienții veneau doar din recomandări.', solutie: 'Site de prezentare rapid cu pagini separate pe județe, optimizat local SEO.', rezultat: 'Prima comandă online în 3 zile de la lansare. Trafic organic +180% în 2 luni.', order: 0 },
-  { id: 'p2', emoji: '🏭', tag: 'Dealer Autorizat', title: 'Dealer Autorizat Lindab', description: 'Prezentare profesională cu catalog de produse și date de contact integrate.', problema: 'Site vechi, neoptimizat pentru mobil — 70% din vizitatori plecau în primele 5 secunde.', solutie: 'Redesign complet cu catalog digital și formular de cerere ofertă integrat.', rezultat: 'Rata de abandon scăzută cu 55%. Cereri de ofertă x3 față de înainte.', order: 1 },
-  { id: 'p3', emoji: '🌸', tag: 'Florărie', title: 'Site Florărie', description: 'Site modern cu produse și posibilitate de comandă online, optimizat pentru mobil.', problema: 'Fără prezență online — clienții nu știau dacă florăria e deschisă sau ce oferte are.', solutie: 'Site cu galerie produse, program actualizabil și buton de comandă WhatsApp.', rezultat: 'Comenzi online de la zero la 15-20/săptămână în prima lună.', order: 2 },
-  { id: 'p4', emoji: '🏗️', tag: 'Construcții', title: 'Arhitectură & Construcții', description: 'Portofoliu vizual elegant cu proiecte realizate și testimoniale clienți.', problema: 'Firma lucra bine, dar nu putea dovedi asta online — fără portofoliu vizibil.', solutie: 'Site portofoliu cu galerie proiecte, testimoniale și pagină de servicii detaliată.', rezultat: 'Câștigat 2 contracte noi direct din site în prima lună. ROI investiție: 10x.', order: 3 },
-  { id: 'p5', emoji: '💼', tag: 'Start-Up', title: 'Micul Întreprinzător', description: 'Pachet complet la start: site + identitate vizuală + prezență online activă.', problema: 'Afacere nouă, zero prezență online — buget limitat, nevoie de totul dintr-o dată.', solutie: 'Pachet Startup: site + logo + domeniu + găzduire + 2 conturi social media, livrat în 14 zile.', rezultat: 'Online complet în 2 săptămâni. Primul client obținut din Google după 3 săptămâni.', order: 4 },
-  { id: 'p6', emoji: '🔧', tag: 'Servicii', title: 'Firmă Servicii Tehnice', description: 'Site de prezentare cu formular de solicitare ofertă și galerie de lucrări.', problema: 'Pierdeau clienți potențiali pentru că nu aveau o modalitate ușoară de contact online.', solutie: 'Site cu formular rapid de solicitare ofertă, galerie lucrări și recenzii Google integrate.', rezultat: 'Cereri de ofertă online: de la 0 la 8-12/lună. Economie de timp la telefon: 4h/săpt.', order: 5 },
+  { id: 'expotigla', emoji: '🏠', tag: 'Magazin acoperișuri', title: 'ExpoTigla — magazin online acoperișuri', description: 'Magazin online pentru un furnizor de sisteme complete de acoperiș: țiglă metalică, tablă fălțuită, panouri sandwich, sisteme pluviale și accesorii. Catalog cu prețuri, configurator „Sistem complet", cerere de ofertă și consultanță tehnică — tot ce îi trebuie clientului ca să ajungă rapid la o ofertă.', image: '/portofoliu/expotigla.jpg', link: 'https://expotigla.ro', order: 0 },
 ];
 
 function isAdmin(url, env) {
@@ -1560,21 +1555,24 @@ export default {
     if (path === '/api/projects' && request.method === 'GET') {
       try {
         const raw = await env.PROGRAMARI.get('__projects__');
-        const projects = raw ? JSON.parse(raw) : DEFAULT_PROJECTS;
-        return json(projects.sort((a, b) => a.order - b.order));
+        let projects = raw ? JSON.parse(raw) : null;
+        // Fallback la proiectele implicite când nu există niciunul salvat
+        // (KV lipsă sau listă goală) — ca portofoliul public să nu fie gol.
+        if (!Array.isArray(projects) || projects.length === 0) projects = DEFAULT_PROJECTS;
+        return json(projects.sort((a, b) => (a.order || 0) - (b.order || 0)));
       } catch { return json(DEFAULT_PROJECTS); }
     }
 
     if (path === '/api/project' && request.method === 'POST') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
-        const { emoji, tag, title, description } = await request.json();
+        const { emoji, tag, title, description, image, link } = await request.json();
         if (!title) return json({ error: 'Titlul este obligatoriu' }, 400);
         const raw = await env.PROGRAMARI.get('__projects__');
         const projects = raw ? JSON.parse(raw) : [...DEFAULT_PROJECTS];
         const id = `p_${Date.now()}`;
-        const maxOrder = projects.reduce((m, p) => Math.max(m, p.order), -1);
-        projects.push({ id, emoji: emoji || '🌐', tag: tag || 'Web', title, description: description || '', order: maxOrder + 1 });
+        const maxOrder = projects.reduce((m, p) => Math.max(m, p.order || 0), -1);
+        projects.push({ id, emoji: emoji || '🌐', tag: tag || 'Web', title, description: description || '', image: image || '', link: link || '', order: maxOrder + 1 });
         await env.PROGRAMARI.put('__projects__', JSON.stringify(projects));
         return json({ success: true, id });
       } catch { return json({ error: 'Eroare server' }, 500); }
@@ -1584,12 +1582,12 @@ export default {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
         const id = path.replace('/api/project/', '');
-        const { emoji, tag, title, description, order } = await request.json();
+        const { emoji, tag, title, description, order, image, link } = await request.json();
         const raw = await env.PROGRAMARI.get('__projects__');
         const projects = raw ? JSON.parse(raw) : [...DEFAULT_PROJECTS];
         const idx = projects.findIndex(p => p.id === id);
         if (idx === -1) return json({ error: 'Negăsit' }, 404);
-        projects[idx] = { ...projects[idx], emoji: emoji ?? projects[idx].emoji, tag: tag ?? projects[idx].tag, title: title ?? projects[idx].title, description: description ?? projects[idx].description, order: order ?? projects[idx].order };
+        projects[idx] = { ...projects[idx], emoji: emoji ?? projects[idx].emoji, tag: tag ?? projects[idx].tag, title: title ?? projects[idx].title, description: description ?? projects[idx].description, image: image ?? projects[idx].image, link: link ?? projects[idx].link, order: order ?? projects[idx].order };
         await env.PROGRAMARI.put('__projects__', JSON.stringify(projects));
         return json({ success: true });
       } catch { return json({ error: 'Eroare server' }, 500); }

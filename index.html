@@ -209,6 +209,11 @@
   .demo-btn.admin:hover{border-color:var(--blue);color:var(--blue)}
   @media(max-width:920px){.demo-grid{grid-template-columns:1fr 1fr}}
   @media(max-width:600px){.demo-grid{grid-template-columns:1fr}.demos{padding:70px 20px}}
+  /* carduri proiecte reale (cu imagine) */
+  .proj-card{padding:0;overflow:hidden}
+  .proj-thumb{display:block;width:100%;aspect-ratio:16/8;object-fit:cover;background:#eef4f4}
+  .proj-body{padding:24px 26px;display:flex;flex-direction:column;flex:1}
+  .proj-body .demo-tag{margin-top:2px}
 
   /* ---------- CTA BANNER (get in touch) ---------- */
   .cta-banner{position:relative;overflow:hidden;text-align:center;padding:120px 24px;color:#fff;background:#05060c}
@@ -324,7 +329,7 @@
       <nav class="nav-menu">
         <a href="/">Acasă</a>
         <a href="/servicii">Servicii</a>
-        <a href="/#portofoliu">Portofoliu</a>
+        <a href="/#proiecte">Proiecte</a>
         <a href="/#testimoniale">Recenzii</a>
         <a href="/blog">Blog</a>
         <a href="/demos">Demo-uri</a>
@@ -345,7 +350,7 @@
     <button class="mm-close" id="mmClose" aria-label="Închide meniu">&times;</button>
     <a href="/">Acasă</a>
     <a href="/servicii">Servicii</a>
-    <a href="/#portofoliu">Portofoliu</a>
+    <a href="/#proiecte">Proiecte</a>
     <a href="/#testimoniale">Recenzii</a>
     <a href="/blog">Blog</a>
         <a href="/demos">Demo-uri</a>
@@ -363,7 +368,7 @@
       <p class="sub" id="hero-desc-el">De la prima ta afacere până la un brand consacrat — construim site-uri clare, rapide și găsite pe Google. <b>Livrate în 14 zile, preț fix de la 400€.</b></p>
       <div class="hero-cta">
         <a href="#contact" class="btn-primary" data-edit="buton-1">Hai să vorbim gratuit <span class="arr">→</span></a>
-        <a href="/#portofoliu" class="btn-ghost" data-edit="buton-secundar-1">Vezi portofoliu</a>
+        <a href="/#proiecte" class="btn-ghost" data-edit="buton-secundar-1">Vezi portofoliu</a>
       </div>
     </div>
   </section>
@@ -470,6 +475,16 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- PROIECTE REALE / LUCRĂRI LIVRATE -->
+  <section class="demos" id="proiecte" style="display:none;background:#fff">
+    <div class="demos-head">
+      <span class="eyebrow">Clienți reali</span>
+      <h2>Proiecte <b>livrate</b></h2>
+      <p>Site-uri construite și lansate pentru clienții noștri. Intră și vezi-le live.</p>
+    </div>
+    <div class="demo-grid" id="proiecteGrid"></div>
   </section>
 
   <!-- PORTOFOLIU / DEMO WEBSITES -->
@@ -698,6 +713,36 @@
             .catch(function(){ render(FALLBACK_DEMOS); });
         })
         .catch(function(){ render(FALLBACK_DEMOS); });
+    })();
+
+    // Proiecte reale livrate (din admin, /api/projects) — secțiune separată de demo-uri
+    (function(){
+      var grid = document.getElementById('proiecteGrid');
+      var section = document.getElementById('proiecte');
+      if(!grid || !section) return;
+      function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+      function card(p){
+        var thumb = p.image
+          ? '<img class="proj-thumb" src="' + esc(p.image) + '" alt="' + esc(p.title || 'Proiect') + '" loading="lazy">'
+          : '<div class="demo-emoji" style="margin:24px 26px 0">' + esc(p.emoji || '🌐') + '</div>';
+        var tag = p.tag ? '<span class="demo-tag">' + esc(p.tag) + '</span>' : '';
+        var desc = p.description ? '<p>' + esc(p.description) + '</p>' : '<p></p>';
+        var link = p.link || p.url;
+        var btn = link
+          ? '<div class="demo-actions"><a class="demo-btn" href="' + esc(link) + '" target="_blank" rel="noopener">Vezi site live →</a></div>'
+          : '';
+        return '<div class="demo-card proj-card">' + thumb
+          + '<div class="proj-body">' + tag
+          + '<h3>' + esc(p.title || 'Proiect') + '</h3>' + desc + btn + '</div></div>';
+      }
+      fetch('/api/projects')
+        .then(function(r){ return r.ok ? r.json() : []; })
+        .then(function(list){
+          if(!Array.isArray(list) || !list.length){ return; }
+          grid.innerHTML = list.map(card).join('');
+          section.style.display = 'block';
+        })
+        .catch(function(){ /* secțiunea rămâne ascunsă dacă nu se pot încărca */ });
     })();
 
     // Setări din admin: video de fundal + carusel bannere About
