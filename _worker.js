@@ -840,14 +840,14 @@ async function sendContactNotification(contact, env) {
 }
 
 const DEFAULT_PROJECTS = [
-  { id: 'expotigla', emoji: '🏠', tag: 'Magazin acoperișuri', title: 'ExpoTigla — magazin online acoperișuri', description: 'Magazin online pentru un furnizor de sisteme complete de acoperiș: țiglă metalică, tablă fălțuită, panouri sandwich, sisteme pluviale și accesorii. Catalog cu prețuri, configurator „Sistem complet", cerere de ofertă și consultanță tehnică — tot ce îi trebuie clientului ca să ajungă rapid la o ofertă.', image: '/portofoliu/expotigla.jpg', link: 'https://expotigla.ro', detail: '/portofoliu/expotigla', order: 0 },
-  { id: 'cosmin-tatulescu', emoji: '📷', tag: 'Fotografie', title: 'Cosmin Tătulescu — ședințe foto de Crăciun', description: 'Site de prezentare și rezervare pentru ședințele foto de Crăciun ale unui fotograf din Brașov. Explică pe scurt experiența, afișează prețurile pe perioade și arată în calendar câte locuri libere mai sunt în fiecare zi.', image: '/portofoliu/cosmin-tatulescu.jpg', link: 'https://cosmintatulescu.ro', detail: '/portofoliu/cosmin-tatulescu', order: 1 },
-  { id: 'traditum', emoji: '🎂', tag: 'Cofetărie', title: 'Traditum By Victoria — cofetărie artizanală', description: 'Site de prezentare pentru o cofetărie artizanală din Ilfov. Produsele sunt grupate pe categorii, iar site-ul pune în față galeria cu evenimente reale și cererea de ofertă pentru torturi și candy bar.', image: '/portofoliu/traditum.jpg', link: 'https://traditumbyvictoria.ro', detail: '/portofoliu/traditum', order: 2 },
-  { id: 'mrdtf', emoji: '🖨️', tag: 'Print DTF', title: 'Mr.DTF — print DTF la metru liniar', description: 'Site pentru un atelier de print DTF din București. Prețurile pe metru liniar sunt vizibile din primul ecran, un calculator arată câte modele încap pe un metru, iar comanda se trimite dintr-un formular rapid.', image: '/portofoliu/mrdtf.jpg', link: 'https://mrdtf.ro', detail: '/portofoliu/mrdtf', order: 3 },
-  { id: 'comstore', emoji: '🛠️', tag: 'Acoperișuri', title: 'ComStore — montaj și renovare acoperișuri', description: 'Site de prezentare pentru o firmă de montaj și renovare acoperișuri. Pune în față serviciile, proiectele realizate și brandurile partenere, iar fiecare secțiune duce spre o cerere de ofertă.', image: '/portofoliu/comstore.jpg', link: 'https://comstore-acoperisuri.ro', detail: '/portofoliu/comstore', order: 4 },
-  { id: 'apg-garage', emoji: '🔧', tag: 'Service auto', title: 'APG Garage — service auto', description: 'Site pentru un service auto din Militari, București. Prezintă serviciile și prețurile orientative, iar clienții își pot face cont pentru a se programa online.', image: '/portofoliu/apg-garage.jpg', detail: '/portofoliu/apg-garage', order: 5 },
-  { id: 'asociatia-roa', emoji: '🤝', tag: 'ONG', title: 'Asociația RO Administrația — ONG educație & ocupare', description: 'Site de prezentare pentru un ONG care ajută tinerii și persoanele vulnerabile să se califice și să își găsească un loc de muncă. Explică cui se adresează asociația și ce oferă, apoi trimite spre proiecte, consiliere și joburi.', image: '/portofoliu/asociatia-roa.jpg', link: 'https://asociatia-roa.ro', detail: '/portofoliu/asociatia-roa', order: 6 },
-  { id: 'wsd-tractari', emoji: '🛻', tag: 'Tractări auto', title: 'WSD Logistics — tractări auto non-stop', description: 'Landing page pentru o firmă de tractări auto care lucrează non-stop. Totul e construit în jurul unui singur gest: omul blocat pe drum trebuie să poată suna în câteva secunde.', image: '/portofoliu/wsd-tractari.jpg', link: 'https://wsdtractari.ro', detail: '/portofoliu/wsd-tractari', order: 7 },
+  { id: 'expotigla', emoji: '🏠', tag: 'Magazin acoperișuri', cat: 'constructii', title: 'ExpoTigla — magazin online acoperișuri', description: 'Magazin online pentru un furnizor de sisteme complete de acoperiș: țiglă metalică, tablă fălțuită, panouri sandwich, sisteme pluviale și accesorii. Catalog cu prețuri, configurator „Sistem complet", cerere de ofertă și consultanță tehnică — tot ce îi trebuie clientului ca să ajungă rapid la o ofertă.', image: '/portofoliu/expotigla.jpg', link: 'https://expotigla.ro', detail: '/portofoliu/expotigla', order: 0 },
+  { id: 'cosmin-tatulescu', emoji: '📷', tag: 'Fotografie', cat: 'foto', title: 'Cosmin Tătulescu — ședințe foto de Crăciun', description: 'Site de prezentare și rezervare pentru ședințele foto de Crăciun ale unui fotograf din Brașov. Explică pe scurt experiența, afișează prețurile pe perioade și arată în calendar câte locuri libere mai sunt în fiecare zi.', image: '/portofoliu/cosmin-tatulescu.jpg', link: 'https://cosmintatulescu.ro', detail: '/portofoliu/cosmin-tatulescu', order: 1 },
+  { id: 'traditum', emoji: '🎂', tag: 'Cofetărie', cat: 'food', title: 'Traditum By Victoria — cofetărie artizanală', description: 'Site de prezentare pentru o cofetărie artizanală din Ilfov. Produsele sunt grupate pe categorii, iar site-ul pune în față galeria cu evenimente reale și cererea de ofertă pentru torturi și candy bar.', image: '/portofoliu/traditum.jpg', link: 'https://traditumbyvictoria.ro', detail: '/portofoliu/traditum', order: 2 },
+  { id: 'mrdtf', emoji: '🖨️', tag: 'Print DTF', cat: 'print', title: 'Mr.DTF — print DTF la metru liniar', description: 'Site pentru un atelier de print DTF din București. Prețurile pe metru liniar sunt vizibile din primul ecran, un calculator arată câte modele încap pe un metru, iar comanda se trimite dintr-un formular rapid.', image: '/portofoliu/mrdtf.jpg', link: 'https://mrdtf.ro', detail: '/portofoliu/mrdtf', order: 3 },
+  { id: 'comstore', emoji: '🛠️', tag: 'Acoperișuri', cat: 'constructii', title: 'ComStore — montaj și renovare acoperișuri', description: 'Site de prezentare pentru o firmă de montaj și renovare acoperișuri. Pune în față serviciile, proiectele realizate și brandurile partenere, iar fiecare secțiune duce spre o cerere de ofertă.', image: '/portofoliu/comstore.jpg', link: 'https://comstore-acoperisuri.ro', detail: '/portofoliu/comstore', order: 4 },
+  { id: 'apg-garage', emoji: '🔧', tag: 'Service auto', cat: 'auto', title: 'APG Garage — service auto', description: 'Site pentru un service auto din Militari, București. Prezintă serviciile și prețurile orientative, iar clienții își pot face cont pentru a se programa online.', image: '/portofoliu/apg-garage.jpg', detail: '/portofoliu/apg-garage', order: 5 },
+  { id: 'asociatia-roa', emoji: '🤝', tag: 'ONG', cat: 'ong', title: 'Asociația RO Administrația — ONG educație & ocupare', description: 'Site de prezentare pentru un ONG care ajută tinerii și persoanele vulnerabile să se califice și să își găsească un loc de muncă. Explică cui se adresează asociația și ce oferă, apoi trimite spre proiecte, consiliere și joburi.', image: '/portofoliu/asociatia-roa.jpg', link: 'https://asociatia-roa.ro', detail: '/portofoliu/asociatia-roa', order: 6 },
+  { id: 'wsd-tractari', emoji: '🛻', tag: 'Tractări auto', cat: 'auto', title: 'WSD Logistics — tractări auto non-stop', description: 'Landing page pentru o firmă de tractări auto care lucrează non-stop. Totul e construit în jurul unui singur gest: omul blocat pe drum trebuie să poată suna în câteva secunde.', image: '/portofoliu/wsd-tractari.jpg', link: 'https://wsdtractari.ro', detail: '/portofoliu/wsd-tractari', order: 7 },
 ];
 
 // ── STUDII DE CAZ (pagina-profil a fiecărui proiect) ─────────
@@ -1491,6 +1491,13 @@ export default {
       return Response.redirect('https://www.c-design.ro' + clean + url.search, 301);
     }
 
+    // ── PORTOFOLIU (galerie cu toate proiectele + filtre) ─────
+    if ((path === '/portofoliu' || path === '/portofoliu/') && (request.method === 'GET' || request.method === 'HEAD')) {
+      const assetUrl = new URL(request.url);
+      assetUrl.pathname = '/portofoliu.html';
+      return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+    }
+
     // ── PAGINĂ PROFIL PROIECT (studiu de caz) ─────────────────
     // /portofoliu/<slug> (fără extensie) → pagina detaliată a proiectului.
     // Fișierele imagine /portofoliu/<slug>/*.jpg conțin punct → servite de ASSETS.
@@ -1513,6 +1520,7 @@ export default {
       const staticPages = [
         { loc: '/',                           cf: 'weekly',  pr: '1.0' },
         { loc: '/servicii',                   cf: 'monthly', pr: '0.9' },
+        { loc: '/portofoliu',                 cf: 'weekly',  pr: '0.8' },
         { loc: '/servicii/website-design',        cf: 'monthly', pr: '0.7' },
         { loc: '/servicii/ecommerce',        cf: 'monthly', pr: '0.7' },
         { loc: '/servicii/web-apps',        cf: 'monthly', pr: '0.7' },

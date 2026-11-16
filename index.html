@@ -329,7 +329,7 @@
       <nav class="nav-menu">
         <a href="/">Acasă</a>
         <a href="/servicii">Servicii</a>
-        <a href="/#proiecte">Proiecte</a>
+        <a href="/portofoliu">Proiecte</a>
         <a href="/#testimoniale">Recenzii</a>
         <a href="/blog">Blog</a>
         <a href="/demos">Demo-uri</a>
@@ -350,7 +350,7 @@
     <button class="mm-close" id="mmClose" aria-label="Închide meniu">&times;</button>
     <a href="/">Acasă</a>
     <a href="/servicii">Servicii</a>
-    <a href="/#proiecte">Proiecte</a>
+    <a href="/portofoliu">Proiecte</a>
     <a href="/#testimoniale">Recenzii</a>
     <a href="/blog">Blog</a>
         <a href="/demos">Demo-uri</a>
@@ -485,6 +485,9 @@
       <p>Site-uri construite și lansate pentru clienții noștri. Intră și vezi-le live.</p>
     </div>
     <div class="demo-grid" id="proiecteGrid"></div>
+    <div style="text-align:center;margin-top:44px">
+      <a href="/portofoliu" class="btn-primary">Vezi tot portofoliul <span class="arr">→</span></a>
+    </div>
   </section>
 
   <!-- PORTOFOLIU / DEMO WEBSITES -->
@@ -740,7 +743,7 @@
         .then(function(r){ return r.ok ? r.json() : []; })
         .then(function(list){
           if(!Array.isArray(list) || !list.length){ return; }
-          grid.innerHTML = list.map(card).join('');
+          grid.innerHTML = list.slice(0, 6).map(card).join('');
           section.style.display = 'block';
         })
         .catch(function(){ /* secțiunea rămâne ascunsă dacă nu se pot încărca */ });
