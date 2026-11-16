@@ -4144,8 +4144,6 @@ Cerințe titluri:
         html = injectText(html, 'ind-sub-el',         'p',  settings.indSub);
         html = injectText(html, 'proces-heading',     'h2', settings.procesTitle);
         html = injectText(html, 'proces-sub-el',      'p',  settings.procesSub);
-        html = injectText(html, 'portofoliu-heading', 'h2', settings.portTitle);
-        html = injectText(html, 'portofoliu-sub-el',  'p',  settings.portSub);
         html = injectText(html, 'testi-heading',      'h2', settings.testiTitle);
         html = injectText(html, 'contact-heading',    'h2', settings.contactTitle);
         // LCP: imaginea hero injectată server-side + preload — browserul o

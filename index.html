@@ -94,6 +94,9 @@
   .hero-content{max-width:960px;margin:0 auto;position:relative;z-index:3}
   .hero h1{font-family:'Poppins',sans-serif;font-weight:300;color:var(--ink);font-size:clamp(2.6rem,7.2vw,5.6rem);line-height:1.02;letter-spacing:-.03em;margin-bottom:26px}
   .circle-word{position:relative;display:inline-block;white-space:nowrap;font-weight:700}
+  .hero-rot{display:inline-block;color:var(--blue);font-weight:700;transition:opacity .4s ease,transform .4s ease;will-change:opacity,transform}
+  .hero-rot.swap{opacity:0;transform:translateY(14px)}
+  @media(prefers-reduced-motion:reduce){.hero-rot{transition:none}}
   .circle-word .scribble{position:absolute;left:-1%;bottom:-.20em;width:102%;height:.34em;overflow:visible;pointer-events:none}
   .circle-word .scribble path{fill:none;stroke:var(--sky);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:460;stroke-dashoffset:460;animation:draw 1s ease-out .5s forwards}
   @keyframes draw{to{stroke-dashoffset:0}}
@@ -364,7 +367,7 @@
     <div class="hero-scrim"></div>
 
     <div class="hero-content">
-      <h1 id="hero-h1-el"><span class="circle-word">Site-uri<svg class="scribble" viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 13 Q 22 3 40 13 T 76 13 T 112 13 T 148 13 T 184 13 T 220 13 T 256 13 T 296 13"/></svg></span> care aduc<br>clienți noi</h1>
+      <h1 id="hero-h1-el"><span class="circle-word">Site-uri<svg class="scribble" viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 13 Q 22 3 40 13 T 76 13 T 112 13 T 148 13 T 184 13 T 220 13 T 256 13 T 296 13"/></svg></span> care aduc<br><span class="hero-rot" id="heroRot">clienți noi</span></h1>
       <p class="sub" id="hero-desc-el">De la prima ta afacere până la un brand consacrat — construim site-uri clare, rapide și găsite pe Google. <b>Livrate în 14 zile, preț fix de la 400€.</b></p>
       <div class="hero-cta">
         <a href="#contact" class="btn-primary" data-edit="buton-1">Hai să vorbim gratuit <span class="arr">→</span></a>
@@ -490,19 +493,6 @@
     </div>
   </section>
 
-  <!-- PORTOFOLIU / DEMO WEBSITES -->
-  <section class="demos" id="portofoliu" style="display:block">
-    <div class="demos-head">
-      <span class="eyebrow">Afaceri ca a ta</span>
-      <h2 id="portofoliu-heading">Portofoliu — <b>rezultate reale</b></h2>
-      <p id="portofoliu-sub-el">Iată câteva dintre proiectele pe care le-am livrat: restaurante, firme de construcții, servicii de consultanță, freelanceri. Oameni reali, site-uri care funcționează.</p>
-    </div>
-    <div class="demo-grid" id="demoGrid"></div>
-    <div style="text-align:center;margin-top:46px">
-      <a href="/#portofoliu" class="btn-primary">Vezi tot portofoliul <span class="arr">→</span></a>
-    </div>
-  </section>
-
   <!-- TESTIMONIALE / REVIEWS -->
   <section class="demos" id="testimoniale" style="display:block;background:#fff;padding:96px 24px">
     <div class="demos-head">
@@ -616,7 +606,7 @@
       <div class="f-col">
         <h4>Companie</h4>
         <a href="/despre-noi">Despre noi</a>
-        <a href="/#portofoliu">Portofoliu</a>
+        <a href="/portofoliu">Portofoliu</a>
         <a href="/blog">Blog</a>
         <a href="/demos">Demo-uri</a>
         <a href="/#testimoniale">Recenzii</a>
@@ -670,55 +660,25 @@
       });
     }
 
-    // Website-uri demo (din admin, /api/demos)
+    // Text rotativ în hero — se schimbă prin mai multe variante
     (function(){
-      var grid = document.getElementById('demoGrid');
-      var section = document.getElementById('portofoliu');
-      if(!grid || !section) return;
-      function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
-      var FALLBACK_DEMOS = [
-        { emoji:'🍽️', businessName:'Restaurant Demo', industry:'Restaurant', tagline:'Meniu, rezervări și bucătăria casei.', url:'/demos/restaurant.html' },
-        { emoji:'☕', businessName:'Cafenea Demo', industry:'Cafenea', tagline:'Cafea de specialitate și prăjituri proaspete.', url:'/demos/cafe.html' },
-        { emoji:'🏪', businessName:'Magazin Demo', industry:'Vânzări', tagline:'Online și în magazin, produse de calitate.', url:'/demos/shop.html' },
-      ];
-      var ADMIN_MAP = {'restaurant':'restaurant','cafe':'cafe','shop':'shop'};
-      function adminHref(url){ var m = String(url||'').match(/\/demos\/([a-z0-9-]+)\.html/); return (m && ADMIN_MAP[m[1]]) ? '/demos/admin-demo.html?type=' + ADMIN_MAP[m[1]] : null; }
-      var DEMO_ICONS = {'_generic': '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.7 3 2.7 15 0 18M12 3c-2.7 3-2.7 15 0 18"/></svg>'};
-
-      function render(items){
-        grid.innerHTML = items.map(function(d){
-          var name = esc(d.businessName || 'Site demo');
-          var tag = d.industry ? '<span class="demo-tag">' + esc(d.industry) + '</span>' : '';
-          var tagline = d.tagline ? '<p>' + esc(d.tagline) + '</p>' : '<p></p>';
-          var href = d.url ? d.url : ('/demo/' + encodeURIComponent(d.slug || d.id || ''));
-          var adm = adminHref(d.url);
-          var admBtn = adm ? '<a class="demo-btn admin" href="' + esc(adm) + '" target="_blank" rel="noopener">Admin</a>' : '';
-          return '<div class="demo-card">'
-            + '<div class="demo-emoji">' + esc(d.emoji || '🌐') + '</div>'
-            + tag
-            + '<h3>' + name + '</h3>'
-            + tagline
-            + '<div class="demo-actions"><a class="demo-btn" href="' + esc(href) + '" target="_blank" rel="noopener">Vezi demo →</a>' + admBtn + '</div>'
-            + '</div>';
-        }).join('');
-        section.style.display = 'block';
-      }
-      fetch('/api/demos')
-        .then(function(r){ return r.ok ? r.json() : []; })
-        .then(function(list){
-          if(Array.isArray(list) && list.length){ render(list.slice(0, 3)); return; }
-          fetch('/api/site-settings')
-            .then(function(r){ return r.ok ? r.json() : null; })
-            .then(function(d){
-              var ex = (d && Array.isArray(d.demoExamples) && d.demoExamples.length) ? d.demoExamples : FALLBACK_DEMOS;
-              render(ex.slice(0, 3));
-            })
-            .catch(function(){ render(FALLBACK_DEMOS); });
-        })
-        .catch(function(){ render(FALLBACK_DEMOS); });
+      var el = document.getElementById('heroRot');
+      if(!el) return;
+      var words = ['clienți noi', 'mai multe vânzări', 'rezervări online', 'comenzi noi', 'mai mulți clienți'];
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(reduce) return;
+      var i = 0;
+      setInterval(function(){
+        el.classList.add('swap');
+        setTimeout(function(){
+          i = (i + 1) % words.length;
+          el.textContent = words[i];
+          el.classList.remove('swap');
+        }, 400);
+      }, 2600);
     })();
 
-    // Proiecte reale livrate (din admin, /api/projects) — secțiune separată de demo-uri
+    // Proiecte reale livrate (din admin, /api/projects)
     (function(){
       var grid = document.getElementById('proiecteGrid');
       var section = document.getElementById('proiecte');
