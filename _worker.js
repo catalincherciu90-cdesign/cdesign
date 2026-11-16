@@ -847,6 +847,7 @@ const DEFAULT_PROJECTS = [
   { id: 'comstore', emoji: '🛠️', tag: 'Acoperișuri', title: 'ComStore — montaj și renovare acoperișuri', description: 'Site de prezentare pentru o firmă de montaj și renovare acoperișuri. Pune în față serviciile, proiectele realizate și brandurile partenere, iar fiecare secțiune duce spre o cerere de ofertă.', image: '/portofoliu/comstore.jpg', link: 'https://comstore-acoperisuri.ro', detail: '/portofoliu/comstore', order: 4 },
   { id: 'apg-garage', emoji: '🔧', tag: 'Service auto', title: 'APG Garage — service auto', description: 'Site pentru un service auto din Militari, București. Prezintă serviciile și prețurile orientative, iar clienții își pot face cont pentru a se programa online.', image: '/portofoliu/apg-garage.jpg', detail: '/portofoliu/apg-garage', order: 5 },
   { id: 'asociatia-roa', emoji: '🤝', tag: 'ONG', title: 'Asociația RO Administrația — ONG educație & ocupare', description: 'Site de prezentare pentru un ONG care ajută tinerii și persoanele vulnerabile să se califice și să își găsească un loc de muncă. Explică cui se adresează asociația și ce oferă, apoi trimite spre proiecte, consiliere și joburi.', image: '/portofoliu/asociatia-roa.jpg', link: 'https://asociatia-roa.ro', detail: '/portofoliu/asociatia-roa', order: 6 },
+  { id: 'wsd-tractari', emoji: '🛻', tag: 'Tractări auto', title: 'WSD Logistics — tractări auto non-stop', description: 'Landing page pentru o firmă de tractări auto care lucrează non-stop. Totul e construit în jurul unui singur gest: omul blocat pe drum trebuie să poată suna în câteva secunde.', image: '/portofoliu/wsd-tractari.jpg', link: 'https://wsdtractari.ro', detail: '/portofoliu/wsd-tractari', order: 7 },
 ];
 
 // ── STUDII DE CAZ (pagina-profil a fiecărui proiect) ─────────
@@ -984,6 +985,24 @@ const PROJECT_CASE_STUDIES = {
       ['/portofoliu/asociatia-roa/05-cifre-si-contact.jpg', 'Cifre și contact', 'Contoare animate cu rezultatele asociației (persoane consiliate, tineri calificați, localități rurale, parteneri), urmate de datele de contact și datele de înregistrare ale ONG-ului.']
     ],
     features: ['Acces rapid pe trei tipuri de vizitatori', 'Secțiuni dedicate pentru joburi, proiecte, știri și FAQ', 'Contoare animate pentru rezultate', 'Pagină pentru echipă', 'Legături spre Facebook și LinkedIn']
+  },
+  'wsd-tractari': {
+    title: 'WSD Logistics', subtitle: 'Landing page pentru o firmă de tractări auto non-stop',
+    tag: 'Landing page', link: 'https://wsdtractari.ro', cover: '/portofoliu/wsd-tractari/01-hero.jpg',
+    meta: [['Client', 'WSD Logistics'], ['Domeniu', 'Tractări auto & asistență rutieră'], ['Zonă', 'Toată România']],
+    about: [
+      'Cine intră pe un site de tractări e de obicei pe marginea drumului, pe telefon și stresat. Nu are timp să citească, vrea doar un număr de telefon și siguranța că vine cineva. Site-ul pune numărul în meniu, în bara galbenă, într-un buton fix pe ecran și în secțiunea finală. Lângă el sunt butoane rapide pentru WhatsApp și pentru trimiterea locației.',
+      'Designul folosește negru și galben, culorile de avertizare din trafic, cu titluri mari și condensate, ușor de citit chiar și din mers. Fotografia din hero arată o mașină reală din flota firmei.'
+    ],
+    sections: [
+      ['/portofoliu/wsd-tractari/01-hero.jpg', 'Hero', 'Mesajul „Tractări auto oriunde, oricând”, cu butonul „Sună acum” în față și trei cifre-cheie: non-stop 24/7, timp mediu de sosire și numărul de orașe acoperite. În dreapta, o fotografie cu platforma firmei în acțiune.'],
+      ['/portofoliu/wsd-tractari/02-banda-urgenta.jpg', 'Bandă de urgență', 'O bandă galbenă cu numărul de telefon afișat mare și un link pentru trimiterea locației.'],
+      ['/portofoliu/wsd-tractari/03-servicii.jpg', 'Servicii', 'Șase servicii prezentate în grilă: autoturisme, dube și utilaje, SUV și 4x4, asistență pe autostradă, asistență rutieră și transport pe platformă.'],
+      ['/portofoliu/wsd-tractari/04-de-ce-noi-si-acoperire.jpg', 'De ce noi și acoperire', 'Patru argumente (răspuns rapid, prețuri transparente, acoperire națională, firmă autorizată ARR) și lista orașelor deservite, prezentate ca etichete galbene, gândită și pentru căutări locale.'],
+      ['/portofoliu/wsd-tractari/05-recenzii-si-cta.jpg', 'Recenzii și îndemn final', 'Trei recenzii scurte, cu oraș, urmate de un bloc galben, „Ești blocat pe drum?”, cu un singur buton de apel.'],
+      ['/portofoliu/wsd-tractari/06-footer.jpg', 'Footer', 'Serviciile, pagini pentru principalele orașe și contactul.']
+    ],
+    features: ['Buton de apel fix pe ecran, vizibil permanent', 'Butoane rapide pentru WhatsApp și trimiterea locației', 'Linkuri dedicate pentru orașe, pentru SEO local']
   }
 };
 
@@ -1517,6 +1536,7 @@ export default {
         { loc: '/portofoliu/comstore',        cf: 'monthly', pr: '0.7' },
         { loc: '/portofoliu/apg-garage',      cf: 'monthly', pr: '0.7' },
         { loc: '/portofoliu/asociatia-roa',   cf: 'monthly', pr: '0.7' },
+        { loc: '/portofoliu/wsd-tractari',    cf: 'monthly', pr: '0.7' },
         { loc: '/blog',                       cf: 'weekly',  pr: '0.7' },
         { loc: '/demos',                      cf: 'monthly', pr: '0.7' },
         { loc: '/cere-oferta',                cf: 'monthly', pr: '0.8' },
@@ -1758,7 +1778,7 @@ export default {
         try {
           const mid = 'msg_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
           const rec = { id: mid, name: String(name).slice(0, 120), phone: String(phone).slice(0, 40), email: String(email).slice(0, 160), service: contact.service, message: String(message).slice(0, 5000), createdAt: Date.now(), status: 'nou', ip };
-          await env.PROGRAMARI.put('msg:' + mid, JSON.stringify(rec), { metadata: { name: rec.name, email: rec.email, createdAt: rec.createdAt, status: 'nou', preview: String(message).slice(0, 90) } });
+          await env.PROGRAMARI.put('msg:' + mid, JSON.stringify(rec), { metadata: { name: rec.name, email: rec.email, service: rec.service, createdAt: rec.createdAt, status: 'nou', preview: String(message).slice(0, 90) } });
         } catch (e) {}
         await sendContactNotification(contact, env);
         return json({ success: true });
@@ -2916,7 +2936,7 @@ Cerințe titluri:
         const mid = 'msg_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
         const rec = { id: mid, name: name.slice(0, 120), phone: phone.slice(0, 40), email: email.slice(0, 160), service: service.slice(0, 80), message: message.slice(0, 5000), createdAt: Date.now(), status: 'nou', ip };
         try {
-          await env.PROGRAMARI.put('msg:' + mid, JSON.stringify(rec), { metadata: { name: rec.name, email: rec.email, createdAt: rec.createdAt, status: 'nou', preview: (service + ' — ' + message).replace(/\n/g, ' ').slice(0, 90) } });
+          await env.PROGRAMARI.put('msg:' + mid, JSON.stringify(rec), { metadata: { name: rec.name, email: rec.email, service: rec.service, createdAt: rec.createdAt, status: 'nou', preview: (service + ' — ' + message).replace(/\n/g, ' ').slice(0, 90) } });
         } catch (e) {}
         try { await sendContactNotification({ name: rec.name, phone: rec.phone || '-', email: rec.email || '-', service: rec.service, message: rec.message }, env); } catch (e) {}
         return json({ success: true });
