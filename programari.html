@@ -2394,6 +2394,7 @@
         <h3 style="font-family:'Share Tech Mono',monospace;font-size:.95rem;color:var(--soft);">// mesaje &mdash; din formularul de Contact al site-ului</h3>
         <button class="btn-save" onclick="loadMessages()" style="padding:8px 16px;font-size:.85rem;">&#x21BB; Re&icirc;mprosp&#x103;teaz&#x103;</button>
       </div>
+      <div id="msg-filter" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;"></div>
       <div id="msg-stats" style="color:var(--muted);font-size:.85rem;margin-bottom:12px;"></div>
       <div class="msg-grid" style="display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:16px;align-items:start;">
         <div id="msg-list" style="display:flex;flex-direction:column;gap:8px;max-height:72vh;overflow-y:auto;"><div style="color:var(--muted)">Se &icirc;ncarc&#x103;...</div></div>
@@ -7691,9 +7692,51 @@
     if (!window.__chataiPoll) window.__chataiPoll = setInterval(updateChataiBadge, 60000);
   }
 
-  // -- MESAJE (din formularul de Contact) --
+  // -- MESAJE (din formularele site-ului) --
   var msgData = [];
+  var msgSourceFilter = '';
   var MSG_STATUS = { nou: { t: 'Nou', c: '#00a8a8' }, citit: { t: 'Citit', c: '#f59e0b' }, rezolvat: { t: 'Rezolvat', c: '#4ade80' } };
+  var MSG_SOURCES = [
+    { k: '', label: 'Toate' },
+    { k: 'contact', label: 'Contact' },
+    { k: 'oferta', label: 'Cerere ofertă' },
+    { k: 'demo', label: 'Demo' },
+    { k: 'promo', label: 'Promo' },
+    { k: 'giveaway', label: 'Giveaway' },
+    { k: 'referral', label: 'Recomandare' }
+  ];
+  var MSG_SOURCE_META = { contact: { t: 'Contact', c: '#38bdf8' }, oferta: { t: 'Ofertă', c: '#a78bfa' }, demo: { t: 'Demo', c: '#34d399' }, promo: { t: 'Promo', c: '#fb923c' }, giveaway: { t: 'Giveaway', c: '#f472b6' }, referral: { t: 'Recomandare', c: '#facc15' } };
+  function msgServiceText(m) {
+    if (m && m.service) return String(m.service);
+    var p = String((m && m.preview) || '');
+    var i = p.indexOf(' — ');
+    return i > 0 ? p.slice(0, i) : '';
+  }
+  function msgSourceKey(m) {
+    var s = msgServiceText(m).toLowerCase();
+    if (/demo/.test(s)) return 'demo';
+    if (/giveaway/.test(s)) return 'giveaway';
+    if (/referral|recomand/.test(s)) return 'referral';
+    if (/promo/.test(s)) return 'promo';
+    if (/ofert/.test(s)) return 'oferta';
+    return 'contact';
+  }
+  function setMsgSource(k, btn) {
+    msgSourceFilter = k;
+    var bar = document.getElementById('msg-filter');
+    if (bar) bar.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+    renderMsgList();
+  }
+  function renderMsgFilter() {
+    var bar = document.getElementById('msg-filter');
+    if (!bar) return;
+    bar.innerHTML = MSG_SOURCES.map(function (s) {
+      var n = s.k ? msgData.filter(function (m) { return msgSourceKey(m) === s.k; }).length : msgData.length;
+      if (s.k && n === 0) return '';
+      return '<button class="filter-btn' + (s.k === msgSourceFilter ? ' active' : '') + '" onclick="setMsgSource(\'' + s.k + '\',this)">' + s.label + ' <span style="opacity:.7;">' + n + '</span></button>';
+    }).join('');
+  }
 
   async function loadMessages() {
     const list = document.getElementById('msg-list');
@@ -7703,6 +7746,7 @@
       const r = await fetch('/api/messages?token=' + encodeURIComponent(adminToken));
       const d = await r.json();
       msgData = d.messages || [];
+      renderMsgFilter();
       renderMsgList();
       updateMsgBadge();
     } catch (e) { list.innerHTML = '<div style="color:#f87171">Eroare la &icirc;ncărcare.</div>'; }
@@ -7712,17 +7756,22 @@
     const list = document.getElementById('msg-list');
     const stats = document.getElementById('msg-stats');
     if (!list) return;
-    const newCount = msgData.filter(function (m) { return (m.status || 'nou') === 'nou'; }).length;
-    if (stats) stats.innerHTML = msgData.length + ' mesaje &middot; <span style="color:#00a8a8;">' + newCount + ' noi</span>';
-    if (!msgData.length) { list.innerHTML = '<div style="color:var(--muted)">Niciun mesaj &icirc;ncă. Apar aici mesajele trimise din formularul de Contact al site-ului.</div>'; return; }
-    list.innerHTML = msgData.map(function (m) {
+    renderMsgFilter();
+    const shown = msgSourceFilter ? msgData.filter(function (m) { return msgSourceKey(m) === msgSourceFilter; }) : msgData;
+    const newCount = shown.filter(function (m) { return (m.status || 'nou') === 'nou'; }).length;
+    if (stats) stats.innerHTML = shown.length + ' mesaje' + (msgSourceFilter ? ' (filtrate)' : '') + ' &middot; <span style="color:#00a8a8;">' + newCount + ' noi</span>';
+    if (!shown.length) { list.innerHTML = '<div style="color:var(--muted)">' + (msgData.length ? 'Niciun mesaj pentru acest filtru.' : 'Niciun mesaj &icirc;ncă. Apar aici mesajele trimise din formularele site-ului.') + '</div>'; return; }
+    list.innerHTML = shown.map(function (m) {
       const when = m.createdAt ? new Date(m.createdAt).toLocaleString('ro-RO') : '';
       const st = MSG_STATUS[m.status || 'nou'] || MSG_STATUS.nou;
+      const src = MSG_SOURCE_META[msgSourceKey(m)] || MSG_SOURCE_META.contact;
       return '<div class="chatai-item" onclick="viewMessage(\'' + esc(m.id) + '\')" style="background:var(--bg2);border:1px solid var(--border-soft);border-radius:9px;padding:11px 13px;cursor:pointer;">'
         + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">'
         + '<div style="font-weight:600;color:var(--text);font-size:.9rem;word-break:break-all;">' + esc(m.name || m.email || '(anonim)') + '</div>'
         + '<span style="flex:0 0 auto;font-size:.66rem;font-weight:700;color:#06121a;background:' + st.c + ';padding:2px 8px;border-radius:20px;">' + st.t + '</span></div>'
-        + '<div style="color:var(--muted);font-size:.78rem;margin:3px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + esc(m.preview || '') + '</div>'
+        + '<div style="display:flex;align-items:center;gap:6px;margin:4px 0;">'
+        + '<span style="flex:0 0 auto;font-size:.64rem;font-weight:700;color:' + src.c + ';border:1px solid ' + src.c + ';padding:1px 7px;border-radius:20px;">' + src.t + '</span>'
+        + '<span style="color:var(--muted);font-size:.78rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + esc(m.preview || '') + '</span></div>'
         + '<div style="color:var(--muted);font-size:.72rem;">' + when + '</div>'
         + '</div>';
     }).join('');
