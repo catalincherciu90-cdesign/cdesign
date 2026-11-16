@@ -844,6 +844,7 @@ const DEFAULT_PROJECTS = [
   { id: 'cosmin-tatulescu', emoji: '📷', tag: 'Fotografie', title: 'Cosmin Tătulescu — ședințe foto de Crăciun', description: 'Site de prezentare și rezervare pentru ședințele foto de Crăciun ale unui fotograf din Brașov. Explică pe scurt experiența, afișează prețurile pe perioade și arată în calendar câte locuri libere mai sunt în fiecare zi.', image: '/portofoliu/cosmin-tatulescu.jpg', link: 'https://cosmintatulescu.ro', detail: '/portofoliu/cosmin-tatulescu', order: 1 },
   { id: 'traditum', emoji: '🎂', tag: 'Cofetărie', title: 'Traditum By Victoria — cofetărie artizanală', description: 'Site de prezentare pentru o cofetărie artizanală din Ilfov. Produsele sunt grupate pe categorii, iar site-ul pune în față galeria cu evenimente reale și cererea de ofertă pentru torturi și candy bar.', image: '/portofoliu/traditum.jpg', link: 'https://traditumbyvictoria.ro', detail: '/portofoliu/traditum', order: 2 },
   { id: 'mrdtf', emoji: '🖨️', tag: 'Print DTF', title: 'Mr.DTF — print DTF la metru liniar', description: 'Site pentru un atelier de print DTF din București. Prețurile pe metru liniar sunt vizibile din primul ecran, un calculator arată câte modele încap pe un metru, iar comanda se trimite dintr-un formular rapid.', image: '/portofoliu/mrdtf.jpg', link: 'https://mrdtf.ro', detail: '/portofoliu/mrdtf', order: 3 },
+  { id: 'comstore', emoji: '🛠️', tag: 'Acoperișuri', title: 'ComStore — montaj și renovare acoperișuri', description: 'Site de prezentare pentru o firmă de montaj și renovare acoperișuri. Pune în față serviciile, proiectele realizate și brandurile partenere, iar fiecare secțiune duce spre o cerere de ofertă.', image: '/portofoliu/comstore.jpg', link: 'https://comstore-acoperisuri.ro', detail: '/portofoliu/comstore', order: 4 },
 ];
 
 // ── STUDII DE CAZ (pagina-profil a fiecărui proiect) ─────────
@@ -928,6 +929,24 @@ const PROJECT_CASE_STUDIES = {
       ['/portofoliu/mrdtf/06-formular-comanda.jpg', 'Formular de comandă', 'Fereastră cu tot ce trebuie pentru o comandă: date de contact, metri liniari, persoană fizică sau juridică, date de facturare, link spre grafică și detalii. Un mesaj explică pașii de după trimitere: confirmarea fișierului, factura și intrarea în print după plată.']
     ],
     features: ['Prețuri pe trepte de cantitate, afișate din primul ecran', 'Calculator de încadrare pe 1 metru liniar, pe formate', 'Tricou interactiv cu drag and drop', 'Formular de comandă cu date de facturare pentru PF și PJ', 'Butoane rapide de apel și contact', 'Integrare video TikTok', 'Blog cu sfaturi tehnice']
+  },
+  'comstore': {
+    title: 'ComStore Acoperișuri', subtitle: 'Site de prezentare pentru o firmă de montaj și renovare acoperișuri',
+    tag: 'Site de prezentare', link: 'https://comstore-acoperisuri.ro', cover: '/portofoliu/comstore/01-hero.jpg',
+    meta: [['Client', 'ComStore Construct SRL'], ['Domeniu', 'Montaj & renovare acoperișuri'], ['Tip proiect', 'Site de prezentare']],
+    about: [
+      'ComStore lucrează de la măsurătoare până la montajul final, inclusiv deviz și randare 3D a acoperișului. Clientul tipic își face casă sau își renovează acoperișul și vrea să știe dacă poate avea încredere în echipă. Site-ul răspunde la asta prin servicii explicate clar, proiecte reale, testimoniale și branduri cunoscute.',
+      'Am folosit culorile logo-ului, galben și gri antracit, cu fotografii mari de acoperișuri. Butonul „Cere ofertă” apare permanent în meniu, iar telefonul și WhatsApp-ul sunt la un click distanță.'
+    ],
+    sections: [
+      ['/portofoliu/comstore/01-hero.jpg', 'Hero', 'Slider pe toată lățimea ecranului, cu mesajul „Tot ce ai nevoie pentru acoperișul tău” și două acțiuni: cere o ofertă sau vezi produsele. Sub el, o bandă galbenă cu butoane de apel și de solicitare ofertă.'],
+      ['/portofoliu/comstore/02-servicii.jpg', 'Serviciile noastre', 'Cinci servicii prezentate în carduri cu fotografie și o descriere scurtă: montaj, renovare, măsurători, creare deviz și randări 3D.'],
+      ['/portofoliu/comstore/03-6-motive.jpg', '6 motive să ne alegi', 'Secțiune pe fundal închis, cu șase argumente numerotate: expertiză, renovări de calitate, măsurători precise, devize clare, respectarea termenelor și garanție.'],
+      ['/portofoliu/comstore/04-proiecte-realizate.jpg', 'Proiecte realizate', 'Lucrări reale, fiecare cu numele materialului folosit (de exemplu tablă dublufalț Lindab), ca vizitatorul să vadă cum arată produsul montat.'],
+      ['/portofoliu/comstore/05-testimoniale.jpg', 'Testimoniale', 'Șase recenzii scurte, cu prenume, inițiala numelui și localitate.'],
+      ['/portofoliu/comstore/06-cta-parteneri-footer.jpg', 'Îndemn, parteneri și footer', 'O bandă galbenă cu îndemnul final spre ofertă, apoi logo-urile partenerilor (Lindab, Velux, Metigla, Wetterbest). Footer-ul conține datele firmei, contactul și meniul complet.']
+    ],
+    features: ['Slider în hero cu campanii (de exemplu voucher)', 'Cerere de ofertă prin formular', 'Buton WhatsApp și apel direct', 'Pagini separate pentru produse, proiecte, campanii și blog', 'Secțiune de parteneri']
   }
 };
 
@@ -1458,6 +1477,7 @@ export default {
         { loc: '/portofoliu/cosmin-tatulescu', cf: 'monthly', pr: '0.7' },
         { loc: '/portofoliu/traditum',        cf: 'monthly', pr: '0.7' },
         { loc: '/portofoliu/mrdtf',           cf: 'monthly', pr: '0.7' },
+        { loc: '/portofoliu/comstore',        cf: 'monthly', pr: '0.7' },
         { loc: '/blog',                       cf: 'weekly',  pr: '0.7' },
         { loc: '/demos',                      cf: 'monthly', pr: '0.7' },
         { loc: '/cere-oferta',                cf: 'monthly', pr: '0.8' },
