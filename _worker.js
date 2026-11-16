@@ -845,6 +845,7 @@ const DEFAULT_PROJECTS = [
   { id: 'traditum', emoji: '🎂', tag: 'Cofetărie', title: 'Traditum By Victoria — cofetărie artizanală', description: 'Site de prezentare pentru o cofetărie artizanală din Ilfov. Produsele sunt grupate pe categorii, iar site-ul pune în față galeria cu evenimente reale și cererea de ofertă pentru torturi și candy bar.', image: '/portofoliu/traditum.jpg', link: 'https://traditumbyvictoria.ro', detail: '/portofoliu/traditum', order: 2 },
   { id: 'mrdtf', emoji: '🖨️', tag: 'Print DTF', title: 'Mr.DTF — print DTF la metru liniar', description: 'Site pentru un atelier de print DTF din București. Prețurile pe metru liniar sunt vizibile din primul ecran, un calculator arată câte modele încap pe un metru, iar comanda se trimite dintr-un formular rapid.', image: '/portofoliu/mrdtf.jpg', link: 'https://mrdtf.ro', detail: '/portofoliu/mrdtf', order: 3 },
   { id: 'comstore', emoji: '🛠️', tag: 'Acoperișuri', title: 'ComStore — montaj și renovare acoperișuri', description: 'Site de prezentare pentru o firmă de montaj și renovare acoperișuri. Pune în față serviciile, proiectele realizate și brandurile partenere, iar fiecare secțiune duce spre o cerere de ofertă.', image: '/portofoliu/comstore.jpg', link: 'https://comstore-acoperisuri.ro', detail: '/portofoliu/comstore', order: 4 },
+  { id: 'apg-garage', emoji: '🔧', tag: 'Service auto', title: 'APG Garage — service auto', description: 'Site pentru un service auto din Militari, București. Prezintă serviciile și prețurile orientative, iar clienții își pot face cont pentru a se programa online.', image: '/portofoliu/apg-garage.jpg', detail: '/portofoliu/apg-garage', order: 5 },
 ];
 
 // ── STUDII DE CAZ (pagina-profil a fiecărui proiect) ─────────
@@ -947,6 +948,24 @@ const PROJECT_CASE_STUDIES = {
       ['/portofoliu/comstore/06-cta-parteneri-footer.jpg', 'Îndemn, parteneri și footer', 'O bandă galbenă cu îndemnul final spre ofertă, apoi logo-urile partenerilor (Lindab, Velux, Metigla, Wetterbest). Footer-ul conține datele firmei, contactul și meniul complet.']
     ],
     features: ['Slider în hero cu campanii (de exemplu voucher)', 'Cerere de ofertă prin formular', 'Buton WhatsApp și apel direct', 'Pagini separate pentru produse, proiecte, campanii și blog', 'Secțiune de parteneri']
+  },
+  'apg-garage': {
+    title: 'APG Garage', subtitle: 'Site de prezentare cu cont de client și programări online pentru un service auto',
+    tag: 'Site de prezentare', cover: '/portofoliu/apg-garage/01-hero.jpg',
+    meta: [['Client', 'APG Garage'], ['Locație', 'Militari, Sector 6, București'], ['Tip proiect', 'Site de prezentare cu programări online']],
+    about: [
+      'La un service auto, oamenii vor să afle repede trei lucruri: ce reparații se fac, cam cât costă și când pot veni. Site-ul răspunde la toate trei. Are o listă de prețuri orientative pe categorii și un sistem de programare online, ca clientul să nu mai stea la coadă.',
+      'Am ales un design întunecat, aproape negru, cu fotografii dramatice din atelier și titluri condensate, cu majuscule. Atmosfera e una de garaj profesionist. Butonul „Programează-te acum” apare de două ori pe prima pagină, iar WhatsApp-ul e disponibil permanent.'
+    ],
+    sections: [
+      ['/portofoliu/apg-garage/01-hero.jpg', 'Hero', 'Fotografie pe tot ecranul, cu un mecanic la lucru, numele service-ului scris mare și două acțiuni: programare online și prețuri.'],
+      ['/portofoliu/apg-garage/02-servicii-si-cifre.jpg', 'Servicii și cifre', 'Patru servicii principale în carduri simple (revizie completă, diagnoză computerizată, sistem de frânare, suspensie și direcție), cu link spre lista completă. Sub ele, trei cifre: 10+ ani experiență, 500+ clienți, 100% transparență.'],
+      ['/portofoliu/apg-garage/03-recenzii.jpg', 'Recenzii', 'Secțiune pentru părerile clienților, cu stele și citat.'],
+      ['/portofoliu/apg-garage/04-cta-si-program.jpg', 'Îndemn și program de lucru', 'O a doua fotografie de atelier, cu îndemnul „Mașina ta, pe mâini bune”, urmată de programul de lucru afișat clar.'],
+      ['/portofoliu/apg-garage/05-footer.jpg', 'Footer', 'Serviciile, zonele deservite și mărcile reparate, gândite și pentru căutările locale (service auto Militari, Sector 6), plus datele firmei și paginile legale.'],
+      ['/portofoliu/apg-garage/06-pagina-preturi.jpg', 'Pagina Prețuri', 'Tarife orientative grupate pe categorii, de exemplu revizii sau frâne, cu mențiunea dacă piesele se plătesc separat. O notă explică faptul că prețul final se stabilește după diagnoză.']
+    ],
+    features: ['Cont de client și programare online', 'Listă de prețuri orientative pe categorii', 'Pagini separate pentru fiecare serviciu', 'Buton WhatsApp permanent', 'Texte de footer optimizate pentru căutări locale']
   }
 };
 
@@ -1032,8 +1051,8 @@ h1,h2,h3{font-family:'Poppins',sans-serif;color:var(--ink);letter-spacing:-.02em
   <h1>${esc(cs.title)}</h1>
   <p class="lead">${esc(cs.subtitle)}.</p>
   <div class="hero-actions">
-    <a href="${esc(cs.link)}" target="_blank" rel="noopener" class="btn btn-p">Vezi site-ul live ↗</a>
-    <a href="/cere-oferta" class="btn btn-o">Vreau un site similar</a>
+    ${cs.link ? `<a href="${esc(cs.link)}" target="_blank" rel="noopener" class="btn btn-p">Vezi site-ul live ↗</a>` : ''}
+    <a href="/cere-oferta" class="btn ${cs.link ? 'btn-o' : 'btn-p'}">Vreau un site similar</a>
   </div>
   <div class="cs-meta">${metaRows}</div>
 </div></section>
@@ -1046,7 +1065,7 @@ h1,h2,h3{font-family:'Poppins',sans-serif;color:var(--ink);letter-spacing:-.02em
   <p>Îți construim un site clar, rapid și făcut să aducă clienți — preț fix, livrat în 14 zile.</p>
   <a href="/cere-oferta" class="btn btn-p">Cere o ofertă gratuită</a>
 </section>
-<footer class="foot">© C Design · <a href="/" style="color:var(--blue)">c-design.ro</a> · <a href="${esc(cs.link)}" target="_blank" rel="noopener" style="color:var(--blue)">${esc(cs.link.replace(/^https?:\/\//, ''))}</a></footer>
+<footer class="foot">© C Design · <a href="/" style="color:var(--blue)">c-design.ro</a>${cs.link ? ` · <a href="${esc(cs.link)}" target="_blank" rel="noopener" style="color:var(--blue)">${esc(cs.link.replace(/^https?:\/\//, ''))}</a>` : ''}</footer>
 </body></html>`;
 }
 
@@ -1478,6 +1497,7 @@ export default {
         { loc: '/portofoliu/traditum',        cf: 'monthly', pr: '0.7' },
         { loc: '/portofoliu/mrdtf',           cf: 'monthly', pr: '0.7' },
         { loc: '/portofoliu/comstore',        cf: 'monthly', pr: '0.7' },
+        { loc: '/portofoliu/apg-garage',      cf: 'monthly', pr: '0.7' },
         { loc: '/blog',                       cf: 'weekly',  pr: '0.7' },
         { loc: '/demos',                      cf: 'monthly', pr: '0.7' },
         { loc: '/cere-oferta',                cf: 'monthly', pr: '0.8' },
