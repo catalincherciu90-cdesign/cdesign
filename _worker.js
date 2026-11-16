@@ -842,6 +842,7 @@ async function sendContactNotification(contact, env) {
 const DEFAULT_PROJECTS = [
   { id: 'expotigla', emoji: '🏠', tag: 'Magazin acoperișuri', title: 'ExpoTigla — magazin online acoperișuri', description: 'Magazin online pentru un furnizor de sisteme complete de acoperiș: țiglă metalică, tablă fălțuită, panouri sandwich, sisteme pluviale și accesorii. Catalog cu prețuri, configurator „Sistem complet", cerere de ofertă și consultanță tehnică — tot ce îi trebuie clientului ca să ajungă rapid la o ofertă.', image: '/portofoliu/expotigla.jpg', link: 'https://expotigla.ro', detail: '/portofoliu/expotigla', order: 0 },
   { id: 'cosmin-tatulescu', emoji: '📷', tag: 'Fotografie', title: 'Cosmin Tătulescu — ședințe foto de Crăciun', description: 'Site de prezentare și rezervare pentru ședințele foto de Crăciun ale unui fotograf din Brașov. Explică pe scurt experiența, afișează prețurile pe perioade și arată în calendar câte locuri libere mai sunt în fiecare zi.', image: '/portofoliu/cosmin-tatulescu.jpg', link: 'https://cosmintatulescu.ro', detail: '/portofoliu/cosmin-tatulescu', order: 1 },
+  { id: 'traditum', emoji: '🎂', tag: 'Cofetărie', title: 'Traditum By Victoria — cofetărie artizanală', description: 'Site de prezentare pentru o cofetărie artizanală din Ilfov. Produsele sunt grupate pe categorii, iar site-ul pune în față galeria cu evenimente reale și cererea de ofertă pentru torturi și candy bar.', image: '/portofoliu/traditum.jpg', link: 'https://traditumbyvictoria.ro', detail: '/portofoliu/traditum', order: 2 },
 ];
 
 // ── STUDII DE CAZ (pagina-profil a fiecărui proiect) ─────────
@@ -889,6 +890,25 @@ const PROJECT_CASE_STUDIES = {
       ['/portofoliu/cosmin-tatulescu/09-contact-si-final.jpg', 'Contact și final', 'Formular simplu cu acord pentru prelucrarea datelor, telefon, email și rețele sociale. Pagina se încheie cu un mesaj de sărbători și încă un buton spre zilele libere.']
     ],
     features: ['Calendar de rezervări cu locuri libere pe zi', 'Prețuri diferite în funcție de perioadă', 'Opțiune de ședință cadou', 'Versiune în română și engleză', 'Hartă Google încărcată doar cu acordul vizitatorului', 'FAQ în acordeon', 'Formular de contact cu acord GDPR']
+  },
+  'traditum': {
+    title: 'Traditum By Victoria', subtitle: 'Site de prezentare pentru o cofetărie artizanală, cu cerere de ofertă',
+    tag: 'Site de prezentare', link: 'https://traditumbyvictoria.ro', cover: '/portofoliu/traditum/01-hero.jpg',
+    meta: [['Client', 'Traditum By Victoria'], ['Zonă', 'București și Ilfov'], ['Tip proiect', 'Site de prezentare cu cerere de ofertă']],
+    about: [
+      'Traditum By Victoria lucrează în principal la comandă: torturi personalizate, mese dulci pentru nunți și botezuri, cutii cadou. Majoritatea produselor nu au un preț fix, așa că site-ul nu e un magazin online. Rolul lui e să inspire încredere și să ducă vizitatorul spre o cerere de ofertă.',
+      'Am mers pe o paletă caldă, crem și maro închis, cu accente aurii, și pe titluri serif care se potrivesc cu ideea de „gust de altădată”. Fotografiile cu produse ocupă cea mai mare parte din pagină, iar butonul „Solicită ofertă” apare permanent în meniu.'
+    ],
+    sections: [
+      ['/portofoliu/traditum/01-hero.jpg', 'Hero', 'Mesajul principal, „Deserturi artizanale, cu gustul de altădată”, însoțit de o scurtă descriere a ofertei și de două acțiuni: vezi produsele sau solicită o ofertă.'],
+      ['/portofoliu/traditum/02-categorii-produse.jpg', 'Categorii de produse', 'Cinci categorii (torturi, candy bar, cutii cadou, taguri, mărțișoare), fiecare cu fotografie, descriere scurtă și preț sau eticheta „Preț la cerere”, pentru produsele care se calculează în funcție de eveniment.'],
+      ['/portofoliu/traditum/03-despre-noi-si-cifre.jpg', 'Despre noi și cifre', 'O secțiune scurtă despre laborator și filozofia cofetăriei, cu patru avantaje (calitate, torturi personalizate, comenzi online, livrare la domiciliu). Sub ea, o bandă cu cifre: 10+ ani de experiență, 80+ rețete, 120+ sortimente, 2500+ clienți.'],
+      ['/portofoliu/traditum/04-recenzii.jpg', 'Recenzii', 'Patru recenzii scurte de la clienți, cu link spre pagina cu toate recenziile.'],
+      ['/portofoliu/traditum/05-cta-si-footer.jpg', 'Îndemn final și footer', 'Un bloc închis la culoare care invită la o ofertă personalizată pentru evenimente. Footer-ul conține adresa, telefonul, emailul, linkurile principale și paginile legale.'],
+      ['/portofoliu/traditum/06-pagina-galerie.jpg', 'Pagina Galerie', 'Grilă de fotografii cu mese dulci și deserturi pregătite pentru evenimentele clienților. Le arată vizitatorilor rezultate reale, nu poze de stoc.'],
+      ['/portofoliu/traditum/07-pagina-contact-oferta.jpg', 'Pagina Contact și ofertă', 'Formular de cerere de ofertă cu câmpuri pentru tipul evenimentului și detalii (dată, număr de porții, temă), alături de datele de contact, programul pe zile și un buton direct spre WhatsApp.']
+    ],
+    features: ['Catalog pe categorii, cu prețuri sau „preț la cerere”', 'Formular de cerere de ofertă adaptat pentru evenimente', 'Buton de contact rapid pe WhatsApp', 'Galerie foto cu lucrări reale', 'Pagină de recenzii', 'Program de lucru afișat pe zile', 'Întrebări frecvente pe pagina de contact']
   }
 };
 
@@ -1417,6 +1437,7 @@ export default {
         { loc: '/abonament-lunar',            cf: 'monthly', pr: '0.8' },
         { loc: '/portofoliu/expotigla',       cf: 'monthly', pr: '0.7' },
         { loc: '/portofoliu/cosmin-tatulescu', cf: 'monthly', pr: '0.7' },
+        { loc: '/portofoliu/traditum',        cf: 'monthly', pr: '0.7' },
         { loc: '/blog',                       cf: 'weekly',  pr: '0.7' },
         { loc: '/demos',                      cf: 'monthly', pr: '0.7' },
         { loc: '/cere-oferta',                cf: 'monthly', pr: '0.8' },
