@@ -4146,6 +4146,15 @@ Cerințe titluri:
         html = injectText(html, 'proces-sub-el',      'p',  settings.procesSub);
         html = injectText(html, 'testi-heading',      'h2', settings.testiTitle);
         html = injectText(html, 'contact-heading',    'h2', settings.contactTitle);
+        // Hero — texte rotative configurabile din admin (câte unul pe linie)
+        try {
+          const rot = String(settings.heroRotate || '').split('\n').map(s => s.trim()).filter(Boolean);
+          if (rot.length) {
+            html = html.replace('<!--HERO_ROTATE_DATA-->', '<script>window.__HERO_ROTATE=' + JSON.stringify(rot).replace(/</g, '\\u003c') + ';</script>');
+            const first = rot[0].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            html = html.replace(/(<span class="hero-rot" id="heroRot">)[\s\S]*?(<\/span>)/, `$1${first}$2`);
+          }
+        } catch {}
         // LCP: imaginea hero injectată server-side + preload — browserul o
         // descarcă imediat, nu după fetch-ul client-side de site-settings
         try {
