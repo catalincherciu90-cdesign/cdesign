@@ -3028,6 +3028,11 @@
                 <div class="f-label" style="font-size:.7rem;">Hero — Descriere</div>
                 <textarea class="f-input" id="h-heroDesc" rows="2" placeholder="De la prima ta afacere până la un brand consacrat..."></textarea>
               </div>
+              <div>
+                <div class="f-label" style="font-size:.7rem;">Hero — Texte rotative <span style="color:var(--muted);font-weight:400;">(se schimbă automat; câte unul pe linie; min. 2)</span></div>
+                <textarea class="f-input" id="h-heroRotate" rows="4" placeholder="clienți noi&#10;mai multe vânzări&#10;rezervări online&#10;comenzi noi"></textarea>
+                <div style="font-size:.68rem;color:var(--muted);margin-top:3px;">Apare după „Site-uri care aduc…" și se rotește. Lasă gol pentru variantele implicite.</div>
+              </div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
                 <div>
                   <div class="f-label" style="font-size:.7rem;">Servicii — Titlu H2</div>
@@ -4786,6 +4791,7 @@
   const HEADING_FIELDS = [
     {key:'heroTitle',    id:'h-heroTitle',     colorKey:'heroTitleColor',     colorId:'hc-heroTitle'},
     {key:'heroDesc',     id:'h-heroDesc'},
+    {key:'heroRotate',   id:'h-heroRotate'},
     {key:'servicesTitle',id:'h-servicesTitle', colorKey:'servicesTitleColor', colorId:'hc-servicesTitle'},
     {key:'servicesSub',  id:'h-servicesSub'},
     {key:'indTitle',     id:'h-indTitle',      colorKey:'indTitleColor',      colorId:'hc-indTitle'},

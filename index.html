@@ -306,6 +306,7 @@
     .btn-primary,.btn-ghost{width:100%;justify-content:center}
   }
 </style>
+<!--HERO_ROTATE_DATA-->
 </head>
 <body>
 
@@ -664,7 +665,9 @@
     (function(){
       var el = document.getElementById('heroRot');
       if(!el) return;
-      var words = ['clienți noi', 'mai multe vânzări', 'rezervări online', 'comenzi noi', 'mai mulți clienți'];
+      var custom = window.__HERO_ROTATE;
+      var words = (Array.isArray(custom) && custom.length) ? custom : ['clienți noi', 'mai multe vânzări', 'rezervări online', 'comenzi noi', 'mai mulți clienți'];
+      if(words.length < 2) return;
       var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if(reduce) return;
       var i = 0;
