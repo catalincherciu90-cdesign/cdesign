@@ -843,6 +843,7 @@ const DEFAULT_PROJECTS = [
   { id: 'expotigla', emoji: '🏠', tag: 'Magazin acoperișuri', title: 'ExpoTigla — magazin online acoperișuri', description: 'Magazin online pentru un furnizor de sisteme complete de acoperiș: țiglă metalică, tablă fălțuită, panouri sandwich, sisteme pluviale și accesorii. Catalog cu prețuri, configurator „Sistem complet", cerere de ofertă și consultanță tehnică — tot ce îi trebuie clientului ca să ajungă rapid la o ofertă.', image: '/portofoliu/expotigla.jpg', link: 'https://expotigla.ro', detail: '/portofoliu/expotigla', order: 0 },
   { id: 'cosmin-tatulescu', emoji: '📷', tag: 'Fotografie', title: 'Cosmin Tătulescu — ședințe foto de Crăciun', description: 'Site de prezentare și rezervare pentru ședințele foto de Crăciun ale unui fotograf din Brașov. Explică pe scurt experiența, afișează prețurile pe perioade și arată în calendar câte locuri libere mai sunt în fiecare zi.', image: '/portofoliu/cosmin-tatulescu.jpg', link: 'https://cosmintatulescu.ro', detail: '/portofoliu/cosmin-tatulescu', order: 1 },
   { id: 'traditum', emoji: '🎂', tag: 'Cofetărie', title: 'Traditum By Victoria — cofetărie artizanală', description: 'Site de prezentare pentru o cofetărie artizanală din Ilfov. Produsele sunt grupate pe categorii, iar site-ul pune în față galeria cu evenimente reale și cererea de ofertă pentru torturi și candy bar.', image: '/portofoliu/traditum.jpg', link: 'https://traditumbyvictoria.ro', detail: '/portofoliu/traditum', order: 2 },
+  { id: 'mrdtf', emoji: '🖨️', tag: 'Print DTF', title: 'Mr.DTF — print DTF la metru liniar', description: 'Site pentru un atelier de print DTF din București. Prețurile pe metru liniar sunt vizibile din primul ecran, un calculator arată câte modele încap pe un metru, iar comanda se trimite dintr-un formular rapid.', image: '/portofoliu/mrdtf.jpg', link: 'https://mrdtf.ro', detail: '/portofoliu/mrdtf', order: 3 },
 ];
 
 // ── STUDII DE CAZ (pagina-profil a fiecărui proiect) ─────────
@@ -909,6 +910,24 @@ const PROJECT_CASE_STUDIES = {
       ['/portofoliu/traditum/07-pagina-contact-oferta.jpg', 'Pagina Contact și ofertă', 'Formular de cerere de ofertă cu câmpuri pentru tipul evenimentului și detalii (dată, număr de porții, temă), alături de datele de contact, programul pe zile și un buton direct spre WhatsApp.']
     ],
     features: ['Catalog pe categorii, cu prețuri sau „preț la cerere”', 'Formular de cerere de ofertă adaptat pentru evenimente', 'Buton de contact rapid pe WhatsApp', 'Galerie foto cu lucrări reale', 'Pagină de recenzii', 'Program de lucru afișat pe zile', 'Întrebări frecvente pe pagina de contact']
+  },
+  'mrdtf': {
+    title: 'Mr.DTF', subtitle: 'Site de prezentare cu formular de comandă pentru print DTF la metru liniar',
+    tag: 'Site de prezentare', link: 'https://mrdtf.ro', cover: '/portofoliu/mrdtf/01-hero-si-preturi.jpg',
+    meta: [['Client', 'Mr.DTF (Unilevel Network SRL)'], ['Locație', 'București'], ['Tip proiect', 'Site de prezentare cu formular de comandă']],
+    about: [
+      'Clienții Mr.DTF sunt în mare parte firme și creatori care personalizează textile. Ei vor să afle repede trei lucruri: cât costă, cât încape pe folie și cum trimit fișierul. Site-ul răspunde la toate trei pe o singură pagină, fără pași inutili.',
+      'Identitatea pornește de la logo-ul colorat, în stil graffiti. Restul designului e curat și luminos, cu accente galbene pe butoanele de comandă și titluri mari, ușor de citit. Pentru partea de joc am adăugat un tricou interactiv în hero: vizitatorul trage un print peste tricou și vede pe loc cum ar arăta.'
+    ],
+    sections: [
+      ['/portofoliu/mrdtf/01-hero-si-preturi.jpg', 'Hero și prețuri', 'Mesajul principal, „Printuri DTF de calitate”, scoate în față avantajul lățimii de 90 cm. Imediat dedesubt sunt cele cinci trepte de preț pe metru liniar, de la 70 la 55 lei. Treapta cea mai avantajoasă e evidențiată.'],
+      ['/portofoliu/mrdtf/02-tricou-interactiv.jpg', 'Tricou interactiv', 'Vizitatorul alege unul dintre cele cinci printuri și îl trage peste tricou. Un element mic, care face pagina memorabilă și arată direct ce face produsul.'],
+      ['/portofoliu/mrdtf/03-calculator-1-ml.jpg', 'Calculator „Ce încape pe 1 ml”', 'Alegi formatul (A5, A4, A3 sau pătrate de 5–20 cm) și vezi câte bucăți încap pe un metru de folie, plus prețul estimat pe bucată la primele și la ultimele trepte de preț. O schemă vizuală arată așezarea modelelor pe folie.'],
+      ['/portofoliu/mrdtf/04-ce-facem-si-cum-functioneaza.jpg', 'Ce facem și cum funcționează', 'O grilă cu fotografii din atelier (folie, role, culori, imprimanta Epson) și un proces în patru pași: trimiți comanda, noi imprimăm, primești coletul, tu aplici.'],
+      ['/portofoliu/mrdtf/05-blog-ridicare-footer.jpg', 'Blog, ridicare comenzi și footer', 'Două carduri: unul trimite spre blog (sfaturi de aplicare, pregătire fișiere, spălare), celălalt spre adresa de ridicare, cu hartă. Footer-ul conține contactul, programul, datele firmei și paginile legale.'],
+      ['/portofoliu/mrdtf/06-formular-comanda.jpg', 'Formular de comandă', 'Fereastră cu tot ce trebuie pentru o comandă: date de contact, metri liniari, persoană fizică sau juridică, date de facturare, link spre grafică și detalii. Un mesaj explică pașii de după trimitere: confirmarea fișierului, factura și intrarea în print după plată.']
+    ],
+    features: ['Prețuri pe trepte de cantitate, afișate din primul ecran', 'Calculator de încadrare pe 1 metru liniar, pe formate', 'Tricou interactiv cu drag and drop', 'Formular de comandă cu date de facturare pentru PF și PJ', 'Butoane rapide de apel și contact', 'Integrare video TikTok', 'Blog cu sfaturi tehnice']
   }
 };
 
@@ -1438,6 +1457,7 @@ export default {
         { loc: '/portofoliu/expotigla',       cf: 'monthly', pr: '0.7' },
         { loc: '/portofoliu/cosmin-tatulescu', cf: 'monthly', pr: '0.7' },
         { loc: '/portofoliu/traditum',        cf: 'monthly', pr: '0.7' },
+        { loc: '/portofoliu/mrdtf',           cf: 'monthly', pr: '0.7' },
         { loc: '/blog',                       cf: 'weekly',  pr: '0.7' },
         { loc: '/demos',                      cf: 'monthly', pr: '0.7' },
         { loc: '/cere-oferta',                cf: 'monthly', pr: '0.8' },
