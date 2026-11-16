@@ -101,14 +101,19 @@
   .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Poppins',sans-serif;font-weight:600;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:16px}
   .eyebrow::before{content:'';width:26px;height:2px;background:var(--teal);border-radius:2px}
   /* hero */
-  .promo-hero{background:linear-gradient(160deg,#e9f6f6 0%,#fff 60%);padding:64px 24px 40px}
-  .ph-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1.1fr .9fr;gap:52px;align-items:center}
-  .ph-badge{display:inline-flex;align-items:center;gap:8px;background:#fff3d9;color:#9a6b00;font-family:'Poppins',sans-serif;font-weight:600;font-size:.82rem;letter-spacing:.02em;padding:8px 16px;border-radius:999px;margin-bottom:20px;border:1px solid #ffe3a8}
-  .promo-hero h1{font-family:'Poppins',sans-serif;font-weight:300;color:var(--ink);font-size:clamp(2.1rem,4.6vw,3.1rem);letter-spacing:-.02em;line-height:1.1;margin-bottom:16px}
-  .promo-hero h1 b{font-weight:700;color:var(--teal-dk)}
-  .promo-hero .sub{font-size:1.12rem;color:var(--body);line-height:1.6;margin-bottom:26px;max-width:520px}
-  .ph-cta{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
-  .ph-trust{font-family:'Poppins',sans-serif;font-size:.9rem;color:var(--muted)}
+  .promo-hero{position:relative;overflow:hidden;background:#0a1830 url('/promo-img/hero-bg.jpg') center/cover no-repeat;padding:92px 24px;min-height:clamp(460px,76vh,660px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+  .promo-hero::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,16,34,.5) 0%,rgba(6,16,34,.72) 100%);z-index:1}
+  .ph-content{position:relative;z-index:2;max-width:860px;margin:0 auto;display:flex;flex-direction:column;align-items:center}
+  .ph-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);color:#fff;font-family:'Poppins',sans-serif;font-weight:600;font-size:.82rem;letter-spacing:.02em;padding:8px 16px;border-radius:999px;margin-bottom:22px;border:1px solid rgba(255,255,255,.28);backdrop-filter:blur(6px)}
+  .promo-hero h1{font-family:'Poppins',sans-serif;font-weight:300;color:#fff;font-size:clamp(2.2rem,5vw,3.6rem);letter-spacing:-.02em;line-height:1.08;margin-bottom:18px}
+  .promo-hero h1 b{font-weight:700;color:#fff}
+  .promo-hero .sub{font-size:clamp(1rem,1.5vw,1.2rem);color:rgba(255,255,255,.88);line-height:1.6;margin-bottom:28px;max-width:620px}
+  .ph-cta{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+  .btn-light{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);color:#fff;font-family:'Poppins',sans-serif;font-weight:600;font-size:1.02rem;padding:15px 30px;border-radius:999px;border:1.5px solid rgba(255,255,255,.4);transition:background .2s,border-color .2s}
+  .btn-light:hover{background:rgba(255,255,255,.2);border-color:#fff}
+  .ph-trust{font-family:'Poppins',sans-serif;font-size:.9rem;color:rgba(255,255,255,.82)}
+  .price-sec{display:flex;justify-content:center;padding:0 24px;margin-top:-56px;position:relative;z-index:5}
+  .price-sec .price-card{max-width:470px;width:100%}
   /* price card */
   .price-card{background:linear-gradient(155deg,var(--teal),var(--teal-dk));border-radius:22px;padding:34px 32px;color:#fff;box-shadow:0 30px 70px -30px rgba(0,133,135,.7);position:relative;overflow:hidden}
   .price-card::after{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:rgba(255,255,255,.08);border-radius:50%}
@@ -210,7 +215,7 @@
   .pf-company{border-top:1px dashed var(--line);padding-top:14px;margin-bottom:2px}
   .pf-note{text-align:center;font-size:.82rem;color:var(--muted);margin-top:12px}
   .pf-success{background:rgba(0,170,172,.08);border:1px solid var(--teal);color:var(--teal-dk);border-radius:10px;padding:18px;text-align:center;font-size:.98rem;margin-top:14px;line-height:1.5}
-  @media(max-width:860px){.ph-inner{grid-template-columns:1fr;gap:36px}.pf-inner{grid-template-columns:1fr;gap:34px}}
+  @media(max-width:860px){.price-sec{margin-top:26px}.pf-inner{grid-template-columns:1fr;gap:34px}}
   /* ---------- FOOTER ---------- */
   .site-footer{background:#0c1016;color:#9aa6b2;padding:70px 24px 34px}
   .footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1.1fr;gap:44px}
@@ -266,7 +271,7 @@
       <nav class="nav-menu">
         <a href="/">Acasă</a>
         <a href="/servicii">Servicii</a>
-        <a href="/#portofoliu">Portofoliu</a>
+        <a href="/portofoliu">Portofoliu</a>
         <a href="/#testimoniale">Recenzii</a>
         <a href="/blog">Blog</a>
         <a href="/demos">Demo-uri</a>
@@ -287,7 +292,7 @@
     <button class="mm-close" id="mmClose" aria-label="Închide meniu">&times;</button>
     <a href="/">Acasă</a>
     <a href="/servicii">Servicii</a>
-    <a href="/#portofoliu">Portofoliu</a>
+    <a href="/portofoliu">Portofoliu</a>
     <a href="/#testimoniale">Recenzii</a>
     <a href="/blog">Blog</a>
     <a href="/demos">Demo-uri</a>
@@ -297,28 +302,31 @@
 
   <!-- HERO -->
   <section class="promo-hero">
-    <div class="ph-inner">
-      <div>
-        <span class="ph-badge">🚀 Ofertă de lansare limitată</span>
-        <h1>Afacerea ta online — <b>totul gata pentru tine</b></h1>
-        <p class="sub">Site profesional de prezentare, găsit pe Google, cu social media gata de folosit. Un singur pachet, un preț onest — ne ocupăm noi de totul.</p>
-        <div class="ph-cta">
-          <a href="#claim" class="btn-primary">Cere oferta <span>→</span></a>
-          <span class="ph-trust">✔ Fără taxe ascunse &nbsp;·&nbsp; ✔ Rapid</span>
-        </div>
+    <div class="ph-content">
+      <span class="ph-badge">🚀 Ofertă de lansare · Pachet complet 400€</span>
+      <h1>Afacerea ta online — <b>totul gata pentru tine</b></h1>
+      <p class="sub">Site profesional de prezentare, găsit pe Google, cu social media gata de folosit. Un singur pachet, un preț onest — ne ocupăm noi de totul.</p>
+      <div class="ph-cta">
+        <a href="#claim" class="btn-primary">Cere oferta <span>→</span></a>
+        <a href="#proiecte-reale" class="btn-light">Vezi exemple</a>
       </div>
-      <div class="price-card">
-        <div class="pc-label">Pachet complet</div>
-        <div class="pc-price">400€</div>
-        <div class="pc-was"><s>Normal 750€</s> &nbsp;— preț de lansare</div>
-        <ul>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Site de prezentare (până la 5 pagini)</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> SEO — apare pe Google</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Google Business Profile configurat</li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Conturi Instagram și Facebook</li>
-        </ul>
-        <div class="pc-meta"><span>⚡ Live în zile, nu săptămâni</span><span>🔒 Fără taxe ascunse</span></div>
-      </div>
+      <span class="ph-trust">✔ Fără taxe ascunse &nbsp;·&nbsp; ✔ Live în zile, nu săptămâni</span>
+    </div>
+  </section>
+
+  <!-- PRICE CARD -->
+  <section class="price-sec">
+    <div class="price-card">
+      <div class="pc-label">Pachet complet</div>
+      <div class="pc-price">400€</div>
+      <div class="pc-was"><s>Normal 750€</s> &nbsp;— preț de lansare</div>
+      <ul>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Site de prezentare (până la 5 pagini)</li>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> SEO — apare pe Google</li>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Google Business Profile configurat</li>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Conturi Instagram și Facebook</li>
+      </ul>
+      <div class="pc-meta"><span>⚡ Live în zile, nu săptămâni</span><span>🔒 Fără taxe ascunse</span></div>
     </div>
   </section>
 
@@ -513,7 +521,7 @@
       <div class="f-col">
         <h4>Companie</h4>
         <a href="/despre-noi">Despre noi</a>
-        <a href="/#portofoliu">Portofoliu</a>
+        <a href="/portofoliu">Portofoliu</a>
         <a href="/blog">Blog</a>
         <a href="/demos">Demo-uri</a>
       </div>
