@@ -846,6 +846,7 @@ const DEFAULT_PROJECTS = [
   { id: 'mrdtf', emoji: '🖨️', tag: 'Print DTF', title: 'Mr.DTF — print DTF la metru liniar', description: 'Site pentru un atelier de print DTF din București. Prețurile pe metru liniar sunt vizibile din primul ecran, un calculator arată câte modele încap pe un metru, iar comanda se trimite dintr-un formular rapid.', image: '/portofoliu/mrdtf.jpg', link: 'https://mrdtf.ro', detail: '/portofoliu/mrdtf', order: 3 },
   { id: 'comstore', emoji: '🛠️', tag: 'Acoperișuri', title: 'ComStore — montaj și renovare acoperișuri', description: 'Site de prezentare pentru o firmă de montaj și renovare acoperișuri. Pune în față serviciile, proiectele realizate și brandurile partenere, iar fiecare secțiune duce spre o cerere de ofertă.', image: '/portofoliu/comstore.jpg', link: 'https://comstore-acoperisuri.ro', detail: '/portofoliu/comstore', order: 4 },
   { id: 'apg-garage', emoji: '🔧', tag: 'Service auto', title: 'APG Garage — service auto', description: 'Site pentru un service auto din Militari, București. Prezintă serviciile și prețurile orientative, iar clienții își pot face cont pentru a se programa online.', image: '/portofoliu/apg-garage.jpg', detail: '/portofoliu/apg-garage', order: 5 },
+  { id: 'asociatia-roa', emoji: '🤝', tag: 'ONG', title: 'Asociația RO Administrația — ONG educație & ocupare', description: 'Site de prezentare pentru un ONG care ajută tinerii și persoanele vulnerabile să se califice și să își găsească un loc de muncă. Explică cui se adresează asociația și ce oferă, apoi trimite spre proiecte, consiliere și joburi.', image: '/portofoliu/asociatia-roa.jpg', link: 'https://asociatia-roa.ro', detail: '/portofoliu/asociatia-roa', order: 6 },
 ];
 
 // ── STUDII DE CAZ (pagina-profil a fiecărui proiect) ─────────
@@ -966,6 +967,23 @@ const PROJECT_CASE_STUDIES = {
       ['/portofoliu/apg-garage/06-pagina-preturi.jpg', 'Pagina Prețuri', 'Tarife orientative grupate pe categorii, de exemplu revizii sau frâne, cu mențiunea dacă piesele se plătesc separat. O notă explică faptul că prețul final se stabilește după diagnoză.']
     ],
     features: ['Cont de client și programare online', 'Listă de prețuri orientative pe categorii', 'Pagini separate pentru fiecare serviciu', 'Buton WhatsApp permanent', 'Texte de footer optimizate pentru căutări locale']
+  },
+  'asociatia-roa': {
+    title: 'Asociația RO Administrația', subtitle: 'Site de prezentare pentru un ONG de educație și ocupare pe piața muncii',
+    tag: 'Site de prezentare', link: 'https://asociatia-roa.ro', cover: '/portofoliu/asociatia-roa/01-hero-misiune.jpg',
+    meta: [['Client', 'Asociația RO Administrația'], ['Domeniu', 'ONG – educație & ocupare'], ['Locație', 'București']],
+    about: [
+      'Asociația lucrează cu publicuri foarte diferite: tineri fără loc de muncă, adulți în reconversie, angajatori și instituții publice. Fiecare caută altceva pe site. Structura le dă tuturor o cale rapidă din primul ecran: proiecte europene, consiliere sau locuri de muncă.',
+      'Am ales o paletă de albastru instituțional, care trimite la Uniunea Europeană și la finanțările europene, și titluri serif aerisite. Tonul e serios, dar accesibil.'
+    ],
+    sections: [
+      ['/portofoliu/asociatia-roa/01-hero-misiune.jpg', 'Misiune și acces rapid', 'Misiunea asociației, afișată mare, urmată de trei carduri care împart vizitatorii după ce caută: proiecte europene, consiliere profesională și locuri de muncă.'],
+      ['/portofoliu/asociatia-roa/02-despre-noi.jpg', 'Ce trebuie să știi despre noi', 'Trei coloane cu imagini care rezumă activitatea: programe finanțate din fonduri UE, consiliere personalizată și o comunitate deschisă.'],
+      ['/portofoliu/asociatia-roa/03-cui-ne-adresam.jpg', 'Cui ne adresăm și ce oferim', 'Două liste clare: cine poate beneficia (tineri, persoane în căutarea unui loc de muncă, angajatori) și ce primește concret. Sub ele, o bandă cu îndemn spre contact.'],
+      ['/portofoliu/asociatia-roa/04-ce-facem-concret.jpg', 'Ce facem concret', 'Șase carduri pe fundal albastru, fiecare cu iconiță, descriere și buton propriu: formare profesională, consiliere vocațională, mediere pe piața muncii, proiecte europene, parteneriate și recrutare de voluntari.'],
+      ['/portofoliu/asociatia-roa/05-cifre-si-contact.jpg', 'Cifre și contact', 'Contoare animate cu rezultatele asociației (persoane consiliate, tineri calificați, localități rurale, parteneri), urmate de datele de contact și datele de înregistrare ale ONG-ului.']
+    ],
+    features: ['Acces rapid pe trei tipuri de vizitatori', 'Secțiuni dedicate pentru joburi, proiecte, știri și FAQ', 'Contoare animate pentru rezultate', 'Pagină pentru echipă', 'Legături spre Facebook și LinkedIn']
   }
 };
 
@@ -1498,6 +1516,7 @@ export default {
         { loc: '/portofoliu/mrdtf',           cf: 'monthly', pr: '0.7' },
         { loc: '/portofoliu/comstore',        cf: 'monthly', pr: '0.7' },
         { loc: '/portofoliu/apg-garage',      cf: 'monthly', pr: '0.7' },
+        { loc: '/portofoliu/asociatia-roa',   cf: 'monthly', pr: '0.7' },
         { loc: '/blog',                       cf: 'weekly',  pr: '0.7' },
         { loc: '/demos',                      cf: 'monthly', pr: '0.7' },
         { loc: '/cere-oferta',                cf: 'monthly', pr: '0.8' },

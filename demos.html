@@ -75,6 +75,31 @@
   .demo-btn.admin{border:1.5px solid var(--line);color:var(--ink)}
   .demo-btn.admin:hover{border-color:var(--teal);color:var(--teal)}
   .d-loading{text-align:center;color:var(--muted);padding:40px}
+  /* buton alege temă pe card */
+  .demo-actions{flex-wrap:wrap}
+  .demo-btn.pick{flex:1 1 100%;background:var(--ink);color:#fff}
+  .demo-btn.pick:hover{background:#1f2426}
+  .demo-card.chosen{border-color:var(--teal);box-shadow:0 0 0 2px rgba(0,170,172,.35)}
+  /* sectiune cerere oferta cu tema aleasa */
+  .d-offer{padding:10px 24px 90px}
+  .offer-card{max-width:760px;margin:0 auto;background:var(--bg-soft);border:1px solid rgba(0,170,172,.22);border-radius:22px;padding:44px 40px}
+  .offer-card .eyebrow{justify-content:flex-start}
+  .offer-card h2{font-family:'Poppins',sans-serif;font-weight:300;font-size:clamp(1.6rem,3.2vw,2.3rem);color:var(--ink);letter-spacing:-.02em;line-height:1.15;margin-bottom:10px}
+  .offer-card h2 b{font-weight:700}
+  .offer-card>p{font-size:1.02rem;line-height:1.65;color:var(--body);margin-bottom:24px}
+  .of-chosen{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px dashed var(--teal);border-radius:12px;padding:12px 16px;margin-bottom:18px;font-size:.95rem;color:var(--ink)}
+  .of-chosen b{color:var(--teal-dk)}
+  .of-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .of-field{display:flex;flex-direction:column;gap:6px}
+  .of-field.full{grid-column:1/-1}
+  .of-field label{font-family:'Poppins',sans-serif;font-weight:500;font-size:.85rem;color:var(--ink)}
+  .of-field input,.of-field select,.of-field textarea{font-family:'Inter',sans-serif;font-size:.98rem;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;outline:none;transition:border-color .2s;width:100%}
+  .of-field input:focus,.of-field select:focus,.of-field textarea:focus{border-color:var(--teal)}
+  .of-field textarea{resize:vertical;min-height:90px}
+  .of-submit{margin-top:18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .of-status{font-size:.92rem}
+  .of-status.ok{color:var(--teal-dk)}.of-status.err{color:#d6453c}
+  @media(max-width:600px){.of-grid{grid-template-columns:1fr}.offer-card{padding:32px 22px}}
   /* CTA */
   .cta-band{background:var(--ink);color:#fff;text-align:center;padding:76px 24px}
   .cta-band h2{font-family:'Poppins',sans-serif;font-weight:700;font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:-.02em;margin-bottom:14px;color:#fff}
@@ -127,8 +152,8 @@
         <a href="/demos">Demo-uri</a>
       </nav>
       <div class="nav-right">
-        <a href="#contact" class="contact-link">Contact</a>
-        <a href="/cere-oferta" class="btn-quote">Cere ofertă</a>
+        <a href="#cere" class="contact-link">Contact</a>
+        <a href="#cere" class="btn-quote">Cere ofertă</a>
         <button class="burger" id="burger" aria-label="Deschide meniu">
           <span></span><span></span><span></span>
         </button>
@@ -145,8 +170,8 @@
     <a href="/#testimoniale">Recenzii</a>
     <a href="/blog">Blog</a>
         <a href="/demos">Demo-uri</a>
-    <a href="#contact">Contact</a>
-    <a href="/cere-oferta" class="btn-quote">Cere ofertă</a>
+    <a href="#cere">Contact</a>
+    <a href="#cere" class="btn-quote">Cere ofertă</a>
   </nav>
 
   <section class="d-hero">
@@ -171,10 +196,47 @@
     </div>
   </section>
 
+  <section class="d-offer" id="cere">
+    <div class="offer-card">
+      <span class="eyebrow">Cerere ofertă</span>
+      <h2>Ți-a plăcut o temă? <b>Cere o ofertă</b></h2>
+      <p>Alege tema care ți se potrivește din galeria de mai sus (butonul „Alege tema”), completează datele și te contactăm noi cu o ofertă fixă, fără costuri ascunse.</p>
+      <div class="of-chosen" id="ofChosen">Nicio temă aleasă încă — apasă <b>„Alege tema”</b> pe un demo, sau selecteaz-o mai jos.</div>
+      <form id="offerForm" novalidate>
+        <div class="of-grid">
+          <div class="of-field full">
+            <label for="ofTheme">Tema aleasă</label>
+            <select id="ofTheme" name="theme"><option value="">— alege o temă —</option></select>
+          </div>
+          <div class="of-field">
+            <label for="ofName">Nume *</label>
+            <input type="text" id="ofName" name="name" placeholder="Numele tău" required>
+          </div>
+          <div class="of-field">
+            <label for="ofPhone">Telefon *</label>
+            <input type="tel" id="ofPhone" name="phone" placeholder="07xx xxx xxx">
+          </div>
+          <div class="of-field full">
+            <label for="ofEmail">Email</label>
+            <input type="email" id="ofEmail" name="email" placeholder="email@exemplu.ro">
+          </div>
+          <div class="of-field full">
+            <label for="ofMsg">Detalii (opțional)</label>
+            <textarea id="ofMsg" name="message" placeholder="Spune-ne pe scurt despre afacerea ta și ce ai nevoie..."></textarea>
+          </div>
+        </div>
+        <div class="of-submit">
+          <button type="submit" class="btn-primary" id="ofBtn">Trimite cererea <span>→</span></button>
+          <span class="of-status" id="ofStatus"></span>
+        </div>
+      </form>
+    </div>
+  </section>
+
   <section class="cta-band">
     <h2>Îți place ceea ce vezi?</h2>
     <p>O să construim un site ca acestea — special pentru afacerea ta.</p>
-    <a href="#contact" class="btn-primary">Obține o ofertă gratuită <span>→</span></a>
+    <a href="#cere" class="btn-primary">Obține o ofertă gratuită <span>→</span></a>
   </section>
 
   <footer class="site-footer">
@@ -311,13 +373,62 @@
         var href=d.url?d.url:('/demo/'+encodeURIComponent(d.slug||d.id||''));
         var adm=adminHref(d.url);
         var admBtn=adm?'<a class="demo-btn admin" href="'+esc(adm)+'" target="_blank" rel="noopener">Admin</a>':'';
-        return '<div class="demo-card">'
+        var nm=d.businessName||'Website demo';
+        return '<div class="demo-card" data-name="'+esc(nm)+'">'
           +'<div class="demo-emoji">'+demoIcon(d)+'</div>'+tag
-          +'<h3>'+esc(d.businessName||'Website demo')+'</h3>'+tagline
-          +'<div class="demo-actions"><a class="demo-btn" href="'+esc(href)+'" target="_blank" rel="noopener">Vezi demo →</a>'+admBtn+'</div></div>';
+          +'<h3>'+esc(nm)+'</h3>'+tagline
+          +'<div class="demo-actions"><a class="demo-btn" href="'+esc(href)+'" target="_blank" rel="noopener">Vezi demo →</a>'+admBtn
+          +'<button type="button" class="demo-btn pick" onclick="pickDemo(this.closest(\'.demo-card\').dataset.name)">Alege tema</button></div></div>';
       }).join('');
     }
-    function render(items){ allDemos=Array.isArray(items)?items:[]; currentCat=''; renderChips(); renderGrid(); }
+    function render(items){ allDemos=Array.isArray(items)?items:[]; currentCat=''; renderChips(); renderGrid(); populateThemeSelect(); }
+    function populateThemeSelect(){
+      var sel=document.getElementById('ofTheme'); if(!sel) return;
+      var names=allDemos.map(function(d){return d.businessName||'';}).filter(Boolean);
+      sel.innerHTML='<option value="">— alege o temă —</option>'+names.map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>';}).join('');
+    }
+    function pickDemo(name){
+      var sel=document.getElementById('ofTheme'); if(sel) sel.value=name;
+      syncChosen();
+      document.querySelectorAll('.demo-card').forEach(function(c){ c.classList.toggle('chosen', c.dataset.name===name); });
+      var s=document.getElementById('cere'); if(s) s.scrollIntoView({behavior:'smooth',block:'start'});
+      setTimeout(function(){ var n=document.getElementById('ofName'); if(n) n.focus(); },500);
+    }
+    function syncChosen(){
+      var sel=document.getElementById('ofTheme'), box=document.getElementById('ofChosen');
+      if(!sel||!box) return;
+      if(sel.value){ box.innerHTML='Temă aleasă: <b>'+esc(sel.value)+'</b>'; }
+      else { box.innerHTML='Nicio temă aleasă încă — apasă <b>„Alege tema”</b> pe un demo, sau selecteaz-o mai jos.'; }
+    }
+    (function(){
+      var sel=document.getElementById('ofTheme'); if(sel) sel.addEventListener('change', syncChosen);
+      var form=document.getElementById('offerForm'); if(!form) return;
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        var theme=(document.getElementById('ofTheme').value||'').trim();
+        var name=(document.getElementById('ofName').value||'').trim();
+        var phone=(document.getElementById('ofPhone').value||'').trim();
+        var email=(document.getElementById('ofEmail').value||'').trim();
+        var note=(document.getElementById('ofMsg').value||'').trim();
+        var st=document.getElementById('ofStatus'), btn=document.getElementById('ofBtn');
+        st.className='of-status';
+        if(!name){ st.className='of-status err'; st.textContent='Te rugăm să completezi numele.'; return; }
+        if(!phone && !email){ st.className='of-status err'; st.textContent='Lasă un telefon sau un email ca să te putem contacta.'; return; }
+        var message='Cerere ofertă din galeria de demo-uri.'+(theme?(' Temă aleasă: '+theme+'.'):' (fără temă selectată).')+(note?(' Detalii: '+note):'');
+        btn.disabled=true; var old=btn.innerHTML; btn.innerHTML='Se trimite...';
+        st.textContent='';
+        fetch('/api/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({name:name,phone:phone,email:email,service:'Ofertă demo'+(theme?(' — '+theme):''),message:message})
+        }).then(function(r){return r.json().then(function(d){return {ok:r.ok,d:d};});}).then(function(res){
+          if(res.ok && res.d && res.d.success!==false){
+            form.reset(); syncChosen();
+            document.querySelectorAll('.demo-card.chosen').forEach(function(c){c.classList.remove('chosen');});
+            st.className='of-status ok'; st.textContent='✓ Cererea a fost trimisă! Te contactăm în cel mai scurt timp.';
+          } else { st.className='of-status err'; st.textContent=(res.d&&res.d.error)?res.d.error:'A apărut o eroare. Încearcă din nou sau sună la 0753 116 155.'; }
+        }).catch(function(){ st.className='of-status err'; st.textContent='Eroare de rețea. Încearcă din nou sau sună la 0753 116 155.'; })
+        .then(function(){ btn.disabled=false; btn.innerHTML=old; });
+      });
+    })();
     fetch('/api/demos').then(function(r){return r.ok?r.json():[];}).then(function(list){
       if(Array.isArray(list)&&list.length){ render(list); return; }
       fetch('/api/site-settings').then(function(r){return r.ok?r.json():null;}).then(function(d){
