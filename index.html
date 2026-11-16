@@ -91,8 +91,9 @@
   .hero.has-video .hero-bg{opacity:1}
   .hero-scrim{position:absolute;inset:0;z-index:1;display:none;background:linear-gradient(180deg,rgba(255,255,255,.86) 0%,rgba(255,255,255,.74) 55%,rgba(255,255,255,.82) 100%)}
   .hero.has-video .hero-scrim{display:block}
-  .hero-content{max-width:960px;margin:0 auto;position:relative;z-index:3}
-  .hero h1{font-family:'Poppins',sans-serif;font-weight:300;color:var(--ink);font-size:clamp(2.6rem,7.2vw,5.6rem);line-height:1.02;letter-spacing:-.03em;margin-bottom:26px}
+  .hero-content{max-width:960px;margin:0 auto;position:relative;z-index:3;display:flex;flex-direction:column;align-items:center}
+  .hero-kicker{display:inline-flex;align-items:center;gap:8px;font-family:'Poppins',sans-serif;font-weight:600;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);background:rgba(0,170,172,.08);border:1px solid rgba(0,170,172,.22);padding:7px 15px;border-radius:999px;margin-bottom:24px}
+  .hero h1{font-family:'Poppins',sans-serif;font-weight:300;color:var(--ink);font-size:clamp(2.6rem,7.2vw,5.6rem);line-height:1.04;letter-spacing:-.03em;margin-bottom:22px}
   .circle-word{position:relative;display:inline-block;white-space:nowrap;font-weight:700}
   .hero-rot{display:inline-block;color:var(--blue);font-weight:700;transition:opacity .4s ease,transform .4s ease;will-change:opacity,transform}
   .hero-rot.swap{opacity:0;transform:translateY(14px)}
@@ -100,8 +101,14 @@
   .circle-word .scribble{position:absolute;left:-1%;bottom:-.20em;width:102%;height:.34em;overflow:visible;pointer-events:none}
   .circle-word .scribble path{fill:none;stroke:var(--sky);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:460;stroke-dashoffset:460;animation:draw 1s ease-out .5s forwards}
   @keyframes draw{to{stroke-dashoffset:0}}
-  .hero p.sub{font-family:'Inter',sans-serif;font-size:clamp(1rem,1.6vw,1.22rem);color:var(--body);max-width:620px;margin:0 auto 34px}
+  .hero p.sub{font-family:'Inter',sans-serif;font-size:clamp(1rem,1.6vw,1.22rem);color:var(--body);max-width:600px;margin:0 auto 26px}
   .hero p.sub b{color:var(--ink);font-weight:700}
+  .hero-offer{display:inline-flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:32px;padding:8px 8px 8px 20px;background:#fff;border:1.5px solid var(--line);border-radius:999px;box-shadow:0 10px 28px -16px rgba(20,40,60,.35);transition:border-color .2s,transform .15s,box-shadow .2s}
+  .hero-offer:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 16px 34px -16px rgba(0,170,172,.45)}
+  .hero-offer-price{font-family:'Poppins',sans-serif;font-weight:500;color:var(--ink);font-size:1rem}
+  .hero-offer-price b{font-weight:700}
+  .hero-offer-link{display:inline-flex;align-items:center;gap:6px;font-family:'Poppins',sans-serif;font-weight:600;font-size:.88rem;color:#fff;background:var(--blue);padding:8px 16px;border-radius:999px}
+  .hero-offer:hover .hero-offer-link{background:var(--blue-dk)}
   .hero-cta{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:36px}
   .btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--blue);color:#fff;font-family:'Poppins',sans-serif;font-weight:600;font-size:1.05rem;padding:16px 34px;border-radius:999px;box-shadow:0 12px 30px -8px rgba(0,170,172,.42);transition:transform .15s,background .2s,box-shadow .2s}
   .btn-primary:hover{background:var(--blue-dk);transform:translateY(-2px);box-shadow:0 16px 36px -8px rgba(0,170,172,.52)}
@@ -368,8 +375,13 @@
     <div class="hero-scrim"></div>
 
     <div class="hero-content">
+      <span class="hero-kicker">Agenție web · Livrat în 14 zile</span>
       <h1 id="hero-h1-el"><span class="circle-word">Site-uri<svg class="scribble" viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 13 Q 22 3 40 13 T 76 13 T 112 13 T 148 13 T 184 13 T 220 13 T 256 13 T 296 13"/></svg></span> care aduc<br><span class="hero-rot" id="heroRot">clienți noi</span></h1>
-      <p class="sub" id="hero-desc-el">De la prima ta afacere până la un brand consacrat — construim site-uri clare, rapide și găsite pe Google. <b>Livrate în 14 zile, preț fix de la 400€.</b></p>
+      <p class="sub" id="hero-desc-el">De la prima ta afacere până la un brand consacrat — construim site-uri clare, rapide și găsite pe Google, cu prețuri fixe și oneste.</p>
+      <a class="hero-offer" href="/demos">
+        <span class="hero-offer-price">Pachet complet de la <b>400€</b></span>
+        <span class="hero-offer-link">Vezi exemple live <span class="arr">→</span></span>
+      </a>
       <div class="hero-cta">
         <a href="#contact" class="btn-primary" data-edit="buton-1">Hai să vorbim gratuit <span class="arr">→</span></a>
         <a href="/#proiecte" class="btn-ghost" data-edit="buton-secundar-1">Vezi portofoliu</a>
