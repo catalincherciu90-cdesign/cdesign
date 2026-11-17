@@ -6,7 +6,9 @@
   <title>Admin | C Design</title>
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/png" href="/logo-c-design.png">
-  <link rel="apple-touch-icon" href="/logo-c-design.png">
+  <link rel="apple-touch-icon" href="/admin-icon-192.png">
+  <link rel="manifest" href="/admin.webmanifest">
+  <meta name="theme-color" content="#04141a">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -2785,6 +2787,17 @@
           <span id="testEmailStatus" style="font-family:'Share Tech Mono',monospace;font-size:.75rem;display:none;"></span>
         </div>
       </div>
+      <div class="table-wrap" id="push-box" style="padding:24px;margin-bottom:18px;">
+        <div class="f-label" style="margin-bottom:10px;">// notific&#259;ri_pe_telefon</div>
+        <p style="font-size:.86rem;color:var(--text-soft);line-height:1.55;margin-bottom:14px;max-width:720px;">Prime&#537;ti o notificare pe acest dispozitiv c&acirc;nd apare o <b>programare nou&#259;</b>, un <b>mesaj nou</b> din formulare sau un <b>lead nou</b> din chat. Se activeaz&#259; separat pe fiecare telefon / calculator.</p>
+        <div id="push-status" style="font-family:'Share Tech Mono',monospace;font-size:.8rem;margin-bottom:14px;color:var(--teal);">// se verific&#259;...</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button class="btn-add" id="push-btn-on" onclick="pushEnable()">&#x1F514; Activeaz&#259; pe acest dispozitiv</button>
+          <button class="btn-add" id="push-btn-test" onclick="pushTest()" style="background:var(--teal-dim);border:1px solid var(--teal-border);color:var(--teal);">&#x1F4E8; Trimite test</button>
+          <button class="btn-add" id="push-btn-off" onclick="pushDisable()" style="background:transparent;border:1px solid rgba(248,113,113,.4);color:#f87171;display:none;">Dezactiveaz&#259; aici</button>
+        </div>
+        <div id="push-devices" style="font-size:.8rem;color:var(--text-soft);margin-top:14px;"></div>
+      </div>
       <div class="table-wrap" style="padding:24px;">
 
         <div style="margin-bottom:28px;">
@@ -3981,6 +3994,147 @@
 
 <script>
   let adminToken = '';
+
+  // ── NOTIFICĂRI PUSH (telefon / aplicația Android) ─────────────────
+  const pushSupported = ('serviceWorker' in navigator) && ('PushManager' in window) && ('Notification' in window);
+  let pushReg = null;
+  let pushPendingTab = '';
+  function pushKeyBytes(b64u) {
+    const b = atob(String(b64u).replace(/-/g, '+').replace(/_/g, '/'));
+    const out = new Uint8Array(b.length);
+    for (let i = 0; i < b.length; i++) out[i] = b.charCodeAt(i);
+    return out;
+  }
+  function pushDeviceLabel() {
+    const ua = navigator.userAgent;
+    const inApp = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || /^android-app:/.test(document.referrer);
+    const os = /Android/i.test(ua) ? 'Android' : /iPhone|iPad/i.test(ua) ? 'iPhone/iPad' : /Windows/i.test(ua) ? 'Windows' : /Mac/i.test(ua) ? 'Mac' : 'Dispozitiv';
+    return (inApp ? 'Aplicație ' : 'Browser ') + os;
+  }
+  function pushOpenTab(tab) {
+    if (!tab) return;
+    pushPendingTab = tab;
+    let tries = 0;
+    const go = () => {
+      if (!pushPendingTab) return;
+      const btn = adminToken ? document.querySelector('.tab[onclick*="\'' + pushPendingTab + '\'"]') : null;
+      if (btn) { pushPendingTab = ''; btn.click(); window.scrollTo(0, 0); return; }
+      if (++tries < 40) setTimeout(go, 300);
+    };
+    go();
+  }
+  async function pushApi(path, body) {
+    const res = await fetch('/api/push/' + path + '?token=' + encodeURIComponent(adminToken), body === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
+    return data;
+  }
+  async function pushRefreshUI() {
+    const st = document.getElementById('push-status');
+    if (!st) return;
+    const on = document.getElementById('push-btn-on'), off = document.getElementById('push-btn-off'), test = document.getElementById('push-btn-test'), dev = document.getElementById('push-devices');
+    const set = (txt, color) => { st.textContent = txt; st.style.color = color || 'var(--teal)'; };
+    if (!pushSupported) {
+      set('// ✗ acest browser nu suportă notificări push', '#f87171');
+      on.style.display = 'none'; off.style.display = 'none';
+    } else {
+      let sub = null;
+      try { sub = pushReg ? await pushReg.pushManager.getSubscription() : null; } catch (e) {}
+      if (Notification.permission === 'denied') set('// ✗ notificările sunt blocate pentru acest site — permite-le din setările telefonului / browserului', '#f87171');
+      else if (sub && Notification.permission === 'granted') set('// ✓ active pe acest dispozitiv', '#4ade80');
+      else set('// ○ inactive pe acest dispozitiv', '#fbbf24');
+      on.style.display = (sub && Notification.permission === 'granted') ? 'none' : '';
+      off.style.display = sub ? '' : 'none';
+    }
+    if (!adminToken) return;
+    try {
+      const d = await pushApi('key');
+      const list = d.devices || [];
+      test.disabled = !list.length;
+      test.style.opacity = list.length ? '1' : '.45';
+      dev.textContent = list.length
+        ? 'Dispozitive abonate (' + list.length + '): ' + list.map(x => x.label + (x.createdAt ? ' · ' + new Date(x.createdAt).toLocaleDateString('ro-RO') : '')).join('  |  ')
+        : 'Niciun dispozitiv abonat încă.';
+    } catch (e) { dev.textContent = ''; }
+  }
+  async function pushSubscribeDevice() {
+    if (!pushReg) pushReg = await navigator.serviceWorker.register('/admin-sw.js', { scope: '/programari' });
+    await navigator.serviceWorker.ready.catch(() => {});
+    const { key } = await pushApi('key');
+    const opts = { userVisibleOnly: true, applicationServerKey: pushKeyBytes(key) };
+    let sub;
+    try { sub = await pushReg.pushManager.subscribe(opts); }
+    catch (e) {
+      // abonament vechi făcut cu altă cheie → îl refacem
+      const old = await pushReg.pushManager.getSubscription();
+      if (!old) throw e;
+      await old.unsubscribe();
+      sub = await pushReg.pushManager.subscribe(opts);
+    }
+    await pushApi('subscribe', { subscription: sub.toJSON(), label: pushDeviceLabel() });
+    try { localStorage.setItem('cdPushEp', sub.endpoint); } catch (e) {}
+    return sub;
+  }
+  async function pushEnable() {
+    if (!pushSupported) { showToast('Acest browser nu suportă notificări push'); return; }
+    const bar = document.getElementById('push-ask'); if (bar) bar.remove();
+    try {
+      const perm = await Notification.requestPermission();
+      if (perm !== 'granted') { showToast('Notificările nu au fost permise'); pushRefreshUI(); return; }
+      await pushSubscribeDevice();
+      showToast('🔔 Notificări activate pe acest dispozitiv');
+    } catch (e) { showToast('Nu am putut activa notificările: ' + (e && e.message ? e.message : 'eroare')); }
+    pushRefreshUI();
+  }
+  async function pushDisable() {
+    try {
+      const sub = pushReg ? await pushReg.pushManager.getSubscription() : null;
+      if (sub) { await pushApi('unsubscribe', { endpoint: sub.endpoint }); await sub.unsubscribe(); }
+      try { localStorage.removeItem('cdPushEp'); } catch (e) {}
+      showToast('Notificări dezactivate pe acest dispozitiv');
+    } catch (e) { showToast('Eroare la dezactivare'); }
+    pushRefreshUI();
+  }
+  async function pushTest() {
+    try {
+      const d = await pushApi('test', {});
+      showToast(d.sent ? '📨 Test trimis către ' + d.sent + ' dispozitiv(e)' : 'Testul nu a ajuns la niciun dispozitiv');
+    } catch (e) { showToast('Eroare la test: ' + e.message); }
+    pushRefreshUI();
+  }
+  // După login: resincronizăm abonamentul (endpoint-ul se poate schimba) sau,
+  // dacă notificările n-au fost cerute încă, arătăm o singură dată invitația.
+  async function pushAfterLogin() {
+    if (!pushSupported) return;
+    try {
+      if (!pushReg) pushReg = await navigator.serviceWorker.register('/admin-sw.js', { scope: '/programari' });
+      const sub = await pushReg.pushManager.getSubscription();
+      if (Notification.permission === 'granted' && sub) {
+        let known = ''; try { known = localStorage.getItem('cdPushEp') || ''; } catch (e) {}
+        if (known !== sub.endpoint) {
+          await pushApi('subscribe', { subscription: sub.toJSON(), label: pushDeviceLabel() });
+          try { localStorage.setItem('cdPushEp', sub.endpoint); } catch (e) {}
+        }
+        return;
+      }
+      let asked = ''; try { asked = localStorage.getItem('cdPushAsk') || ''; } catch (e) {}
+      if (Notification.permission !== 'default' || asked || document.getElementById('push-ask')) return;
+      const bar = document.createElement('div');
+      bar.id = 'push-ask';
+      bar.style.cssText = 'position:fixed;left:12px;right:12px;bottom:14px;z-index:9000;max-width:560px;margin:0 auto;background:rgba(4,20,26,.96);border:1px solid rgba(0,229,255,.45);box-shadow:0 0 22px rgba(0,229,255,.25);padding:14px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.86rem;color:#e8edf2;';
+      bar.innerHTML = '<span style="flex:1;min-width:190px;">🔔 Vrei notificări pe acest dispozitiv la programări, mesaje și lead-uri noi?</span>'
+        + '<button class="btn-add" id="push-ask-yes">Activează</button>'
+        + '<button class="btn-add" id="push-ask-no" style="background:transparent;border:1px solid rgba(255,255,255,.25);color:#8bbaba;">Nu acum</button>';
+      document.body.appendChild(bar);
+      document.getElementById('push-ask-yes').onclick = () => pushEnable();
+      document.getElementById('push-ask-no').onclick = () => { try { localStorage.setItem('cdPushAsk', '1'); } catch (e) {} bar.remove(); };
+    } catch (e) {}
+  }
+  if (pushSupported) {
+    navigator.serviceWorker.register('/admin-sw.js', { scope: '/programari' }).then(r => { pushReg = r; }).catch(() => {});
+    navigator.serviceWorker.addEventListener('message', (ev) => { if (ev.data && ev.data.type === 'cd-open-tab') pushOpenTab(ev.data.tab); });
+  }
+  try { pushOpenTab(new URLSearchParams(location.search).get('tab') || ''); } catch (e) {}
   let allBookings = [];
   let allProjects = [];
   let currentFilter = 'all';
@@ -4006,7 +4160,7 @@
       adminToken = saved;
       const ok = await fetchBookings(true);
       if (!ok) { adminToken = ''; localStorage.removeItem('cdAdmin'); }
-      else { fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); fetchTheme(); fetchCheltuieli(); }
+      else { fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); fetchTheme(); fetchCheltuieli(); pushAfterLogin(); }
     }
   })();
 
@@ -4028,7 +4182,7 @@
       if (!ok) { err.textContent = '✗ Eroare de autentificare'; adminToken = ''; }
       else {
         localStorage.setItem('cdAdmin', password);
-        fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); fetchTheme(); fetchCheltuieli();
+        fetchProjects(); fetchCrm(); fetchBlog(); fetchSocial(); fetchSettings(); loadGibilan(); fetchClients(); fetchTheme(); fetchCheltuieli(); pushAfterLogin();
       }
     } catch { err.textContent = '✗ Eroare de rețea'; }
   }
@@ -4050,6 +4204,7 @@
     if (tab === 'oferte') { fetchServicii(); fetchOferte(); fetchContracte(); populateOfertaClientSel(); }
     if (tab === 'chatai') loadConversations();
     if (tab === 'mesaje') loadMessages();
+    if (tab === 'settings') pushRefreshUI();
     if (tab === 'gsc') loadGsc();
     if (tab === 'promotions') { loadPromotions(); loadGiveawaySettings(); loadPromoVisibility(); }
   }
