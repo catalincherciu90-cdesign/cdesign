@@ -1803,7 +1803,8 @@
      desenată ca linie luminoasă. Se aplică doar pe containere care au deja
      overflow:hidden, deci nu taie meniuri sau popup-uri. */
   .jvs-card, .table-wrap, .modal, .block-editor-box, .block-picker-box,
-  .stat-box, .proj-card, .client-card, .media-card {
+  .stat-box, .proj-card, .client-card, .media-card,
+  #msg-view, #chatai-view, .chatai-item {
     --cut: 12px;
     --win-edge: rgba(0, 229, 255, .42);
     --win-a: rgba(10, 24, 24, .88);
@@ -1817,7 +1818,8 @@
       linear-gradient(135deg, var(--win-a) 0%, var(--win-b) 100%) !important;
   }
   /* ferestrele mari: tăietură mai amplă */
-  .jvs-card, .table-wrap, .modal, .block-editor-box, .block-picker-box { --cut: 20px; }
+  .jvs-card, .table-wrap, .modal, .block-editor-box, .block-picker-box, #msg-view, #chatai-view { --cut: 20px; }
+  .chatai-item { --cut: 9px; }
   .jvs-card { --win-edge: #00e5ff; --win-a: rgba(10, 24, 24, .8); --win-b: rgba(15, 32, 32, .6); }
   .modal, .block-editor-box, .block-picker-box { --win-a: rgba(10, 24, 24, .96); --win-b: rgba(15, 32, 32, .88); }
   /* panourile holografice din Gibilan au reguli proprii (cu ID), deci forma
@@ -1833,8 +1835,29 @@
       repeating-linear-gradient(0deg, rgba(0,229,255,.05) 0px, rgba(0,229,255,.05) 1px, transparent 1px, transparent 5px),
       linear-gradient(160deg, rgba(0,229,255,.10) 0%, rgba(6,18,24,.42) 55%, rgba(6,18,24,.30) 100%) !important;
   }
+  /* banda cu zilele lunii (stil inline din JS, de aceea !important) */
+  #stark-month-band {
+    --cut: 12px;
+    --win-edge: rgba(0, 229, 255, .4);
+    border-color: var(--win-edge) !important;
+    clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+    background:
+      linear-gradient(45deg, transparent calc(50% - .8px), var(--win-edge) calc(50% - .8px), var(--win-edge) calc(50% + .8px), transparent calc(50% + .8px)) top right / var(--cut) var(--cut) no-repeat border-box,
+      linear-gradient(45deg, transparent calc(50% - .8px), var(--win-edge) calc(50% - .8px), var(--win-edge) calc(50% + .8px), transparent calc(50% + .8px)) bottom left / var(--cut) var(--cut) no-repeat border-box,
+      linear-gradient(90deg, rgba(0,229,255,.08), rgba(0,229,255,.04)) !important;
+  }
+  /* butoanele mari din agendă (+ Întâlnire / + To-do / + Deadline); bordura
+     lor e de 2px, deci și linia de pe muchie e mai groasă. Tenta de la hover
+     vine din ::before, deci rămâne. */
+  .gib-add-btn {
+    --cut: 10px;
+    clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+    background:
+      linear-gradient(45deg, transparent calc(50% - 1.5px), #00e5ff calc(50% - 1.5px), #00e5ff calc(50% + 1.5px), transparent calc(50% + 1.5px)) top right / var(--cut) var(--cut) no-repeat border-box,
+      linear-gradient(45deg, transparent calc(50% - 1.5px), #00e5ff calc(50% - 1.5px), #00e5ff calc(50% + 1.5px), transparent calc(50% + 1.5px)) bottom left / var(--cut) var(--cut) no-repeat border-box !important;
+  }
   /* la hover, muchia tăiată se aprinde odată cu bordura */
-  .stat-box:hover, .proj-card:hover, .client-card:hover, .media-card:hover {
+  .stat-box:hover, .proj-card:hover, .client-card:hover, .media-card:hover, .chatai-item:hover {
     --win-edge: rgba(0, 229, 255, .8);
     border-color: var(--win-edge) !important;
   }
