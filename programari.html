@@ -2022,6 +2022,18 @@
   @media (max-width: 600px) { .gib-quick { gap: 8px; margin-bottom: 14px; } .gq-tile { min-height: 72px; font-size: .68rem; padding: 10px 4px 8px; } .gq-ico { font-size: 1.3rem; } }
   @media (prefers-reduced-motion: reduce) { .gq-tile { transition: none; } }
   </style>
+  <style id="admin-voice">
+  /* ── Opțiuni voce (Gibilan) ── */
+  .jvs-voice-opts { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 8px; width: 100%; max-width: 300px; }
+  #jvs-voice-pick { width: 100%; background: rgba(0,229,255,.08); border: 1px solid rgba(0,229,255,.45); color: #00e5ff; font-family: 'Share Tech Mono', monospace; font-size: .74rem; padding: 6px 10px; border-radius: 0; cursor: pointer; }
+  #jvs-voice-pick option { background: #06141a; color: #e8edf2; }
+  .jvs-voice-rate { display: flex; align-items: center; gap: 8px; width: 100%; font-family: 'Share Tech Mono', monospace; font-size: .72rem; color: #7df9ff; }
+  .jvs-voice-rate input { flex: 1; min-width: 0; accent-color: #00e5ff; }
+  #jvs-voice-rate-val { min-width: 42px; text-align: right; }
+  .jvs-speak-btn.jvs-voice-test { margin-top: 0; font-size: .72rem; padding: 6px 14px; }
+  #jvs-voice-hint { font-size: .72rem; line-height: 1.45; color: #fbbf24; text-align: center; }
+  #jvs-voice-hint:empty { display: none; }
+  </style>
 </head>
 <body>
 
@@ -2124,10 +2136,16 @@
               <button id="jvs-speak-btn" class="jvs-speak-btn" type="button" onclick="jvsSpeak()">🔊 Raport vocal</button>
               <button id="jvs-mic-btn" class="jvs-speak-btn" type="button" onclick="jvsVoiceCmd()" title="Comenzi vocale: 'ce am azi' sau 'adaugă task ...'">🎤 Vorbește</button>
             </div>
-            <select id="jvs-voice-mode" onchange="localStorage.setItem('jvsVoiceMode', this.value)" title="Limba vocii" style="margin-top:8px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.45);color:#00e5ff;font-family:'Share Tech Mono',monospace;font-size:.74rem;padding:6px 10px;border-radius:0;cursor:pointer;">
-              <option value="ro">Voce: Română (cadență JARVIS)</option>
-              <option value="en">Voce: Engleză (accent britanic JARVIS)</option>
+            <select id="jvs-voice-mode" onchange="jvsModeChosen(this.value)" title="Limba vocii" style="margin-top:8px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.45);color:#00e5ff;font-family:'Share Tech Mono',monospace;font-size:.74rem;padding:6px 10px;border-radius:0;cursor:pointer;">
+              <option value="ro">Limbă: Română</option>
+              <option value="en">Limbă: Engleză (accent britanic)</option>
             </select>
+            <div class="jvs-voice-opts">
+              <select id="jvs-voice-pick" onchange="jvsVoiceChosen(this.value)" title="Vocea folosită" aria-label="Voce"></select>
+              <label class="jvs-voice-rate">Vitez&#259; <input type="range" id="jvs-voice-rate" min="0.8" max="1.2" step="0.05" value="1" oninput="jvsRateChosen(this.value)" aria-label="Viteza vocii"><span id="jvs-voice-rate-val">1.00&times;</span></label>
+              <button type="button" class="jvs-speak-btn jvs-voice-test" onclick="jvsVoiceTest()">&#9654; Test voce</button>
+              <div id="jvs-voice-hint"></div>
+            </div>
           </div>
 
           <!-- Status Widget (right panel) -->
@@ -5750,11 +5768,12 @@
     if (m === 0 && t === 0 && d === 0) {
       txt = 'Momentan nu ai nimic programat. Zi liniștită!';
     } else {
+      // doar ce există efectiv (fără „0 întâlniri"), legate natural cu „și"
       const parts = [];
-      parts.push(m === 1 ? 'o întâlnire azi' : m + ' întâlniri azi');
-      parts.push(t === 1 ? 'un task de făcut' : t + ' task-uri de făcut');
-      parts.push(d === 1 ? 'un deadline în următoarele 7 zile' : d + ' deadline-uri în următoarele 7 zile');
-      txt = 'Ai ' + parts.join(', ') + '.';
+      if (m) parts.push(m === 1 ? 'o întâlnire azi' : m + ' întâlniri azi');
+      if (t) parts.push(t === 1 ? 'un task de făcut' : t + ' task-uri de făcut');
+      if (d) parts.push(d === 1 ? 'un deadline în următoarele 7 zile' : d + ' deadline-uri în următoarele 7 zile');
+      txt = 'Ai ' + (parts.length > 1 ? parts.slice(0, -1).join(', ') + ' și ' + parts[parts.length - 1] : parts[0]) + '.';
     }
     const next = meetings.slice().sort((a, b) => ((a.date || '') + (a.time || '')).localeCompare((b.date || '') + (b.time || ''))).find(x => x.date >= today);
     if (next) {
@@ -5774,41 +5793,165 @@
     return txt;
   }
 
-  // configureaza vocea dupa modul ales (RO calm / EN accent britanic), salvat in localStorage
-  function jvsConfigVoice(u) {
-    const mode = localStorage.getItem('jvsVoiceMode') || 'ro';
-    const voices = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
-    u.rate = 0.92; u.pitch = 0.85;
-    if (mode === 'en') {
-      u.lang = 'en-GB';
-      let pool = voices.filter(v => /en[-_]?GB/i.test(v.lang));
-      if (!pool.length) pool = voices.filter(v => /^en/i.test(v.lang));
-      const pick = pool.find(v => /male|daniel|george|arthur|oliver|ryan|uk english/i.test(v.name)) || pool[0];
-      if (pick) u.voice = pick;
-    } else {
-      u.lang = 'ro-RO';
-      const ro = voices.filter(v => /ro/i.test(v.lang));
-      const pick = ro.find(v => /male|b(ă|a)rb|david|andrei|emil|george|paul|cristian/i.test(v.name)) || ro[0];
-      if (pick) u.voice = pick;
+  // ── VOCE (Gibilan) ────────────────────────────────────────────────
+  // Folosește vocile instalate pe dispozitiv. Ca să sune clar: alege cea mai
+  // bună voce disponibilă (sau cea aleasă de tine), ton natural, viteză
+  // reglabilă, text pregătit pentru citire (ore, date, numere) și pauze între
+  // propoziții. În modul Engleză raportul e spus în engleză, nu română citită
+  // cu voce englezească.
+  function jvsVoiceMode() { return localStorage.getItem('jvsVoiceMode') === 'en' ? 'en' : 'ro'; }
+  function jvsVoiceScore(v, lang) {
+    const n = (v.name || '').toLowerCase();
+    let sc = 0;
+    if (/natural|neural/.test(n)) sc += 60;
+    if (/google/.test(n)) sc += 35;
+    if (/enhanced|premium|siri/.test(n)) sc += 30;
+    if (/online/.test(n)) sc += 15;
+    if (/microsoft/.test(n)) sc += 10;
+    if (v.localService === false) sc += 8;
+    if (/espeak|compact|pico/.test(n)) sc -= 60;
+    if (lang === 'en' && /en[-_]GB/i.test(v.lang || '')) sc += 20;
+    return sc;
+  }
+  function jvsVoicesFor(lang) {
+    let all = [];
+    try { all = window.speechSynthesis.getVoices() || []; } catch (e) {}
+    const re = lang === 'en' ? /^en([-_]|$)/i : /^ro([-_]|$)/i;
+    return all.filter(v => re.test(v.lang || '')).sort((a, b) => jvsVoiceScore(b, lang) - jvsVoiceScore(a, lang));
+  }
+  function jvsPickVoice(lang) {
+    const pool = jvsVoicesFor(lang);
+    const want = localStorage.getItem('jvsVoiceName_' + lang) || '';
+    return pool.find(v => v.name === want) || pool[0] || null;
+  }
+  function jvsRate() { const r = parseFloat(localStorage.getItem('jvsVoiceRate')); return (r >= 0.7 && r <= 1.3) ? r : 1; }
+
+  // Pregătește textul pentru citire cu voce (ce se afișează rămâne neschimbat)
+  const JVS_LUNI = ['ianuarie', 'februarie', 'martie', 'aprilie', 'mai', 'iunie', 'iulie', 'august', 'septembrie', 'octombrie', 'noiembrie', 'decembrie'];
+  const JVS_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  function jvsSayable(txt, lang) {
+    let t = String(txt);
+    const date = (m, d, mo) => { const k = parseInt(mo, 10); return (k >= 1 && k <= 12) ? (lang === 'en' ? JVS_MONTHS[k - 1] + ' ' + parseInt(d, 10) : parseInt(d, 10) + ' ' + JVS_LUNI[k - 1]) : m; };
+    t = t.replace(/\b(\d{1,2})\.(\d{1,2})\.\d{4}\b/g, date);
+    if (lang === 'en') return t.replace(/\b(\d{1,2}):(\d{2})\b/g, (m, h, mi) => parseInt(h, 10) + (mi === '00' ? " o'clock" : ' ' + mi));
+    // ore: 14:30 → „14 și 30", 09:00 → „9 fix"
+    t = t.replace(/\b(\d{1,2}):(\d{2})\b/g, (m, h, mi) => parseInt(h, 10) + (mi === '00' ? ' fix' : ' și ' + parseInt(mi, 10)));
+    // cuvinte englezești pe care vocea în română le citește greșit
+    t = t.replace(/deadline-urile/gi, 'termenele limită').replace(/deadline-uri/gi, 'termene limită').replace(/deadline-ul/gi, 'termenul limită').replace(/deadline/gi, 'termen limită')
+         .replace(/task-urile/gi, 'taskurile').replace(/task-uri/gi, 'taskuri').replace(/task-ul/gi, 'taskul');
+    // numere înaintea substantivelor: „2" → două, „12" → douăsprezece, „de" de la 20 în sus
+    t = t.replace(/\b(\d+) (întâlniri|taskuri|termene limită)/g, (m, n, w) => {
+      const k = parseInt(n, 10);
+      if (k === 0) return 'zero ' + w;
+      const num = k === 2 ? 'două' : (k === 12 ? 'douăsprezece' : String(k));
+      const r = k % 100;
+      return num + ((k >= 20 && !(r >= 1 && r <= 19)) ? ' de ' : ' ') + w;
+    });
+    return t.replace(/\bJ\.A\.R\.V\.I\.S\.?/g, 'Jarvis');
+  }
+
+  // Spune un text: propozițiile sunt puse la coadă una câte una (pauze naturale)
+  function jvsSay(txt, lang, onDone) {
+    const finish = () => { if (onDone) { const f = onDone; onDone = null; f(); } };
+    try {
+      if (!('speechSynthesis' in window)) { finish(); return; }
+      const synth = window.speechSynthesis;
+      synth.cancel();
+      const voice = jvsPickVoice(lang);
+      const parts = (jvsSayable(txt, lang).match(/[^.!?]+(?:[.!?]+(?=\s|$)|$)/g) || [String(txt)]).map(x => x.trim()).filter(Boolean);
+      if (!parts.length) { finish(); return; }
+      parts.forEach((part, idx) => {
+        const u = new SpeechSynthesisUtterance(part);
+        u.lang = voice ? voice.lang : (lang === 'en' ? 'en-GB' : 'ro-RO');
+        if (voice) u.voice = voice;
+        u.rate = jvsRate(); u.pitch = 1; u.volume = 1;
+        if (idx === parts.length - 1) { u.onend = finish; u.onerror = finish; }
+        synth.speak(u);
+      });
+    } catch (e) { finish(); }
+  }
+
+  // Raportul în engleză (modul „Engleză")
+  function jvsSpeakTextEn() {
+    const today = new Date().toISOString().split('T')[0];
+    const in7 = new Date(); in7.setDate(in7.getDate() + 7);
+    const in7Str = in7.toISOString().split('T')[0];
+    const meetings = gibData.meetings || [];
+    const m = meetings.filter(x => x.date === today).length;
+    const t = (gibData.todos || []).filter(x => !x.done).length;
+    const d = (gibData.deadlines || []).filter(x => x.date >= today && x.date <= in7Str).length;
+    const pl = (n, one, many) => (n === 0 ? 'no ' + many : (n === 1 ? 'one ' + one : n + ' ' + many));
+    let txt = (m === 0 && t === 0 && d === 0)
+      ? 'You have nothing scheduled right now. Enjoy a quiet day!'
+      : 'You have ' + pl(m, 'meeting', 'meetings') + ' today, ' + pl(t, 'task', 'tasks') + ' to do, and ' + pl(d, 'deadline', 'deadlines') + ' in the next 7 days.';
+    const next = meetings.slice().sort((a, b) => ((a.date || '') + (a.time || '')).localeCompare((b.date || '') + (b.time || ''))).find(x => x.date >= today);
+    if (next) txt += ' Next meeting: ' + (next.title || 'untitled') + (next.time ? ' at ' + next.time : '') + (next.date === today ? ', today.' : ', on ' + formatDate(next.date) + '.');
+    const acum = new Date();
+    const lunaAc = acum.getFullYear() + '-' + String(acum.getMonth() + 1).padStart(2, '0');
+    const chLuna = (typeof allCheltuieli !== 'undefined' ? (allCheltuieli || []) : []).filter(c => (c.data || '').startsWith(lunaAc));
+    if (chLuna.length) {
+      const total = chLuna.reduce((a, c) => a + (parseFloat(c.suma) || 0), 0);
+      const unpaid = chLuna.filter(c => !c.achitat).reduce((a, c) => a + (parseFloat(c.suma) || 0), 0);
+      txt += ' Expenses this month: ' + Math.round(total) + ' lei' + (unpaid > 0 ? ', of which ' + Math.round(unpaid) + ' lei unpaid.' : '.');
     }
+    return txt;
   }
 
   function jvsSpeak(prefix) {
     if (typeof gibData === 'undefined' || !gibData) return;
-    let txt = (prefix ? prefix + '! ' : 'Bună! ') + jvsSpeakText();
+    const lang = jvsVoiceMode();
+    let txt;
+    if (lang === 'en') {
+      const en = { 'Bună dimineața': 'Good morning', 'Bună ziua': 'Good afternoon', 'Bună seara': 'Good evening', 'Sigur': 'Certainly' };
+      txt = (prefix ? (en[prefix] || 'Hello') : 'Hello') + '! ' + jvsSpeakTextEn();
+    } else {
+      txt = (prefix ? prefix + '! ' : 'Bună! ') + jvsSpeakText();
+    }
     const bubble = document.getElementById('gib-bubble');
     if (bubble) bubble.textContent = txt;
-    try {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(txt);
-        jvsConfigVoice(u);
-        const btn = document.getElementById('jvs-speak-btn');
-        if (btn) { btn.classList.add('speaking'); u.onend = u.onerror = () => btn.classList.remove('speaking'); }
-        window.speechSynthesis.speak(u);
-      }
-    } catch (e) {}
+    const btn = document.getElementById('jvs-speak-btn');
+    if (btn && 'speechSynthesis' in window) btn.classList.add('speaking');
+    jvsSay(txt, lang, () => { if (btn) btn.classList.remove('speaking'); });
   }
+
+  // Opțiunile de voce din interfață
+  function jvsFillVoices() {
+    const sel = document.getElementById('jvs-voice-pick'), hint = document.getElementById('jvs-voice-hint');
+    if (!sel) return;
+    const lang = jvsVoiceMode(), pool = jvsVoicesFor(lang);
+    const vm = document.getElementById('jvs-voice-mode'); if (vm) vm.value = lang;
+    const want = localStorage.getItem('jvsVoiceName_' + lang) || '';
+    sel.innerHTML = '';
+    const auto = document.createElement('option');
+    auto.value = ''; auto.textContent = 'Voce: automat (cea mai clară)';
+    sel.appendChild(auto);
+    pool.forEach(v => { const o = document.createElement('option'); o.value = v.name; o.textContent = v.name + (v.lang ? ' · ' + v.lang : ''); sel.appendChild(o); });
+    sel.value = pool.some(v => v.name === want) ? want : '';
+    if (hint) {
+      hint.textContent = !('speechSynthesis' in window) ? 'Acest browser nu poate reda voce.'
+        : (pool.length ? '' : (lang === 'en' ? 'Nu am găsit o voce în engleză pe acest dispozitiv.' : 'Nu am găsit o voce în română pe acest dispozitiv. Instalează datele vocale pentru Română din setările telefonului (Redare vocală a textului).'));
+    }
+    const rate = document.getElementById('jvs-voice-rate'), val = document.getElementById('jvs-voice-rate-val');
+    if (rate) rate.value = jvsRate();
+    if (val) val.textContent = jvsRate().toFixed(2) + '×';
+  }
+  function jvsModeChosen(v) { localStorage.setItem('jvsVoiceMode', v === 'en' ? 'en' : 'ro'); jvsFillVoices(); }
+  function jvsVoiceChosen(name) { localStorage.setItem('jvsVoiceName_' + jvsVoiceMode(), name || ''); jvsVoiceTest(); }
+  function jvsRateChosen(v) {
+    const r = Math.min(1.3, Math.max(0.7, parseFloat(v) || 1));
+    localStorage.setItem('jvsVoiceRate', String(r));
+    const val = document.getElementById('jvs-voice-rate-val'); if (val) val.textContent = r.toFixed(2) + '×';
+  }
+  function jvsVoiceTest() {
+    const lang = jvsVoiceMode();
+    jvsSay(lang === 'en'
+      ? "Hello! This is Gibilan's voice. You have two meetings today, the next one at 14:30."
+      : 'Bună! Aceasta este vocea lui Gibilan. Ai 2 întâlniri azi, următoarea la ora 14:30.', lang);
+  }
+  try {
+    jvsFillVoices();
+    if ('speechSynthesis' in window && window.speechSynthesis.addEventListener) window.speechSynthesis.addEventListener('voiceschanged', jvsFillVoices);
+  } catch (e) {}
 
   // Salut automat o data pe zi, la prima interactiune cand esti pe tabul Gibilan
   function jvsGreet() {
@@ -5873,7 +6016,7 @@
     const bubble = document.getElementById('gib-bubble');
     const speak = (txt) => {
       if (bubble) bubble.textContent = txt;
-      try { if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(txt); jvsConfigVoice(u); window.speechSynthesis.speak(u); } } catch (e) {}
+      jvsSay(txt, 'ro');
     };
     if (!said) { speak('Nu am auzit nimic.'); return; }
     const add = said.match(/(?:adaug[ăa]?|noteaz[ăa]?|creeaz[ăa]?)(?:\s+un)?\s+task\s+(.+)/) || said.match(/task\s+nou\s+(.+)/);
@@ -6366,7 +6509,8 @@
 
   function aiChatInit() {
     const vm = document.getElementById('jvs-voice-mode');
-    if (vm) vm.value = localStorage.getItem('jvsVoiceMode') || 'ro';
+    if (vm) vm.value = jvsVoiceMode();
+    if (typeof jvsFillVoices === 'function') jvsFillVoices();
     if (typeof fetchBlog === 'function' && !(typeof allBlog !== 'undefined' && allBlog.length)) { try { fetchBlog(); } catch (e) {} }
     const sel = document.getElementById('ai-agent-sel');
     if (!sel || sel.options.length) return;
