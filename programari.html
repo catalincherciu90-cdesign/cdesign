@@ -1930,6 +1930,100 @@
     #panel-gibilan .jvs-card, #panel-gibilan .gib-section, #panel-gibilan #stark-weather-panel { --cut: 14px; }
   }
 </style>
+  <style id="admin-burger">
+  /* ── MENIU BURGER (telefon / tabletă) ─────────────────────────────
+     Sub 901px bara de taburi devine un sertar care iese din stânga,
+     deschis din butonul ☰ din bara de sus. Pe desktop rămâne sidebar. */
+  .menu-burger, .menu-backdrop { display: none; }
+  @media (max-width: 900px) {
+    .menu-burger {
+      display: inline-flex; align-items: center; gap: 10px; min-width: 0; max-width: 46vw;
+      height: 38px; padding: 0 12px 0 10px; position: relative; cursor: pointer;
+      background: rgba(0, 229, 255, .06); color: #00e5ff;
+      border: 1px solid rgba(0, 229, 255, .4);
+      font-family: 'Share Tech Mono', monospace; font-size: .8rem; letter-spacing: .04em;
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .menu-burger-ico { display: inline-flex; flex-direction: column; justify-content: center; gap: 4px; width: 18px; flex-shrink: 0; }
+    .menu-burger-ico i { display: block; height: 2px; background: currentColor; border-radius: 2px; box-shadow: 0 0 6px rgba(0, 229, 255, .7); transition: transform .25s ease, opacity .2s ease; transform-origin: center; }
+    .menu-burger[aria-expanded="true"] .menu-burger-ico i:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .menu-burger[aria-expanded="true"] .menu-burger-ico i:nth-child(2) { opacity: 0; }
+    .menu-burger[aria-expanded="true"] .menu-burger-ico i:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+    .menu-burger-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+    .menu-burger-dot { display: none; position: absolute; top: 4px; right: 5px; width: 8px; height: 8px; border-radius: 50%; background: #e8112d; box-shadow: 0 0 8px rgba(232, 17, 45, .9); }
+    .menu-burger.has-new .menu-burger-dot { display: block; }
+
+    .top-bar .top-logo { display: none; }
+    .top-bar > div:first-child { gap: 12px !important; }
+
+    .tabs {
+      position: fixed; top: 60px; left: 0; bottom: 0; z-index: 50;
+      width: min(84vw, 310px); padding: 12px 10px calc(16px + env(safe-area-inset-bottom));
+      display: flex; flex-direction: column; align-items: stretch; gap: 3px;
+      background: rgba(4, 18, 24, .97) !important;
+      border-bottom: none !important; border-right: 1px solid rgba(0, 229, 255, .35);
+      box-shadow: 8px 0 30px rgba(0, 0, 0, .55), 0 0 22px rgba(0, 229, 255, .12) !important;
+      overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
+      transform: translateX(-105%); visibility: hidden;
+      transition: transform .28s cubic-bezier(.2, .8, .2, 1), visibility 0s linear .28s;
+    }
+    .tabs.open { transform: translateX(0); visibility: visible; transition: transform .28s cubic-bezier(.2, .8, .2, 1), visibility 0s; }
+    .tab {
+      flex-shrink: 0; text-align: left; white-space: normal;
+      font-size: .9rem !important; padding: 13px 14px !important;
+      border-bottom: none !important; border-left: 3px solid transparent; border-radius: 0;
+    }
+    .tab.active {
+      border-left-color: #00e5ff; background: rgba(0, 229, 255, .10);
+      box-shadow: 0 0 16px rgba(0, 229, 255, var(--jvs-aura)) !important;
+    }
+    .tab.active[onclick*="gibilan"]::after { display: none; }
+
+    .menu-backdrop {
+      display: block; position: fixed; top: 60px; left: 0; right: 0; bottom: 0; z-index: 49;
+      background: rgba(0, 6, 10, .62); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+      opacity: 0; pointer-events: none; transition: opacity .25s ease;
+    }
+    .menu-backdrop.open { opacity: 1; pointer-events: auto; }
+    body.menu-open { overflow: hidden; }
+  }
+  @media (max-width: 600px) {
+    .tabs, .menu-backdrop { top: 52px; }
+    .menu-burger { height: 34px; max-width: 52vw; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tabs, .tabs.open, .menu-backdrop, .menu-burger-ico i { transition: none; }
+  }
+  </style>
+  <style id="admin-quick">
+  /* ── ACCES RAPID pe prima pagină (Gibilan) ───────────────────────── */
+  .gib-quick { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
+  .gq-tile {
+    --cut: 10px; --gq-edge: rgba(0, 229, 255, .45);
+    position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px;
+    min-height: 78px; padding: 12px 6px 10px; cursor: pointer; color: #7df9ff;
+    font-family: 'Share Tech Mono', monospace; font-size: .74rem; letter-spacing: .04em;
+    border: 1px solid var(--gq-edge); border-radius: 0;
+    clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+    background:
+      linear-gradient(45deg, transparent calc(50% - .8px), var(--gq-edge) calc(50% - .8px), var(--gq-edge) calc(50% + .8px), transparent calc(50% + .8px)) top right / var(--cut) var(--cut) no-repeat border-box,
+      linear-gradient(45deg, transparent calc(50% - .8px), var(--gq-edge) calc(50% - .8px), var(--gq-edge) calc(50% + .8px), transparent calc(50% + .8px)) bottom left / var(--cut) var(--cut) no-repeat border-box,
+      linear-gradient(160deg, rgba(0, 229, 255, .12) 0%, rgba(6, 18, 24, .5) 60%, rgba(6, 18, 24, .35) 100%);
+    transition: color .2s ease, transform .15s ease, filter .2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .gq-tile:hover { color: #fff; --gq-edge: #00e5ff; filter: drop-shadow(0 0 8px rgba(0, 229, 255, .45)); }
+  .gq-tile:active { transform: scale(.96); }
+  .gq-tile:focus-visible { outline: 2px solid #00e5ff; outline-offset: 2px; }
+  .gq-ico { font-size: 1.45rem; line-height: 1; filter: drop-shadow(0 0 6px rgba(0, 229, 255, .45)); }
+  .gq-lab { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  .gq-badge { display: none; position: absolute; top: 6px; left: 7px; min-width: 18px; padding: 1px 5px; border-radius: 20px; background: #e8112d; color: #fff; font-size: .62rem; font-weight: 700; line-height: 1.5; box-shadow: 0 0 8px rgba(232, 17, 45, .8); }
+  .gq-badge.on { display: inline-block; }
+  @media (max-width: 1100px) { .gib-quick { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { .gib-quick { gap: 8px; margin-bottom: 14px; } .gq-tile { min-height: 72px; font-size: .68rem; padding: 10px 4px 8px; } .gq-ico { font-size: 1.3rem; } }
+  @media (prefers-reduced-motion: reduce) { .gq-tile { transition: none; } }
+  </style>
 </head>
 <body>
 
@@ -1957,7 +2051,8 @@
 <!-- DASHBOARD -->
 <div id="dashboard">
   <div class="top-bar">
-    <div style="display:flex;align-items:center;gap:18px;">
+    <div style="display:flex;align-items:center;gap:18px;min-width:0;">
+      <button class="menu-burger" id="menuBurger" type="button" aria-label="Meniu" aria-controls="adminTabs" aria-expanded="false" onclick="toggleAdminMenu()"><span class="menu-burger-ico" aria-hidden="true"><i></i><i></i><i></i></span><span class="menu-burger-label" id="menuCurrent">Meniu</span><span class="menu-burger-dot" id="menuDot" aria-hidden="true"></span></button>
       <div class="top-logo"><span>C</span>DESIGN</div>
       <div class="top-clock">
         <div class="top-clock-time" id="topTime">00:00:00</div>
@@ -1970,7 +2065,8 @@
     </div>
   </div>
 
-  <div class="tabs">
+  <div class="menu-backdrop" id="menuBackdrop" onclick="toggleAdminMenu(false)"></div>
+  <div class="tabs" id="adminTabs">
     <button class="tab active" onclick="switchTab('gibilan',this)">&#x1F916; Gibilan</button>
     <button class="tab" onclick="switchTab('bookings',this)">&#x1F4C5; Program&#259;ri</button>
     <button class="tab" onclick="switchTab('projects',this)">&#x1F5BC; Portofoliu</button>
@@ -1995,6 +2091,16 @@
   <div class="tab-panel active" id="panel-gibilan">
     <div class="main">
       <div id="gib-leads-alert" style="display:none;"></div>
+      <div class="gib-quick" id="gib-quick" aria-label="Acces rapid">
+        <button type="button" class="gq-tile" onclick="quickOpen('bookings')"><span class="gq-ico" aria-hidden="true">&#x1F4C5;</span><span class="gq-lab">Program&#259;ri</span></button>
+        <button type="button" class="gq-tile" onclick="quickOpen('mesaje')"><span class="gq-ico" aria-hidden="true">&#x1F4E8;</span><span class="gq-lab">Mesaje</span><span class="gq-badge" data-for="mesaje-tab-badge"></span></button>
+        <button type="button" class="gq-tile" onclick="quickOpen('chatai')"><span class="gq-ico" aria-hidden="true">&#x1F4AC;</span><span class="gq-lab">Chat AI</span><span class="gq-badge" data-for="chatai-tab-badge"></span></button>
+        <button type="button" class="gq-tile" onclick="quickOpen('clients')"><span class="gq-ico" aria-hidden="true">&#x1F465;</span><span class="gq-lab">Clien&#x21B;i</span></button>
+        <button type="button" class="gq-tile" onclick="quickOpen('crm')"><span class="gq-ico" aria-hidden="true">&#x1F4CB;</span><span class="gq-lab">CRM</span></button>
+        <button type="button" class="gq-tile" onclick="quickOpen('oferte')"><span class="gq-ico" aria-hidden="true">&#x1F9FE;</span><span class="gq-lab">Oferte</span></button>
+        <button type="button" class="gq-tile" onclick="quickOpen('cheltuieli')"><span class="gq-ico" aria-hidden="true">&#x1F4B8;</span><span class="gq-lab">Cheltuieli</span></button>
+        <button type="button" class="gq-tile" onclick="quickOpen('settings')"><span class="gq-ico" aria-hidden="true">&#x2699;&#xFE0F;</span><span class="gq-lab">Set&#x103;ri</span></button>
+      </div>
       <div class="gibilan-layout">
         <!-- Hero Zone: Reactor in Center with Panels Around -->
         <div class="gibilan-char">
@@ -4214,6 +4320,53 @@
     if (tab === 'gsc') loadGsc();
     if (tab === 'promotions') { loadPromotions(); loadGiveawaySettings(); loadPromoVisibility(); }
   }
+
+  // Acces rapid de pe prima pagină: deschide tabul cerut
+  function quickOpen(tab) {
+    const btn = document.querySelector('.tab[onclick*="\'' + tab + '\'"]');
+    if (btn) { btn.click(); window.scrollTo(0, 0); }
+  }
+
+  // ── MENIU BURGER (telefon / tabletă) ──────────────────────────────
+  function toggleAdminMenu(force) {
+    const tabs = document.getElementById('adminTabs'), btn = document.getElementById('menuBurger'), bd = document.getElementById('menuBackdrop');
+    if (!tabs || !btn) return;
+    const open = typeof force === 'boolean' ? force : !tabs.classList.contains('open');
+    tabs.classList.toggle('open', open);
+    if (bd) bd.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.classList.toggle('menu-open', open);
+    if (open) { const act = tabs.querySelector('.tab.active'); if (act && act.scrollIntoView) act.scrollIntoView({ block: 'nearest' }); }
+  }
+  function syncAdminMenu() {
+    const tabs = document.getElementById('adminTabs'), btn = document.getElementById('menuBurger'), lbl = document.getElementById('menuCurrent');
+    if (!tabs || !btn) return;
+    const act = tabs.querySelector('.tab.active');
+    if (act && lbl) {
+      // eticheta = textul tabului activ, fără emoji de început și fără insigna de necitite
+      let txt = '';
+      act.childNodes.forEach(n => { if (n.nodeType === 3) txt += n.textContent; });
+      lbl.textContent = txt.replace(/^[^\p{L}\p{N}]+/u, '').trim() || 'Meniu';
+    }
+    // insignele de necitite se văd și pe butoanele de acces rapid
+    document.querySelectorAll('.gq-badge[data-for]').forEach(g => {
+      const src = document.getElementById(g.getAttribute('data-for'));
+      const on = !!(src && src.classList.contains('on') && src.textContent.trim());
+      if (g.textContent !== (on ? src.textContent : '')) g.textContent = on ? src.textContent : '';
+      g.classList.toggle('on', on);
+    });
+    const hasNew = [...tabs.querySelectorAll('.tab-badge')].some(b => b.classList.contains('on') || (b.id === 'promoTabBadge' && b.style.display !== 'none' && b.textContent.trim()));
+    btn.classList.toggle('has-new', hasNew);
+  }
+  (function initAdminMenu() {
+    const tabs = document.getElementById('adminTabs');
+    if (!tabs) return;
+    tabs.addEventListener('click', (e) => { if (e.target.closest('.tab')) { toggleAdminMenu(false); setTimeout(syncAdminMenu, 0); } });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') toggleAdminMenu(false); });
+    window.addEventListener('resize', () => { if (window.innerWidth > 900) toggleAdminMenu(false); });
+    new MutationObserver(syncAdminMenu).observe(tabs, { subtree: true, attributes: true, attributeFilter: ['class', 'style'], childList: true, characterData: true });
+    syncAdminMenu();
+  })();
 
   function refreshCurrent() {
     if (currentTab === 'gibilan') loadGibilan();
