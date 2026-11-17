@@ -1803,6 +1803,9 @@
 <!-- JARVIS PARTICLES NETWORK BACKGROUND -->
 <canvas id="jvsParticlesCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;display:none;"></canvas>
 
+<!-- MATRIX RAIN BACKGROUND (ploaie digitală, în spatele conținutului) -->
+<canvas id="jvsMatrixCanvas" aria-hidden="true" style="position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.42;"></canvas>
+
 <!-- LOGIN -->
 <div class="login-wrap" id="loginWrap">
   <div class="login-box">
@@ -9102,6 +9105,100 @@
   };
 
   jvsParticles.init();
+
+  // 1b) MATRIX RAIN BACKGROUND (ploaie digitala in culorile temei)
+  // Canvas fix in spatele continutului (z-index:-1). Ruleaza la ~18fps,
+  // se opreste cand tabul e ascuns si nu porneste la prefers-reduced-motion.
+  const jvsMatrix = {
+    canvas: null,
+    ctx: null,
+    cols: [],
+    fontSize: 16,
+    running: false,
+    animationId: null,
+    last: 0,
+    interval: 55,
+    glyphs: 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワ0123456789<>/{}[]=+*',
+
+    init() {
+      if (this.canvas) return;
+      this.canvas = document.getElementById('jvsMatrixCanvas');
+      if (!this.canvas) return;
+      this.ctx = this.canvas.getContext('2d');
+      this.resize();
+      let rt;
+      window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => this.resize(), 150); });
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) { if (this.animationId) cancelAnimationFrame(this.animationId); }
+        else if (this.running) this.loop();
+      });
+    },
+
+    newCol(h) {
+      return { y: -Math.random() * (h / this.fontSize), speed: 0.45 + Math.random() * 0.9, row: null, ch: null };
+    },
+
+    resize() {
+      if (!this.canvas) return;
+      const w = window.innerWidth, h = window.innerHeight;
+      this.canvas.width = w;
+      this.canvas.height = h;
+      this.fontSize = w < 700 ? 14 : 16;
+      const n = Math.ceil(w / this.fontSize);
+      this.cols = Array.from({ length: n }, () => this.newCol(h));
+      this.ctx.font = this.fontSize + 'px "Share Tech Mono", monospace';
+      this.ctx.textBaseline = 'top';
+    },
+
+    step() {
+      const c = this.ctx, fs = this.fontSize, h = this.canvas.height;
+      // estompeaza treptat urmele, pastrand canvasul transparent
+      c.globalCompositeOperation = 'destination-out';
+      c.fillStyle = 'rgba(0,0,0,0.085)';
+      c.fillRect(0, 0, this.canvas.width, h);
+      c.globalCompositeOperation = 'source-over';
+      for (let i = 0; i < this.cols.length; i++) {
+        const col = this.cols[i];
+        const row = Math.floor(col.y);
+        if (row >= 0 && row !== col.row) {
+          // fostul "cap" devine urma (cyan), noul cap e aproape alb
+          if (col.ch !== null && col.row !== null) {
+            c.clearRect(i * fs, col.row * fs, fs, fs);
+            c.fillStyle = 'rgba(0,229,255,0.9)';
+            c.fillText(col.ch, i * fs, col.row * fs);
+          }
+          col.row = row;
+          col.ch = this.glyphs.charAt(Math.floor(Math.random() * this.glyphs.length));
+          c.fillStyle = '#dcfeff';
+          c.fillText(col.ch, i * fs, row * fs);
+        }
+        col.y += col.speed;
+        if (row * fs > h && Math.random() > 0.97) this.cols[i] = this.newCol(h * 0.4);
+      }
+    },
+
+    loop(ts) {
+      if (!this.running) return;
+      if (!ts || ts - this.last >= this.interval) { this.last = ts || 0; this.step(); }
+      this.animationId = requestAnimationFrame((t) => this.loop(t));
+    },
+
+    start() {
+      if (this.running || !this.canvas) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      this.running = true;
+      this.loop();
+    },
+
+    stop() {
+      this.running = false;
+      if (this.animationId) cancelAnimationFrame(this.animationId);
+      if (this.ctx) this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+  };
+
+  jvsMatrix.init();
+  jvsMatrix.start();
 
   // 2) ENERGY BEAMS (reactor → TIME/STATUS cards)
   const jvsBeams = {
