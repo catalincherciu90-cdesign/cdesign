@@ -2060,20 +2060,41 @@
   </style>
   <style id="admin-agenda">
   /* ── TAB AGENDĂ ───────────────────────────────────────────────── */
-  .agenda-nav { display: flex; gap: 8px; margin-bottom: 18px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
-  .agenda-nav::-webkit-scrollbar { display: none; }
-  .agenda-chip {
-    flex-shrink: 0; display: inline-flex; align-items: center; gap: 7px; cursor: pointer; white-space: nowrap;
-    font-family: 'Share Tech Mono', monospace; font-size: .78rem; letter-spacing: .03em;
-    padding: 8px 13px; color: #7df9ff; background: rgba(0, 229, 255, .05); border: 1px solid rgba(0, 229, 255, .35);
-    transition: background .2s ease, color .2s ease, box-shadow .2s ease; -webkit-tap-highlight-color: transparent;
+  .agenda-menu { position: relative; display: inline-block; margin-bottom: 18px; z-index: 20; }
+  .agenda-burger {
+    display: inline-flex; align-items: center; gap: 10px; height: 36px; padding: 0 14px 0 11px; cursor: pointer;
+    font-family: 'Share Tech Mono', monospace; font-size: .8rem; letter-spacing: .04em; color: #00e5ff;
+    background: rgba(0, 229, 255, .06); border: 1px solid rgba(0, 229, 255, .45);
+    clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+    -webkit-tap-highlight-color: transparent;
   }
-  .agenda-chip:hover { color: #fff; background: rgba(0, 229, 255, .12); }
-  .agenda-chip.active { color: #04141a; background: #00e5ff; border-color: #00e5ff; font-weight: 700; box-shadow: 0 0 14px rgba(0, 229, 255, .45); }
+  .agenda-burger:hover { background: rgba(0, 229, 255, .12); }
+  .agenda-burger-ico { display: inline-flex; flex-direction: column; justify-content: center; gap: 3px; width: 14px; flex-shrink: 0; }
+  .agenda-burger-ico i { display: block; height: 2px; background: currentColor; border-radius: 2px; box-shadow: 0 0 5px rgba(0, 229, 255, .7); transition: transform .22s ease, opacity .18s ease; transform-origin: center; }
+  .agenda-burger[aria-expanded="true"] .agenda-burger-ico i:nth-child(1) { transform: translateY(5px) rotate(45deg); }
+  .agenda-burger[aria-expanded="true"] .agenda-burger-ico i:nth-child(2) { opacity: 0; }
+  .agenda-burger[aria-expanded="true"] .agenda-burger-ico i:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
+  .agenda-nav {
+    position: absolute; top: calc(100% + 6px); left: 0; min-width: 230px; max-width: calc(100vw - 32px);
+    display: flex; flex-direction: column; gap: 2px; padding: 6px;
+    background: rgba(4, 18, 24, .97); border: 1px solid rgba(0, 229, 255, .45);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .6), 0 0 18px rgba(0, 229, 255, .16);
+    opacity: 0; visibility: hidden; transform: translateY(-6px);
+    transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s;
+  }
+  .agenda-nav.open { opacity: 1; visibility: visible; transform: translateY(0); transition: opacity .18s ease, transform .18s ease, visibility 0s; }
+  .agenda-chip {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; cursor: pointer; white-space: nowrap; text-align: left;
+    font-family: 'Share Tech Mono', monospace; font-size: .84rem; letter-spacing: .03em;
+    padding: 11px 12px; color: #7df9ff; background: transparent; border: none; border-left: 3px solid transparent;
+    transition: background .2s ease, color .2s ease; -webkit-tap-highlight-color: transparent;
+  }
+  .agenda-chip:hover { color: #fff; background: rgba(0, 229, 255, .10); }
+  .agenda-chip.active { color: #00e5ff; background: rgba(0, 229, 255, .12); border-left-color: #00e5ff; font-weight: 700; }
   .agenda-count, .tab-count { display: none; min-width: 18px; padding: 0 5px; border-radius: 20px; font-size: .66rem; font-weight: 700; line-height: 1.6; text-align: center; background: rgba(0, 229, 255, .16); color: #7df9ff; border: 1px solid rgba(0, 229, 255, .5); }
   .agenda-count.on, .tab-count.on { display: inline-block; }
   .tab-count { margin-left: 4px; vertical-align: middle; }
-  .agenda-chip.active .agenda-count { background: rgba(4, 20, 26, .18); color: #04141a; border-color: rgba(4, 20, 26, .45); }
+  @media (prefers-reduced-motion: reduce) { .agenda-nav, .agenda-nav.open, .agenda-burger-ico i { transition: none; } }
   .agenda-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
   #panel-agenda:not([data-view="all"]) .agenda-grid { grid-template-columns: minmax(0, 1fr); max-width: 820px; }
   .agenda-sec-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; position: relative; z-index: 1; }
@@ -2287,12 +2308,15 @@
       <div class="proj-toolbar">
         <h3>// agend&#259;</h3>
       </div>
-      <div class="agenda-nav" aria-label="Sec&#539;iuni agend&#259;">
+      <div class="agenda-menu" id="agendaMenu">
+        <button type="button" class="agenda-burger" id="agendaBurger" aria-label="Sec&#539;iuni agend&#259;" aria-controls="agendaNav" aria-expanded="false" onclick="agendaMenuToggle()"><span class="agenda-burger-ico" aria-hidden="true"><i></i><i></i><i></i></span><span id="agendaCurrent">Toate</span><span class="agenda-count" id="agendaCurrentCount"></span></button>
+      <div class="agenda-nav" id="agendaNav">
         <button type="button" class="agenda-chip active" data-view="all" onclick="agendaShow('all')">Toate</button>
         <button type="button" class="agenda-chip" data-view="todos" onclick="agendaShow('todos')">&#x2705; Task-uri <span class="agenda-count" data-count="todos"></span></button>
         <button type="button" class="agenda-chip" data-view="meetings" onclick="agendaShow('meetings')">&#x1F550; &Icirc;nt&acirc;lniri <span class="agenda-count" data-count="meetings"></span></button>
         <button type="button" class="agenda-chip" data-view="deadlines" onclick="agendaShow('deadlines')">&#x26A0; Deadline-uri <span class="agenda-count" data-count="deadlines"></span></button>
         <button type="button" class="agenda-chip" data-view="bookings" onclick="agendaShow('bookings')">&#x1F4C5; Program&#259;ri <span class="agenda-count" data-count="bookings"></span></button>
+      </div>
       </div>
       <div class="agenda-grid">
 
@@ -4432,6 +4456,25 @@
     panel.setAttribute('data-view', v);
     panel.querySelectorAll('.agenda-chip').forEach(c => c.classList.toggle('active', c.getAttribute('data-view') === v));
     panel.querySelectorAll('.gib-section[data-sec]').forEach(sec => { sec.style.display = (v === 'all' || sec.getAttribute('data-sec') === v) ? '' : 'none'; });
+    agendaMenuToggle(false);
+    agendaMenuSync();
+  }
+  // Meniul mic (burger) al Agendei: butonul arată secțiunea curentă și numărul ei
+  function agendaMenuToggle(force) {
+    const nav = document.getElementById('agendaNav'), btn = document.getElementById('agendaBurger');
+    if (!nav || !btn) return;
+    const open = typeof force === 'boolean' ? force : !nav.classList.contains('open');
+    nav.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  function agendaMenuSync() {
+    const act = document.querySelector('#agendaNav .agenda-chip.active'), lbl = document.getElementById('agendaCurrent'), cnt = document.getElementById('agendaCurrentCount');
+    if (!act || !lbl) return;
+    let txt = '';
+    act.childNodes.forEach(n => { if (n.nodeType === 3) txt += n.textContent; });
+    lbl.textContent = txt.trim() || 'Toate';
+    const src = act.querySelector('.agenda-count');
+    if (cnt) { cnt.textContent = src ? src.textContent : ''; cnt.classList.toggle('on', !!(src && src.textContent)); }
   }
   // Scurtătură: deschide tabul Agendă direct pe o secțiune (opțional cu formularul de adăugare deschis)
   function agendaOpen(view, formId) {
@@ -4451,6 +4494,7 @@
       if (el.textContent !== txt) el.textContent = txt;
       el.classList.toggle('on', k > 0);
     });
+    agendaMenuSync();
   }
   (function initAgenda() {
     const lists = ['gib-todos-list', 'gib-meetings-list', 'gib-deadlines-list', 'gib-bookings-list'].map(id => document.getElementById(id)).filter(Boolean);
@@ -4458,6 +4502,8 @@
     const mo = new MutationObserver(agendaUpdateCounts);
     lists.forEach(l => mo.observe(l, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] }));
     agendaUpdateCounts();
+    document.addEventListener('click', (e) => { if (!e.target.closest('#agendaMenu')) agendaMenuToggle(false); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') agendaMenuToggle(false); });
   })();
 
   // ── MENIU BURGER (toate ecranele) ─────────────────────────────────
