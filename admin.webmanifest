@@ -1,0 +1,16 @@
+{
+  "name": "C Design Admin",
+  "short_name": "C Design",
+  "description": "Administrare site C Design: programări, mesaje, clienți, conținut.",
+  "lang": "ro",
+  "start_url": "/programari",
+  "scope": "/programari",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#04141a",
+  "theme_color": "#04141a",
+  "icons": [
+    { "src": "/admin-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/admin-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

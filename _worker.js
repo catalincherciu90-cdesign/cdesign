@@ -1233,6 +1233,94 @@ async function buildPlatformSnapshot(env) {
   ].join('\n');
 }
 
+// ── WEB PUSH (notificări pe telefon / aplicația Android) ──────────────────
+// VAPID (RFC 8292) + criptarea mesajului aes128gcm (RFC 8291), doar cu
+// WebCrypto. Cheile VAPID se generează o singură dată și se țin în KV
+// (__vapid__); abonamentele dispozitivelor stau în __push_subs__.
+const PUSH_HOSTS = ['fcm.googleapis.com', 'push.services.mozilla.com', 'web.push.apple.com', 'notify.windows.com'];
+function pushB64u(bytes) { let s = ''; for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+function pushB64uDec(str) { const b = atob(String(str).replace(/-/g, '+').replace(/_/g, '/')); const out = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) out[i] = b.charCodeAt(i); return out; }
+function pushConcat(...parts) { const out = new Uint8Array(parts.reduce((n, p) => n + p.length, 0)); let o = 0; for (const p of parts) { out.set(p, o); o += p.length; } return out; }
+// Acceptăm doar endpoint-uri https ale serviciilor de push cunoscute
+// (worker-ul face fetch către ele, deci nu lăsăm URL-uri arbitrare).
+function pushEndpointOk(endpoint) {
+  try { const u = new URL(endpoint); return u.protocol === 'https:' && PUSH_HOSTS.some(h => u.hostname === h || u.hostname.endsWith('.' + h)); } catch { return false; }
+}
+async function pushVapid(env) {
+  const raw = await env.PROGRAMARI.get('__vapid__');
+  if (raw) { try { const v = JSON.parse(raw); if (v && v.jwk && v.pub) return v; } catch {} }
+  const kp = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, true, ['sign', 'verify']);
+  const v = {
+    jwk: await crypto.subtle.exportKey('jwk', kp.privateKey),
+    pub: pushB64u(new Uint8Array(await crypto.subtle.exportKey('raw', kp.publicKey))),
+    createdAt: Date.now(),
+  };
+  await env.PROGRAMARI.put('__vapid__', JSON.stringify(v));
+  return v;
+}
+async function pushVapidHeader(vapid, endpoint) {
+  const te = new TextEncoder();
+  const enc = (o) => pushB64u(te.encode(JSON.stringify(o)));
+  const unsigned = enc({ typ: 'JWT', alg: 'ES256' }) + '.' + enc({ aud: new URL(endpoint).origin, exp: Math.floor(Date.now() / 1000) + 12 * 3600, sub: 'mailto:office@c-design.ro' });
+  const key = await crypto.subtle.importKey('jwk', vapid.jwk, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign']);
+  const sig = new Uint8Array(await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, key, te.encode(unsigned)));
+  return 'vapid t=' + unsigned + '.' + pushB64u(sig) + ', k=' + vapid.pub;
+}
+async function pushEncrypt(sub, payloadBytes) {
+  const te = new TextEncoder();
+  const uaPub = pushB64uDec(sub.keys.p256dh), auth = pushB64uDec(sub.keys.auth);
+  const as = await crypto.subtle.generateKey({ name: 'ECDH', namedCurve: 'P-256' }, true, ['deriveBits']);
+  const asPub = new Uint8Array(await crypto.subtle.exportKey('raw', as.publicKey));
+  const uaKey = await crypto.subtle.importKey('raw', uaPub, { name: 'ECDH', namedCurve: 'P-256' }, false, []);
+  const secret = new Uint8Array(await crypto.subtle.deriveBits({ name: 'ECDH', public: uaKey }, as.privateKey, 256));
+  const hkdf = async (salt, ikm, info, len) => {
+    const k = await crypto.subtle.importKey('raw', ikm, 'HKDF', false, ['deriveBits']);
+    return new Uint8Array(await crypto.subtle.deriveBits({ name: 'HKDF', hash: 'SHA-256', salt, info }, k, len * 8));
+  };
+  const ikm = await hkdf(auth, secret, pushConcat(te.encode('WebPush: info\0'), uaPub, asPub), 32);
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const cek = await hkdf(salt, ikm, te.encode('Content-Encoding: aes128gcm\0'), 16);
+  const nonce = await hkdf(salt, ikm, te.encode('Content-Encoding: nonce\0'), 12);
+  const aes = await crypto.subtle.importKey('raw', cek, 'AES-GCM', false, ['encrypt']);
+  const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv: nonce }, aes, pushConcat(payloadBytes, new Uint8Array([2]))));
+  const head = new Uint8Array(21);
+  head.set(salt, 0); new DataView(head.buffer).setUint32(16, 4096); head[20] = asPub.length;
+  return pushConcat(head, asPub, ct);
+}
+async function pushSendOne(vapid, sub, payload) {
+  const body = await pushEncrypt(sub, new TextEncoder().encode(JSON.stringify(payload)));
+  const res = await fetch(sub.endpoint, {
+    method: 'POST',
+    headers: { 'Authorization': await pushVapidHeader(vapid, sub.endpoint), 'Content-Encoding': 'aes128gcm', 'Content-Type': 'application/octet-stream', 'TTL': '86400', 'Urgency': 'high' },
+    body,
+  });
+  return res.status;
+}
+// Trimite o notificare tuturor dispozitivelor abonate. Nu aruncă niciodată
+// erori (e apelată din fluxurile de formulare) și curăță abonamentele expirate.
+async function pushNotifyAll(env, payload) {
+  const results = [];
+  try {
+    const raw = await env.PROGRAMARI.get('__push_subs__');
+    const subs = raw ? JSON.parse(raw) : [];
+    if (!Array.isArray(subs) || !subs.length) return results;
+    const vapid = await pushVapid(env);
+    const dead = [];
+    for (const sub of subs) {
+      let status = 0;
+      try { status = pushEndpointOk(sub.endpoint) ? await pushSendOne(vapid, sub, payload) : 0; } catch { status = -1; }
+      results.push(status);
+      if (status === 404 || status === 410) dead.push(sub.endpoint);
+    }
+    if (dead.length) await env.PROGRAMARI.put('__push_subs__', JSON.stringify(subs.filter(s => !dead.includes(s.endpoint))));
+  } catch {}
+  return results;
+}
+// Amprenta certificatului cu care e semnată aplicația Android (Digital Asset
+// Links) — îi spune lui Chrome că aplicația ro.cdesign.admin aparține site-ului.
+const ANDROID_APP_PACKAGE = 'ro.cdesign.admin';
+const ANDROID_APP_SHA256 = ['57:C2:64:E6:59:73:91:63:06:3C:44:70:66:B0:06:0F:3B:A8:76:D5:CE:E3:F2:B3:6F:F1:22:88:0D:4F:7C:B3'];
+
 // ── GOOGLE SEARCH CONSOLE (service account → JWT → access token) ──
 function gscB64urlBytes(bytes) { let s = ''; for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
 function gscB64urlStr(str) { return gscB64urlBytes(new TextEncoder().encode(str)); }
@@ -1429,9 +1517,18 @@ async function notifyRecipients(env) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = url.pathname;
+    // Notificare push către telefoanele abonate, fără să întârzie răspunsul.
+    const notifyPush = (payload) => {
+      try { const p = pushNotifyAll(env, payload); if (ctx && typeof ctx.waitUntil === 'function') ctx.waitUntil(p); } catch {}
+    };
+
+    // Digital Asset Links pentru aplicația Android (Trusted Web Activity)
+    if (path === '/.well-known/assetlinks.json') {
+      return new Response(JSON.stringify([{ relation: ['delegate_permission/common.handle_all_urls'], target: { namespace: 'android_app', package_name: ANDROID_APP_PACKAGE, sha256_cert_fingerprints: ANDROID_APP_SHA256 } }]), { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=3600' } });
+    }
 
     if (request.method === 'OPTIONS') return new Response(null, { headers: getCors(request) });
 
@@ -1788,6 +1885,7 @@ export default {
           const rec = { id: mid, name: String(name).slice(0, 120), phone: String(phone).slice(0, 40), email: String(email).slice(0, 160), service: contact.service, message: String(message).slice(0, 5000), createdAt: Date.now(), status: 'nou', ip };
           await env.PROGRAMARI.put('msg:' + mid, JSON.stringify(rec), { metadata: { name: rec.name, email: rec.email, service: rec.service, createdAt: rec.createdAt, status: 'nou', preview: String(message).slice(0, 90) } });
         } catch (e) {}
+        notifyPush({ title: '✉️ Mesaj nou — ' + String(contact.service).slice(0, 60), body: String(name).slice(0, 60) + ': ' + String(message).replace(/\s+/g, ' ').slice(0, 140), tab: 'mesaje', tag: 'mesaj' });
         await sendContactNotification(contact, env);
         return json({ success: true });
       } catch { return json({ error: 'Eroare server' }, 500); }
@@ -1815,6 +1913,7 @@ export default {
         const index = raw ? JSON.parse(raw) : [];
         index.unshift({ id, date, time, name });
         await env.PROGRAMARI.put('__index__', JSON.stringify(index));
+        notifyPush({ title: '📅 Programare nouă', body: String(name).slice(0, 60) + ' · ' + String(date).slice(0, 20) + ' ' + String(time).slice(0, 10) + ' · ' + String(booking.service).slice(0, 60), tab: 'bookings', tag: 'programare' });
         await sendBookingNotification(booking, env);
         return json({ success: true, id });
       } catch { return json({ error: 'Eroare server' }, 500); }
@@ -2693,6 +2792,46 @@ Cerințe titluri:
     }
 
     // ── SITE SETTINGS (hero image etc.) ──────────────────────
+    // ── PUSH (notificări pe telefon) — doar admin ─────────────
+    if (path.startsWith('/api/push/')) {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const readSubs = async () => { try { const v = JSON.parse(await env.PROGRAMARI.get('__push_subs__') || '[]'); return Array.isArray(v) ? v : []; } catch { return []; } };
+        if (path === '/api/push/key' && request.method === 'GET') {
+          const vapid = await pushVapid(env);
+          const subs = await readSubs();
+          return json({ key: vapid.pub, devices: subs.map(s => ({ id: s.endpoint.slice(-16), label: s.label || 'Dispozitiv', createdAt: s.createdAt || 0 })) });
+        }
+        if (path === '/api/push/subscribe' && request.method === 'POST') {
+          const b = await request.json().catch(() => ({}));
+          const sub = b.subscription || {};
+          const keys = sub.keys || {};
+          if (!pushEndpointOk(sub.endpoint) || String(sub.endpoint).length > 1000) return json({ error: 'Abonament invalid' }, 400);
+          let okKeys = false;
+          try { okKeys = pushB64uDec(keys.p256dh).length === 65 && pushB64uDec(keys.auth).length === 16; } catch {}
+          if (!okKeys) return json({ error: 'Chei invalide' }, 400);
+          let subs = (await readSubs()).filter(s => s.endpoint !== sub.endpoint);
+          subs.unshift({ endpoint: sub.endpoint, keys: { p256dh: keys.p256dh, auth: keys.auth }, label: String(b.label || 'Dispozitiv').slice(0, 60), createdAt: Date.now() });
+          subs = subs.slice(0, 20);
+          await env.PROGRAMARI.put('__push_subs__', JSON.stringify(subs));
+          return json({ success: true, devices: subs.length });
+        }
+        if (path === '/api/push/unsubscribe' && request.method === 'POST') {
+          const b = await request.json().catch(() => ({}));
+          const subs = await readSubs();
+          const left = b.all ? [] : subs.filter(s => s.endpoint !== b.endpoint && s.endpoint.slice(-16) !== b.id);
+          await env.PROGRAMARI.put('__push_subs__', JSON.stringify(left));
+          return json({ success: true, devices: left.length });
+        }
+        if (path === '/api/push/test' && request.method === 'POST') {
+          const results = await pushNotifyAll(env, { title: '🔔 Test notificare', body: 'Notificările C Design Admin funcționează pe acest dispozitiv.', tab: 'settings', tag: 'test' });
+          const ok = results.filter(r => r >= 200 && r < 300).length;
+          return json({ success: ok > 0, sent: ok, total: results.length, statuses: results });
+        }
+        return json({ error: 'Not found' }, 404);
+      } catch (e) { return json({ error: 'Eroare server' }, 500); }
+    }
+
     if (path === '/api/site-settings' && request.method === 'GET') {
       try {
         const raw = await env.PROGRAMARI.get('__site_settings__');
@@ -2819,6 +2958,7 @@ Cerințe titluri:
           await env.PROGRAMARI.put(key, JSON.stringify(conv), { metadata: meta });
           if (isNew) {
             const firstMsg = userText ? String(userText).slice(0, 500) : '';
+            notifyPush({ title: '💬 Lead nou din chat', body: String(email).slice(0, 80) + (firstMsg ? ': ' + firstMsg.replace(/\s+/g, ' ').slice(0, 120) : ''), tab: 'chatai', tag: 'lead' });
             // 1) Notificare email către agenție
             try {
               const apiKey = env.RESEND_API_KEY || RESEND_API_KEY;
@@ -2946,6 +3086,7 @@ Cerințe titluri:
         try {
           await env.PROGRAMARI.put('msg:' + mid, JSON.stringify(rec), { metadata: { name: rec.name, email: rec.email, service: rec.service, createdAt: rec.createdAt, status: 'nou', preview: (service + ' — ' + message).replace(/\n/g, ' ').slice(0, 90) } });
         } catch (e) {}
+        notifyPush({ title: '✉️ Mesaj nou — ' + rec.service.slice(0, 60), body: rec.name.slice(0, 60) + ': ' + rec.message.replace(/\s+/g, ' ').slice(0, 140), tab: 'mesaje', tag: 'mesaj' });
         try { await sendContactNotification({ name: rec.name, phone: rec.phone || '-', email: rec.email || '-', service: rec.service, message: rec.message }, env); } catch (e) {}
         return json({ success: true });
       } catch { return json({ error: 'Eroare server' }, 500); }
