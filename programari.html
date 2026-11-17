@@ -1853,6 +1853,21 @@
     animation: terminal-flicker .15s, jvs-aura-pulse 3.2s ease-in-out infinite;
   }
 
+  /* ceasul din bara de sus: cifrele strălucesc și pulsează ușor */
+  .top-clock-time {
+    color: #e6feff;
+    text-shadow: 0 0 6px rgba(0, 229, 255, calc(var(--jvs-aura) + .35)), 0 0 20px rgba(0, 229, 255, var(--jvs-aura));
+    animation: jvs-aura-pulse 3s ease-in-out infinite;
+  }
+  .top-clock-date { text-shadow: 0 0 8px rgba(0, 229, 255, .35); }
+  /* butoanele de salvare / acțiune principală: aura cyan înlocuiește
+     pulsația albă (btn-glow) de dinainte. La hover rămâne strălucirea
+     fixă, mai puternică, din regulile existente. */
+  .btn-save, .btn-add, .gib-save {
+    box-shadow: 0 0 16px rgba(0, 229, 255, var(--jvs-aura)), inset 0 0 10px rgba(0, 229, 255, .08);
+    animation: jvs-aura-pulse 2.6s ease-in-out infinite;
+  }
+
   /* Colțuri teșite reale (corner-shape) acolo unde browserul le suportă:
      bordura, conținutul și umbra urmează forma, deci aura exterioară revine.
      În rest rămâne varianta cu clip-path de mai sus (fără aură exterioară). */
@@ -1904,6 +1919,7 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .tab.active, #stark-month-band .stark-today, .speech-bubble,
+    .top-clock-time, .btn-save, .btn-add, .gib-save,
     #panel-gibilan .jvs-card, #panel-gibilan .gib-section, #panel-gibilan #stark-weather-panel { animation: none !important; }
   }
   @media (max-width: 700px) {
