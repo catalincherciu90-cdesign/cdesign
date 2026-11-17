@@ -4,6 +4,8 @@
      pe tot ecranul, și primește notificările push trimise de site. -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Necesară doar pentru modul de rezervă (WebView), când pe telefon nu există Chrome. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
@@ -11,6 +13,7 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/appName"
+        android:manageSpaceActivity="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Translucent.NoTitleBar">
 
@@ -72,6 +75,16 @@
                     android:host="@string/hostName"
                     android:pathPrefix="/programari" />
             </intent-filter>
+        </activity>
+
+        <!-- Obligatorie: LauncherActivity o activează/dezactivează la fiecare pornire
+             (setComponentEnabledSetting). Fără ea aplicația se închide la deschidere. -->
+        <activity
+            android:name="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.customtabs.trusted.MANAGE_SPACE_URL"
+                android:value="@string/launchUrl" />
         </activity>
 
         <activity android:name="com.google.androidbrowserhelper.trusted.FocusActivity" />
