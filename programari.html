@@ -65,14 +65,7 @@
 
     .main{max-width:1200px;margin:0 auto;padding:32px 24px;}
 
-    /* Navbar admin ca sidebar pe stânga (desktop); pe mobil rămâne bară orizontală sus */
-    @media(min-width:901px){
-      .tabs{position:fixed;top:60px;left:0;bottom:0;width:210px;flex-direction:column;align-items:stretch;gap:3px;padding:12px 10px;background:var(--bg2);border-bottom:none;border-right:1px solid var(--border);overflow-y:auto;overflow-x:hidden;z-index:9;}
-      .tab{border-bottom:none;border-left:3px solid transparent;text-align:left;border-radius:8px;padding:11px 12px;white-space:normal;flex-shrink:0;}
-      .tab:hover{background:rgba(255,255,255,.03);}
-      .tab.active{border-bottom-color:transparent;border-left-color:var(--teal);background:rgba(0,200,180,.10);}
-      .tab-panel{padding-left:210px;}
-    }
+    /* Meniul admin e sertar (burger) pe toate ecranele — vezi <style id="admin-burger"> */
 
     /* STATS */
     .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;}
@@ -1931,11 +1924,10 @@
   }
 </style>
   <style id="admin-burger">
-  /* ── MENIU BURGER (telefon / tabletă) ─────────────────────────────
-     Sub 901px bara de taburi devine un sertar care iese din stânga,
-     deschis din butonul ☰ din bara de sus. Pe desktop rămâne sidebar. */
-  .menu-burger, .menu-backdrop { display: none; }
-  @media (max-width: 900px) {
+  /* ── MENIU BURGER (toate ecranele) ────────────────────────────────
+     Bara de taburi e un sertar care iese din stânga, deschis din
+     butonul ☰ din bara de sus. */
+  @media all {
     .menu-burger {
       display: inline-flex; align-items: center; gap: 10px; min-width: 0; max-width: 46vw;
       height: 38px; padding: 0 12px 0 10px; position: relative; cursor: pointer;
@@ -1954,8 +1946,6 @@
     .menu-burger-dot { display: none; position: absolute; top: 4px; right: 5px; width: 8px; height: 8px; border-radius: 50%; background: #e8112d; box-shadow: 0 0 8px rgba(232, 17, 45, .9); }
     .menu-burger.has-new .menu-burger-dot { display: block; }
 
-    .top-bar .top-logo { display: none; }
-    .top-bar > div:first-child { gap: 12px !important; }
 
     .tabs {
       position: fixed; top: 60px; left: 0; bottom: 0; z-index: 50;
@@ -1987,6 +1977,14 @@
     }
     .menu-backdrop.open { opacity: 1; pointer-events: auto; }
     body.menu-open { overflow: hidden; }
+  }
+  @media (min-width: 901px) {
+    .menu-burger { max-width: 260px; }
+    .tabs { width: 300px; }
+  }
+  @media (max-width: 900px) {
+    .top-bar .top-logo { display: none; }
+    .top-bar > div:first-child { gap: 12px !important; }
   }
   @media (max-width: 600px) {
     .tabs, .menu-backdrop { top: 52px; }
@@ -4327,7 +4325,7 @@
     if (btn) { btn.click(); window.scrollTo(0, 0); }
   }
 
-  // ── MENIU BURGER (telefon / tabletă) ──────────────────────────────
+  // ── MENIU BURGER (toate ecranele) ─────────────────────────────────
   function toggleAdminMenu(force) {
     const tabs = document.getElementById('adminTabs'), btn = document.getElementById('menuBurger'), bd = document.getElementById('menuBackdrop');
     if (!tabs || !btn) return;
@@ -4363,7 +4361,6 @@
     if (!tabs) return;
     tabs.addEventListener('click', (e) => { if (e.target.closest('.tab')) { toggleAdminMenu(false); setTimeout(syncAdminMenu, 0); } });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') toggleAdminMenu(false); });
-    window.addEventListener('resize', () => { if (window.innerWidth > 900) toggleAdminMenu(false); });
     new MutationObserver(syncAdminMenu).observe(tabs, { subtree: true, attributes: true, attributeFilter: ['class', 'style'], childList: true, characterData: true });
     syncAdminMenu();
   })();
