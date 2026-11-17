@@ -1832,6 +1832,80 @@
   }
   /* parantezele HUD rămân doar în colțurile netăiate (stânga-sus, dreapta-jos) */
   .jvs-bracket-tr, .jvs-bracket-bl { display: none; }
+  /* ── AURĂ LUMINOASĂ ───────────────────────────────────────────────────────
+     --jvs-aura e o proprietate numerică înregistrată, ca să poată fi animată
+     chiar și în umbre declarate cu !important. */
+  @property --jvs-aura { syntax: '<number>'; inherits: false; initial-value: .25; }
+  @keyframes jvs-aura-pulse { 0%, 100% { --jvs-aura: .18; } 50% { --jvs-aura: .6; } }
+  @keyframes jvs-aura-breathe { 0%, 100% { --jvs-aura: .16; } 50% { --jvs-aura: .36; } }
+
+  /* elemente de accent: aură pulsatorie */
+  .tab.active {
+    box-shadow: inset 0 -3px 0 0 rgba(0, 229, 255, .4), 0 0 16px rgba(0, 229, 255, var(--jvs-aura)) !important;
+    animation: jvs-aura-pulse 2.8s ease-in-out infinite;
+  }
+  #stark-month-band .stark-today {
+    box-shadow: 0 0 12px rgba(0, 229, 255, calc(var(--jvs-aura) + .3)), 0 0 3px #00e5ff !important;
+    animation: jvs-aura-pulse 2.4s ease-in-out infinite;
+  }
+  .speech-bubble {
+    box-shadow: 0 0 20px rgba(0, 229, 255, var(--jvs-aura)), inset 0 0 12px rgba(0, 229, 255, .08);
+    animation: terminal-flicker .15s, jvs-aura-pulse 3.2s ease-in-out infinite;
+  }
+
+  /* Colțuri teșite reale (corner-shape) acolo unde browserul le suportă:
+     bordura, conținutul și umbra urmează forma, deci aura exterioară revine.
+     În rest rămâne varianta cu clip-path de mai sus (fără aură exterioară). */
+  @supports (corner-shape: bevel) {
+    .jvs-card, .table-wrap, .modal, .block-editor-box, .block-picker-box,
+    .stat-box, .proj-card, .client-card, .media-card,
+    #msg-view, #chatai-view, .chatai-item {
+      --jvs-aura: .16;
+      --aura-size: 16px;
+      clip-path: none;
+      border-radius: 0 var(--cut) 0 var(--cut) !important;
+      corner-shape: bevel;
+      background: linear-gradient(135deg, var(--win-a) 0%, var(--win-b) 100%) !important;
+      box-shadow: 0 0 var(--aura-size) rgba(0, 229, 255, var(--jvs-aura)), 0 0 4px rgba(0, 229, 255, .3), inset 0 0 18px rgba(0, 229, 255, .05) !important;
+    }
+    .jvs-card, .table-wrap, #msg-view, #chatai-view { --jvs-aura: .2; --aura-size: 26px; }
+    .modal, .block-editor-box, .block-picker-box { --jvs-aura: .32; --aura-size: 44px; }
+    .stat-box:hover, .proj-card:hover, .client-card:hover, .media-card:hover, .chatai-item:hover {
+      --jvs-aura: .45;
+      --aura-size: 26px;
+      box-shadow: 0 0 var(--aura-size) rgba(0, 229, 255, var(--jvs-aura)), 0 0 4px rgba(0, 229, 255, .5), inset 0 0 18px rgba(0, 229, 255, .08) !important;
+    }
+    /* panourile principale din Gibilan: aură care „respiră" lent */
+    #panel-gibilan .jvs-card, #panel-gibilan .gib-section, #panel-gibilan #stark-weather-panel {
+      --jvs-aura: .24;
+      clip-path: none;
+      border-radius: 0 var(--cut) 0 var(--cut) !important;
+      corner-shape: bevel;
+      background:
+        repeating-linear-gradient(0deg, rgba(0,229,255,.05) 0px, rgba(0,229,255,.05) 1px, transparent 1px, transparent 5px),
+        linear-gradient(160deg, rgba(0,229,255,.10) 0%, rgba(6,18,24,.42) 55%, rgba(6,18,24,.30) 100%) !important;
+      box-shadow: 0 0 30px rgba(0, 229, 255, var(--jvs-aura)), 0 0 5px rgba(0, 229, 255, .45), inset 0 0 26px rgba(0, 229, 255, .07) !important;
+      animation: holo-flicker 6s ease-in-out infinite, jvs-aura-breathe 5.5s ease-in-out infinite;
+    }
+    #stark-month-band {
+      clip-path: none;
+      border-radius: 0 var(--cut) 0 var(--cut) !important;
+      corner-shape: bevel;
+      background: linear-gradient(90deg, rgba(0,229,255,.08), rgba(0,229,255,.04)) !important;
+      box-shadow: 0 0 18px rgba(0, 229, 255, .16), inset 0 0 10px rgba(0, 229, 255, .05) !important;
+    }
+    .gib-add-btn {
+      clip-path: none;
+      border-radius: 0 var(--cut) 0 var(--cut) !important;
+      corner-shape: bevel;
+      background: none !important;
+      box-shadow: 0 0 12px rgba(0, 229, 255, .2);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tab.active, #stark-month-band .stark-today, .speech-bubble,
+    #panel-gibilan .jvs-card, #panel-gibilan .gib-section, #panel-gibilan #stark-weather-panel { animation: none !important; }
+  }
   @media (max-width: 700px) {
     .jvs-card, .table-wrap, .modal, .block-editor-box, .block-picker-box { --cut: 14px; }
     .stat-box, .proj-card, .client-card, .media-card { --cut: 9px; }
@@ -9601,6 +9675,7 @@
     for (let d = 1; d <= daysInMonth; d++) {
       const dayBox = document.createElement('div');
       dayBox.style.cssText = 'flex-shrink: 0; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(0,229,255,0.3); background: ' + (d === todayNum ? 'rgba(0,229,255,0.25)' : 'transparent') + '; border-radius: 0; font-weight: ' + (d === todayNum ? '700' : '400') + '; color: ' + (d === todayNum ? '#00e5ff' : 'rgba(0,229,255,0.6)') + '; box-shadow: ' + (d === todayNum ? '0 0 8px #00e5ff' : 'none') + ';';
+      if (d === todayNum) dayBox.className = 'stark-today';
       dayBox.textContent = String(d).padStart(2, '0');
       band.appendChild(dayBox);
     }
