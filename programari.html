@@ -510,7 +510,7 @@
     .jvs-speak-btn{margin-top:14px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.45);color:#00e5ff;font-family:'Share Tech Mono',monospace;font-size:.78rem;font-weight:700;letter-spacing:.04em;padding:9px 18px;border-radius:0;cursor:pointer;transition:background .2s,box-shadow .2s,transform .15s;text-shadow:0 0 8px rgba(0,229,255,.5);}
     .jvs-speak-btn:hover{background:rgba(0,229,255,.18);box-shadow:0 0 14px rgba(0,229,255,.4);transform:translateY(-1px);}
     /* casute holografice (Gibilan): translucid + glow + scanline + palpait subtil */
-    #panel-gibilan .jvs-card, #panel-gibilan .gib-section, #panel-gibilan #stark-weather-panel{
+    #panel-gibilan .jvs-card, #panel-gibilan .gib-section, #panel-agenda .gib-section, #panel-gibilan #stark-weather-panel{
       background:
         repeating-linear-gradient(0deg, rgba(0,229,255,.05) 0px, rgba(0,229,255,.05) 1px, transparent 1px, transparent 5px),
         linear-gradient(160deg, rgba(0,229,255,.10) 0%, rgba(6,18,24,.42) 55%, rgba(6,18,24,.30) 100%) !important;
@@ -520,7 +520,7 @@
       animation:holo-flicker 6s ease-in-out infinite;
     }
     @keyframes holo-flicker{0%,100%{opacity:1}47%{opacity:.985}49%{opacity:.93}51%{opacity:.99}53%{opacity:.96}}
-    @media(prefers-reduced-motion:reduce){#panel-gibilan .jvs-card,#panel-gibilan .gib-section,#panel-gibilan #stark-weather-panel{animation:none !important;}}
+    @media(prefers-reduced-motion:reduce){#panel-gibilan .jvs-card,#panel-gibilan .gib-section, #panel-agenda .gib-section,#panel-gibilan #stark-weather-panel{animation:none !important;}}
     .jvs-speak-btn.speaking{animation:jvs-speak-pulse 1s ease-in-out infinite;}
     @keyframes jvs-speak-pulse{0%,100%{box-shadow:0 0 8px rgba(0,229,255,.3)}50%{box-shadow:0 0 18px rgba(0,229,255,.7)}}
     #jvs-mic-btn.listening{color:#ff5f57;border-color:#ff5f57;text-shadow:0 0 8px rgba(255,95,87,.6);animation:jvs-mic-pulse 1s ease-in-out infinite;}
@@ -1788,7 +1788,7 @@
   .modal, .block-editor-box, .block-picker-box { --win-a: rgba(10, 24, 24, .96); --win-b: rgba(15, 32, 32, .88); }
   /* panourile holografice din Gibilan au reguli proprii (cu ID), deci forma
      se repetă aici la aceeași specificitate, păstrând fundalul lor */
-  #panel-gibilan .jvs-card, #panel-gibilan .gib-section, #panel-gibilan #stark-weather-panel {
+  #panel-gibilan .jvs-card, #panel-gibilan .gib-section, #panel-agenda .gib-section, #panel-gibilan #stark-weather-panel {
     --cut: 20px;
     --win-edge: rgba(0, 229, 255, .5);
     border-radius: 0 !important;
@@ -1886,7 +1886,7 @@
       box-shadow: 0 0 var(--aura-size) rgba(0, 229, 255, var(--jvs-aura)), 0 0 4px rgba(0, 229, 255, .5), inset 0 0 18px rgba(0, 229, 255, .08) !important;
     }
     /* panourile principale din Gibilan: aură care „respiră" lent */
-    #panel-gibilan .jvs-card, #panel-gibilan .gib-section, #panel-gibilan #stark-weather-panel {
+    #panel-gibilan .jvs-card, #panel-gibilan .gib-section, #panel-agenda .gib-section, #panel-gibilan #stark-weather-panel {
       --jvs-aura: .24;
       clip-path: none;
       border-radius: 0 var(--cut) 0 var(--cut) !important;
@@ -1915,12 +1915,12 @@
   @media (prefers-reduced-motion: reduce) {
     .tab.active, #stark-month-band .stark-today, .speech-bubble,
     .top-clock-time, .btn-save, .btn-add, .gib-save,
-    #panel-gibilan .jvs-card, #panel-gibilan .gib-section, #panel-gibilan #stark-weather-panel { animation: none !important; }
+    #panel-gibilan .jvs-card, #panel-gibilan .gib-section, #panel-agenda .gib-section, #panel-gibilan #stark-weather-panel { animation: none !important; }
   }
   @media (max-width: 700px) {
     .jvs-card, .table-wrap, .modal, .block-editor-box, .block-picker-box { --cut: 14px; }
     .stat-box, .proj-card, .client-card, .media-card { --cut: 9px; }
-    #panel-gibilan .jvs-card, #panel-gibilan .gib-section, #panel-gibilan #stark-weather-panel { --cut: 14px; }
+    #panel-gibilan .jvs-card, #panel-gibilan .gib-section, #panel-agenda .gib-section, #panel-gibilan #stark-weather-panel { --cut: 14px; }
   }
 </style>
   <style id="admin-burger">
@@ -1996,7 +1996,7 @@
   </style>
   <style id="admin-quick">
   /* ── ACCES RAPID pe prima pagină (Gibilan) ───────────────────────── */
-  .gib-quick { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
+  .gib-quick { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
   .gq-tile {
     --cut: 10px; --gq-edge: rgba(0, 229, 255, .45);
     position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px;
@@ -2018,7 +2018,8 @@
   .gq-lab { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
   .gq-badge { display: none; position: absolute; top: 6px; left: 7px; min-width: 18px; padding: 1px 5px; border-radius: 20px; background: #e8112d; color: #fff; font-size: .62rem; font-weight: 700; line-height: 1.5; box-shadow: 0 0 8px rgba(232, 17, 45, .8); }
   .gq-badge.on { display: inline-block; }
-  @media (max-width: 1100px) { .gib-quick { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  @media (max-width: 900px) { .gib-quick { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .gq-badge.gq-count { background: rgba(0, 229, 255, .16); color: #7df9ff; border: 1px solid rgba(0, 229, 255, .6); box-shadow: 0 0 8px rgba(0, 229, 255, .35); }
   @media (max-width: 600px) { .gib-quick { gap: 8px; margin-bottom: 14px; } .gq-tile { min-height: 72px; font-size: .68rem; padding: 10px 4px 8px; } .gq-ico { font-size: 1.3rem; } }
   @media (prefers-reduced-motion: reduce) { .gq-tile { transition: none; } }
   </style>
@@ -2056,6 +2057,30 @@
     #stark-month-band .stark-days { grid-template-columns: repeat(11, minmax(0, 1fr)); gap: 3px; }
     #stark-month-band .stark-day { height: 27px; font-size: .68rem; }
   }
+  </style>
+  <style id="admin-agenda">
+  /* ── TAB AGENDĂ ───────────────────────────────────────────────── */
+  .agenda-nav { display: flex; gap: 8px; margin-bottom: 18px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .agenda-nav::-webkit-scrollbar { display: none; }
+  .agenda-chip {
+    flex-shrink: 0; display: inline-flex; align-items: center; gap: 7px; cursor: pointer; white-space: nowrap;
+    font-family: 'Share Tech Mono', monospace; font-size: .78rem; letter-spacing: .03em;
+    padding: 8px 13px; color: #7df9ff; background: rgba(0, 229, 255, .05); border: 1px solid rgba(0, 229, 255, .35);
+    transition: background .2s ease, color .2s ease, box-shadow .2s ease; -webkit-tap-highlight-color: transparent;
+  }
+  .agenda-chip:hover { color: #fff; background: rgba(0, 229, 255, .12); }
+  .agenda-chip.active { color: #04141a; background: #00e5ff; border-color: #00e5ff; font-weight: 700; box-shadow: 0 0 14px rgba(0, 229, 255, .45); }
+  .agenda-count, .tab-count { display: none; min-width: 18px; padding: 0 5px; border-radius: 20px; font-size: .66rem; font-weight: 700; line-height: 1.6; text-align: center; background: rgba(0, 229, 255, .16); color: #7df9ff; border: 1px solid rgba(0, 229, 255, .5); }
+  .agenda-count.on, .tab-count.on { display: inline-block; }
+  .tab-count { margin-left: 4px; vertical-align: middle; }
+  .agenda-chip.active .agenda-count { background: rgba(4, 20, 26, .18); color: #04141a; border-color: rgba(4, 20, 26, .45); }
+  .agenda-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+  #panel-agenda:not([data-view="all"]) .agenda-grid { grid-template-columns: minmax(0, 1fr); max-width: 820px; }
+  .agenda-sec-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; position: relative; z-index: 1; }
+  .agenda-sec-head .gib-section-title { margin-bottom: 0; }
+  .gib-add-btn.agenda-add { width: auto; flex-shrink: 0; padding: 7px 12px; font-size: .76rem; border-width: 1px; }
+  #panel-agenda .gib-form { margin: 0 0 14px; }
+  @media (max-width: 900px) { .agenda-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; } }
   </style>
 </head>
 <body>
@@ -2101,6 +2126,7 @@
   <div class="menu-backdrop" id="menuBackdrop" onclick="toggleAdminMenu(false)"></div>
   <div class="tabs" id="adminTabs">
     <button class="tab active" onclick="switchTab('gibilan',this)">&#x1F916; Gibilan</button>
+    <button class="tab" onclick="switchTab('agenda',this)">&#x1F5D3; Agend&#259; <span class="tab-count" data-count="todos"></span></button>
     <button class="tab" onclick="switchTab('bookings',this)">&#x1F4C5; Program&#259;ri</button>
     <button class="tab" onclick="switchTab('projects',this)">&#x1F5BC; Portofoliu</button>
     <button class="tab" onclick="switchTab('clients',this)">&#x1F465; Clien&#x21B;i</button>
@@ -2125,6 +2151,9 @@
     <div class="main">
       <div id="gib-leads-alert" style="display:none;"></div>
       <div class="gib-quick" id="gib-quick" aria-label="Acces rapid">
+        <button type="button" class="gq-tile" onclick="agendaOpen('todos')"><span class="gq-ico" aria-hidden="true">&#x2705;</span><span class="gq-lab">Task-uri</span><span class="gq-badge gq-count" data-count="todos"></span></button>
+        <button type="button" class="gq-tile" onclick="agendaOpen('meetings')"><span class="gq-ico" aria-hidden="true">&#x1F550;</span><span class="gq-lab">&Icirc;nt&acirc;lniri</span><span class="gq-badge gq-count" data-count="meetings"></span></button>
+        <button type="button" class="gq-tile" onclick="agendaOpen('deadlines')"><span class="gq-ico" aria-hidden="true">&#x26A0;&#xFE0F;</span><span class="gq-lab">Deadline-uri</span><span class="gq-badge gq-count" data-count="deadlines"></span></button>
         <button type="button" class="gq-tile" onclick="quickOpen('bookings')"><span class="gq-ico" aria-hidden="true">&#x1F4C5;</span><span class="gq-lab">Program&#259;ri</span></button>
         <button type="button" class="gq-tile" onclick="quickOpen('mesaje')"><span class="gq-ico" aria-hidden="true">&#x1F4E8;</span><span class="gq-lab">Mesaje</span><span class="gq-badge" data-for="mesaje-tab-badge"></span></button>
         <button type="button" class="gq-tile" onclick="quickOpen('chatai')"><span class="gq-ico" aria-hidden="true">&#x1F4AC;</span><span class="gq-lab">Chat AI</span><span class="gq-badge" data-for="chatai-tab-badge"></span></button>
@@ -2132,6 +2161,7 @@
         <button type="button" class="gq-tile" onclick="quickOpen('crm')"><span class="gq-ico" aria-hidden="true">&#x1F4CB;</span><span class="gq-lab">CRM</span></button>
         <button type="button" class="gq-tile" onclick="quickOpen('oferte')"><span class="gq-ico" aria-hidden="true">&#x1F9FE;</span><span class="gq-lab">Oferte</span></button>
         <button type="button" class="gq-tile" onclick="quickOpen('cheltuieli')"><span class="gq-ico" aria-hidden="true">&#x1F4B8;</span><span class="gq-lab">Cheltuieli</span></button>
+        <button type="button" class="gq-tile" onclick="quickOpen('projects')"><span class="gq-ico" aria-hidden="true">&#x1F5BC;&#xFE0F;</span><span class="gq-lab">Portofoliu</span></button>
         <button type="button" class="gq-tile" onclick="quickOpen('settings')"><span class="gq-ico" aria-hidden="true">&#x2699;&#xFE0F;</span><span class="gq-lab">Set&#x103;ri</span></button>
       </div>
       <div class="gibilan-layout">
@@ -2183,40 +2213,6 @@
             </div>
           </div>
 
-          <!-- Butoane adauga (full width at bottom) -->
-          <div class="gib-add-btns">
-            <button class="gib-add-btn" onclick="toggleGibForm('form-meeting')">+ &Icirc;nt&#xE2;lnire</button>
-            <div class="gib-form" id="form-meeting">
-              <input class="gib-input" type="text" id="gib-m-title" placeholder="Titlu &icirc;nt&#xE2;lnire *">
-              <input class="gib-input" type="date" id="gib-m-date" style="color-scheme:dark;">
-              <input class="gib-input" type="time" id="gib-m-time">
-              <input class="gib-input" type="text" id="gib-m-notes" placeholder="Note (op&#x21B;ional)">
-              <select class="gib-input" id="gib-m-client"><option value="">— f&#x103;r&#x103; client —</option></select>
-              <button class="gib-save" onclick="addMeeting()">Salveaz&#259;</button>
-            </div>
-
-            <button class="gib-add-btn" onclick="toggleGibForm('form-todo')">+ To-do</button>
-            <div class="gib-form" id="form-todo">
-              <input class="gib-input" type="text" id="gib-t-title" placeholder="Task *">
-              <input class="gib-input" type="date" id="gib-t-due" style="color-scheme:dark;">
-              <select class="gib-input" id="gib-t-priority">
-                <option value="normal">Prioritate normal&#259;</option>
-                <option value="high">Prioritate ridicat&#259;</option>
-              </select>
-              <select class="gib-input" id="gib-t-client"><option value="">— f&#x103;r&#x103; client —</option></select>
-              <button class="gib-save" onclick="addTodo()">Salveaz&#259;</button>
-            </div>
-
-            <button class="gib-add-btn" onclick="toggleGibForm('form-deadline')">+ Deadline</button>
-            <div class="gib-form" id="form-deadline">
-              <input class="gib-input" type="text" id="gib-d-title" placeholder="Titlu deadline *">
-              <input class="gib-input" type="date" id="gib-d-date" style="color-scheme:dark;">
-              <input class="gib-input" type="text" id="gib-d-project" placeholder="Proiect (op&#x21B;ional)">
-              <input class="gib-input" type="text" id="gib-d-notes" placeholder="Note (op&#x21B;ional)">
-              <select class="gib-input" id="gib-d-client"><option value="">— f&#x103;r&#x103; client —</option></select>
-              <button class="gib-save" onclick="addDeadline()">Salveaz&#259;</button>
-            </div>
-          </div>
         </div>
 
         <!-- Dreapta: agenda zilei -->
@@ -2239,36 +2235,6 @@
                 <button class="gib-save" id="ai-chat-send" onclick="aiChatSend()" style="flex:0 0 auto;width:auto;white-space:nowrap;">Trimite</button>
               </div>
             </div>
-          </div>
-
-          <!-- Intalniri -->
-          <div class="gib-section">
-            <div class="gib-section-title">&#x1F550; &Icirc;NT&#xC2;LNIRI</div>
-            <div id="gib-meetings-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
-          </div>
-
-          <!-- To-do -->
-          <div class="gib-section">
-            <div class="gib-section-title">&#x2705; DE F&#x102;CUT</div>
-            <div id="gib-todos-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
-            <div id="gib-todos-done-toggle" style="margin-top:10px;display:none;">
-              <button onclick="toggleDoneTodos()" id="gib-done-btn" style="background:none;border:none;color:var(--muted);font-size:.78rem;cursor:pointer;padding:4px 0;display:flex;align-items:center;gap:6px;">
-                <span id="gib-done-arrow">&#x25B8;</span> <span id="gib-done-label">Arat&#259; finalizate</span>
-              </button>
-              <div id="gib-todos-done-list" style="display:none;margin-top:8px;"></div>
-            </div>
-          </div>
-
-          <!-- Deadlines -->
-          <div class="gib-section">
-            <div class="gib-section-title">&#x26A0; DEADLINE-URI <span style="font-size:.72rem;font-weight:400;color:var(--muted);">(azi + 3 zile)</span></div>
-            <div id="gib-deadlines-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
-          </div>
-
-          <!-- Programări -->
-          <div class="gib-section">
-            <div class="gib-section-title">&#x1F4C5; PROGRAM&#x102;RI <span style="font-size:.72rem;font-weight:400;color:var(--muted);">(urm&#x103;toarele 7 zile)</span></div>
-            <div id="gib-bookings-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
           </div>
 
           <!-- Cheltuieli luna -->
@@ -2311,6 +2277,93 @@
           </div>
           <div id="gib-blog-results" style="margin-top:16px;"></div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: AGENDĂ — task-uri, întâlniri, deadline-uri, programări -->
+  <div class="tab-panel" id="panel-agenda" data-view="all">
+    <div class="main">
+      <div class="proj-toolbar">
+        <h3>// agend&#259;</h3>
+      </div>
+      <div class="agenda-nav" aria-label="Sec&#539;iuni agend&#259;">
+        <button type="button" class="agenda-chip active" data-view="all" onclick="agendaShow('all')">Toate</button>
+        <button type="button" class="agenda-chip" data-view="todos" onclick="agendaShow('todos')">&#x2705; Task-uri <span class="agenda-count" data-count="todos"></span></button>
+        <button type="button" class="agenda-chip" data-view="meetings" onclick="agendaShow('meetings')">&#x1F550; &Icirc;nt&acirc;lniri <span class="agenda-count" data-count="meetings"></span></button>
+        <button type="button" class="agenda-chip" data-view="deadlines" onclick="agendaShow('deadlines')">&#x26A0; Deadline-uri <span class="agenda-count" data-count="deadlines"></span></button>
+        <button type="button" class="agenda-chip" data-view="bookings" onclick="agendaShow('bookings')">&#x1F4C5; Program&#259;ri <span class="agenda-count" data-count="bookings"></span></button>
+      </div>
+      <div class="agenda-grid">
+
+        <!-- Task-uri -->
+        <div class="gib-section" data-sec="todos">
+          <div class="agenda-sec-head">
+            <div class="gib-section-title">&#x2705; TASK-URI</div>
+            <button type="button" class="gib-add-btn agenda-add" onclick="toggleGibForm('form-todo')">+ Task</button>
+          </div>
+          <div class="gib-form" id="form-todo">
+            <input class="gib-input" type="text" id="gib-t-title" placeholder="Task *">
+            <input class="gib-input" type="date" id="gib-t-due" style="color-scheme:dark;">
+            <select class="gib-input" id="gib-t-priority">
+              <option value="normal">Prioritate normal&#259;</option>
+              <option value="high">Prioritate ridicat&#259;</option>
+            </select>
+            <select class="gib-input" id="gib-t-client"><option value="">— f&#x103;r&#x103; client —</option></select>
+            <button class="gib-save" onclick="addTodo()">Salveaz&#259;</button>
+          </div>
+          <div id="gib-todos-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
+          <div id="gib-todos-done-toggle" style="margin-top:10px;display:none;">
+            <button onclick="toggleDoneTodos()" id="gib-done-btn" style="background:none;border:none;color:var(--muted);font-size:.78rem;cursor:pointer;padding:4px 0;display:flex;align-items:center;gap:6px;">
+              <span id="gib-done-arrow">&#x25B8;</span> <span id="gib-done-label">Arat&#259; finalizate</span>
+            </button>
+            <div id="gib-todos-done-list" style="display:none;margin-top:8px;"></div>
+          </div>
+        </div>
+
+        <!-- Întâlniri -->
+        <div class="gib-section" data-sec="meetings">
+          <div class="agenda-sec-head">
+            <div class="gib-section-title">&#x1F550; &Icirc;NT&Acirc;LNIRI</div>
+            <button type="button" class="gib-add-btn agenda-add" onclick="toggleGibForm('form-meeting')">+ &Icirc;nt&acirc;lnire</button>
+          </div>
+          <div class="gib-form" id="form-meeting">
+            <input class="gib-input" type="text" id="gib-m-title" placeholder="Titlu &icirc;nt&#xE2;lnire *">
+            <input class="gib-input" type="date" id="gib-m-date" style="color-scheme:dark;">
+            <input class="gib-input" type="time" id="gib-m-time">
+            <input class="gib-input" type="text" id="gib-m-notes" placeholder="Note (op&#x21B;ional)">
+            <select class="gib-input" id="gib-m-client"><option value="">— f&#x103;r&#x103; client —</option></select>
+            <button class="gib-save" onclick="addMeeting()">Salveaz&#259;</button>
+          </div>
+          <div id="gib-meetings-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
+        </div>
+
+        <!-- Deadline-uri -->
+        <div class="gib-section" data-sec="deadlines">
+          <div class="agenda-sec-head">
+            <div class="gib-section-title">&#x26A0; DEADLINE-URI</div>
+            <button type="button" class="gib-add-btn agenda-add" onclick="toggleGibForm('form-deadline')">+ Deadline</button>
+          </div>
+          <div class="gib-form" id="form-deadline">
+            <input class="gib-input" type="text" id="gib-d-title" placeholder="Titlu deadline *">
+            <input class="gib-input" type="date" id="gib-d-date" style="color-scheme:dark;">
+            <input class="gib-input" type="text" id="gib-d-project" placeholder="Proiect (op&#x21B;ional)">
+            <input class="gib-input" type="text" id="gib-d-notes" placeholder="Note (op&#x21B;ional)">
+            <select class="gib-input" id="gib-d-client"><option value="">— f&#x103;r&#x103; client —</option></select>
+            <button class="gib-save" onclick="addDeadline()">Salveaz&#259;</button>
+          </div>
+          <div id="gib-deadlines-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
+        </div>
+
+        <!-- Programări de pe site -->
+        <div class="gib-section" data-sec="bookings">
+          <div class="agenda-sec-head">
+            <div class="gib-section-title">&#x1F4C5; PROGRAM&#x102;RI <span style="font-size:.72rem;font-weight:400;color:var(--muted);">(urm&#x103;toarele 7 zile)</span></div>
+            <button type="button" class="gib-add-btn agenda-add" onclick="quickOpen('bookings')">Toate &rarr;</button>
+          </div>
+          <div id="gib-bookings-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -4349,6 +4402,7 @@
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     document.getElementById('panel-' + tab).classList.add('active');
     if (tab === 'gibilan') loadGibilan();
+    if (tab === 'agenda') loadGibilan();
     if (tab === 'crm') { fetchCrm(); loadGibilan(); }
     if (tab === 'clients') { fetchClients(); loadGibilan(); }
     if (tab === 'pagini') { var sel = document.getElementById('layout-page-sel'); loadLayoutPage(sel ? sel.value : 'index'); }
@@ -4369,6 +4423,42 @@
     const btn = document.querySelector('.tab[onclick*="\'' + tab + '\'"]');
     if (btn) { btn.click(); window.scrollTo(0, 0); }
   }
+
+  // ── AGENDĂ: vederi pe secțiuni + contoare ─────────────────────────
+  function agendaShow(view) {
+    const panel = document.getElementById('panel-agenda');
+    if (!panel) return;
+    const v = ['todos', 'meetings', 'deadlines', 'bookings'].indexOf(view) >= 0 ? view : 'all';
+    panel.setAttribute('data-view', v);
+    panel.querySelectorAll('.agenda-chip').forEach(c => c.classList.toggle('active', c.getAttribute('data-view') === v));
+    panel.querySelectorAll('.gib-section[data-sec]').forEach(sec => { sec.style.display = (v === 'all' || sec.getAttribute('data-sec') === v) ? '' : 'none'; });
+  }
+  // Scurtătură: deschide tabul Agendă direct pe o secțiune (opțional cu formularul de adăugare deschis)
+  function agendaOpen(view, formId) {
+    quickOpen('agenda');
+    agendaShow(view);
+    if (formId) { const f = document.getElementById(formId); if (f && !f.classList.contains('open')) toggleGibForm(formId); }
+  }
+  function agendaUpdateCounts() {
+    const n = {
+      todos: document.querySelectorAll('#gib-todos-list .gib-item:not(.done)').length,
+      meetings: document.querySelectorAll('#gib-meetings-list .gib-item').length,
+      deadlines: document.querySelectorAll('#gib-deadlines-list .gib-item').length,
+      bookings: document.querySelectorAll('#gib-bookings-list .gib-item').length,
+    };
+    document.querySelectorAll('[data-count]').forEach(el => {
+      const k = n[el.getAttribute('data-count')] || 0, txt = k ? String(k) : '';
+      if (el.textContent !== txt) el.textContent = txt;
+      el.classList.toggle('on', k > 0);
+    });
+  }
+  (function initAgenda() {
+    const lists = ['gib-todos-list', 'gib-meetings-list', 'gib-deadlines-list', 'gib-bookings-list'].map(id => document.getElementById(id)).filter(Boolean);
+    if (!lists.length) return;
+    const mo = new MutationObserver(agendaUpdateCounts);
+    lists.forEach(l => mo.observe(l, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] }));
+    agendaUpdateCounts();
+  })();
 
   // ── MENIU BURGER (toate ecranele) ─────────────────────────────────
   function toggleAdminMenu(force) {
@@ -4412,6 +4502,7 @@
 
   function refreshCurrent() {
     if (currentTab === 'gibilan') loadGibilan();
+    else if (currentTab === 'agenda') loadGibilan();
     else if (currentTab === 'bookings') fetchBookings();
     else if (currentTab === 'crm') { fetchCrm(); loadGibilan(); }
     else if (currentTab === 'clients') { fetchClients(); loadGibilan(); }
@@ -6122,8 +6213,7 @@
       const titlu = add[1].trim();
       const inp = document.getElementById('gib-t-title');
       if (inp) inp.value = titlu.charAt(0).toUpperCase() + titlu.slice(1);
-      const f = document.getElementById('form-todo');
-      if (f && !f.classList.contains('open') && typeof toggleGibForm === 'function') toggleGibForm('form-todo');
+      agendaOpen('todos', 'form-todo');
       speak('Am pregătit task-ul: ' + titlu + '. Apasă Salvează ca să-l adaugi.');
       return;
     }
@@ -6262,12 +6352,10 @@
     const wrap = document.getElementById('gib-deadlines-list');
     if (!wrap) return;
     const today = new Date().toISOString().split('T')[0];
-    const in3 = new Date(); in3.setDate(in3.getDate() + 3);
-    const in3Str = in3.toISOString().split('T')[0];
-    const list = (gibData.deadlines || [])
-      .filter(d => d.date >= today && d.date <= in3Str)
-      .sort((a, b) => a.date.localeCompare(b.date));
-    if (!list.length) { wrap.innerHTML = '<div class="gib-empty">Niciun deadline &icirc;n urm&#259;toarele 3 zile.</div>'; return; }
+    // toate deadline-urile viitoare (înainte apăreau doar cele din următoarele 3 zile)
+    const list = (gibData.deadlines || []).filter(d => d.date >= today)
+      .sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')));
+    if (!list.length) { wrap.innerHTML = '<div class="gib-empty">Niciun deadline &icirc;n viitor.</div>'; return; }
     wrap.innerHTML = list.map(d => {
       const isAzi = d.date === today;
       const client = clientsData.find(c => c.id === d.clientId);
