@@ -193,7 +193,7 @@
         <h2 style="font-family:'Poppins',sans-serif;font-weight:700;font-size:clamp(1.6rem,3.2vw,2.3rem);color:var(--ink);letter-spacing:-.02em;line-height:1.15;margin-bottom:10px">Fiecare site vine cu un panou de administrare simplu</h2>
         <p style="font-size:1.02rem;line-height:1.65;color:var(--body)">Gestionează comenzi, rezervări, produse, mesaje și conținut singur — fără cunoștințe tehnice. Uită-te la o demonstrație a panoului.</p>
       </div>
-      <a href="/demos/admin-demo.html" target="_blank" rel="noopener" class="btn-primary">Vezi demo admin <span>→</span></a>
+      <a href="/demos/admin-demo" target="_blank" rel="noopener" class="btn-primary">Vezi demo admin <span>→</span></a>
     </div>
   </section>
 
@@ -297,30 +297,30 @@
     mm.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeM);});
 
     var FALLBACK=[
-      {emoji:'🍽️',businessName:'Restaurantul Meu',industry:'Restaurant',tagline:'Meniu, rezervări și gustul casei.',url:'/demos/my-restaurant.html'},
-      {emoji:'☕',businessName:'Cafeneaua Mea',industry:'Cafenea',tagline:'Cafea de specialitate și cozonaci proaspeți.',url:'/demos/my-cafe.html'},
-      {emoji:'🥐',businessName:'Brutăria Mea',industry:'Brutărie',tagline:'Pâini artizanale și prăjituri de ocazie.',url:'/demos/my-bakery.html'},
-      {emoji:'🛍️',businessName:'Magazinul Meu',industry:'Retail',tagline:'Online și în magazin, produse de calitate.',url:'/demos/my-shop.html'},
-      {emoji:'👗',businessName:'Butichea Mea',industry:'Modă',tagline:'Colecția sezonului și styling personal.',url:'/demos/my-boutique.html'},
-      {emoji:'💈',businessName:'Barber Shop-ul Meu',industry:'Frizerie',tagline:'Tunsori precisie și rezervări online ușoare.',url:'/demos/my-barbershop.html'},
-      {emoji:'🌸',businessName:'Spa-ul Meu',industry:'Spa & Wellness',tagline:'Masaj, faciale și relaxare pură.',url:'/demos/my-spa.html'},
-      {emoji:'🦷',businessName:'Clinica Dentară Mea',industry:'Dental',tagline:'Îngrijire dentară modernă și ușoară.',url:'/demos/my-dental-clinic.html'},
-      {emoji:'🩺',businessName:'Clinica Mea',industry:'Sănătate',tagline:'Îngrijire de încredere pentru toată familia.',url:'/demos/my-clinic.html'},
-      {emoji:'💪',businessName:'Sala de Fitness Mea',industry:'Fitness',tagline:'Echipamente, clase și antrenament personal.',url:'/demos/my-gym.html'},
-      {emoji:'🧘',businessName:'Studio-ul Meu',industry:'Yoga',tagline:'Clase pentru orice nivel.',url:'/demos/my-studio.html'},
-      {emoji:'⚖️',businessName:'Cabinet Juridic Meu',industry:'Juridic',tagline:'Consiliere juridică clară și onestă.',url:'/demos/my-law-firm.html'},
-      {emoji:'📊',businessName:'Birou Contabil Meu',industry:'Contabilitate',tagline:'Ținere cărți, taxe și consiliere afaceri.',url:'/demos/my-accounting.html'},
-      {emoji:'🏠',businessName:'Agenție Imobiliară Mea',industry:'Imobiliare',tagline:'Cumpără, vinde sau închiriază cu experți locali.',url:'/demos/my-estate-agency.html'},
-      {emoji:'🏗️',businessName:'Compania de Construcții Mea',industry:'Construcții',tagline:'Construcții noi și renovări durabile.',url:'/demos/my-construction.html'},
-      {emoji:'🔧',businessName:'Instalații Sanitare Mea',industry:'Meșteșuguri',tagline:'Instalații rapide, fiabile, 24/7.',url:'/demos/my-plumbing.html'},
-      {emoji:'⚡',businessName:'Electrician Certificat Meu',industry:'Meșteșuguri',tagline:'Electricieni certificați de încredere.',url:'/demos/my-electrical.html'},
-      {emoji:'🚗',businessName:'Garaj Meu',industry:'Automotive',tagline:'Revizii, inspecții și reparații.',url:'/demos/my-garage.html'},
-      {emoji:'📷',businessName:'Fotografie Profesională Mea',industry:'Fotografie',tagline:'Nunți, portrete și evenimente.',url:'/demos/my-photography.html'},
-      {emoji:'🧼',businessName:'Compania de Curățenie Mea',industry:'Curățenie',tagline:'Case și birouri impecabile.',url:'/demos/my-cleaning.html'}
+      {emoji:'🍽️',businessName:'Restaurantul Meu',industry:'Restaurant',tagline:'Meniu, rezervări și gustul casei.',url:'/demos/my-restaurant'},
+      {emoji:'☕',businessName:'Cafeneaua Mea',industry:'Cafenea',tagline:'Cafea de specialitate și cozonaci proaspeți.',url:'/demos/my-cafe'},
+      {emoji:'🥐',businessName:'Brutăria Mea',industry:'Brutărie',tagline:'Pâini artizanale și prăjituri de ocazie.',url:'/demos/my-bakery'},
+      {emoji:'🛍️',businessName:'Magazinul Meu',industry:'Retail',tagline:'Online și în magazin, produse de calitate.',url:'/demos/my-shop'},
+      {emoji:'👗',businessName:'Butichea Mea',industry:'Modă',tagline:'Colecția sezonului și styling personal.',url:'/demos/my-boutique'},
+      {emoji:'💈',businessName:'Barber Shop-ul Meu',industry:'Frizerie',tagline:'Tunsori precisie și rezervări online ușoare.',url:'/demos/my-barbershop'},
+      {emoji:'🌸',businessName:'Spa-ul Meu',industry:'Spa & Wellness',tagline:'Masaj, faciale și relaxare pură.',url:'/demos/my-spa'},
+      {emoji:'🦷',businessName:'Clinica Dentară Mea',industry:'Dental',tagline:'Îngrijire dentară modernă și ușoară.',url:'/demos/my-dental-clinic'},
+      {emoji:'🩺',businessName:'Clinica Mea',industry:'Sănătate',tagline:'Îngrijire de încredere pentru toată familia.',url:'/demos/my-clinic'},
+      {emoji:'💪',businessName:'Sala de Fitness Mea',industry:'Fitness',tagline:'Echipamente, clase și antrenament personal.',url:'/demos/my-gym'},
+      {emoji:'🧘',businessName:'Studio-ul Meu',industry:'Yoga',tagline:'Clase pentru orice nivel.',url:'/demos/my-studio'},
+      {emoji:'⚖️',businessName:'Cabinet Juridic Meu',industry:'Juridic',tagline:'Consiliere juridică clară și onestă.',url:'/demos/my-law-firm'},
+      {emoji:'📊',businessName:'Birou Contabil Meu',industry:'Contabilitate',tagline:'Ținere cărți, taxe și consiliere afaceri.',url:'/demos/my-accounting'},
+      {emoji:'🏠',businessName:'Agenție Imobiliară Mea',industry:'Imobiliare',tagline:'Cumpără, vinde sau închiriază cu experți locali.',url:'/demos/my-estate-agency'},
+      {emoji:'🏗️',businessName:'Compania de Construcții Mea',industry:'Construcții',tagline:'Construcții noi și renovări durabile.',url:'/demos/my-construction'},
+      {emoji:'🔧',businessName:'Instalații Sanitare Mea',industry:'Meșteșuguri',tagline:'Instalații rapide, fiabile, 24/7.',url:'/demos/my-plumbing'},
+      {emoji:'⚡',businessName:'Electrician Certificat Meu',industry:'Meșteșuguri',tagline:'Electricieni certificați de încredere.',url:'/demos/my-electrical'},
+      {emoji:'🚗',businessName:'Garaj Meu',industry:'Automotive',tagline:'Revizii, inspecții și reparații.',url:'/demos/my-garage'},
+      {emoji:'📷',businessName:'Fotografie Profesională Mea',industry:'Fotografie',tagline:'Nunți, portrete și evenimente.',url:'/demos/my-photography'},
+      {emoji:'🧼',businessName:'Compania de Curățenie Mea',industry:'Curățenie',tagline:'Case și birouri impecabile.',url:'/demos/my-cleaning'}
     ];
     function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
     var ADMIN_MAP={'my-restaurant':'restaurant','my-cafe':'cafe','my-bakery':'bakery','my-shop':'shop','my-boutique':'boutique','my-barbershop':'barber','my-spa':'spa','my-dental-clinic':'dental','my-clinic':'clinic','my-gym':'gym','my-studio':'yoga','my-law-firm':'law','my-accounting':'accounting','my-estate-agency':'realestate','my-construction':'construction','my-plumbing':'plumbing','my-electrical':'electrical','my-garage':'garage','my-photography':'photography','my-cleaning':'cleaning','bella-cucina':'restaurant','brightsmile-dental':'dental','urban-threads':'shop'};
-    function adminHref(url){var m=String(url||'').match(/\/demos\/([a-z0-9-]+)\.html/);return (m&&ADMIN_MAP[m[1]])?'/demos/admin-demo.html?type='+ADMIN_MAP[m[1]]:null;}
+    function adminHref(url){var m=String(url||'').match(/\/demos\/([a-z0-9-]+)\.html/);return (m&&ADMIN_MAP[m[1]])?'/demos/admin-demo?type='+ADMIN_MAP[m[1]]:null;}
       var DEMO_ICONS = {
         restaurant: '<svg viewBox="0 0 24 24"><path d="M6 3v7a2 2 0 0 0 4 0V3M8 10v11M17 3c-1.5 0-2.5 1.5-2.5 4.5S15.5 12 17 12v9"/></svg>',
         cafe: '<svg viewBox="0 0 24 24"><path d="M5 8h11v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8Z"/><path d="M16 9h2a2 2 0 0 1 0 4h-2M8 3v2M11 3v2"/></svg>',
