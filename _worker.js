@@ -507,6 +507,10 @@ const CONTENT_PAGES = {
   'web-design-bucuresti': '/web-design-bucuresti.html',
   'web-design-cluj': '/web-design-cluj.html',
   'web-design-timisoara': '/web-design-timisoara.html',
+  'web-design-brasov': '/web-design-brasov.html',
+  'web-design-iasi': '/web-design-iasi.html',
+  'web-design-constanta': '/web-design-constanta.html',
+  'web-design-sibiu': '/web-design-sibiu.html',
   'web-design-auto': '/web-design-auto.html',
   'web-design-restaurante': '/web-design-restaurante.html',
   'web-design-afaceri-mici': '/web-design-afaceri-mici.html',
@@ -1687,6 +1691,10 @@ export default {
         { loc: '/web-design-bucuresti',       cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-cluj',            cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-timisoara',       cf: 'monthly', pr: '0.8' },
+        { loc: '/web-design-brasov',          cf: 'monthly', pr: '0.8' },
+        { loc: '/web-design-iasi',            cf: 'monthly', pr: '0.8' },
+        { loc: '/web-design-constanta',       cf: 'monthly', pr: '0.8' },
+        { loc: '/web-design-sibiu',           cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-auto',            cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-restaurante',     cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-afaceri-mici',    cf: 'monthly', pr: '0.8' },
@@ -1850,6 +1858,22 @@ export default {
 
     if (path === '/web-design-timisoara') {
       return serveContentPage(request, env, 'web-design-timisoara');
+    }
+
+    if (path === '/web-design-brasov') {
+      return serveContentPage(request, env, 'web-design-brasov');
+    }
+
+    if (path === '/web-design-iasi') {
+      return serveContentPage(request, env, 'web-design-iasi');
+    }
+
+    if (path === '/web-design-constanta') {
+      return serveContentPage(request, env, 'web-design-constanta');
+    }
+
+    if (path === '/web-design-sibiu') {
+      return serveContentPage(request, env, 'web-design-sibiu');
     }
 
     if (path === '/web-design-auto') {
