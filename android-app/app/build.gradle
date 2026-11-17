@@ -1,0 +1,51 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Semnarea: keystore-ul NU stă în repo. Se dă la build prin variabile de mediu:
+//   CDESIGN_KEYSTORE=/cale/cdesign-admin.keystore CDESIGN_KEYSTORE_PASS=... gradle assembleRelease
+def ksPath = System.getenv('CDESIGN_KEYSTORE')
+def ksPass = System.getenv('CDESIGN_KEYSTORE_PASS')
+
+android {
+    namespace 'ro.cdesign.admin'
+    compileSdk 36
+    buildToolsVersion '36.0.0'
+
+    defaultConfig {
+        applicationId 'ro.cdesign.admin'
+        minSdk 24
+        targetSdk 35
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    signingConfigs {
+        release {
+            if (ksPath && ksPass) {
+                storeFile file(ksPath)
+                storePassword ksPass
+                keyAlias 'cdesign-admin'
+                keyPassword ksPass
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+            if (ksPath && ksPass) signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.7.4'
+}

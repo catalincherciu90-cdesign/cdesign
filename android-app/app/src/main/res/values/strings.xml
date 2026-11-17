@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appName">C Design Admin</string>
+    <string name="launcherName">C Design</string>
+    <string name="hostName">www.c-design.ro</string>
+    <string name="launchUrl">https://www.c-design.ro/programari</string>
+    <string name="webManifestUrl">https://www.c-design.ro/admin.webmanifest</string>
+    <string name="providerAuthority">ro.cdesign.admin.fileprovider</string>
+    <string name="fallbackType">webview</string>
+    <string name="assetStatements">[{ \"relation\": [\"delegate_permission/common.handle_all_urls\"], \"target\": { \"namespace\": \"web\", \"site\": \"https://www.c-design.ro\" } }]</string>
+    <integer name="splashScreenFadeOutDuration">300</integer>
+</resources>
