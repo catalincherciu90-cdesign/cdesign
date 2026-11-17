@@ -2792,6 +2792,45 @@ Cerințe titluri:
     }
 
     // ── SITE SETTINGS (hero image etc.) ──────────────────────
+    // ── VOCE HD (text → vorbire, engleză britanică) — doar admin ──
+    // Folosește modelul Deepgram Aura-2 găzduit de Cloudflare (Workers AI),
+    // prin același binding ca asistentul de chat; fără chei externe.
+    if (path === '/api/tts' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      if (!env.AI) return json({ error: 'Voce HD indisponibilă' }, 503);
+      const ipT = request.headers.get('CF-Connecting-IP') || 'unknown';
+      if (!(await checkRateLimit(env, 'tts_' + ipT, 80, 3600))) return json({ error: 'Prea multe cereri' }, 429);
+      const b = await request.json().catch(() => ({}));
+      const text = String(b.text || '').replace(/\s+/g, ' ').trim().slice(0, 700);
+      if (!text) return json({ error: 'Text lipsă' }, 400);
+      const speaker = ['draco', 'pandora'].includes(b.voice) ? b.voice : 'draco';
+      try {
+        const out = await env.AI.run('@cf/deepgram/aura-2-en', { text, speaker }, { returnRawResponse: true });
+        const hdr = { 'Content-Type': 'audio/mpeg', 'Cache-Control': 'no-store' };
+        if (out instanceof Response) {
+          if (!out.ok) return json({ error: 'Voce HD indisponibilă' }, 502);
+          const ct = out.headers.get('content-type') || '';
+          if (/json/i.test(ct)) {
+            const j = await out.json().catch(() => null);
+            const b64 = j && (j.audio || (j.result && j.result.audio));
+            if (typeof b64 !== 'string' || !b64) return json({ error: 'Voce HD indisponibilă' }, 502);
+            const bin = atob(b64); const bytes = new Uint8Array(bin.length);
+            for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+            return new Response(bytes, { headers: hdr });
+          }
+          if (ct && /^audio\//i.test(ct)) hdr['Content-Type'] = ct;
+          return new Response(out.body, { headers: hdr });
+        }
+        if (out && typeof out.getReader === 'function') return new Response(out, { headers: hdr });
+        if (out && typeof out.audio === 'string') {
+          const bin = atob(out.audio); const bytes = new Uint8Array(bin.length);
+          for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+          return new Response(bytes, { headers: hdr });
+        }
+        return json({ error: 'Voce HD indisponibilă' }, 502);
+      } catch (e) { return json({ error: 'Voce HD indisponibilă' }, 502); }
+    }
+
     // ── PUSH (notificări pe telefon) — doar admin ─────────────
     if (path.startsWith('/api/push/')) {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
