@@ -484,13 +484,21 @@
   </section>
 
   <!-- PROIECTE REALE / LUCRĂRI LIVRATE -->
-  <section class="demos" id="proiecte" style="display:none;background:#fff">
+  <section class="demos" id="proiecte" style="display:block;background:#fff">
     <div class="demos-head">
       <span class="eyebrow">Clienți reali</span>
       <h2>Proiecte <b>livrate</b></h2>
       <p>Site-uri construite și lansate pentru clienții noștri. Intră și vezi-le live.</p>
     </div>
-    <div class="demo-grid" id="proiecteGrid"></div>
+    <div class="demo-grid" id="proiecteGrid">
+      <!-- Proiecte afișate direct în HTML (pentru motoarele de căutare); JS le înlocuiește cu lista la zi din /api/projects -->
+      <div class="demo-card proj-card"><img class="proj-thumb" src="/portofoliu/expotigla.jpg" alt="ExpoTigla — magazin online acoperișuri" loading="lazy"><div class="proj-body"><span class="demo-tag">Magazin acoperișuri</span><h3>ExpoTigla — magazin online acoperișuri</h3><p>Magazin online pentru un furnizor de sisteme complete de acoperiș: țiglă metalică, tablă fălțuită, panouri sandwich, sisteme pluviale și accesorii. Catalog cu prețuri, configurator „Sistem complet&quot;, cerere de ofertă și consultanță tehnică — tot ce îi trebuie clientului ca să ajungă rapid la o ofertă.</p><div class="demo-actions"><a class="demo-btn" href="/portofoliu/expotigla">Vezi proiectul →</a><a class="demo-btn admin" href="https://expotigla.ro" target="_blank" rel="noopener">Site live ↗</a></div></div></div>
+      <div class="demo-card proj-card"><img class="proj-thumb" src="/portofoliu/cosmin-tatulescu.jpg" alt="Cosmin Tătulescu — ședințe foto de Crăciun" loading="lazy"><div class="proj-body"><span class="demo-tag">Fotografie</span><h3>Cosmin Tătulescu — ședințe foto de Crăciun</h3><p>Site de prezentare și rezervare pentru ședințele foto de Crăciun ale unui fotograf din Brașov. Explică pe scurt experiența, afișează prețurile pe perioade și arată în calendar câte locuri libere mai sunt în fiecare zi.</p><div class="demo-actions"><a class="demo-btn" href="/portofoliu/cosmin-tatulescu">Vezi proiectul →</a><a class="demo-btn admin" href="https://cosmintatulescu.ro" target="_blank" rel="noopener">Site live ↗</a></div></div></div>
+      <div class="demo-card proj-card"><img class="proj-thumb" src="/portofoliu/traditum.jpg" alt="Traditum By Victoria — cofetărie artizanală" loading="lazy"><div class="proj-body"><span class="demo-tag">Cofetărie</span><h3>Traditum By Victoria — cofetărie artizanală</h3><p>Site de prezentare pentru o cofetărie artizanală din Ilfov. Produsele sunt grupate pe categorii, iar site-ul pune în față galeria cu evenimente reale și cererea de ofertă pentru torturi și candy bar.</p><div class="demo-actions"><a class="demo-btn" href="/portofoliu/traditum">Vezi proiectul →</a><a class="demo-btn admin" href="https://traditumbyvictoria.ro" target="_blank" rel="noopener">Site live ↗</a></div></div></div>
+      <div class="demo-card proj-card"><img class="proj-thumb" src="/portofoliu/mrdtf.jpg" alt="Mr.DTF — print DTF la metru liniar" loading="lazy"><div class="proj-body"><span class="demo-tag">Print DTF</span><h3>Mr.DTF — print DTF la metru liniar</h3><p>Site pentru un atelier de print DTF din București. Prețurile pe metru liniar sunt vizibile din primul ecran, un calculator arată câte modele încap pe un metru, iar comanda se trimite dintr-un formular rapid.</p><div class="demo-actions"><a class="demo-btn" href="/portofoliu/mrdtf">Vezi proiectul →</a><a class="demo-btn admin" href="https://mrdtf.ro" target="_blank" rel="noopener">Site live ↗</a></div></div></div>
+      <div class="demo-card proj-card"><img class="proj-thumb" src="/portofoliu/comstore.jpg" alt="ComStore — montaj și renovare acoperișuri" loading="lazy"><div class="proj-body"><span class="demo-tag">Acoperișuri</span><h3>ComStore — montaj și renovare acoperișuri</h3><p>Site de prezentare pentru o firmă de montaj și renovare acoperișuri. Pune în față serviciile, proiectele realizate și brandurile partenere, iar fiecare secțiune duce spre o cerere de ofertă.</p><div class="demo-actions"><a class="demo-btn" href="/portofoliu/comstore">Vezi proiectul →</a><a class="demo-btn admin" href="https://comstore-acoperisuri.ro" target="_blank" rel="noopener">Site live ↗</a></div></div></div>
+      <div class="demo-card proj-card"><img class="proj-thumb" src="/portofoliu/apg-garage.jpg" alt="APG Garage — service auto" loading="lazy"><div class="proj-body"><span class="demo-tag">Service auto</span><h3>APG Garage — service auto</h3><p>Site pentru un service auto din Militari, București. Prezintă serviciile și prețurile orientative, iar clienții își pot face cont pentru a se programa online.</p><div class="demo-actions"><a class="demo-btn" href="/portofoliu/apg-garage">Vezi proiectul →</a></div></div></div>
+    </div>
     <div style="text-align:center;margin-top:44px">
       <a href="/portofoliu" class="btn-primary">Vezi tot portofoliul <span class="arr">→</span></a>
     </div>
@@ -669,11 +677,17 @@
       if(!el) return;
       var custom = window.__HERO_ROTATE;
       var words = (Array.isArray(custom) && custom.length) ? custom : ['clienți noi', 'mai multe vânzări', 'rezervări online', 'comenzi noi', 'mai mulți clienți'];
-      if(words.length < 2) return;
       var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if(reduce) return;
       var i = 0;
+      // textele setate în admin (Setări → Titluri) ajung aici din /api/site-settings
+      window.__setHeroRotate = function(list){
+        var w = String(list || '').split('\n').map(function(x){ return x.trim(); }).filter(Boolean);
+        if(!w.length) return;
+        words = w; i = 0; el.textContent = words[0];
+      };
+      if(reduce) return;
       setInterval(function(){
+        if(words.length < 2) return;
         el.classList.add('swap');
         setTimeout(function(){
           i = (i + 1) % words.length;
@@ -732,6 +746,7 @@
       .then(function(d){
         d = d || {};
         if(d.bgVideo){ setHeroVideo(d.bgVideo); }
+        if(d.heroRotate && window.__setHeroRotate){ window.__setHeroRotate(d.heroRotate); }
         setupAboutCarousel(d.aboutBanners);
       })
       .catch(function(){ setupAboutCarousel(null); });
