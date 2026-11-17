@@ -1412,6 +1412,14 @@ async function promoPagePublished(env, key) {
     return !!(s && s[key] && s[key].published);
   } catch { return false; }
 }
+// Articol de blog inexistent sau nepublicat: 404 real (Google îl scoate din index),
+// cu link înapoi spre lista de articole pentru vizitatori.
+function blogNotFound() {
+  return new Response('<!DOCTYPE html><html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Articolul nu a fost găsit | C Design</title></head>'
+    + '<body style="font-family:system-ui,sans-serif;text-align:center;padding:80px 20px;color:#334155"><h1 style="font-size:1.6rem">Articolul nu a fost găsit</h1>'
+    + '<p>Este posibil să fi fost mutat sau șters.</p><p><a href="/blog" style="color:#00a8a8;font-weight:600">Vezi toate articolele</a> · <a href="/" style="color:#00a8a8;font-weight:600">Prima pagină</a></p></body></html>',
+    { status: 404, headers: { 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'no-store' } });
+}
 function promoDraft404() {
   return new Response('<!DOCTYPE html><meta charset="utf-8"><title>Pagina nu a fost găsită</title><body style="font-family:system-ui,sans-serif;text-align:center;padding:80px 20px;color:#334155;"><h1>Pagina nu a fost găsită</h1><p><a href="https://www.c-design.ro" style="color:#00AAAC;">Înapoi la C Design →</a></p></body>', { status: 404, headers: { 'Content-Type': 'text/html;charset=utf-8' } });
 }
@@ -1608,6 +1616,9 @@ export default {
     if (path === '/campanie-florarii' || path.startsWith('/campanie-florarii/')) {
       return Response.redirect('https://www.c-design.ro/', 301);
     }
+    // Adrese vechi care au existat în linkuri (Google le-a găsit) → pagina corectă
+    const LEGACY_301 = { '/privacy-policy': '/politica-confidentialitate', '/privacy-policy/': '/politica-confidentialitate' };
+    if (LEGACY_301[path]) return Response.redirect('https://www.c-design.ro' + LEGACY_301[path], 301);
 
     // ── CANONICAL: .html brut → URL curat (301) ─────────────────
     // Fiecare pagină are un URL curat (/despre-noi) + un geamăn .html servit
@@ -1782,11 +1793,11 @@ export default {
         const raw = await env.PROGRAMARI.get('__blog__');
         const posts = raw ? JSON.parse(raw) : [];
         const post = posts.find(p => p.slug === slug && p.published);
-        if (!post) return Response.redirect('https://www.c-design.ro/blog', 302);
+        if (!post) return blogNotFound();
         return new Response(renderArticle(post), {
           headers: { 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'public,max-age=300' },
         });
-      } catch { return Response.redirect('https://www.c-design.ro/blog', 302); }
+      } catch { return blogNotFound(); }
     }
 
     // ── PACHET STARTUP ────────────────────────────────────────

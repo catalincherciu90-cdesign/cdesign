@@ -8,6 +8,11 @@ Disallow: /programari
 Disallow: /programari.html
 Disallow: /*.json$
 Disallow: /aplicatie/
+# API: doar datele publice afișate pe pagini rămân accesibile (Google le folosește la randare)
+Allow: /api/projects
+Allow: /api/blog
+Allow: /api/site-settings
+Disallow: /api/
 # Cloudflare (email obfuscation etc.) — link-uri interne, nu pagini reale
 Disallow: /cdn-cgi/
 
