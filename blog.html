@@ -273,9 +273,44 @@
 <!-- BLOG SECTION -->
 <section class="blog-section">
   <div id="blog-container" style="max-width:1180px;margin:0 auto">
-    <div class="blog-loading">
-      <div class="spinner"></div>
-      <p>Se încarcă articolele...</p>
+    <!-- Articole afișate direct în HTML (pentru motoarele de căutare); JS le înlocuiește cu lista la zi din /api/blog -->
+    <div class="blog-grid">
+      <a href="/blog/web-design-de-calitate" class="post-card" aria-label="Web Design de Calitate">
+        <span class="post-tag">Blog</span>
+        <div class="post-title">Web Design de Calitate</div>
+        <div class="post-excerpt">Alege un serviciu de web design care îți oferă o prezență online puternică. Descoperă ce să cauți pentru a reuși. În acest articol, vei…</div>
+        <div class="post-footer">
+          <span class="post-date">22 iunie 2026</span>
+          <span class="post-read">Citește articolul →</span>
+        </div>
+      </a>
+      <a href="/blog/web-design-pentru-succes" class="post-card" aria-label="Web Design pentru Succes">
+        <span class="post-tag">Blog</span>
+        <div class="post-title">Web Design pentru Succes</div>
+        <div class="post-excerpt">Aflați cum un web design de calitate poate crește succesul afacerii dvs. mici. Sfaturi practice și exemple concrete pentru antreprenorii…</div>
+        <div class="post-footer">
+          <span class="post-date">20 iunie 2026</span>
+          <span class="post-read">Citește articolul →</span>
+        </div>
+      </a>
+      <a href="/blog/alegerea-web-designerului" class="post-card" aria-label="Alegerea Web Designerului">
+        <span class="post-tag">Blog</span>
+        <div class="post-title">Alegerea Web Designerului</div>
+        <div class="post-excerpt">Găsește cel mai bun web designer pentru afacerea ta. Află sfaturi practice și exemple concrete pentru a face alegerea potrivită.…</div>
+        <div class="post-footer">
+          <span class="post-date">11 iunie 2026</span>
+          <span class="post-read">Citește articolul →</span>
+        </div>
+      </a>
+      <a href="/blog/web-design-pentru-afaceri-mici" class="post-card" aria-label="Web Design pentru Afaceri Mici">
+        <span class="post-tag">Blog</span>
+        <div class="post-title">Web Design pentru Afaceri Mici</div>
+        <div class="post-excerpt">Aflați cum un design de website de calitate poate crește vizibilitatea și vânzările afacerii dvs. mici. Descoperiți sfaturi practice și…</div>
+        <div class="post-footer">
+          <span class="post-date">11 iunie 2026</span>
+          <span class="post-read">Citește articolul →</span>
+        </div>
+      </a>
     </div>
   </div>
 </section>
@@ -410,7 +445,8 @@ async function loadBlog() {
     container.innerHTML = `<div class="blog-grid">${cards}</div>`;
     observeReveals();
   } catch (err) {
-    container.innerHTML = `<div class="blog-empty"><div class="blog-empty-icon">⚠️</div><h3>Eroare la încărcare</h3><p>Încearcă din nou mai târziu.</p></div>`;
+    // rămân articolele deja afișate în pagină; mesajul de eroare apare doar dacă nu există niciunul
+    if (!container.querySelector('.post-card')) container.innerHTML = `<div class="blog-empty"><div class="blog-empty-icon">⚠️</div><h3>Eroare la încărcare</h3><p>Încearcă din nou mai târziu.</p></div>`;
   }
 }
 

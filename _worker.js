@@ -16,13 +16,18 @@ function sanitizeHtml(html) {
 function renderArticle(post) {
   const date = new Date(post.createdAt).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
   const plain = post.content.replace(/<[^>]*>/g, '');
-  const desc = escHtml(post.excerpt || (plain.slice(0, 155) + (plain.length > 155 ? '…' : '')));
+  // Titlul paginii este singurul H1: titlurile H1 din conținut devin H2 (SEO)
+  const bodyHtml = String(post.content || '').replace(/<h1(\s[^>]*)?>/gi, '<h2$1>').replace(/<\/h1>/gi, '</h2>');
+  // Descrierea pentru Google: cel mult ~160 de caractere, tăiată la un cuvânt întreg
+  const rawDesc = String(post.excerpt || plain).replace(/\s+/g, ' ').trim();
+  const shortDesc = rawDesc.length > 160 ? rawDesc.slice(0, 157).replace(/\s+\S*$/, '') + '…' : rawDesc;
+  const desc = escHtml(shortDesc);
   const schema = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: post.title,
-    description: post.excerpt || plain.slice(0, 155),
-    image: post.coverImage || 'https://www.c-design.ro/logo-c-design.png',
+    description: shortDesc,
+    image: post.coverImage || 'https://www.c-design.ro/cover.jpg',
     datePublished: post.createdAt,
     dateModified: post.updatedAt || post.createdAt,
     author: { '@type': 'Organization', name: 'C Design', url: 'https://www.c-design.ro' },
@@ -162,7 +167,7 @@ fbq('init','893560673744618');fbq('track','PageView');
   <span class="art-tag">Blog</span>
   <h1 class="art-title">${escHtml(post.title)}</h1>
   <div class="art-meta">${date}</div>
-  <div class="art-content">${sanitizeHtml(post.content)}</div>
+  <div class="art-content">${sanitizeHtml(bodyHtml)}</div>
   <div class="cta-box">
     <h3>Vrei un site profesional pentru afacerea ta?</h3>
     <p>Programează o şedinţă de consultanţă gratuită — fără obligaţii.</p>
@@ -547,10 +552,19 @@ function extractContentFields(html) {
 async function serveContentPage(request, env, page) {
   const assetUrl = new URL(request.url);
   assetUrl.pathname = CONTENT_PAGES[page];
-  const [resp, raw] = await Promise.all([
+  let [resp, raw] = await Promise.all([
     env.ASSETS.fetch(new Request(assetUrl.toString(), request)),
     env.PROGRAMARI.get('__content__' + page).catch(() => null),
   ]);
+  // ASSETS redirecționează „pagina.html" către „pagina"; urmăm redirectul intern,
+  // altfel vizitatorul (și Google) ar fi trimiși pe alt URL decât cel canonic.
+  if (resp.status >= 300 && resp.status < 400) {
+    const loc = resp.headers.get('location');
+    if (loc) {
+      const again = await env.ASSETS.fetch(new Request(new URL(loc, assetUrl).toString(), request));
+      if (again.status === 200) resp = again;
+    }
+  }
   // paginile servite de aici primesc mereu headerele de securitate
   const withSec = (r) => {
     const h = new Headers(r.headers);
@@ -1016,15 +1030,37 @@ function renderCaseStudy(id, cs) {
       <div class="cs-row-txt"><span class="cs-num">${String(i + 1).padStart(2, '0')}</span><h3>${esc(s[1])}</h3><p>${esc(s[2])}</p></div>
     </div>`).join('');
   const features = cs.features.map(f => `<li>${esc(f)}</li>`).join('');
+  // SEO: titlu cu tipul proiectului, descriere completă și date structurate
+  const pageUrl = 'https://www.c-design.ro/portofoliu/' + encodeURIComponent(id);
+  const pageTitle = cs.title + (cs.tag ? ' — ' + cs.tag : '') + ' | Portofoliu C Design';
+  const fullDesc = cs.subtitle + '. Studiu de caz C Design: ce am construit, cum arată și ce funcții are site-ul.';
+  const pageDesc = fullDesc.length > 160 ? fullDesc.slice(0, 157).replace(/\s+\S*$/, '') + '…' : fullDesc;
+  const ldJson = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'BreadcrumbList', itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Acasă', item: 'https://www.c-design.ro/' },
+        { '@type': 'ListItem', position: 2, name: 'Portofoliu', item: 'https://www.c-design.ro/portofoliu' },
+        { '@type': 'ListItem', position: 3, name: cs.title, item: pageUrl },
+      ] },
+      { '@type': 'CreativeWork', name: cs.title, headline: cs.title + ' — ' + cs.subtitle, description: pageDesc, url: pageUrl,
+        image: 'https://www.c-design.ro' + cs.cover, inLanguage: 'ro', genre: cs.tag || 'Web design',
+        creator: { '@type': 'Organization', name: 'C Design', url: 'https://www.c-design.ro' } },
+    ],
+  }).replace(/</g, '\\u003c');
   return `<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${esc(cs.title)} — Proiect C Design</title>
-<meta name="description" content="${esc(cs.subtitle)} — proiect realizat de C Design.">
-<link rel="canonical" href="https://www.c-design.ro/portofoliu/${esc(id)}">
+<title>${esc(pageTitle)}</title>
+<meta name="description" content="${esc(pageDesc)}">
+<link rel="canonical" href="${pageUrl}">
 <meta name="robots" content="index, follow">
-<meta property="og:title" content="${esc(cs.title)} — Proiect C Design">
-<meta property="og:description" content="${esc(cs.subtitle)}">
+<meta property="og:title" content="${esc(pageTitle)}">
+<meta property="og:description" content="${esc(pageDesc)}">
 <meta property="og:image" content="https://www.c-design.ro${esc(cs.cover)}">
+<meta property="og:url" content="${pageUrl}">
+<meta property="og:site_name" content="C Design">
 <meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${ldJson}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
