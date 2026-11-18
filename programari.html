@@ -9754,6 +9754,7 @@
   }
   function renderAgendaOferte() {
     const wrap = document.getElementById('gib-oferte-list');
+    if (typeof starkUpdateAgendaGauges === 'function') starkUpdateAgendaGauges();
     if (!wrap) return;
     const list = ofertePending();
     if (!list.length) { wrap.innerHTML = '<div class="gib-empty">Nicio ofertă în așteptare.</div>'; return; }
@@ -10797,17 +10798,22 @@
 
     const gaugesDiv = document.createElement('div');
     gaugesDiv.id = 'stark-agenda-gauges';
-    gaugesDiv.style.cssText = 'display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px;';
+    gaugesDiv.style.cssText = 'display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 14px;';
 
     const metrics = [
       { id: 'stark-gauge-meetings', label: 'INTALNIRI', max: 5, color: '#00e5ff' },
       { id: 'stark-gauge-todos', label: 'TO-DO', max: 8, color: '#00b8cc' },
       { id: 'stark-gauge-deadlines', label: 'DEADLINE', max: 5, color: '#009999' },
+      { id: 'stark-gauge-oferte', label: 'OFERTE', max: 5, color: '#7df9ff' },
     ];
+    // fiecare indicator deschide secțiunea lui din Agendă
+    const views = { 'stark-gauge-meetings': 'meetings', 'stark-gauge-todos': 'todos', 'stark-gauge-deadlines': 'deadlines', 'stark-gauge-oferte': 'oferte' };
 
     metrics.forEach((m) => {
       const container = document.createElement('div');
-      container.style.cssText = 'display: flex; flex-direction: column; align-items: center; gap: 6px;';
+      container.style.cssText = 'display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer;';
+      container.title = 'Deschide în Agendă';
+      container.addEventListener('click', () => { if (typeof agendaOpen === 'function') agendaOpen(views[m.id]); });
 
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       svg.setAttribute('viewBox', '0 0 80 80');
@@ -10882,6 +10888,7 @@
       { id: 'stark-gauge-meetings', value: meetingsCount },
       { id: 'stark-gauge-todos', value: todosCount },
       { id: 'stark-gauge-deadlines', value: deadlinesCount },
+      { id: 'stark-gauge-oferte', value: (typeof ofertePending === 'function') ? ofertePending().length : 0 },
     ];
 
     gauges.forEach((g) => {
