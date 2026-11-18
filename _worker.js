@@ -1146,6 +1146,48 @@ h1,h2,h3{font-family:'Poppins',sans-serif;color:var(--ink);letter-spacing:-.02em
 </body></html>`;
 }
 
+// ── ANAF: date publice despre o firmă, după CUI ──────────────────
+// Serviciul public ANAF „PlatitorTvaRest" v9 (fără cheie). Răspunsul este
+// redus la câmpurile folosite în fișa clientului și păstrat 24h în KV, ca
+// să nu interogăm ANAF de mai multe ori pentru aceeași firmă.
+const ANAF_TVA_URL = 'https://webservicesp.anaf.ro/api/PlatitorTvaRest/v9/tva';
+function anafText(v) {
+  // ANAF folosește ş/ţ cu sedilă; le trecem la ș/ț (cu virgulă), forma corectă în română
+  return String(v == null ? '' : v).replace(/ş/g, 'ș').replace(/Ş/g, 'Ș').replace(/ţ/g, 'ț').replace(/Ţ/g, 'Ț').replace(/\s+/g, ' ').trim();
+}
+function anafTitle(v) {
+  return anafText(v).toLowerCase().replace(/(^|[\s\-.(/])(\p{L})/gu, (m, p, c) => p + c.toUpperCase());
+}
+function anafParse(item) {
+  const g = item.date_generale || {}, sed = item.adresa_sediu_social || {}, fisc = item.adresa_domiciliu_fiscal || {};
+  const tva = !!(item.inregistrare_scop_Tva && item.inregistrare_scop_Tva.scpTVA);
+  const street = [anafText(sed.sdenumire_Strada), sed.snumar_Strada ? 'nr. ' + anafText(sed.snumar_Strada) : '', anafText(sed.sdetalii_Adresa)].filter(Boolean).join(', ');
+  const useSed = !!(sed.sdenumire_Localitate || sed.sdenumire_Strada);
+  const stare = anafText(g.stare_inregistrare);
+  const inactiv = !!(item.stare_inactiv && item.stare_inactiv.statusInactivi);
+  const radiat = /^RADIER/i.test(stare);
+  return {
+    cui: (tva ? 'RO' : '') + String(g.cui || ''),
+    name: anafText(g.denumire),
+    regCom: anafText(g.nrRegCom).toUpperCase(),
+    tva,
+    adresa: useSed ? street : anafText(g.adresa),
+    oras: useSed ? anafTitle(sed.sdenumire_Localitate) : '',
+    judet: useSed ? anafTitle(sed.sdenumire_Judet) : '',
+    codPostal: anafText(sed.scod_Postal || g.codPostal),
+    adresaFiscala: anafText(g.adresa),
+    telefon: anafText(g.telefon),
+    iban: anafText(g.iban).toUpperCase().replace(/\s+/g, ''),
+    caen: anafText(g.cod_CAEN),
+    formaJuridica: anafText(g.forma_juridica),
+    stare, inactiv, radiat,
+    eFactura: !!g.statusRO_e_Factura,
+    dataInterogare: anafText(g.data),
+  };
+}
+
+const SVC_CATEGORII = ['pachete', 'web-design', 'seo', 'mentenanta', 'grafic', 'marketing', 'altele'];
+
 // Câmpurile salvate pentru un client (persoană fizică sau firmă), curățate și
 // limitate. Orice alt câmp trimis este ignorat.
 function cleanClientFields(b) {
@@ -2925,6 +2967,43 @@ Cerințe titluri:
       } catch (e) { return json({ error: 'Voce HD indisponibilă' }, 502); }
     }
 
+    // ── ANAF: completare date firmă după CUI — doar admin ─────
+    if (path === '/api/anaf/cui' && request.method === 'GET') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      const cui = String(url.searchParams.get('cui') || '').toUpperCase().replace(/^RO/, '').replace(/\s+/g, '');
+      if (!/^\d{2,10}$/.test(cui)) return json({ error: 'CUI invalid: trebuie să conțină între 2 și 10 cifre.' }, 400);
+      const cacheKey = '__anaf_' + cui;
+      try {
+        const cached = await env.PROGRAMARI.get(cacheKey);
+        if (cached) return json({ ...JSON.parse(cached), cached: true });
+      } catch {}
+      const ipA = request.headers.get('CF-Connecting-IP') || 'unknown';
+      if (!(await checkRateLimit(env, 'anaf_' + ipA, 40, 3600))) return json({ error: 'Prea multe căutări. Încearcă din nou peste câteva minute.' }, 429);
+      try {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 10000);
+        const today = new Date().toISOString().slice(0, 10);
+        const res = await fetch(ANAF_TVA_URL, {
+          method: 'POST', signal: ctrl.signal,
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify([{ cui: Number(cui), data: today }]),
+        });
+        clearTimeout(timer);
+        // Pentru un CUI inexistent ANAF răspunde cu 404 și {"found":[],"notFound":[...]}
+        const data = await res.json().catch(() => null);
+        if (res.status === 404 && data && Array.isArray(data.notFound) && data.notFound.length) return json({ error: 'ANAF nu are nicio firmă cu acest CUI.', notFound: true }, 404);
+        if (!res.ok) return json({ error: 'ANAF nu a răspuns (cod ' + res.status + '). Încearcă din nou mai târziu.' }, 502);
+        if (!data || !Array.isArray(data.found)) return json({ error: 'Răspuns neașteptat de la ANAF.' }, 502);
+        if (!data.found.length) return json({ error: 'ANAF nu are nicio firmă cu acest CUI.', notFound: true }, 404);
+        const firm = anafParse(data.found[0]);
+        try { await env.PROGRAMARI.put(cacheKey, JSON.stringify(firm), { expirationTtl: 86400 }); } catch {}
+        return json(firm);
+      } catch (e) {
+        const timeout = e && e.name === 'AbortError';
+        return json({ error: timeout ? 'ANAF nu a răspuns la timp. Încearcă din nou.' : 'Nu am putut contacta ANAF.' }, 502);
+      }
+    }
+
     // ── PUSH (notificări pe telefon) — doar admin ─────────────
     if (path.startsWith('/api/push/')) {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
@@ -3479,13 +3558,21 @@ Cerințe titluri:
         // Servicii noi adăugate după seed inițial — migrare automată
         const migrations = [
           { id:'svc_d17', nume:'Integrare Google Search Console', descriere:'Verificare proprietate, sitemap XML, conectare Google Analytics, raport erori indexare', pret:120, moneda:'EUR', unitate:'proiect', categorie:'seo' },
+          { id:'svc_promo', nume:'Pachet Promo — Ofertă de lansare', descriere:'Site de prezentare (până la 5 pagini) + SEO, apare pe Google + Google Business Profile configurat + conturi Instagram și Facebook. Preț normal 750 EUR.', pret:400, moneda:'EUR', unitate:'proiect', categorie:'pachete', promo:true },
         ];
         if (raw !== null) {
           const lista = JSON.parse(raw);
+          // Fiecare serviciu nou se adaugă o singură dată; dacă îl ștergi din catalog, nu mai revine.
+          let applied = [];
+          try { applied = JSON.parse(await env.PROGRAMARI.get('__servicii_migrations__') || '[]'); } catch {}
+          if (!Array.isArray(applied)) applied = [];
           const ids = new Set(lista.map(s => s.id));
-          const toAdd = migrations.filter(m => !ids.has(m.id));
+          const toAdd = migrations.filter(m => !ids.has(m.id) && !applied.includes(m.id));
+          const nowApplied = [...new Set([...applied, ...migrations.filter(m => ids.has(m.id) || toAdd.includes(m)).map(m => m.id)])];
+          if (nowApplied.length !== applied.length) await env.PROGRAMARI.put('__servicii_migrations__', JSON.stringify(nowApplied));
           if (toAdd.length) {
-            const updated = [...lista, ...toAdd];
+            // pachetele apar primele în catalog
+            const updated = [...toAdd.filter(m => m.categorie === 'pachete'), ...lista, ...toAdd.filter(m => m.categorie !== 'pachete')];
             await env.PROGRAMARI.put('__servicii__', JSON.stringify(updated));
             return json(updated);
           }
@@ -3509,9 +3596,11 @@ Cerințe titluri:
           { id:'svc_d14', nume:'Mentenanță Site Avansat', descriere:'Actualizări, backup săptămânal, securitate, 4h modificări/lună, raport', pret:200, moneda:'EUR', unitate:'lună', categorie:'mentenanta' },
           { id:'svc_d15', nume:'Logo Design', descriere:'3 variante de concept, fișiere vectoriale finale (AI, SVG, PNG, PDF)', pret:350, moneda:'EUR', unitate:'proiect', categorie:'grafic' },
           { id:'svc_d16', nume:'Identitate Vizuală Completă', descriere:'Logo + paletă culori + fonturi + business card + antet + ghid brand', pret:800, moneda:'EUR', unitate:'proiect', categorie:'grafic' },
-          ...migrations,
+          ...migrations.filter(m => m.categorie !== 'pachete'),
         ];
+        defaults.unshift(...migrations.filter(m => m.categorie === 'pachete'));
         await env.PROGRAMARI.put('__servicii__', JSON.stringify(defaults));
+        await env.PROGRAMARI.put('__servicii_migrations__', JSON.stringify(migrations.map(m => m.id)));
         return json(defaults);
       } catch { return json([]); }
     }
@@ -3530,7 +3619,7 @@ Cerințe titluri:
           pret: parseFloat(body.pret) || 0,
           moneda: ['EUR', 'RON'].includes(body.moneda) ? body.moneda : 'EUR',
           unitate: ['proiect', 'lună', 'oră', 'pagină', 'an'].includes(body.unitate) ? body.unitate : 'proiect',
-          categorie: ['web-design', 'seo', 'mentenanta', 'grafic', 'marketing', 'altele'].includes(body.categorie) ? body.categorie : 'altele',
+          categorie: SVC_CATEGORII.includes(body.categorie) ? body.categorie : 'altele',
         };
         lista.push(svc);
         await env.PROGRAMARI.put('__servicii__', JSON.stringify(lista));
@@ -3554,7 +3643,7 @@ Cerințe titluri:
           ...(body.pret !== undefined && { pret: parseFloat(body.pret) || 0 }),
           ...(body.moneda && ['EUR', 'RON'].includes(body.moneda) && { moneda: body.moneda }),
           ...(body.unitate && ['proiect','lună','oră','pagină','an'].includes(body.unitate) && { unitate: body.unitate }),
-          ...(body.categorie && { categorie: body.categorie }),
+          ...(body.categorie && SVC_CATEGORII.includes(body.categorie) && { categorie: body.categorie }),
         };
         await env.PROGRAMARI.put('__servicii__', JSON.stringify(lista));
         return json(lista[idx]);
