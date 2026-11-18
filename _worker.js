@@ -1160,6 +1160,44 @@ function anafText(v) {
 function anafTitle(v) {
   return anafText(v).toLowerCase().replace(/(^|[\s\-.(/])(\p{L})/gu, (m, p, c) => p + c.toUpperCase());
 }
+// Interogare ANAF pentru un CUI, cu rezultatul păstrat 24h în KV.
+// Întoarce { firm } sau { error, status } — nu aruncă erori.
+async function anafLookupCached(env, cuiRaw) {
+  const cui = String(cuiRaw || '').toUpperCase().replace(/^RO/, '').replace(/\s+/g, '');
+  if (!/^\d{2,10}$/.test(cui)) return { error: 'CUI invalid: trebuie să conțină între 2 și 10 cifre.', status: 400 };
+  const cacheKey = '__anaf_' + cui;
+  try { const cached = await env.PROGRAMARI.get(cacheKey); if (cached) return { firm: { ...JSON.parse(cached), cached: true } }; } catch {}
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 10000);
+    const res = await fetch(ANAF_TVA_URL, {
+      method: 'POST', signal: ctrl.signal,
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify([{ cui: Number(cui), data: new Date().toISOString().slice(0, 10) }]),
+    });
+    clearTimeout(timer);
+    // Pentru un CUI inexistent ANAF răspunde cu 404 și {"found":[],"notFound":[...]}
+    const data = await res.json().catch(() => null);
+    if (res.status === 404 && data && Array.isArray(data.notFound) && data.notFound.length) return { error: 'ANAF nu are nicio firmă cu acest CUI.', status: 404, notFound: true };
+    if (!res.ok) return { error: 'ANAF nu a răspuns (cod ' + res.status + '). Încearcă din nou mai târziu.', status: 502 };
+    if (!data || !Array.isArray(data.found)) return { error: 'Răspuns neașteptat de la ANAF.', status: 502 };
+    if (!data.found.length) return { error: 'ANAF nu are nicio firmă cu acest CUI.', status: 404, notFound: true };
+    const firm = anafParse(data.found[0]);
+    try { await env.PROGRAMARI.put(cacheKey, JSON.stringify(firm), { expirationTtl: 86400 }); } catch {}
+    return { firm };
+  } catch (e) {
+    return { error: e && e.name === 'AbortError' ? 'ANAF nu a răspuns la timp. Încearcă din nou.' : 'Nu am putut contacta ANAF.', status: 502 };
+  }
+}
+// Sediul firmei: cel salvat în Setări, altfel cel din registrul ANAF (după CUI). Gol dacă ANAF nu răspunde.
+async function companySediu(env, t) {
+  const saved = String((t && t.prestAdresa) || '').trim();
+  if (saved) return saved;
+  const r = await anafLookupCached(env, (t && t.prestCui) || COMPANY_DEFAULTS.cui);
+  if (!r.firm) return '';
+  return [r.firm.adresa, r.firm.oras, r.firm.judet ? 'jud. ' + r.firm.judet : ''].filter(Boolean).join(', ');
+}
+
 function anafParse(item) {
   const g = item.date_generale || {}, sed = item.adresa_sediu_social || {}, fisc = item.adresa_domiciliu_fiscal || {};
   const tva = !!(item.inregistrare_scop_Tva && item.inregistrare_scop_Tva.scpTVA);
@@ -1194,7 +1232,8 @@ const COMPANY_LEGAL_NAME = 'C DESIGN AND IT SOLUTIONS S.R.L.';
 const COMPANY_DEFAULTS = {
   cui: '49110499',            // neplătitor de TVA → fără prefixul RO
   regcom: 'J23/7575/2023',
-  adresa: 'Str. Libertății nr. 72, Sat Chiajna, Com. Chiajna, jud. Ilfov',
+  // Sediul NU este scris în cod (repo public): se citește din registrul ANAF după CUI,
+  // doar pentru oferte, contracte și admin — vezi companySediu().
 };
 
 const SVC_CATEGORII = ['pachete', 'web-design', 'seo', 'mentenanta', 'grafic', 'marketing', 'altele'];
@@ -2979,14 +3018,15 @@ Cerințe titluri:
     }
 
     // ── Datele legale ale firmei, publice (subsolul site-ului) ─────
-    // Doar denumirea, CUI-ul, Reg. Com., sediul și datele de contact — nu IBAN-ul sau reprezentantul.
+    // Doar denumirea, CUI-ul, Reg. Com., statutul de TVA și contactul — fără sediu, IBAN sau reprezentant.
     if (path === '/api/company' && (request.method === 'GET' || request.method === 'HEAD')) {
       let t = {};
       try { t = JSON.parse(await env.PROGRAMARI.get('__contract_template__') || '{}') || {}; } catch {}
       const v = (x, n) => String(x == null ? '' : x).trim().slice(0, n);
       return new Response(JSON.stringify({
         nume: v(t.prestNume, 120) || COMPANY_LEGAL_NAME, cui: v(t.prestCui, 20) || COMPANY_DEFAULTS.cui, regcom: v(t.prestRegcom, 40) || COMPANY_DEFAULTS.regcom,
-        adresa: v(t.prestAdresa, 200) || COMPANY_DEFAULTS.adresa, email: v(t.prestEmail, 120) || 'office@c-design.ro',
+        // plătitorii de TVA au CUI-ul cu prefixul RO; adresa sediului nu se publică pe site
+        tva: /^RO/i.test(v(t.prestCui, 20) || COMPANY_DEFAULTS.cui), email: v(t.prestEmail, 120) || 'office@c-design.ro',
         tel: v(t.prestTel, 40) || '0753 116 155', web: v(t.prestWeb, 80) || 'www.c-design.ro',
       }), { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=600' } });
     }
@@ -2996,36 +3036,15 @@ Cerințe titluri:
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       const cui = String(url.searchParams.get('cui') || '').toUpperCase().replace(/^RO/, '').replace(/\s+/g, '');
       if (!/^\d{2,10}$/.test(cui)) return json({ error: 'CUI invalid: trebuie să conțină între 2 și 10 cifre.' }, 400);
-      const cacheKey = '__anaf_' + cui;
       try {
-        const cached = await env.PROGRAMARI.get(cacheKey);
+        const cached = await env.PROGRAMARI.get('__anaf_' + cui);
         if (cached) return json({ ...JSON.parse(cached), cached: true });
       } catch {}
       const ipA = request.headers.get('CF-Connecting-IP') || 'unknown';
       if (!(await checkRateLimit(env, 'anaf_' + ipA, 40, 3600))) return json({ error: 'Prea multe căutări. Încearcă din nou peste câteva minute.' }, 429);
-      try {
-        const ctrl = new AbortController();
-        const timer = setTimeout(() => ctrl.abort(), 10000);
-        const today = new Date().toISOString().slice(0, 10);
-        const res = await fetch(ANAF_TVA_URL, {
-          method: 'POST', signal: ctrl.signal,
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify([{ cui: Number(cui), data: today }]),
-        });
-        clearTimeout(timer);
-        // Pentru un CUI inexistent ANAF răspunde cu 404 și {"found":[],"notFound":[...]}
-        const data = await res.json().catch(() => null);
-        if (res.status === 404 && data && Array.isArray(data.notFound) && data.notFound.length) return json({ error: 'ANAF nu are nicio firmă cu acest CUI.', notFound: true }, 404);
-        if (!res.ok) return json({ error: 'ANAF nu a răspuns (cod ' + res.status + '). Încearcă din nou mai târziu.' }, 502);
-        if (!data || !Array.isArray(data.found)) return json({ error: 'Răspuns neașteptat de la ANAF.' }, 502);
-        if (!data.found.length) return json({ error: 'ANAF nu are nicio firmă cu acest CUI.', notFound: true }, 404);
-        const firm = anafParse(data.found[0]);
-        try { await env.PROGRAMARI.put(cacheKey, JSON.stringify(firm), { expirationTtl: 86400 }); } catch {}
-        return json(firm);
-      } catch (e) {
-        const timeout = e && e.name === 'AbortError';
-        return json({ error: timeout ? 'ANAF nu a răspuns la timp. Încearcă din nou.' : 'Nu am putut contacta ANAF.' }, 502);
-      }
+      const r = await anafLookupCached(env, cui);
+      if (!r.firm) return json({ error: r.error, ...(r.notFound ? { notFound: true } : {}) }, r.status || 502);
+      return json(r.firm);
     }
 
     // ── PUSH (notificări pe telefon) — doar admin ─────────────
@@ -3754,7 +3773,7 @@ Cerințe titluri:
           web:    t.prestWeb    || 'www.c-design.ro',
           cui:    t.prestCui    || COMPANY_DEFAULTS.cui,
           regcom: t.prestRegcom || COMPANY_DEFAULTS.regcom,
-          adresa: t.prestAdresa || COMPANY_DEFAULTS.adresa,
+          adresa: await companySediu(env, t),
           iban:   t.prestIban   || '',
           banca:  t.prestBanca  || '',
           repr:   t.prestRepr   || '',
@@ -3993,7 +4012,12 @@ Cerințe titluri:
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
         const raw = await env.PROGRAMARI.get('__contract_template__');
-        return json(raw ? JSON.parse(raw) : {});
+        const t = raw ? JSON.parse(raw) : {};
+        // câmpurile firmei care nu sunt salvate primesc datele din registrul ANAF (doar pentru admin)
+        const fill = { prestNume: COMPANY_LEGAL_NAME, prestCui: COMPANY_DEFAULTS.cui, prestRegcom: COMPANY_DEFAULTS.regcom };
+        Object.keys(fill).forEach(k => { if (!String(t[k] || '').trim()) t[k] = fill[k]; });
+        if (!String(t.prestAdresa || '').trim()) t.prestAdresa = await companySediu(env, t);
+        return json(t);
       } catch { return json({}); }
     }
 
@@ -4086,7 +4110,7 @@ Cerințe titluri:
           nume:    t.prestNume   || COMPANY_LEGAL_NAME,
           cui:     t.prestCui    || COMPANY_DEFAULTS.cui,
           regcom:  t.prestRegcom || COMPANY_DEFAULTS.regcom,
-          adresa:  t.prestAdresa || COMPANY_DEFAULTS.adresa,
+          adresa:  await companySediu(env, t),
           email:   t.prestEmail  || 'office@c-design.ro',
           tel:     t.prestTel    || '',
           web:     t.prestWeb    || 'www.c-design.ro',
