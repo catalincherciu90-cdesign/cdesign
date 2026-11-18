@@ -3752,6 +3752,25 @@ Cerințe titluri:
 
     // ── OFERTĂ PREVIEW (print as PDF) ────────────────────────
 
+    // Starea unei oferte: trimisă (așteaptă răspuns) / acceptată / respinsă
+    if (/^\/api\/oferte\/[^/]+$/.test(path) && request.method === 'PATCH') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.slice('/api/oferte/'.length);
+        const body = await request.json().catch(() => ({}));
+        const STARI = ['trimisă', 'acceptată', 'respinsă'];
+        if (!STARI.includes(body.status)) return json({ error: 'Stare invalidă' }, 400);
+        const raw = await env.PROGRAMARI.get('__oferte__');
+        const lista = raw ? JSON.parse(raw) : [];
+        const o = lista.find(x => x.id === id);
+        if (!o) return json({ error: 'Ofertă negăsită' }, 404);
+        o.status = body.status;
+        o.statusAt = new Date().toISOString();
+        await env.PROGRAMARI.put('__oferte__', JSON.stringify(lista));
+        return json(o);
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
     if (path.startsWith('/oferta-preview/') && request.method === 'GET') {
       if (!isAdmin(url, env)) return new Response('Acces neautorizat', { status: 401 });
       const id = path.replace('/oferta-preview/', '');
