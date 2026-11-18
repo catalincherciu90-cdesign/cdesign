@@ -2103,6 +2103,22 @@
   #panel-agenda .gib-form { margin: 0 0 14px; }
   @media (max-width: 900px) { .agenda-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; } }
   </style>
+  <style id="admin-clients">
+  /* ── Clienți: persoană fizică / firmă ── */
+  .cl-type { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .cl-type-btn { flex: 1; min-width: 150px; padding: 10px 12px; cursor: pointer; font-family: 'Share Tech Mono', monospace; font-size: .82rem; color: #7df9ff; background: rgba(0,229,255,.05); border: 1px solid rgba(0,229,255,.35); transition: background .2s ease, color .2s ease; }
+  .cl-type-btn:hover { background: rgba(0,229,255,.12); color: #fff; }
+  .cl-type-btn.active { background: #00e5ff; color: #04141a; border-color: #00e5ff; font-weight: 700; box-shadow: 0 0 14px rgba(0,229,255,.4); }
+  .cl-company { border-left: 2px solid rgba(0,229,255,.45); padding-left: 12px; margin: 4px 0 14px; }
+  .cl-sec-title { font-family: 'Share Tech Mono', monospace; font-size: .72rem; letter-spacing: .06em; color: #00e5ff; margin: 6px 0 10px; text-transform: uppercase; }
+  .cl-check { display: flex; align-items: center; gap: 8px; font-size: .85rem; margin: 2px 0 12px; cursor: pointer; }
+  .cl-check input { width: 16px; height: 16px; accent-color: #00e5ff; }
+  .cl-hint { font-size: .72rem; min-height: 1em; margin-top: 4px; font-family: 'Share Tech Mono', monospace; }
+  .cl-hint.ok { color: #4ade80; } .cl-hint.bad { color: #fbbf24; }
+  .cl-badge { display: inline-block; font-family: 'Share Tech Mono', monospace; font-size: .62rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 2px 7px; color: #04141a; background: #00e5ff; vertical-align: middle; }
+  .cl-badge.muted { background: rgba(0,229,255,.15); color: #7df9ff; border: 1px solid rgba(0,229,255,.45); }
+  #clientModalOverlay .modal { max-height: calc(100vh - 40px); overflow-y: auto; }
+  </style>
 </head>
 <body>
 
@@ -3756,6 +3772,9 @@
 
             <!-- Beneficiar -->
             <div style="font-size:.8rem;font-weight:600;color:var(--soft);margin-bottom:10px;font-family:'Share Tech Mono',monospace;">// beneficiar (client)</div>
+            <select class="f-select" id="cnt-client-sel" onchange="contractFromClient(this.value)" style="margin-bottom:10px;">
+              <option value="">— alege un client salvat (completeaz&#x103; automat) —</option>
+            </select>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
               <div class="f-group" style="margin:0;">
                 <label class="f-label">// denumire / nume *</label>
@@ -3766,7 +3785,7 @@
                 <input class="f-input" type="text" id="cnt-client-cui" placeholder="ex: RO12345678" style="margin-top:4px;">
               </div>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
               <div class="f-group" style="margin:0;">
                 <label class="f-label">// adres&#x103;</label>
                 <input class="f-input" type="text" id="cnt-client-adresa" placeholder="ex: Str. Exemplu nr.1, Bucure&#x219;ti" style="margin-top:4px;">
@@ -3774,6 +3793,26 @@
               <div class="f-group" style="margin:0;">
                 <label class="f-label">// email</label>
                 <input class="f-input" type="email" id="cnt-client-email" placeholder="client@firma.ro" style="margin-top:4px;">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+              <div class="f-group" style="margin:0;">
+                <label class="f-label">// nr. Reg. Com. (firme)</label>
+                <input class="f-input" type="text" id="cnt-client-regcom" placeholder="ex: J40/1234/2020" style="margin-top:4px;">
+              </div>
+              <div class="f-group" style="margin:0;">
+                <label class="f-label">// reprezentant legal (firme)</label>
+                <input class="f-input" type="text" id="cnt-client-repr" placeholder="ex: Ion Popescu, Administrator" style="margin-top:4px;">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+              <div class="f-group" style="margin:0;">
+                <label class="f-label">// IBAN</label>
+                <input class="f-input" type="text" id="cnt-client-iban" placeholder="RO.." style="margin-top:4px;">
+              </div>
+              <div class="f-group" style="margin:0;">
+                <label class="f-label">// banca</label>
+                <input class="f-input" type="text" id="cnt-client-banca" placeholder="ex: Banca Transilvania" style="margin-top:4px;">
               </div>
             </div>
 
@@ -3965,12 +4004,16 @@
 
 </div>
 <div class="modal-overlay" id="clientModalOverlay">
-  <div class="modal" style="max-width:480px;">
+  <div class="modal" style="max-width:600px;">
     <h3 id="clientModalTitle">Client nou</h3>
     <input type="hidden" id="clientEditId">
+    <div class="cl-type" role="radiogroup" aria-label="Tip client">
+      <button type="button" class="cl-type-btn active" data-type="pf" onclick="setClientType('pf')" role="radio" aria-checked="true">&#x1F464; Persoan&#259; fizic&#259;</button>
+      <button type="button" class="cl-type-btn" data-type="pj" onclick="setClientType('pj')" role="radio" aria-checked="false">&#x1F3E2; Firm&#259;</button>
+    </div>
     <div class="f-row">
-      <div><label class="f-label" for="clientName">// nume firm&#259; / persoan&#259; *</label>
-        <input class="f-input" type="text" id="clientName" placeholder="Ex: Firma XYZ / Ion Popescu"></div>
+      <div><label class="f-label" for="clientName" id="clientNameLabel">// nume *</label>
+        <input class="f-input" type="text" id="clientName" placeholder="Ex: Ion Popescu"></div>
       <div><label class="f-label" for="clientContact">// persoana de contact</label>
         <input class="f-input" type="text" id="clientContact" placeholder="Nume contact"></div>
     </div>
@@ -3980,6 +4023,42 @@
       <div><label class="f-label" for="clientEmail">// email</label>
         <input class="f-input" type="email" id="clientEmail" placeholder="email@firma.ro"></div>
     </div>
+
+    <div id="clientCompanyBox" class="cl-company" hidden>
+      <div class="cl-sec-title">// date firm&#259;</div>
+      <div class="f-row">
+        <div><label class="f-label" for="clientCui">// CUI / CIF</label>
+          <input class="f-input" type="text" id="clientCui" placeholder="Ex: RO12345678" oninput="checkClientIds()" autocomplete="off">
+          <div class="cl-hint" id="clientCuiHint"></div></div>
+        <div><label class="f-label" for="clientRegCom">// nr. Registrul Comer&#539;ului</label>
+          <input class="f-input" type="text" id="clientRegCom" placeholder="Ex: J40/1234/2020" autocomplete="off"></div>
+      </div>
+      <label class="cl-check"><input type="checkbox" id="clientTva"> Pl&#259;titor de TVA</label>
+      <div class="f-row">
+        <div><label class="f-label" for="clientRepr">// reprezentant legal</label>
+          <input class="f-input" type="text" id="clientRepr" placeholder="Nume administrator"></div>
+        <div><label class="f-label" for="clientReprFunctie">// func&#539;ie</label>
+          <input class="f-input" type="text" id="clientReprFunctie" placeholder="Ex: Administrator"></div>
+      </div>
+      <div class="f-row">
+        <div><label class="f-label" for="clientIban">// IBAN</label>
+          <input class="f-input" type="text" id="clientIban" placeholder="RO49 AAAA 1B31 0075 9384 0000" oninput="checkClientIds()" autocomplete="off">
+          <div class="cl-hint" id="clientIbanHint"></div></div>
+        <div><label class="f-label" for="clientBanca">// banca</label>
+          <input class="f-input" type="text" id="clientBanca" placeholder="Ex: Banca Transilvania"></div>
+      </div>
+    </div>
+
+    <div class="cl-sec-title" id="clientAddrTitle">// adres&#259;</div>
+    <div><label class="f-label" for="clientAdresa">// strad&#259;, num&#259;r</label>
+      <input class="f-input" type="text" id="clientAdresa" placeholder="Ex: Str. Exemplu nr. 1, bl. A, ap. 2"></div>
+    <div class="f-row">
+      <div><label class="f-label" for="clientOras">// localitate</label>
+        <input class="f-input" type="text" id="clientOras" placeholder="Ex: Cluj-Napoca"></div>
+      <div><label class="f-label" for="clientJudet">// jude&#539;</label>
+        <input class="f-input" type="text" id="clientJudet" placeholder="Ex: Cluj"></div>
+    </div>
+
     <div><label class="f-label" for="clientNotes">// note</label>
       <textarea class="f-input" id="clientNotes" rows="2" placeholder="Detalii, observa&#x21B;ii..."></textarea></div>
     <div class="modal-actions">
@@ -4438,7 +4517,7 @@
     if (tab === 'tema') fetchTheme();
     if (tab === 'media') fetchMedia();
     if (tab === 'cheltuieli') fetchCheltuieli();
-    if (tab === 'oferte') { fetchServicii(); fetchOferte(); fetchContracte(); populateOfertaClientSel(); }
+    if (tab === 'oferte') { fetchServicii(); fetchOferte(); fetchContracte(); populateOfertaClientSel(); populateContractClientSel(); }
     if (tab === 'chatai') loadConversations();
     if (tab === 'mesaje') loadMessages();
     if (tab === 'settings') pushRefreshUI();
@@ -5680,6 +5759,8 @@
       if (!res.ok) return;
       clientsData = await res.json();
       populateClientDropdowns();
+      if (typeof populateOfertaClientSel === 'function') populateOfertaClientSel();
+      if (typeof populateContractClientSel === 'function') populateContractClientSel();
       if (currentTab === 'clients') renderClients();
     } catch {}
   }
@@ -5704,8 +5785,8 @@
       const todos     = (gibData.todos     || []).filter(t => t.clientId === c.id && !t.done).length;
       const deadlines = (gibData.deadlines || []).filter(d => d.clientId === c.id).length;
       return `<div class="client-card" onclick="showClientDetail('${esc(c.id)}')">
-        <div class="client-card-name">${esc(c.name)}</div>
-        <div class="client-card-contact">${c.contact ? esc(c.contact) : ''}${c.phone ? ' · ' + esc(c.phone) : ''}</div>
+        <div class="client-card-name">${esc(c.name)}${c.type === 'pj' ? ' <span class="cl-badge">Firmă</span>' : ''}</div>
+        <div class="client-card-contact">${[c.type === 'pj' && c.cui ? 'CUI ' + c.cui : '', c.contact, c.phone].filter(Boolean).map(esc).join(' · ')}</div>
         <div class="client-card-meta">
           <span>📅 ${meetings} întâlniri</span>
           <span>✅ ${todos} to-do</span>
@@ -5727,13 +5808,32 @@
     document.getElementById('clients-list-view').classList.add('hidden');
     document.getElementById('client-detail-view').classList.add('active');
     document.getElementById('cd-name').textContent = c.name;
-    document.getElementById('cd-info').innerHTML = `
+    const pj = c.type === 'pj', addr = clientFullAddress(c);
+    const item = (lbl, val) => val ? `<div class="client-info-item"><div class="client-info-label">${lbl}</div>${esc(val)}</div>` : '';
+    const firma = pj ? `
+      <div class="client-info-item" style="grid-column:1/-1"><span class="cl-badge">Firmă</span>${c.tva ? ' <span class="cl-badge muted">Plătitor TVA</span>' : ''}</div>
+      ${item('CUI / CIF', c.cui)}${item('Reg. Comerțului', c.regCom)}
+      ${item('Reprezentant legal', [c.repr, c.reprFunctie].filter(Boolean).join(', '))}
+      ${item('IBAN', c.iban)}${item('Banca', c.banca)}` : '';
+    document.getElementById('cd-info').innerHTML = firma + `
+      ${addr ? `<div class="client-info-item"><div class="client-info-label">${pj ? 'Sediu social' : 'Adresă'}</div>${esc(addr)}</div>` : ''}
       ${c.contact ? `<div class="client-info-item"><div class="client-info-label">Persoana contact</div>${esc(c.contact)}</div>` : ''}
       ${c.phone   ? `<div class="client-info-item"><div class="client-info-label">Telefon</div><a href="tel:${esc(c.phone)}" style="color:var(--teal)">${esc(c.phone)}</a></div>` : ''}
       ${c.email   ? `<div class="client-info-item"><div class="client-info-label">Email</div><a href="mailto:${esc(c.email)}" style="color:var(--teal)">${esc(c.email)}</a></div>` : ''}
       ${c.notes   ? `<div class="client-info-item" style="grid-column:1/-1"><div class="client-info-label">Note</div>${esc(c.notes)}</div>` : ''}
-      <div class="client-info-item"><div class="client-info-label">Client din</div>${esc(c.createdAt || '—')}</div>`;
+      <div class="client-info-item"><div class="client-info-label">Client din</div>${esc(c.createdAt || '—')}</div>
+      ${pj ? `<div class="client-info-item" style="grid-column:1/-1"><button class="client-btn-sm" onclick="copyClientData('${esc(c.id)}')">📋 Copiază datele firmei</button></div>` : ''}`;
     renderClientDetail(id);
+  }
+
+  // Datele de facturare, într-un bloc gata de lipit în email / factură
+  async function copyClientData(id) {
+    const c = clientsData.find(x => x.id === id); if (!c) return;
+    const lines = [c.name, c.cui ? 'CUI: ' + c.cui + (c.tva ? ' (plătitor TVA)' : '') : '', c.regCom ? 'Reg. Com.: ' + c.regCom : '',
+      clientFullAddress(c) ? 'Sediu: ' + clientFullAddress(c) : '', c.iban ? 'IBAN: ' + c.iban + (c.banca ? ' — ' + c.banca : '') : '',
+      c.repr ? 'Reprezentant: ' + [c.repr, c.reprFunctie].filter(Boolean).join(', ') : ''].filter(Boolean).join('\n');
+    try { await navigator.clipboard.writeText(lines); showToast('Datele firmei au fost copiate'); }
+    catch (e) { prompt('Copiază datele firmei:', lines); }
   }
 
   function renderClientDetail(id) {
@@ -5827,22 +5927,58 @@
     if (selectedClientId) renderClientDetail(selectedClientId);
   }
 
+  // ── CLIENȚI: persoană fizică / firmă ─────────────────────────────
+  const CLIENT_INPUTS = ['clientName','clientContact','clientPhone','clientEmail','clientNotes','clientCui','clientRegCom','clientRepr','clientReprFunctie','clientIban','clientBanca','clientAdresa','clientOras','clientJudet'];
+  const CLIENT_KEYS = { clientName:'name', clientContact:'contact', clientPhone:'phone', clientEmail:'email', clientNotes:'notes', clientCui:'cui', clientRegCom:'regCom', clientRepr:'repr', clientReprFunctie:'reprFunctie', clientIban:'iban', clientBanca:'banca', clientAdresa:'adresa', clientOras:'oras', clientJudet:'judet' };
+  function setClientType(t) {
+    const pj = t === 'pj';
+    document.querySelectorAll('#clientModalOverlay .cl-type-btn').forEach(b => { const on = b.dataset.type === (pj ? 'pj' : 'pf'); b.classList.toggle('active', on); b.setAttribute('aria-checked', on ? 'true' : 'false'); });
+    document.getElementById('clientCompanyBox').hidden = !pj;
+    document.getElementById('clientNameLabel').textContent = pj ? '// denumire firmă *' : '// nume *';
+    document.getElementById('clientName').placeholder = pj ? 'Ex: Firma XYZ SRL' : 'Ex: Ion Popescu';
+    document.getElementById('clientAddrTitle').textContent = pj ? '// sediu social' : '// adresă';
+    checkClientIds();
+  }
+  function clientType() { const b = document.querySelector('#clientModalOverlay .cl-type-btn.active'); return b && b.dataset.type === 'pj' ? 'pj' : 'pf'; }
+  // CUI: cifra de control (algoritm oficial, cheia 753217532); IBAN: verificare mod 97
+  function cuiValid(v) {
+    const d = String(v || '').toUpperCase().replace(/^RO/, '').replace(/\s+/g, '');
+    if (!/^\d{2,10}$/.test(d)) return false;
+    const key = '753217532', body = d.slice(0, -1).padStart(9, '0');
+    let sum = 0; for (let i = 0; i < 9; i++) sum += (+body[i]) * (+key[i]);
+    let c = (sum * 10) % 11; if (c === 10) c = 0;
+    return c === +d.slice(-1);
+  }
+  function ibanValid(v) {
+    const s = String(v || '').toUpperCase().replace(/\s+/g, '');
+    if (!/^[A-Z]{2}\d{2}[A-Z0-9]{10,30}$/.test(s)) return false;
+    if (s.startsWith('RO') && s.length !== 24) return false;
+    const r = (s.slice(4) + s.slice(0, 4)).replace(/[A-Z]/g, ch => String(ch.charCodeAt(0) - 55));
+    let m = 0; for (const ch of r) m = (m * 10 + (+ch)) % 97;
+    return m === 1;
+  }
+  function checkClientIds() {
+    const pj = clientType() === 'pj';
+    const set = (id, val, okFn, okTxt, badTxt) => {
+      const h = document.getElementById(id); if (!h) return;
+      if (!pj || !val.trim()) { h.textContent = ''; h.className = 'cl-hint'; return; }
+      const ok = okFn(val); h.textContent = ok ? okTxt : badTxt; h.className = 'cl-hint ' + (ok ? 'ok' : 'bad');
+    };
+    set('clientCuiHint', document.getElementById('clientCui').value, cuiValid, '✓ CUI valid', 'Verifică CUI-ul: cifra de control nu se potrivește');
+    set('clientIbanHint', document.getElementById('clientIban').value, ibanValid, '✓ IBAN valid', 'Verifică IBAN-ul: nu trece verificarea de control');
+  }
+  function clientFullAddress(c) {
+    return [c.adresa, c.oras, c.judet ? 'jud. ' + c.judet : ''].map(x => String(x || '').trim()).filter(Boolean).join(', ');
+  }
+
   function openClientModal(id) {
-    if (id) {
-      const c = clientsData.find(x => x.id === id);
-      if (!c) return;
-      document.getElementById('clientModalTitle').textContent = 'Editează client';
-      document.getElementById('clientEditId').value = id;
-      document.getElementById('clientName').value    = c.name;
-      document.getElementById('clientContact').value = c.contact || '';
-      document.getElementById('clientPhone').value   = c.phone   || '';
-      document.getElementById('clientEmail').value   = c.email   || '';
-      document.getElementById('clientNotes').value   = c.notes   || '';
-    } else {
-      document.getElementById('clientModalTitle').textContent = 'Client nou';
-      document.getElementById('clientEditId').value = '';
-      ['clientName','clientContact','clientPhone','clientEmail','clientNotes'].forEach(i => { document.getElementById(i).value=''; });
-    }
+    const c = id ? clientsData.find(x => x.id === id) : null;
+    if (id && !c) return;
+    document.getElementById('clientModalTitle').textContent = c ? 'Editează client' : 'Client nou';
+    document.getElementById('clientEditId').value = c ? id : '';
+    CLIENT_INPUTS.forEach(i => { document.getElementById(i).value = c ? (c[CLIENT_KEYS[i]] || '') : ''; });
+    document.getElementById('clientTva').checked = !!(c && c.tva);
+    setClientType(c && c.type === 'pj' ? 'pj' : 'pf');
     document.getElementById('clientModalOverlay').classList.add('open');
   }
 
@@ -5851,23 +5987,18 @@
   }
 
   async function saveClient() {
-    const id      = document.getElementById('clientEditId').value;
-    const name    = document.getElementById('clientName').value.trim();
-    const contact = document.getElementById('clientContact').value.trim();
-    const phone   = document.getElementById('clientPhone').value.trim();
-    const email   = document.getElementById('clientEmail').value.trim();
-    const notes   = document.getElementById('clientNotes').value.trim();
-    if (!name) { alert('Numele este obligatoriu.'); return; }
-    const body = { name, contact, phone, email, notes };
-    if (id) {
-      await fetch('/api/client/' + id + '?token=' + encodeURIComponent(adminToken), {
-        method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+    const id = document.getElementById('clientEditId').value;
+    const body = { type: clientType(), tva: document.getElementById('clientTva').checked };
+    CLIENT_INPUTS.forEach(i => { body[CLIENT_KEYS[i]] = document.getElementById(i).value.trim(); });
+    if (!body.name) { alert(body.type === 'pj' ? 'Denumirea firmei este obligatorie.' : 'Numele este obligatoriu.'); return; }
+    if (body.type === 'pj' && body.cui && !cuiValid(body.cui) && !confirm('CUI-ul nu trece verificarea cifrei de control. Salvezi totuși?')) return;
+    if (body.type === 'pj' && body.iban && !ibanValid(body.iban) && !confirm('IBAN-ul nu trece verificarea de control. Salvezi totuși?')) return;
+    try {
+      const res = await fetch(id ? '/api/client/' + id + '?token=' + encodeURIComponent(adminToken) : '/api/client?token=' + encodeURIComponent(adminToken), {
+        method: id ? 'PATCH' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
       });
-    } else {
-      await fetch('/api/client?token=' + encodeURIComponent(adminToken), {
-        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
-      });
-    }
+      if (!res.ok) { const d = await res.json().catch(() => ({})); alert('Nu am putut salva clientul: ' + (d.error || res.status)); return; }
+    } catch (e) { alert('Eroare de rețea. Clientul nu a fost salvat.'); return; }
     closeClientModal();
     await fetchClients();
     if (id && selectedClientId === id) showClientDetail(id);
@@ -9578,6 +9709,22 @@
       ).join('');
   }
 
+  function populateContractClientSel() {
+    const sel = document.getElementById('cnt-client-sel'); if (!sel) return;
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">— alege un client salvat (completează automat) —</option>' +
+      (clientsData || []).map(c => `<option value="${esc(c.id)}">${esc(c.name)}${c.type === 'pj' ? ' (firmă)' : ''}</option>`).join('');
+    sel.value = cur;
+  }
+  function contractFromClient(id) {
+    const c = (clientsData || []).find(x => x.id === id); if (!c) return;
+    const set = (k, v) => { const el = document.getElementById(k); if (el) el.value = v || ''; };
+    set('cnt-client-name', c.name); set('cnt-client-email', c.email);
+    set('cnt-client-cui', c.cui); set('cnt-client-adresa', clientFullAddress(c));
+    set('cnt-client-regcom', c.regCom); set('cnt-client-iban', c.iban); set('cnt-client-banca', c.banca);
+    set('cnt-client-repr', [c.repr, c.reprFunctie].filter(Boolean).join(', '));
+  }
+
   function importaOfertaInContract() {
     const id = document.getElementById('cnt-din-oferta').value;
     if (!id) return;
@@ -9585,6 +9732,11 @@
     if (!o) return;
     document.getElementById('cnt-client-name').value = o.client?.name || '';
     document.getElementById('cnt-client-email').value = o.client?.email || '';
+    // dacă oferta e legată de un client salvat, se completează și datele firmei
+    if (o.client?.id && (clientsData || []).some(c => c.id === o.client.id)) {
+      contractFromClient(o.client.id);
+      const sel = document.getElementById('cnt-client-sel'); if (sel) sel.value = o.client.id;
+    }
     const total = (o.servicii||[]).reduce((s,sv) => s + parseFloat(sv.pret||0), 0);
     document.getElementById('cnt-total').value = total;
     document.getElementById('cnt-moneda').value = o.moneda || 'EUR';
@@ -9612,6 +9764,10 @@
           cui: document.getElementById('cnt-client-cui').value.trim(),
           adresa: document.getElementById('cnt-client-adresa').value.trim(),
           email: document.getElementById('cnt-client-email').value.trim(),
+          regCom: document.getElementById('cnt-client-regcom').value.trim(),
+          repr: document.getElementById('cnt-client-repr').value.trim(),
+          iban: document.getElementById('cnt-client-iban').value.trim(),
+          banca: document.getElementById('cnt-client-banca').value.trim(),
         },
         obiect,
         serviciiText: document.getElementById('cnt-servicii-text').value.trim(),

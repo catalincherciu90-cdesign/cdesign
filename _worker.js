@@ -1146,6 +1146,28 @@ h1,h2,h3{font-family:'Poppins',sans-serif;color:var(--ink);letter-spacing:-.02em
 </body></html>`;
 }
 
+// Câmpurile salvate pentru un client (persoană fizică sau firmă), curățate și
+// limitate. Orice alt câmp trimis este ignorat.
+function cleanClientFields(b) {
+  const str = (v, n) => String(v == null ? '' : v).replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, n);
+  const out = {
+    name: str(b.name, 160), contact: str(b.contact, 120), phone: str(b.phone, 40),
+    email: str(b.email, 160), notes: String(b.notes == null ? '' : b.notes).slice(0, 4000),
+    type: b.type === 'pj' ? 'pj' : 'pf',
+    adresa: str(b.adresa, 200), oras: str(b.oras, 80), judet: str(b.judet, 60),
+  };
+  if (out.type === 'pj') {
+    Object.assign(out, {
+      cui: str(b.cui, 20).toUpperCase().replace(/\s+/g, ''), regCom: str(b.regCom, 40).toUpperCase(),
+      tva: !!b.tva, iban: str(b.iban, 40).toUpperCase().replace(/\s+/g, ''), banca: str(b.banca, 80),
+      repr: str(b.repr, 120), reprFunctie: str(b.reprFunctie, 60),
+    });
+  } else {
+    Object.assign(out, { cui: '', regCom: '', tva: false, iban: '', banca: '', repr: '', reprFunctie: '' });
+  }
+  return out;
+}
+
 function isAdmin(url, env) {
   return url.searchParams.get('token') === (env.ADMIN_TOKEN || ADMIN_TOKEN);
 }
@@ -2601,14 +2623,12 @@ Cerințe titluri:
     if (path === '/api/client' && request.method === 'POST') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
-        const { name, contact, phone, email, notes } = await request.json();
-        if (!name) return json({ error: 'Numele este obligatoriu' }, 400);
+        const fields = cleanClientFields(await request.json().catch(() => ({})));
+        if (!fields.name) return json({ error: 'Numele este obligatoriu' }, 400);
         const raw = await env.PROGRAMARI.get('__clients__');
         const clients = raw ? JSON.parse(raw) : [];
         const client = {
-          id: 'c_' + Date.now(), name,
-          contact: contact || '', phone: phone || '',
-          email: email || '', notes: notes || '',
+          id: 'c_' + Date.now(), ...fields,
           createdAt: new Date().toISOString().split('T')[0]
         };
         clients.push(client);
@@ -2626,7 +2646,10 @@ Cerințe titluri:
         const clients = raw ? JSON.parse(raw) : [];
         const idx = clients.findIndex(c => c.id === id);
         if (idx === -1) return json({ error: 'Client negăsit' }, 404);
-        clients[idx] = { ...clients[idx], ...body };
+        // se actualizează doar câmpurile cunoscute; id-ul și data creării rămân
+        const fields = cleanClientFields({ ...clients[idx], ...body });
+        if (!fields.name) return json({ error: 'Numele este obligatoriu' }, 400);
+        clients[idx] = { ...clients[idx], ...fields };
         await env.PROGRAMARI.put('__clients__', JSON.stringify(clients));
         return json(clients[idx]);
       } catch { return json({ error: 'Eroare server' }, 500); }
@@ -3887,8 +3910,12 @@ Cerințe titluri:
           client: {
             name: String(body.client.name||'').slice(0,120),
             cui: String(body.client.cui||'').slice(0,40),
-            adresa: String(body.client.adresa||'').slice(0,200),
+            regCom: String(body.client.regCom||'').slice(0,40),
+            adresa: String(body.client.adresa||'').slice(0,240),
             email: String(body.client.email||'').slice(0,120),
+            iban: String(body.client.iban||'').slice(0,40),
+            banca: String(body.client.banca||'').slice(0,80),
+            repr: String(body.client.repr||'').slice(0,160),
           },
           obiect: String(body.obiect||'').slice(0,500),
           serviciiText: String(body.serviciiText||'').slice(0,2000),
@@ -4035,8 +4062,11 @@ Cerințe titluri:
           <div class="party-label">Beneficiar</div>
           <div class="party-name">${e(c.client.name)}</div>
           ${c.client.cui ? `<div class="party-detail">CUI/CNP: ${e(c.client.cui)}</div>` : ''}
+          ${c.client.regCom ? `<div class="party-detail">Reg.Com.: ${e(c.client.regCom)}</div>` : ''}
           ${c.client.adresa ? `<div class="party-detail">${e(c.client.adresa)}</div>` : ''}
           ${c.client.email ? `<div class="party-detail">${e(c.client.email)}</div>` : ''}
+          ${c.client.iban ? `<div class="party-detail">IBAN: ${e(c.client.iban)}${c.client.banca ? ' · ' + e(c.client.banca) : ''}</div>` : ''}
+          ${c.client.repr ? `<div class="party-detail">Reprezentant: ${e(c.client.repr)}</div>` : ''}
         </div>
       </div>
       <p>Au convenit să încheie prezentul contract de prestări servicii în condițiile următoare:</p>
