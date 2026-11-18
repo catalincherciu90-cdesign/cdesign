@@ -1,10 +1,10 @@
-/* Datele comerciale ale firmei (denumire, CUI, Reg. Com., TVA — fără adresă), afișate în
+/* Datele comerciale ale firmei (denumire, CUI, Reg. Com. — fără adresă), afișate în
    subsolul fiecărei pagini și în politica de confidențialitate.
    Sursa: Admin → Setări → Template contract → date prestator (/api/company).
    Fără CUI salvat se afișează doar denumirea legală. */
 (function () {
   function legal(d) {
-    return [d.nume, d.cui ? 'CUI ' + d.cui : '', d.regcom ? 'Reg. Com. ' + d.regcom : '', d.cui ? (d.tva ? 'Plătitor de TVA' : 'Neplătitor de TVA') : '']
+    return [d.nume, d.cui ? 'CUI ' + d.cui : '', d.regcom ? 'Reg. Com. ' + d.regcom : '']
       .filter(Boolean).join(' · ');
   }
   function run(d) {
