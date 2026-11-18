@@ -6192,6 +6192,41 @@
   }
 
   // Raport vocal: agenda completa (intalniri, taskuri, deadline-uri, urmatoarea intalnire, cheltuieli)
+  // Ofertele în așteptare, în raportul vocal: pentru ce clienți și care sunt urgente
+  function jvsOfferSentence(txt, lang) {
+    const list = (typeof ofertePending === 'function') ? ofertePending() : [];
+    if (!list.length) return txt;
+    const en = lang === 'en';
+    txt = en ? txt.replace('You have nothing scheduled right now. Enjoy a quiet day!', 'You have nothing scheduled.')
+             : txt.replace('Momentan nu ai nimic programat. Zi liniștită!', 'Nu ai nimic programat.');
+    // clienții, în ordinea urgenței; mai multe oferte pentru același client se adună
+    const byClient = [];
+    list.forEach(({ o }) => {
+      const name = String((o.client && o.client.name) || '').trim() || (en ? 'an unnamed client' : 'un client fără nume');
+      const row = byClient.find(r => r.name === name);
+      if (row) row.n++; else byClient.push({ name, n: 1 });
+    });
+    const and = en ? 'and' : 'și';
+    const names = byClient.slice(0, 5).map(r => r.name + (r.n > 1 ? (en ? ' (' + r.n + ' offers)' : ' (' + r.n + ' oferte)') : ''));
+    const more = byClient.length > 5 ? (en ? ', plus ' + (byClient.length - 5) + ' more' : ', plus încă ' + (byClient.length - 5)) : '';
+    const n = list.length;
+    txt += en
+      ? ' ' + (n === 1 ? 'One sent offer is' : n + ' sent offers are') + ' waiting for an answer, for ' + jvsJoinList(names, and) + more + '.'
+      : (n === 1 ? ' Ai o ofertă care așteaptă răspuns, pentru ' : ' Ai ' + n + ' oferte care așteaptă răspuns, pentru ') + jvsJoinList(names, and) + more + '.';
+    // cele expirate sau care expiră în cel mult 3 zile
+    const azi = new Date(); azi.setHours(0, 0, 0, 0);
+    const urg = list.filter(x => x.exp).map(x => { const e = new Date(x.exp); e.setHours(0, 0, 0, 0); return { name: String((x.o.client && x.o.client.name) || '').trim(), z: Math.round((e - azi) / 864e5) }; })
+      .filter(x => x.name && x.z <= 3).slice(0, 3);
+    if (urg.length) {
+      const part = urg.map(x => en
+        ? (x.z < 0 ? 'the one for ' + x.name + ' has expired' : x.z === 0 ? 'the one for ' + x.name + ' expires today' : 'the one for ' + x.name + ' expires in ' + x.z + (x.z === 1 ? ' day' : ' days'))
+        : (x.z < 0 ? 'cea pentru ' + x.name + ' a expirat' : x.z === 0 ? 'cea pentru ' + x.name + ' expiră azi' : 'cea pentru ' + x.name + ' expiră în ' + x.z + (x.z === 1 ? ' zi' : ' zile')));
+      const s0 = jvsJoinList(part, and);
+      txt += ' ' + s0.charAt(0).toUpperCase() + s0.slice(1) + '.';
+    }
+    return txt;
+  }
+
   // Taskurile nefinalizate grupate pe client (cei cu cele mai multe primii)
   function jvsTasksByClient() {
     const cnt = {};
@@ -6222,8 +6257,7 @@
       if (d) parts.push(d === 1 ? 'un deadline în următoarele 7 zile' : d + ' deadline-uri în următoarele 7 zile');
       txt = 'Ai ' + (parts.length > 1 ? parts.slice(0, -1).join(', ') + ' și ' + parts[parts.length - 1] : parts[0]) + '.';
     }
-    const ofP = (typeof ofertePending === 'function') ? ofertePending().length : 0;
-    if (ofP) txt = txt.replace('Momentan nu ai nimic programat. Zi liniștită!', 'Nu ai nimic programat.') + (ofP === 1 ? ' Ai o ofertă trimisă care așteaptă răspuns.' : ' Ai ' + ofP + ' oferte trimise care așteaptă răspuns.');
+    txt = jvsOfferSentence(txt, 'ro');
     const perClient = jvsTasksByClient();
     if (perClient.length) {
       const top = perClient.slice(0, 5).map(r => 'pentru ' + r.name + (r.n === 1 ? ' un task' : ' ' + r.n + ' task-uri'));
@@ -6294,7 +6328,7 @@
     t = t.replace(/deadline-urile/gi, 'termenele limită').replace(/deadline-uri/gi, 'termene limită').replace(/deadline-ul/gi, 'termenul limită').replace(/deadline/gi, 'termen limită')
          .replace(/task-urile/gi, 'taskurile').replace(/task-uri/gi, 'taskuri').replace(/task-ul/gi, 'taskul');
     // numere înaintea substantivelor: „2" → două, „12" → douăsprezece, „de" de la 20 în sus
-    t = t.replace(/\b(\d+) (întâlniri|taskuri|termene limită)/g, (m, n, w) => {
+    t = t.replace(/\b(\d+) (întâlniri|taskuri|termene limită|oferte|zile)/g, (m, n, w) => {
       const k = parseInt(n, 10);
       if (k === 0) return 'zero ' + w;
       const num = k === 2 ? 'două' : (k === 12 ? 'douăsprezece' : String(k));
@@ -6389,8 +6423,7 @@
       ? 'You have nothing scheduled right now. Enjoy a quiet day!'
       : 'You have ' + pl(m, 'meeting', 'meetings') + ' today, ' + pl(t, 'task', 'tasks') + ' to do, and ' + pl(d, 'deadline', 'deadlines') + ' in the next 7 days.';
     const next = meetings.slice().sort((a, b) => ((a.date || '') + (a.time || '')).localeCompare((b.date || '') + (b.time || ''))).find(x => x.date >= today);
-    const ofPe = (typeof ofertePending === 'function') ? ofertePending().length : 0;
-    if (ofPe) txt = txt.replace('You have nothing scheduled right now. Enjoy a quiet day!', 'You have nothing scheduled.') + (ofPe === 1 ? ' One sent offer is waiting for an answer.' : ' ' + ofPe + ' sent offers are waiting for an answer.');
+    txt = jvsOfferSentence(txt, 'en');
     const perClient = jvsTasksByClient();
     if (perClient.length) {
       const top = perClient.slice(0, 5).map(r => (r.n === 1 ? 'one task' : r.n + ' tasks') + ' for ' + r.name);
