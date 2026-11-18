@@ -2159,6 +2159,27 @@
   .svc-promo { border-color: rgba(0,229,255,.65) !important; background: linear-gradient(135deg, rgba(0,229,255,.12), rgba(0,229,255,.03)) !important; box-shadow: 0 0 16px rgba(0,229,255,.18); }
   .svc-promo-tag { display: inline-block; margin-left: 6px; font-family: 'Share Tech Mono', monospace; font-size: .6rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 2px 6px; color: #04141a; background: #00e5ff; vertical-align: middle; }
   </style>
+  <style id="admin-gib-order">
+  /* ── Prima pagină: Gibilan (galaxia + voce) și STATUS sunt primele ──
+     Doar ordinea vizuală (CSS); structura HTML rămâne aceeași, pentru că
+     o parte din cod găsește ferestrele după poziția lor. */
+  #panel-gibilan .main { display: flex; flex-direction: column; }
+  #panel-gibilan .main > * { order: 20; }
+  #panel-gibilan .gibilan-layout { display: contents; }
+  #panel-gibilan .gibilan-char { order: 1; margin: 0 0 22px; }
+  #panel-gibilan #stark-month-band { order: 3; }
+  #panel-gibilan #gib-leads-alert { order: 4; }
+  #panel-gibilan .gib-quick { order: 5; }
+  #panel-gibilan .gibilan-agenda { order: 7; margin: 8px 0 24px; }
+  #panel-gibilan #gib-blog-panel { order: 8; }
+  @media (max-width: 1024px) {
+    /* pe telefon / tabletă: galaxia, apoi STATUS, apoi restul; notițele după scurtături */
+    #panel-gibilan .gibilan-char { display: contents; }
+    #panel-gibilan .gibilan-char > .clippy-wrap { order: 1; align-self: center; margin: 0 auto 18px; padding-top: 0; }
+    #panel-gibilan .gibilan-char > .jvs-card:nth-child(3) { order: 2; margin-bottom: 20px; }
+    #panel-gibilan .gibilan-char > .jvs-card:nth-child(1) { order: 6; margin-bottom: 20px; }
+  }
+  </style>
 </head>
 <body>
 
