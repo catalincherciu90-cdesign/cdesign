@@ -2118,6 +2118,18 @@
   .cl-badge { display: inline-block; font-family: 'Share Tech Mono', monospace; font-size: .62rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 2px 7px; color: #04141a; background: #00e5ff; vertical-align: middle; }
   .cl-badge.muted { background: rgba(0,229,255,.15); color: #7df9ff; border: 1px solid rgba(0,229,255,.45); }
   #clientModalOverlay .modal { max-height: calc(100vh - 40px); overflow-y: auto; }
+  .cl-cui-row { display: flex; gap: 8px; align-items: stretch; }
+  .cl-cui-row .f-input { flex: 1; min-width: 0; }
+  .cl-anaf-btn { flex-shrink: 0; padding: 0 12px; cursor: pointer; white-space: nowrap; font-family: 'Share Tech Mono', monospace; font-size: .74rem; color: #04141a; background: #00e5ff; border: 1px solid #00e5ff; font-weight: 700; }
+  .cl-anaf-btn:disabled { opacity: .6; cursor: wait; }
+  .cl-anaf { font-size: .8rem; line-height: 1.5; padding: 10px 12px; margin: -2px 0 12px; border: 1px solid rgba(0,229,255,.35); background: rgba(0,229,255,.06); }
+  .cl-anaf.ok { border-color: rgba(74,222,128,.5); background: rgba(74,222,128,.07); }
+  .cl-anaf.warn { border-color: rgba(251,191,36,.55); background: rgba(251,191,36,.08); color: #fde68a; }
+  .cl-anaf-note { opacity: .7; font-size: .74rem; }
+  @media (max-width: 480px) { .cl-cui-row { flex-direction: column; } .cl-anaf-btn { padding: 10px 12px; } }
+  /* pachet promo în ofertare */
+  .svc-promo { border-color: rgba(0,229,255,.65) !important; background: linear-gradient(135deg, rgba(0,229,255,.12), rgba(0,229,255,.03)) !important; box-shadow: 0 0 16px rgba(0,229,255,.18); }
+  .svc-promo-tag { display: inline-block; margin-left: 6px; font-family: 'Share Tech Mono', monospace; font-size: .6rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 2px 6px; color: #04141a; background: #00e5ff; vertical-align: middle; }
   </style>
 </head>
 <body>
@@ -3945,6 +3957,7 @@
         <div class="f-group">
           <label class="f-label">// categorie</label>
           <select class="f-select" id="svcCategorie">
+            <option value="pachete">Pachete</option>
             <option value="web-design">Web Design</option>
             <option value="seo">SEO</option>
             <option value="mentenanta">Mentenan&#x21B;&#x103;</option>
@@ -4028,11 +4041,15 @@
       <div class="cl-sec-title">// date firm&#259;</div>
       <div class="f-row">
         <div><label class="f-label" for="clientCui">// CUI / CIF</label>
-          <input class="f-input" type="text" id="clientCui" placeholder="Ex: RO12345678" oninput="checkClientIds()" autocomplete="off">
+          <div class="cl-cui-row">
+            <input class="f-input" type="text" id="clientCui" placeholder="Ex: RO12345678" oninput="checkClientIds()" onkeydown="if(event.key==='Enter'){event.preventDefault();anafLookup();}" autocomplete="off">
+            <button type="button" class="cl-anaf-btn" id="clientAnafBtn" onclick="anafLookup()" title="Completează datele firmei din registrul public ANAF">&#x1F50D; Caut&#259; &icirc;n ANAF</button>
+          </div>
           <div class="cl-hint" id="clientCuiHint"></div></div>
         <div><label class="f-label" for="clientRegCom">// nr. Registrul Comer&#539;ului</label>
           <input class="f-input" type="text" id="clientRegCom" placeholder="Ex: J40/1234/2020" autocomplete="off"></div>
       </div>
+      <div class="cl-anaf" id="clientAnafBox" hidden></div>
       <label class="cl-check"><input type="checkbox" id="clientTva"> Pl&#259;titor de TVA</label>
       <div class="f-row">
         <div><label class="f-label" for="clientRepr">// reprezentant legal</label>
@@ -5967,6 +5984,33 @@
     set('clientCuiHint', document.getElementById('clientCui').value, cuiValid, '✓ CUI valid', 'Verifică CUI-ul: cifra de control nu se potrivește');
     set('clientIbanHint', document.getElementById('clientIban').value, ibanValid, '✓ IBAN valid', 'Verifică IBAN-ul: nu trece verificarea de control');
   }
+  // ANAF: completează datele firmei după CUI (registrul public, prin server)
+  async function anafLookup() {
+    const inp = document.getElementById('clientCui'), btn = document.getElementById('clientAnafBtn'), box = document.getElementById('clientAnafBox');
+    const cui = inp.value.trim();
+    const show = (html, cls) => { box.hidden = false; box.className = 'cl-anaf ' + (cls || ''); box.innerHTML = html; };
+    if (!cui) { show('Scrie CUI-ul firmei, apoi apasă „Caută în ANAF".', 'warn'); inp.focus(); return; }
+    if (!cuiValid(cui)) { show('CUI-ul nu trece verificarea cifrei de control. Verifică cifrele și încearcă din nou.', 'warn'); return; }
+    btn.disabled = true; const label = btn.innerHTML; btn.textContent = 'Se caută…';
+    try {
+      const res = await fetch('/api/anaf/cui?cui=' + encodeURIComponent(cui) + '&token=' + encodeURIComponent(adminToken));
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) { show(esc(d.error || ('Eroare ' + res.status)), 'warn'); return; }
+      const set = (id, v, onlyEmpty) => { const el = document.getElementById(id); if (!el || !v) return; if (onlyEmpty && el.value.trim()) return; el.value = v; };
+      set('clientName', d.name); set('clientCui', d.cui); set('clientRegCom', d.regCom);
+      set('clientAdresa', d.adresa); set('clientOras', d.oras); set('clientJudet', d.judet);
+      set('clientIban', d.iban, true); set('clientPhone', d.telefon, true);
+      document.getElementById('clientTva').checked = !!d.tva;
+      checkClientIds();
+      const warn = d.radiat ? '⚠ Firma figurează ca RADIATĂ.' : (d.inactiv ? '⚠ Firma figurează ca INACTIVĂ fiscal.' : '');
+      show((warn ? '<b>' + esc(warn) + '</b><br>' : '') + '✓ Date completate din ANAF' + (d.dataInterogare ? ' (' + esc(d.dataInterogare) + ')' : '') + ': '
+        + esc([d.formaJuridica, d.tva ? 'plătitor de TVA' : 'neplătitor de TVA', d.stare].filter(Boolean).join(' · '))
+        + (d.adresaFiscala && d.adresaFiscala.toLowerCase() !== [d.adresa, d.oras].join(' ').toLowerCase() ? '<br>Domiciliu fiscal: ' + esc(d.adresaFiscala) : '')
+        + '<br><span class="cl-anaf-note">Verifică datele înainte de salvare.</span>', warn ? 'warn' : 'ok');
+    } catch (e) { show('Nu am putut contacta serverul. Verifică conexiunea.', 'warn'); }
+    finally { btn.disabled = false; btn.innerHTML = label; }
+  }
+
   function clientFullAddress(c) {
     return [c.adresa, c.oras, c.judet ? 'jud. ' + c.judet : ''].map(x => String(x || '').trim()).filter(Boolean).join(', ');
   }
@@ -5979,6 +6023,7 @@
     CLIENT_INPUTS.forEach(i => { document.getElementById(i).value = c ? (c[CLIENT_KEYS[i]] || '') : ''; });
     document.getElementById('clientTva').checked = !!(c && c.tva);
     setClientType(c && c.type === 'pj' ? 'pj' : 'pf');
+    const ab = document.getElementById('clientAnafBox'); if (ab) { ab.hidden = true; ab.innerHTML = ''; }
     document.getElementById('clientModalOverlay').classList.add('open');
   }
 
@@ -9414,7 +9459,7 @@
   let allOferte = [];
 
   const SVC_CAT_LABEL = {
-    'web-design': 'Web Design', 'seo': 'SEO', 'mentenanta': 'Mentenanță',
+    'pachete': 'Pachete', 'web-design': 'Web Design', 'seo': 'SEO', 'mentenanta': 'Mentenanță',
     'grafic': 'Design Grafic', 'marketing': 'Marketing', 'altele': 'Altele'
   };
 
@@ -9456,18 +9501,20 @@
       if (!byCat[cat]) byCat[cat] = [];
       byCat[cat].push(s);
     });
-    wrap.innerHTML = Object.entries(byCat).map(([cat, svcs]) => `
+    const catOrder = ['pachete', 'web-design', 'seo', 'mentenanta', 'grafic', 'marketing', 'altele'];
+    const cats = Object.entries(byCat).sort((a, b) => (catOrder.indexOf(a[0]) + 1 || 99) - (catOrder.indexOf(b[0]) + 1 || 99));
+    wrap.innerHTML = cats.map(([cat, svcs]) => `
       <div style="margin-bottom:16px;">
         <div style="font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em;">// ${SVC_CAT_LABEL[cat] || esc(cat)}</div>
         ${svcs.map(s => `
-          <label style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--bg3);border:1px solid var(--border-soft);border-radius:8px;cursor:pointer;margin-bottom:6px;transition:border-color .2s;"
-                 onmouseover="this.style.borderColor='var(--teal-border)'"
-                 onmouseout="this.style.borderColor='var(--border-soft)'">
+          <label class="${s.promo ? 'svc-promo' : ''}" style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--bg3);border:1px solid var(--border-soft);border-radius:8px;cursor:pointer;margin-bottom:6px;transition:border-color .2s;"
+                 onmouseover="if(!this.classList.contains('svc-promo'))this.style.borderColor='var(--teal-border)'"
+                 onmouseout="if(!this.classList.contains('svc-promo'))this.style.borderColor='var(--border-soft)'">
             <input type="checkbox" value="${esc(s.id)}" data-pret="${s.pret}" data-moneda="${esc(s.moneda)}"
                    style="width:16px;height:16px;accent-color:var(--teal);cursor:pointer;margin-top:3px;flex-shrink:0;"
                    onchange="renderOfertaTotal()">
             <div style="flex:1;">
-              <div style="font-size:.9rem;font-weight:500;color:var(--text);">${esc(s.nume)}</div>
+              <div style="font-size:.9rem;font-weight:500;color:var(--text);">${esc(s.nume)}${s.promo ? '<span class="svc-promo-tag">Ofertă de lansare</span>' : ''}</div>
               ${s.descriere ? `<div style="font-size:.78rem;color:var(--soft);margin-top:2px;">${esc(s.descriere)}</div>` : ''}
             </div>
             <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.92rem;color:var(--teal);white-space:nowrap;text-align:right;">
