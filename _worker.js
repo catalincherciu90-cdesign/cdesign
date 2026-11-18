@@ -184,6 +184,7 @@ fbq('init','893560673744618');fbq('track','PageView');
 const ham=document.getElementById('hamburger'),mob=document.getElementById('mobileMenu');
 ham.addEventListener('click',()=>{const o=mob.classList.toggle('open');ham.setAttribute('aria-expanded',o)});
 <\/script>
+<script src="/company-info.js" defer></script>
 </body>
 </html>`;
 }
@@ -1143,6 +1144,7 @@ h1,h2,h3{font-family:'Poppins',sans-serif;color:var(--ink);letter-spacing:-.02em
   <a href="/cere-oferta" class="btn btn-p">Cere o ofertă gratuită</a>
 </section>
 <footer class="foot">© C Design · <a href="/" style="color:var(--blue)">c-design.ro</a>${cs.link ? ` · <a href="${esc(cs.link)}" target="_blank" rel="noopener" style="color:var(--blue)">${esc(cs.link.replace(/^https?:\/\//, ''))}</a>` : ''}</footer>
+<script src="/company-info.js" defer></script>
 </body></html>`;
 }
 
@@ -1185,6 +1187,9 @@ function anafParse(item) {
     dataInterogare: anafText(g.data),
   };
 }
+
+// Denumirea legală a firmei; datele salvate în Setări → Template contract au prioritate.
+const COMPANY_LEGAL_NAME = 'C DESIGN AND IT SOLUTIONS S.R.L.';
 
 const SVC_CATEGORII = ['pachete', 'web-design', 'seo', 'mentenanta', 'grafic', 'marketing', 'altele'];
 
@@ -2967,6 +2972,19 @@ Cerințe titluri:
       } catch (e) { return json({ error: 'Voce HD indisponibilă' }, 502); }
     }
 
+    // ── Datele legale ale firmei, publice (subsolul site-ului) ─────
+    // Doar denumirea, CUI-ul, Reg. Com., sediul și datele de contact — nu IBAN-ul sau reprezentantul.
+    if (path === '/api/company' && (request.method === 'GET' || request.method === 'HEAD')) {
+      let t = {};
+      try { t = JSON.parse(await env.PROGRAMARI.get('__contract_template__') || '{}') || {}; } catch {}
+      const v = (x, n) => String(x == null ? '' : x).trim().slice(0, n);
+      return new Response(JSON.stringify({
+        nume: v(t.prestNume, 120) || COMPANY_LEGAL_NAME, cui: v(t.prestCui, 20), regcom: v(t.prestRegcom, 40),
+        adresa: v(t.prestAdresa, 200), email: v(t.prestEmail, 120) || 'office@c-design.ro',
+        tel: v(t.prestTel, 40) || '0753 116 155', web: v(t.prestWeb, 80) || 'www.c-design.ro',
+      }), { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=600' } });
+    }
+
     // ── ANAF: completare date firmă după CUI — doar admin ─────
     if (path === '/api/anaf/cui' && request.method === 'GET') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
@@ -3713,22 +3731,32 @@ Cerințe titluri:
       if (!isAdmin(url, env)) return new Response('Acces neautorizat', { status: 401 });
       const id = path.replace('/oferta-preview/', '');
       try {
-        const [raw, tmplRaw] = await Promise.all([
+        const [raw, tmplRaw, clientsRaw] = await Promise.all([
           env.PROGRAMARI.get('__oferte__'),
           env.PROGRAMARI.get('__contract_template__'),
+          env.PROGRAMARI.get('__clients__'),
         ]);
         const lista = raw ? JSON.parse(raw) : [];
         const o = lista.find(x => x.id === id);
         if (!o) return new Response('Ofertă negăsită', { status: 404 });
         const t = tmplRaw ? JSON.parse(tmplRaw) : {};
+        // Datele C Design: cele salvate în Setări → Template contract → date prestator
         const prest = {
-          nume:  t.prestNume  || 'C Design',
-          email: t.prestEmail || 'office@c-design.ro',
-          tel:   t.prestTel   || '',
-          web:   t.prestWeb   || 'www.c-design.ro',
-          cui:   t.prestCui   || '',
-          adresa:t.prestAdresa|| '',
+          nume:   t.prestNume   || COMPANY_LEGAL_NAME,
+          email:  t.prestEmail  || 'office@c-design.ro',
+          tel:    t.prestTel    || '0753 116 155',
+          web:    t.prestWeb    || 'www.c-design.ro',
+          cui:    t.prestCui    || '',
+          regcom: t.prestRegcom || '',
+          adresa: t.prestAdresa || '',
+          iban:   t.prestIban   || '',
+          banca:  t.prestBanca  || '',
+          repr:   t.prestRepr   || '',
         };
+        // Datele clientului: dacă oferta e legată de un client salvat, se adaugă CUI-ul, Reg. Com. și adresa
+        let cl = null;
+        try { const all = clientsRaw ? JSON.parse(clientsRaw) : []; cl = (o.client && o.client.id) ? (all.find(c => c.id === o.client.id) || null) : null; } catch {}
+        const clAdresa = cl ? [cl.adresa, cl.oras, cl.judet ? 'jud. ' + cl.judet : ''].filter(Boolean).join(', ') : '';
 
         const total = (o.servicii || []).reduce((s, sv) => s + parseFloat(sv.pret || 0), 0);
         const dataDoc = new Date(o.createdAt).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -3847,12 +3875,14 @@ Cerințe titluri:
     <!-- HEADER -->
     <div class="header">
       <div>
-        <div class="brand-name">${e(prest.nume.split(' ')[0])}<span>${prest.nume.includes(' ') ? e(prest.nume.slice(prest.nume.indexOf(' '))) : ''}</span></div>
+        <div class="brand-name">C<span> Design</span></div>
         <div class="brand-details">
+          <div style="font-weight:600;color:#475569;">${e(prest.nume)}</div>
           ${prest.web ? `<div>${e(prest.web)}</div>` : ''}
           ${prest.email ? `<div>${e(prest.email)}</div>` : ''}
           ${prest.tel ? `<div>${e(prest.tel)}</div>` : ''}
-          ${prest.cui ? `<div>CUI: ${e(prest.cui)}</div>` : ''}
+          ${prest.adresa ? `<div>${e(prest.adresa)}</div>` : ''}
+          ${prest.cui || prest.regcom ? `<div>${[prest.cui ? 'CUI: ' + e(prest.cui) : '', prest.regcom ? 'Reg. Com.: ' + e(prest.regcom) : ''].filter(Boolean).join(' · ')}</div>` : ''}
         </div>
       </div>
       <div class="doc-block">
@@ -3874,11 +3904,12 @@ Cerințe titluri:
         <div class="client-name">${e(o.client?.name || '—')}</div>
         ${o.client?.email ? `<div class="client-detail">✉ ${e(o.client.email)}</div>` : ''}
         ${o.client?.phone ? `<div class="client-detail">✆ ${e(o.client.phone)}</div>` : ''}
+        ${cl && cl.type === 'pj' && (cl.cui || cl.regCom) ? `<div class="client-detail">${[cl.cui ? 'CUI: ' + e(cl.cui) : '', cl.regCom ? 'Reg. Com.: ' + e(cl.regCom) : ''].filter(Boolean).join(' · ')}</div>` : ''}
+        ${clAdresa ? `<div class="client-detail">📍 ${e(clAdresa)}</div>` : ''}
       </div>
       <div class="towards-block">
         <div class="block-label">Detalii</div>
         <div class="validity-badge">⏱ Valabilitate: ${e(o.valabilitate)}</div>
-        ${prest.adresa ? `<div class="client-detail" style="margin-top:8px;">📍 ${e(prest.adresa)}</div>` : ''}
       </div>
     </div>
 
@@ -3923,13 +3954,16 @@ Cerințe titluri:
     <div class="footer">
       <div class="footer-left">
         <div style="font-weight:600;color:#475569;margin-bottom:4px;">${e(prest.nume)}</div>
-        ${prest.email ? `<div>${e(prest.email)}</div>` : ''}
-        ${prest.tel ? `<div>${e(prest.tel)}</div>` : ''}
-        ${prest.web ? `<div>${e(prest.web)}</div>` : ''}
+        ${prest.cui ? `<div>CUI: ${e(prest.cui)}</div>` : ''}
+        ${prest.regcom ? `<div>Reg. Com.: ${e(prest.regcom)}</div>` : ''}
+        ${prest.adresa ? `<div>Sediu: ${e(prest.adresa)}</div>` : ''}
+        ${prest.iban ? `<div>IBAN: ${e(prest.iban)}${prest.banca ? ' · ' + e(prest.banca) : ''}</div>` : ''}
+        <div>${[prest.email, prest.tel, prest.web].filter(Boolean).map(e).join(' · ')}</div>
       </div>
       <div class="sig-block">
         <div class="sig-label">Reprezentant autorizat</div>
-        <div class="sig-line">${e(prest.nume)}</div>
+        <div class="sig-line">${e(prest.repr || prest.nume)}</div>
+        ${prest.repr ? `<div style="font-size:.72rem;color:#94a3b8;margin-top:4px;">${e(prest.nume)}</div>` : ''}
       </div>
     </div>
 
@@ -4043,7 +4077,7 @@ Cerințe titluri:
 
         // Merge template defaults with per-contract values
         const prest = {
-          nume:    t.prestNume   || 'C Design',
+          nume:    t.prestNume   || COMPANY_LEGAL_NAME,
           cui:     t.prestCui    || '',
           regcom:  t.prestRegcom || '',
           adresa:  t.prestAdresa || '',
