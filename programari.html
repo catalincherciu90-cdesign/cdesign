@@ -2117,7 +2117,25 @@
   .cl-hint.ok { color: #4ade80; } .cl-hint.bad { color: #fbbf24; }
   .cl-badge { display: inline-block; font-family: 'Share Tech Mono', monospace; font-size: .62rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 2px 7px; color: #04141a; background: #00e5ff; vertical-align: middle; }
   .cl-badge.muted { background: rgba(0,229,255,.15); color: #7df9ff; border: 1px solid rgba(0,229,255,.45); }
-  #clientModalOverlay .modal { max-height: calc(100vh - 40px); overflow-y: auto; }
+  #clientModalOverlay .modal { max-height: calc(100vh - 40px); overflow-y: auto; max-width: 640px !important; }
+  /* așezarea câmpurilor: două pe rând pe ecran lat, unul sub altul pe telefon */
+  #clientModalOverlay .cl-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 14px; }
+  #clientModalOverlay .cl-field { margin-bottom: 14px; min-width: 0; }
+  #clientModalOverlay .cl-field .f-label { margin-bottom: 6px; }
+  #clientModalOverlay .f-input { margin: 0 !important; }
+  #clientModalOverlay .cl-hint:empty { display: none; }
+  #clientModalOverlay .cl-sec-title { margin: 4px 0 12px; }
+  #clientModalOverlay .cl-company { margin: 2px 0 16px; padding-top: 2px; }
+  #clientModalOverlay .cl-check { margin: -2px 0 14px; }
+  #clientModalOverlay .cl-anaf { margin: 0 0 14px; }
+  #clientModalOverlay .modal-actions { margin-top: 6px; }
+  .cl-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  .cl-head h3 { margin: 0 !important; }
+  .cl-close { flex-shrink: 0; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.4rem; line-height: 1; color: #7df9ff; background: rgba(0,229,255,.06); border: 1px solid rgba(0,229,255,.35); }
+  .cl-close:hover { color: #fff; background: rgba(0,229,255,.15); }
+  #clientModalOverlay .cl-row-cui { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+  #clientModalOverlay .cl-row-cui .cl-anaf-btn { padding: 0 10px; }
+  @media (max-width: 560px) { #clientModalOverlay .cl-row, #clientModalOverlay .cl-row-cui { grid-template-columns: minmax(0, 1fr); } }
   .cl-cui-row { display: flex; gap: 8px; align-items: stretch; }
   .cl-cui-row .f-input { flex: 1; min-width: 0; }
   .cl-anaf-btn { flex-shrink: 0; padding: 0 12px; cursor: pointer; white-space: nowrap; font-family: 'Share Tech Mono', monospace; font-size: .74rem; color: #04141a; background: #00e5ff; border: 1px solid #00e5ff; font-weight: 700; }
@@ -4018,65 +4036,68 @@
 </div>
 <div class="modal-overlay" id="clientModalOverlay">
   <div class="modal" style="max-width:600px;">
-    <h3 id="clientModalTitle">Client nou</h3>
+    <div class="cl-head">
+      <h3 id="clientModalTitle">Client nou</h3>
+      <button type="button" class="cl-close" onclick="closeClientModal()" aria-label="Închide">&times;</button>
+    </div>
     <input type="hidden" id="clientEditId">
     <div class="cl-type" role="radiogroup" aria-label="Tip client">
       <button type="button" class="cl-type-btn active" data-type="pf" onclick="setClientType('pf')" role="radio" aria-checked="true">&#x1F464; Persoan&#259; fizic&#259;</button>
       <button type="button" class="cl-type-btn" data-type="pj" onclick="setClientType('pj')" role="radio" aria-checked="false">&#x1F3E2; Firm&#259;</button>
     </div>
-    <div class="f-row">
-      <div><label class="f-label" for="clientName" id="clientNameLabel">// nume *</label>
+    <div class="f-row cl-row">
+      <div class="cl-field"><label class="f-label" for="clientName" id="clientNameLabel">// nume *</label>
         <input class="f-input" type="text" id="clientName" placeholder="Ex: Ion Popescu"></div>
-      <div><label class="f-label" for="clientContact">// persoana de contact</label>
+      <div class="cl-field"><label class="f-label" for="clientContact">// persoana de contact</label>
         <input class="f-input" type="text" id="clientContact" placeholder="Nume contact"></div>
     </div>
-    <div class="f-row">
-      <div><label class="f-label" for="clientPhone">// telefon</label>
+    <div class="f-row cl-row">
+      <div class="cl-field"><label class="f-label" for="clientPhone">// telefon</label>
         <input class="f-input" type="tel" id="clientPhone" placeholder="0700 000 000"></div>
-      <div><label class="f-label" for="clientEmail">// email</label>
+      <div class="cl-field"><label class="f-label" for="clientEmail">// email</label>
         <input class="f-input" type="email" id="clientEmail" placeholder="email@firma.ro"></div>
     </div>
 
     <div id="clientCompanyBox" class="cl-company" hidden>
       <div class="cl-sec-title">// date firm&#259;</div>
-      <div class="f-row">
-        <div><label class="f-label" for="clientCui">// CUI / CIF</label>
+      <div class="f-row cl-row cl-row-cui">
+        <div class="cl-field"><label class="f-label" for="clientCui">// CUI / CIF</label>
           <div class="cl-cui-row">
             <input class="f-input" type="text" id="clientCui" placeholder="Ex: RO12345678" oninput="checkClientIds()" onkeydown="if(event.key==='Enter'){event.preventDefault();anafLookup();}" autocomplete="off">
             <button type="button" class="cl-anaf-btn" id="clientAnafBtn" onclick="anafLookup()" title="Completează datele firmei din registrul public ANAF">&#x1F50D; Caut&#259; &icirc;n ANAF</button>
           </div>
           <div class="cl-hint" id="clientCuiHint"></div></div>
-        <div><label class="f-label" for="clientRegCom">// nr. Registrul Comer&#539;ului</label>
+        <div class="cl-field"><label class="f-label" for="clientRegCom">// nr. Registrul Comer&#539;ului</label>
           <input class="f-input" type="text" id="clientRegCom" placeholder="Ex: J40/1234/2020" autocomplete="off"></div>
       </div>
       <div class="cl-anaf" id="clientAnafBox" hidden></div>
       <label class="cl-check"><input type="checkbox" id="clientTva"> Pl&#259;titor de TVA</label>
-      <div class="f-row">
-        <div><label class="f-label" for="clientRepr">// reprezentant legal</label>
+      <div class="f-row cl-row">
+        <div class="cl-field"><label class="f-label" for="clientRepr">// reprezentant legal</label>
           <input class="f-input" type="text" id="clientRepr" placeholder="Nume administrator"></div>
-        <div><label class="f-label" for="clientReprFunctie">// func&#539;ie</label>
+        <div class="cl-field"><label class="f-label" for="clientReprFunctie">// func&#539;ie</label>
           <input class="f-input" type="text" id="clientReprFunctie" placeholder="Ex: Administrator"></div>
       </div>
-      <div class="f-row">
-        <div><label class="f-label" for="clientIban">// IBAN</label>
+      <div class="f-row cl-row">
+        <div class="cl-field"><label class="f-label" for="clientIban">// IBAN</label>
           <input class="f-input" type="text" id="clientIban" placeholder="RO49 AAAA 1B31 0075 9384 0000" oninput="checkClientIds()" autocomplete="off">
           <div class="cl-hint" id="clientIbanHint"></div></div>
-        <div><label class="f-label" for="clientBanca">// banca</label>
+        <div class="cl-field"><label class="f-label" for="clientBanca">// banca</label>
           <input class="f-input" type="text" id="clientBanca" placeholder="Ex: Banca Transilvania"></div>
       </div>
     </div>
 
     <div class="cl-sec-title" id="clientAddrTitle">// adres&#259;</div>
-    <div><label class="f-label" for="clientAdresa">// strad&#259;, num&#259;r</label>
+    <div class="cl-field"><label class="f-label" for="clientAdresa">// strad&#259;, num&#259;r</label>
       <input class="f-input" type="text" id="clientAdresa" placeholder="Ex: Str. Exemplu nr. 1, bl. A, ap. 2"></div>
-    <div class="f-row">
-      <div><label class="f-label" for="clientOras">// localitate</label>
+    <div class="f-row cl-row">
+      <div class="cl-field"><label class="f-label" for="clientOras">// localitate</label>
         <input class="f-input" type="text" id="clientOras" placeholder="Ex: Cluj-Napoca"></div>
-      <div><label class="f-label" for="clientJudet">// jude&#539;</label>
+      <div class="cl-field"><label class="f-label" for="clientJudet">// jude&#539;</label>
         <input class="f-input" type="text" id="clientJudet" placeholder="Ex: Cluj"></div>
     </div>
 
-    <div><label class="f-label" for="clientNotes">// note</label>
+    <div class="cl-field"><label class="f-label" for="clientNotes">// note</label>
       <textarea class="f-input" id="clientNotes" rows="2" placeholder="Detalii, observa&#x21B;ii..."></textarea></div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeClientModal()">Anuleaz&#259;</button>
@@ -4876,7 +4897,7 @@
 
   document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
   document.getElementById('crmModalOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeCrmModal(); });
-  document.getElementById('clientModalOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeClientModal(); });
+  // Formularul de client se închide doar din „Anulează”, „Salvează” sau ×, nu la click pe fundal (se pierdeau datele scrise).
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeCrmModal(); } });
 
   // -- CRM --
