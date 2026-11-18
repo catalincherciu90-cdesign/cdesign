@@ -5333,12 +5333,15 @@
     ['tmpl-penalitati-pct','penalitatiPct'],
   ];
 
+  // Datele legale ale firmei (registrul ANAF), folosite când nu sunt salvate altele în Setări
+  const COMPANY_INFO = { nume: 'C DESIGN AND IT SOLUTIONS S.R.L.', cui: '49110499', regcom: 'J23/7575/2023', adresa: 'Str. Libertății nr. 72, Sat Chiajna, Com. Chiajna, jud. Ilfov' };
+
   // Datele C Design (prestator), afișate în generatorul de oferte, cu ce lipsește
   async function renderOfertaPrest() {
     const box = document.getElementById('oferta-prest-box'); if (!box) return;
     let t = {};
     try { const r = await fetch('/api/contract-template?token=' + encodeURIComponent(adminToken)); if (r.ok) t = await r.json(); } catch {}
-    const rows = [['Denumire', t.prestNume || 'C DESIGN AND IT SOLUTIONS S.R.L.'], ['CUI', t.prestCui], ['Reg. Com.', t.prestRegcom], ['Sediu', t.prestAdresa], ['IBAN', t.prestIban ? t.prestIban + (t.prestBanca ? ' · ' + t.prestBanca : '') : ''], ['Reprezentant', t.prestRepr], ['Contact', [t.prestEmail || 'office@c-design.ro', t.prestTel || '0753 116 155', t.prestWeb || 'www.c-design.ro'].join(' · ')]];
+    const rows = [['Denumire', t.prestNume || COMPANY_INFO.nume], ['CUI', t.prestCui || COMPANY_INFO.cui], ['Reg. Com.', t.prestRegcom || COMPANY_INFO.regcom], ['Sediu', t.prestAdresa || COMPANY_INFO.adresa], ['IBAN', t.prestIban ? t.prestIban + (t.prestBanca ? ' · ' + t.prestBanca : '') : ''], ['Reprezentant', t.prestRepr], ['Contact', [t.prestEmail || 'office@c-design.ro', t.prestTel || '0753 116 155', t.prestWeb || 'www.c-design.ro'].join(' · ')]];
     const missing = rows.filter(r => !r[1]).map(r => r[0]);
     box.innerHTML = rows.filter(r => r[1]).map(r => `<div><span class="of-k">${esc(r[0])}</span> ${esc(r[1])}</div>`).join('')
       + (missing.length ? `<div class="of-miss">Lipsesc: ${esc(missing.join(', '))}</div>` : '')
@@ -5376,8 +5379,9 @@
         const el = document.getElementById(id);
         if (el && d[key] !== undefined) el.value = d[key];
       });
-      const nm = document.getElementById('tmpl-prest-nume');
-      if (nm && !nm.value.trim()) nm.value = "C DESIGN AND IT SOLUTIONS S.R.L.";
+      // câmpurile goale se precompletează cu datele din registrul ANAF
+      [['tmpl-prest-nume', COMPANY_INFO.nume], ['tmpl-prest-cui', COMPANY_INFO.cui], ['tmpl-prest-regcom', COMPANY_INFO.regcom], ['tmpl-prest-adresa', COMPANY_INFO.adresa]]
+        .forEach(([id, v]) => { const el = document.getElementById(id); if (el && !el.value.trim()) el.value = v; });
     } catch {}
   }
 

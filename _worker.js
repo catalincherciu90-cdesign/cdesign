@@ -1188,8 +1188,14 @@ function anafParse(item) {
   };
 }
 
-// Denumirea legală a firmei; datele salvate în Setări → Template contract au prioritate.
+// Datele legale ale firmei, conform registrului ANAF (verificat 18.11.2026).
+// Datele salvate în Setări → Template contract au prioritate față de acestea.
 const COMPANY_LEGAL_NAME = 'C DESIGN AND IT SOLUTIONS S.R.L.';
+const COMPANY_DEFAULTS = {
+  cui: '49110499',            // neplătitor de TVA → fără prefixul RO
+  regcom: 'J23/7575/2023',
+  adresa: 'Str. Libertății nr. 72, Sat Chiajna, Com. Chiajna, jud. Ilfov',
+};
 
 const SVC_CATEGORII = ['pachete', 'web-design', 'seo', 'mentenanta', 'grafic', 'marketing', 'altele'];
 
@@ -2979,8 +2985,8 @@ Cerințe titluri:
       try { t = JSON.parse(await env.PROGRAMARI.get('__contract_template__') || '{}') || {}; } catch {}
       const v = (x, n) => String(x == null ? '' : x).trim().slice(0, n);
       return new Response(JSON.stringify({
-        nume: v(t.prestNume, 120) || COMPANY_LEGAL_NAME, cui: v(t.prestCui, 20), regcom: v(t.prestRegcom, 40),
-        adresa: v(t.prestAdresa, 200), email: v(t.prestEmail, 120) || 'office@c-design.ro',
+        nume: v(t.prestNume, 120) || COMPANY_LEGAL_NAME, cui: v(t.prestCui, 20) || COMPANY_DEFAULTS.cui, regcom: v(t.prestRegcom, 40) || COMPANY_DEFAULTS.regcom,
+        adresa: v(t.prestAdresa, 200) || COMPANY_DEFAULTS.adresa, email: v(t.prestEmail, 120) || 'office@c-design.ro',
         tel: v(t.prestTel, 40) || '0753 116 155', web: v(t.prestWeb, 80) || 'www.c-design.ro',
       }), { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=600' } });
     }
@@ -3746,9 +3752,9 @@ Cerințe titluri:
           email:  t.prestEmail  || 'office@c-design.ro',
           tel:    t.prestTel    || '0753 116 155',
           web:    t.prestWeb    || 'www.c-design.ro',
-          cui:    t.prestCui    || '',
-          regcom: t.prestRegcom || '',
-          adresa: t.prestAdresa || '',
+          cui:    t.prestCui    || COMPANY_DEFAULTS.cui,
+          regcom: t.prestRegcom || COMPANY_DEFAULTS.regcom,
+          adresa: t.prestAdresa || COMPANY_DEFAULTS.adresa,
           iban:   t.prestIban   || '',
           banca:  t.prestBanca  || '',
           repr:   t.prestRepr   || '',
@@ -4078,9 +4084,9 @@ Cerințe titluri:
         // Merge template defaults with per-contract values
         const prest = {
           nume:    t.prestNume   || COMPANY_LEGAL_NAME,
-          cui:     t.prestCui    || '',
-          regcom:  t.prestRegcom || '',
-          adresa:  t.prestAdresa || '',
+          cui:     t.prestCui    || COMPANY_DEFAULTS.cui,
+          regcom:  t.prestRegcom || COMPANY_DEFAULTS.regcom,
+          adresa:  t.prestAdresa || COMPANY_DEFAULTS.adresa,
           email:   t.prestEmail  || 'office@c-design.ro',
           tel:     t.prestTel    || '',
           web:     t.prestWeb    || 'www.c-design.ro',
