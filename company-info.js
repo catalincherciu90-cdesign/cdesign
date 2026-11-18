@@ -1,10 +1,10 @@
-/* Datele legale ale firmei (denumire, CUI, Reg. Com., sediu), afișate în
+/* Datele comerciale ale firmei (denumire, CUI, Reg. Com., TVA — fără adresă), afișate în
    subsolul fiecărei pagini și în politica de confidențialitate.
    Sursa: Admin → Setări → Template contract → date prestator (/api/company).
    Fără CUI salvat se afișează doar denumirea legală. */
 (function () {
   function legal(d) {
-    return [d.nume, d.cui ? 'CUI ' + d.cui : '', d.regcom ? 'Reg. Com. ' + d.regcom : '', d.adresa ? 'Sediu: ' + d.adresa : '']
+    return [d.nume, d.cui ? 'CUI ' + d.cui : '', d.regcom ? 'Reg. Com. ' + d.regcom : '', d.cui ? (d.tva ? 'Plătitor de TVA' : 'Neplătitor de TVA') : '']
       .filter(Boolean).join(' · ');
   }
   function run(d) {
@@ -24,7 +24,7 @@
     // locuri marcate în pagină, de ex. politica de confidențialitate
     Array.prototype.forEach.call(document.querySelectorAll('[data-company="name"]'), function (el) { if (d.nume) el.textContent = d.nume; });
     Array.prototype.forEach.call(document.querySelectorAll('[data-company="legal"]'), function (el) {
-      var rows = [d.cui ? 'CUI: ' + d.cui : '', d.regcom ? 'Nr. Reg. Com.: ' + d.regcom : '', d.adresa ? 'Sediu: ' + d.adresa : ''].filter(Boolean);
+      var rows = [d.cui ? 'CUI: ' + d.cui : '', d.regcom ? 'Nr. Reg. Com.: ' + d.regcom : ''].filter(Boolean);
       el.textContent = '';
       rows.forEach(function (r) { el.appendChild(document.createTextNode(r)); el.appendChild(document.createElement('br')); });
     });
