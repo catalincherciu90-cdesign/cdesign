@@ -12,6 +12,7 @@ Disallow: /aplicatie/
 Allow: /api/projects
 Allow: /api/blog
 Allow: /api/site-settings
+Allow: /api/company
 Disallow: /api/
 # Cloudflare (email obfuscation etc.) — link-uri interne, nu pagini reale
 Disallow: /cdn-cgi/

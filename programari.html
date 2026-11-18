@@ -2137,6 +2137,11 @@
   #clientModalOverlay .cl-row-cui .cl-anaf-btn { padding: 0 10px; }
   @media (max-width: 560px) { #clientModalOverlay .cl-row, #clientModalOverlay .cl-row-cui { grid-template-columns: minmax(0, 1fr); } }
   .cl-cui-row { display: flex; gap: 8px; align-items: stretch; }
+  .of-prest { font-size: .78rem; line-height: 1.55; color: var(--text); background: rgba(0,229,255,.04); border: 1px solid var(--border-soft); padding: 10px 12px; }
+  .of-prest .of-k { color: var(--muted); font-family: 'Share Tech Mono', monospace; font-size: .68rem; }
+  .of-miss { color: #fbbf24; margin-top: 6px; }
+  .of-edit { margin-top: 8px; background: none; border: none; padding: 0; color: #00e5ff; cursor: pointer; font-family: 'Share Tech Mono', monospace; font-size: .74rem; }
+  .of-edit:hover { text-decoration: underline; }
   .cl-cui-row .f-input { flex: 1; min-width: 0; }
   .cl-anaf-btn { flex-shrink: 0; padding: 0 12px; cursor: pointer; white-space: nowrap; font-family: 'Share Tech Mono', monospace; font-size: .74rem; color: #04141a; background: #00e5ff; border: 1px solid #00e5ff; font-weight: 700; }
   .cl-anaf-btn:disabled { opacity: .6; cursor: wait; }
@@ -3492,15 +3497,19 @@
 
           <!-- Date firmă (Prestator) -->
           <div style="background:var(--bg3);border:1px solid var(--border-soft);border-radius:10px;padding:18px 20px;margin-bottom:14px;">
-            <div style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--teal);margin-bottom:14px;">&#x1F3E2; date_prestator — apar &#xEE;n fiecare contract</div>
+            <div id="tmpl-prest-box" style="font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--teal);margin-bottom:14px;">&#x1F3E2; date_prestator — apar &#xEE;n fiecare ofert&#x103; &#x219;i contract</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
               <div>
                 <div class="f-label" style="font-size:.7rem;">// denumire firm&#x103; *</div>
-                <input class="f-input" id="tmpl-prest-nume" placeholder="ex: C Design SRL" style="margin-top:4px;">
+                <input class="f-input" id="tmpl-prest-nume" placeholder="C DESIGN AND IT SOLUTIONS S.R.L." style="margin-top:4px;">
               </div>
               <div>
                 <div class="f-label" style="font-size:.7rem;">// CUI</div>
-                <input class="f-input" id="tmpl-prest-cui" placeholder="ex: RO12345678" style="margin-top:4px;">
+                <div class="cl-cui-row" style="margin-top:4px;">
+                  <input class="f-input" id="tmpl-prest-cui" placeholder="ex: RO12345678" onkeydown="if(event.key==='Enter'){event.preventDefault();anafPrestLookup();}">
+                  <button type="button" class="cl-anaf-btn" id="tmpl-anaf-btn" onclick="anafPrestLookup()" title="Completează denumirea, Reg. Com. și sediul din registrul public ANAF">&#x1F50D; ANAF</button>
+                </div>
+                <div class="cl-anaf" id="tmpl-anaf-box" hidden style="margin-top:8px;"></div>
               </div>
               <div>
                 <div class="f-label" style="font-size:.7rem;">// Reg. Com.</div>
@@ -3724,6 +3733,11 @@
                 <input class="f-input" type="text" id="oferta-client-name" placeholder="Nume client *" style="margin-bottom:6px;">
                 <input class="f-input" type="email" id="oferta-client-email" placeholder="Email">
                 <input class="f-input" type="text" id="oferta-client-phone" placeholder="Telefon" style="margin-top:6px;">
+              </div>
+
+              <div class="f-group">
+                <label class="f-label">// datele C Design pe ofert&#x103;</label>
+                <div id="oferta-prest-box" class="of-prest"><span style="color:var(--muted);">Se &icirc;ncarc&#x103;…</span></div>
               </div>
 
               <div class="f-group">
@@ -4555,7 +4569,7 @@
     if (tab === 'tema') fetchTheme();
     if (tab === 'media') fetchMedia();
     if (tab === 'cheltuieli') fetchCheltuieli();
-    if (tab === 'oferte') { fetchServicii(); fetchOferte(); fetchContracte(); populateOfertaClientSel(); populateContractClientSel(); }
+    if (tab === 'oferte') { fetchServicii(); fetchOferte(); fetchContracte(); populateOfertaClientSel(); populateContractClientSel(); renderOfertaPrest(); }
     if (tab === 'chatai') loadConversations();
     if (tab === 'mesaje') loadMessages();
     if (tab === 'settings') pushRefreshUI();
@@ -5319,6 +5333,42 @@
     ['tmpl-penalitati-pct','penalitatiPct'],
   ];
 
+  // Datele C Design (prestator), afișate în generatorul de oferte, cu ce lipsește
+  async function renderOfertaPrest() {
+    const box = document.getElementById('oferta-prest-box'); if (!box) return;
+    let t = {};
+    try { const r = await fetch('/api/contract-template?token=' + encodeURIComponent(adminToken)); if (r.ok) t = await r.json(); } catch {}
+    const rows = [['Denumire', t.prestNume || 'C DESIGN AND IT SOLUTIONS S.R.L.'], ['CUI', t.prestCui], ['Reg. Com.', t.prestRegcom], ['Sediu', t.prestAdresa], ['IBAN', t.prestIban ? t.prestIban + (t.prestBanca ? ' · ' + t.prestBanca : '') : ''], ['Reprezentant', t.prestRepr], ['Contact', [t.prestEmail || 'office@c-design.ro', t.prestTel || '0753 116 155', t.prestWeb || 'www.c-design.ro'].join(' · ')]];
+    const missing = rows.filter(r => !r[1]).map(r => r[0]);
+    box.innerHTML = rows.filter(r => r[1]).map(r => `<div><span class="of-k">${esc(r[0])}</span> ${esc(r[1])}</div>`).join('')
+      + (missing.length ? `<div class="of-miss">Lipsesc: ${esc(missing.join(', '))}</div>` : '')
+      + `<button type="button" class="of-edit" onclick="openPrestSettings()">${missing.length ? 'Completează datele firmei' : 'Modifică datele firmei'} →</button>`;
+  }
+  function openPrestSettings() {
+    quickOpen('settings');
+    setTimeout(() => { const el = document.getElementById('tmpl-prest-box'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); const n = document.getElementById('tmpl-prest-nume'); if (n) n.focus({ preventScroll: true }); }, 250);
+  }
+  // ANAF pentru datele C Design
+  async function anafPrestLookup() {
+    const inp = document.getElementById('tmpl-prest-cui'), btn = document.getElementById('tmpl-anaf-btn'), box = document.getElementById('tmpl-anaf-box');
+    const show = (html, cls) => { box.hidden = false; box.className = 'cl-anaf ' + (cls || ''); box.innerHTML = html; };
+    const cui = inp.value.trim();
+    if (!cui) { show('Scrie CUI-ul C Design, apoi apasă ANAF.', 'warn'); return; }
+    if (!cuiValid(cui)) { show('CUI-ul nu trece verificarea cifrei de control.', 'warn'); return; }
+    btn.disabled = true; const label = btn.innerHTML; btn.textContent = '…';
+    try {
+      const res = await fetch('/api/anaf/cui?cui=' + encodeURIComponent(cui) + '&token=' + encodeURIComponent(adminToken));
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) { show(esc(d.error || ('Eroare ' + res.status)), 'warn'); return; }
+      const set = (id, v) => { const el = document.getElementById(id); if (el && v) el.value = v; };
+      set('tmpl-prest-nume', d.name); set('tmpl-prest-cui', d.cui); set('tmpl-prest-regcom', d.regCom);
+      set('tmpl-prest-adresa', [d.adresa, d.oras, d.judet ? 'jud. ' + d.judet : ''].filter(Boolean).join(', '));
+      if (d.iban && !document.getElementById('tmpl-prest-iban').value.trim()) set('tmpl-prest-iban', d.iban);
+      show('✓ Completat din ANAF: ' + esc([d.formaJuridica, d.tva ? 'plătitor de TVA' : 'neplătitor de TVA'].filter(Boolean).join(' · ')) + '. Apasă „Salvează template" ca să rămână.', d.radiat || d.inactiv ? 'warn' : 'ok');
+    } catch (e) { show('Nu am putut contacta serverul.', 'warn'); }
+    finally { btn.disabled = false; btn.innerHTML = label; }
+  }
+
   async function fetchContractTemplate() {
     try {
       const d = await fetch('/api/contract-template?token=' + encodeURIComponent(adminToken)).then(r => r.json());
@@ -5326,6 +5376,8 @@
         const el = document.getElementById(id);
         if (el && d[key] !== undefined) el.value = d[key];
       });
+      const nm = document.getElementById('tmpl-prest-nume');
+      if (nm && !nm.value.trim()) nm.value = "C DESIGN AND IT SOLUTIONS S.R.L.";
     } catch {}
   }
 
@@ -5342,6 +5394,7 @@
         method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
       });
       st.textContent = res.ok ? '✓ Salvat!' : '✕ Eroare';
+      if (res.ok) renderOfertaPrest();
       st.style.color = res.ok ? 'var(--green)' : 'var(--red)';
     } catch { st.textContent = '✕ Eroare rețea'; st.style.color = 'var(--red)'; }
     setTimeout(() => { st.style.display = 'none'; }, 3000);

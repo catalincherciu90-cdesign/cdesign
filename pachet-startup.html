@@ -507,5 +507,6 @@ const bd=document.getElementById('backdrop');
 const mmClose=document.getElementById('mmClose');
 if(burger&&mm){burger.addEventListener('click',()=>{mm.classList.add('open');bd.classList.add('open')});mmClose.addEventListener('click',()=>{mm.classList.remove('open');bd.classList.remove('open')});bd.addEventListener('click',()=>{mm.classList.remove('open');bd.classList.remove('open')});mm.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mm.classList.remove('open');bd.classList.remove('open')}));}
 </script>
+<script src="/company-info.js" defer></script>
 </body>
 </html>
