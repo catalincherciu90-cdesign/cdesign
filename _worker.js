@@ -909,7 +909,7 @@ const PROJECT_CASE_STUDIES = {
     sections: [
       ['/portofoliu/expotigla/01-hero-pagina-principala.jpg', 'Pagina principală', 'Primul ecran arată direct ce face firma: sisteme complete de acoperiș. Imagine mare, mesaj scurt și un singur buton principal. Sub hero, o bandă cu patru argumente: consultanță tehnică, calcul de necesar, transport asigurat și produse cu garanție.'],
       ['/portofoliu/expotigla/02-categorii-produse.jpg', 'Categorii de produse', 'Gama este împărțită în categorii vizuale (țiglă metalică, tablă fălțuită, panouri sandwich, sisteme pluviale, tinichigerie, ventilații, folii, șuruburi și altele). Fiecare card are fotografie, titlu și o descriere de un rând, ca vizitatorul să își găsească rapid categoria potrivită.'],
-      ['/portofoliu/expotigla/03-produse-cele-mai-vandute.jpg', 'Cele mai vândute produse', 'Carusel cu produse populare: etichetă de variantă, categorie, preț afișat ca interval („de la… lei / buc”) și două acțiuni clare: „Detalii” și „În coș”.'],
+      ['/portofoliu/expotigla/03-produse-cele-mai-vandute.jpg', 'Cele mai vândute produse', 'Carusel cu produse populare: etichetă de variantă, categorie, preț afișat ca interval („de la…”) și două acțiuni clare: „Detalii” și „În coș”.'],
       ['/portofoliu/expotigla/04-montaj-si-consultanta.jpg', 'Montaj și consultanță', 'Secțiune dedicată serviciilor: consultanță gratuită, calcul de necesar, montaj la cerere și recomandări de finisaj. Două butoane duc spre pagina de servicii și spre configurator.'],
       ['/portofoliu/expotigla/05-sistem-complet-home.jpg', 'Sistem complet', 'O ilustrație cu acoperișul „desfăcut” în componente explică ideea de sistem complet și trimite spre configurator.'],
       ['/portofoliu/expotigla/06-pagina-sistem-complet.jpg', 'Pagina Sistem complet', 'Pagină separată pentru configurator, cu schema acoperișului strat cu strat și mesajul „1 proiect, 1 ofertă, 1 consultant”. Sub hero apar brandurile partenere și avantajele ofertei integrate.'],
@@ -931,7 +931,7 @@ const PROJECT_CASE_STUDIES = {
       ['/portofoliu/cosmin-tatulescu/01-hero.jpg', 'Hero', 'O fotografie reală din decorul studioului, alături de titlul „Ședințe foto de Crăciun 2026 în Brașov” și un text cald despre atmosfera ședinței. Butonul principal duce direct la zilele libere.'],
       ['/portofoliu/cosmin-tatulescu/02-voi-asa-cum-sunteti.jpg', 'Mesajul principal', 'O secțiune scurtă care fixează tonul: fără zâmbete la comandă, doar familia așa cum este.'],
       ['/portofoliu/cosmin-tatulescu/03-ce-include.jpg', 'Ce include', 'Patru coloane cu cifre mari și ușor de citit: 45 de minute, 35–50 de fotografii, 3 decoruri și livrare în aproximativ o săptămână, în galerie online privată. Dedesubt, oferta de tablouri și canvasuri, prezentată ca un cadou pentru rude.'],
-      ['/portofoliu/cosmin-tatulescu/04-preturi-pe-perioade.jpg', 'Prețuri pe perioade', 'Prețul crește cu cât te apropii de Crăciun (450, 500 și 550 lei), ceea ce încurajează rezervările din timp. Fiecare perioadă are o etichetă scurtă, unele cu umor.'],
+      ['/portofoliu/cosmin-tatulescu/04-preturi-pe-perioade.jpg', 'Prețuri pe perioade', 'Prețul crește cu cât te apropii de Crăciun, ceea ce încurajează rezervările din timp. Fiecare perioadă are o etichetă scurtă, unele cu umor.'],
       ['/portofoliu/cosmin-tatulescu/05-calendar-disponibilitate.jpg', 'Calendar de disponibilitate', 'Calendar împărțit pe perioadele de preț, cu numărul de locuri libere pentru fiecare zi. Două opțiuni clare: rezervă o ședință sau oferă o ședință cadou.'],
       ['/portofoliu/cosmin-tatulescu/06-galerie.jpg', 'Galerie', 'O selecție de fotografii din ședințele anterioare, cu link spre galeria completă.'],
       ['/portofoliu/cosmin-tatulescu/07-locatie.jpg', 'Locație', 'Adresa, reperul, programul și localitățile din apropiere. Harta Google se încarcă doar la cerere, iar vizitatorul este informat că Google primește astfel adresa lui IP.'],
@@ -968,7 +968,7 @@ const PROJECT_CASE_STUDIES = {
       'Identitatea pornește de la logo-ul colorat, în stil graffiti. Restul designului e curat și luminos, cu accente galbene pe butoanele de comandă și titluri mari, ușor de citit. Ca element de joc, am adăugat un tricou interactiv în hero: vizitatorul trage un print peste tricou și vede pe loc cum ar arăta.'
     ],
     sections: [
-      ['/portofoliu/mrdtf/01-hero-si-preturi.jpg', 'Hero și prețuri', 'Mesajul principal, „Printuri DTF de calitate”, scoate în față avantajul lățimii de 90 cm. Imediat dedesubt sunt cele cinci trepte de preț pe metru liniar, de la 70 la 55 lei. Treapta cea mai avantajoasă e evidențiată.'],
+      ['/portofoliu/mrdtf/01-hero-si-preturi.jpg', 'Hero și prețuri', 'Mesajul principal, „Printuri DTF de calitate”, scoate în față avantajul lățimii de 90 cm. Imediat dedesubt sunt cele cinci trepte de preț pe metru liniar, iar prețul scade pe măsură ce comanda crește. Treapta cea mai avantajoasă e evidențiată.'],
       ['/portofoliu/mrdtf/02-tricou-interactiv.jpg', 'Tricou interactiv', 'Vizitatorul alege unul dintre cele cinci printuri și îl trage peste tricou. Un element mic, care face pagina memorabilă și arată direct ce face produsul.'],
       ['/portofoliu/mrdtf/03-calculator-1-ml.jpg', 'Calculator „Ce încape pe 1 ml”', 'Alegi formatul (A5, A4, A3 sau pătrate de 5–20 cm) și vezi câte bucăți încap pe un metru de folie, plus prețul estimat pe bucată la primele și la ultimele trepte de preț. O schemă vizuală arată așezarea modelelor pe folie.'],
       ['/portofoliu/mrdtf/04-ce-facem-si-cum-functioneaza.jpg', 'Ce facem și cum funcționează', 'O grilă cu fotografii din atelier (folie, role, culori, imprimanta Epson) și un proces în patru pași: trimiți comanda, noi imprimăm, primești coletul, tu aplici.'],
@@ -1875,6 +1875,19 @@ export default {
       };
       const clean = HTML_CLEAN[path] || path.slice(0, -5); // scoate ".html"
       return Response.redirect('https://www.c-design.ro' + clean + url.search, 301);
+    }
+
+    // ── VERSIUNEA ÎN ENGLEZĂ: pagini statice care au și un director cu același nume ──
+    // (/en/, /en/services, /en/partners) — servite explicit, ca să nu depindă de
+    // felul în care platforma alege între fișierul .html și director.
+    if (request.method === 'GET' || request.method === 'HEAD') {
+      if (path === '/en') return Response.redirect('https://www.c-design.ro/en/' + url.search, 301);
+      const EN_DIR_PAGES = { '/en/': '/en/index.html', '/en/services': '/en/services.html', '/en/services/': '/en/services.html', '/en/partners': '/en/partners.html', '/en/partners/': '/en/partners.html' };
+      if (EN_DIR_PAGES[path]) {
+        const assetUrl = new URL(request.url);
+        assetUrl.pathname = EN_DIR_PAGES[path];
+        return env.ASSETS.fetch(new Request(assetUrl.toString(), request));
+      }
     }
 
     // ── VERSIUNEA ÎN ENGLEZĂ: pagini generate (studii de caz, articole) ──

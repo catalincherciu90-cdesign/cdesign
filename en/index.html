@@ -13,6 +13,10 @@
 <meta name="description" content="Professional web design from Romania, with fixed prices from €400. Modern, fast websites that are easy to find on Google. Free consultation.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://www.c-design.ro/en/">
+<link rel="alternate" hreflang="ro" href="https://www.c-design.ro/" data-hl>
+<link rel="alternate" hreflang="en" href="https://www.c-design.ro/en/" data-hl>
+<link rel="alternate" hreflang="x-default" href="https://www.c-design.ro/" data-hl>
+<meta property="og:locale:alternate" content="ro_RO" data-hl>
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
@@ -103,8 +107,8 @@
   #hero-h1-el .hero-rot{margin-top:.22em}
   @media(max-width:340px){.hero-rot{font-size:.88em}}
   /* EN: the longest rotating text ("the people looking for you") stays on one line */
-  @media(max-width:640px){#hero-h1-el .hero-rot{font-size:min(1em,calc((100vw - 48px) / 12.6))}}
-  @media(min-width:1000px){#hero-h1-el .hero-rot{font-size:min(1em,calc(min(100vw - 72px, 940px) / 12.6))}}
+  @media(max-width:640px){#hero-h1-el .hero-rot{font-size:min(1em,calc((100vw - 48px) / 11.2))}}
+  @media(min-width:1000px){#hero-h1-el .hero-rot{font-size:min(1em,calc(min(100vw - 72px, 940px) / 11.2))}}
   .hero-rot.swap{opacity:0;transform:translateY(14px)}
   @media(prefers-reduced-motion:reduce){.hero-rot{transition:none}}
   .circle-word .scribble{position:absolute;left:-1%;bottom:-.20em;width:102%;height:.34em;overflow:visible;pointer-events:none}
@@ -329,6 +333,7 @@
     a[data-edit="buton-1"], a[data-edit="buton-2"] { font-size: .84rem; padding-left: 12px; padding-right: 12px; }
   }
 </style>
+<style id="lang-switch-css">.lang-switch{display:inline-flex;align-items:center;gap:2px;padding:3px;border:1px solid rgba(46,52,54,.16);border-radius:999px;font-family:'Poppins',sans-serif;font-weight:600;font-size:.78rem;line-height:1;letter-spacing:.04em;flex-shrink:0}.lang-switch a,.lang-switch span{display:inline-block;padding:6px 9px;border-radius:999px;color:inherit;text-decoration:none}.lang-switch span{background:#2E3436;color:#fff}.lang-switch a{opacity:.7;transition:opacity .2s,background .2s}.lang-switch a:hover{opacity:1;background:rgba(0,170,172,.1)}</style>
 </head>
 <body>
 
@@ -362,6 +367,7 @@
       </nav>
       <div class="nav-right">
         <a href="#contact" class="contact-link">Contact</a>
+        <div class="lang-switch" role="group" aria-label="Language"><span aria-current="true">EN</span><a href="/" hreflang="ro" lang="ro" aria-label="Versiunea în română">RO</a></div>
         <a href="/en/request-a-quote" class="btn-quote">Get a quote</a>
         <button class="burger" id="burger" aria-label="Open menu">
           <span></span><span></span><span></span>
@@ -511,13 +517,13 @@
       <p>Websites built and launched for our clients. Take a look at them live.</p>
     </div>
     <div class="demo-grid" id="proiecteGrid">
-      <!-- Projects shown directly in the HTML (for search engines). In the EN version they are not replaced from /api/projects (that data is in Romanian) -->
-      <div class="demo-card proj-card"><img class="proj-thumb" src="/portofoliu/expotigla.jpg" alt="ExpoTigla — online roofing shop" loading="lazy"><div class="proj-body"><span class="demo-tag">Roofing shop</span><h3>ExpoTigla — online roofing shop</h3><p>An online shop for a supplier of complete roofing systems: metal roof tiles, standing seam sheets, sandwich panels, rainwater systems and accessories. A priced catalogue, a “Complete system” configurator, quote requests and technical advice — everything a customer needs to get to a quote quickly.</p><div class="demo-actions"><a class="demo-btn" href="/en/portfolio/expotigla">View project →</a><a class="demo-btn admin" href="https://expotigla.ro" target="_blank" rel="noopener">Live site ↗</a></div></div></div>
-      <div class="demo-card proj-card"><img class="proj-thumb" src="/portofoliu/cosmin-tatulescu.jpg" alt="Cosmin Tătulescu — Christmas photo shoots" loading="lazy"><div class="proj-body"><span class="demo-tag">Photography</span><h3>Cosmin Tătulescu — Christmas photo shoots</h3><p>A business and booking website for a Brașov photographer’s Christmas photo shoots. It briefly explains the experience, shows prices by period and displays in a calendar how many free slots are left each day.</p><div class="demo-actions"><a class="demo-btn" href="/en/portfolio/cosmin-tatulescu">View project →</a><a class="demo-btn admin" href="https://cosmintatulescu.ro" target="_blank" rel="noopener">Live site ↗</a></div></div></div>
-      <div class="demo-card proj-card"><img class="proj-thumb" src="/portofoliu/traditum.jpg" alt="Traditum By Victoria — artisan patisserie" loading="lazy"><div class="proj-body"><span class="demo-tag">Patisserie</span><h3>Traditum By Victoria — artisan patisserie</h3><p>A business website for an artisan patisserie in Ilfov. Products are grouped by category, and the site highlights the gallery of real events and the quote request for cakes and candy bars.</p><div class="demo-actions"><a class="demo-btn" href="/en/portfolio/traditum">View project →</a><a class="demo-btn admin" href="https://traditumbyvictoria.ro" target="_blank" rel="noopener">Live site ↗</a></div></div></div>
+      <!-- Projects shown directly in the HTML (for search engines); JS replaces them with the up-to-date list from /api/projects?lang=en -->
+      <div class="demo-card proj-card"><img class="proj-thumb" src="/portofoliu/expotigla.jpg" alt="ExpoTigla — online roofing shop" loading="lazy"><div class="proj-body"><span class="demo-tag">Roofing shop</span><h3>ExpoTigla — online roofing shop</h3><p>An online shop for a supplier of complete roofing systems: metal roof tiles, standing seam sheets, sandwich panels, rainwater systems and accessories. A catalogue with prices, a ‘Complete system’ configurator, quote requests and technical advice — everything a customer needs to get to a quote quickly.</p><div class="demo-actions"><a class="demo-btn" href="/en/portfolio/expotigla">View project →</a><a class="demo-btn admin" href="https://expotigla.ro" target="_blank" rel="noopener">Live site ↗</a></div></div></div>
+      <div class="demo-card proj-card"><img class="proj-thumb" src="/portofoliu/cosmin-tatulescu.jpg" alt="Cosmin Tătulescu — Christmas photo sessions" loading="lazy"><div class="proj-body"><span class="demo-tag">Photography</span><h3>Cosmin Tătulescu — Christmas photo sessions</h3><p>A business and booking website for the Christmas photo sessions of a photographer in Brașov. It briefly explains the experience, shows prices by period and uses a calendar to show how many free slots are left each day.</p><div class="demo-actions"><a class="demo-btn" href="/en/portfolio/cosmin-tatulescu">View project →</a><a class="demo-btn admin" href="https://cosmintatulescu.ro" target="_blank" rel="noopener">Live site ↗</a></div></div></div>
+      <div class="demo-card proj-card"><img class="proj-thumb" src="/portofoliu/traditum.jpg" alt="Traditum By Victoria — artisan patisserie" loading="lazy"><div class="proj-body"><span class="demo-tag">Patisserie</span><h3>Traditum By Victoria — artisan patisserie</h3><p>A business website for an artisan patisserie in Ilfov. Products are grouped by category, and the site puts the gallery of real events and the quote request for cakes and candy bars front and centre.</p><div class="demo-actions"><a class="demo-btn" href="/en/portfolio/traditum">View project →</a><a class="demo-btn admin" href="https://traditumbyvictoria.ro" target="_blank" rel="noopener">Live site ↗</a></div></div></div>
       <div class="demo-card proj-card"><img class="proj-thumb" src="/portofoliu/mrdtf.jpg" alt="Mr.DTF — DTF printing by the linear metre" loading="lazy"><div class="proj-body"><span class="demo-tag">DTF printing</span><h3>Mr.DTF — DTF printing by the linear metre</h3><p>A website for a DTF print workshop in Bucharest. Prices per linear metre are visible on the first screen, a calculator shows how many designs fit on one metre, and orders are sent through a quick form.</p><div class="demo-actions"><a class="demo-btn" href="/en/portfolio/mrdtf">View project →</a><a class="demo-btn admin" href="https://mrdtf.ro" target="_blank" rel="noopener">Live site ↗</a></div></div></div>
-      <div class="demo-card proj-card"><img class="proj-thumb" src="/portofoliu/comstore.jpg" alt="ComStore — roof installation and renovation" loading="lazy"><div class="proj-body"><span class="demo-tag">Roofing</span><h3>ComStore — roof installation and renovation</h3><p>A business website for a roof installation and renovation company. It highlights the services, completed projects and partner brands, and every section leads to a quote request.</p><div class="demo-actions"><a class="demo-btn" href="/en/portfolio/comstore">View project →</a><a class="demo-btn admin" href="https://comstore-acoperisuri.ro" target="_blank" rel="noopener">Live site ↗</a></div></div></div>
-      <div class="demo-card proj-card"><img class="proj-thumb" src="/portofoliu/apg-garage.jpg" alt="APG Garage — car service" loading="lazy"><div class="proj-body"><span class="demo-tag">Car service</span><h3>APG Garage — car service</h3><p>A website for a car service in Militari, Bucharest. It presents the services and indicative prices, and customers can create an account to book online.</p><div class="demo-actions"><a class="demo-btn" href="/en/portfolio/apg-garage">View project →</a></div></div></div>
+      <div class="demo-card proj-card"><img class="proj-thumb" src="/portofoliu/comstore.jpg" alt="ComStore — roof installation and renovation" loading="lazy"><div class="proj-body"><span class="demo-tag">Roofing</span><h3>ComStore — roof installation and renovation</h3><p>A business website for a roof installation and renovation company. It puts the services, completed projects and partner brands front and centre, and every section leads to a quote request.</p><div class="demo-actions"><a class="demo-btn" href="/en/portfolio/comstore">View project →</a><a class="demo-btn admin" href="https://comstore-acoperisuri.ro" target="_blank" rel="noopener">Live site ↗</a></div></div></div>
+      <div class="demo-card proj-card"><img class="proj-thumb" src="/portofoliu/apg-garage.jpg" alt="APG Garage — car repair garage" loading="lazy"><div class="proj-body"><span class="demo-tag">Car repair garage</span><h3>APG Garage — car repair garage</h3><p>A website for a car repair garage in Militari, Bucharest. It presents the services and guide prices, and customers can create an account to book online.</p><div class="demo-actions"><a class="demo-btn" href="/en/portfolio/apg-garage">View project →</a></div></div></div>
     </div>
     <div style="text-align:center;margin-top:44px">
       <a href="/en/portfolio" class="btn-primary">See the full portfolio <span class="arr">→</span></a>
@@ -706,7 +712,7 @@
       var el = document.getElementById('heroRot');
       if(!el) return;
       // EN: the admin texts (window.__HERO_ROTATE / site-settings) are in Romanian, so the EN list is fixed here
-      var words = ['your customers', 'the people looking for you', 'your community'];
+      var words = ['your customers', 'people looking for you', 'your community'];
       var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var i = 0;
       // texts set in the admin (Settings → Titles) arrive here from /api/site-settings (not applied in EN)
@@ -741,16 +747,22 @@
         var desc = p.description ? '<p>' + esc(p.description) + '</p>' : '<p></p>';
         var link = p.link || p.url;
         var btns = '';
-        if(p.detail){ btns += '<a class="demo-btn" href="' + esc(p.detail) + '">View project →</a>'; }
+        if(p.detail){ btns += '<a class="demo-btn" href="' + esc(String(p.detail).replace(/^\/portofoliu\//, '/en/portfolio/')) + '">View project →</a>'; }
         if(link){ btns += '<a class="demo-btn' + (p.detail ? ' admin' : '') + '" href="' + esc(link) + '" target="_blank" rel="noopener">Live site ↗</a>'; }
         var btn = btns ? '<div class="demo-actions">' + btns + '</div>' : '';
         return '<div class="demo-card proj-card">' + thumb
           + '<div class="proj-body">' + tag
           + '<h3>' + esc(p.title || 'Project') + '</h3>' + desc + btn + '</div></div>';
       }
-      // EN: /api/projects returns Romanian titles and descriptions, so the translated cards above are kept
-      // (the projects list is not replaced from the API in the EN version)
-      void card;
+      // EN: ?lang=en returns the English texts (en/data/projects.json) and /en/portfolio/ links
+      fetch('/api/projects?lang=en')
+        .then(function(r){ return r.ok ? r.json() : []; })
+        .then(function(list){
+          if(!Array.isArray(list) || !list.length){ return; }
+          grid.innerHTML = list.slice(0, 6).map(card).join('');
+          section.style.display = 'block';
+        })
+        .catch(function(){ /* the section stays as it is if they cannot be loaded */ });
     })();
 
     // Admin settings: background video + About banner carousel
