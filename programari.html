@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin | C Design</title>
   <meta name="robots" content="noindex, nofollow">
-  <link rel="icon" type="image/png" href="/logo-c-design.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
   <link rel="apple-touch-icon" href="/admin-icon-192.png">
   <link rel="manifest" href="/admin.webmanifest">
   <meta name="theme-color" content="#04141a">
@@ -2195,7 +2197,7 @@
 <!-- LOGIN -->
 <div class="login-wrap" id="loginWrap">
   <div class="login-box">
-    <img src="/logo-c-design.png" alt="C Design" style="height:48px;width:auto;display:block;margin:0 auto 12px;">
+    <img src="/favicon-192.png" alt="C Design" style="height:64px;width:64px;display:block;margin:0 auto 12px;">
     <div class="login-logo"><span>C</span>DESIGN</div>
     <div class="login-sub">// admin.dashboard</div>
     <label class="login-label" for="userInput">// utilizator</label>
@@ -6564,7 +6566,7 @@
       const parts = [];
       if (meetingsToday) parts.push(meetingsToday + (meetingsToday === 1 ? ' întâlnire' : ' întâlniri'));
       if (deadlinesToday) parts.push(deadlinesToday + (deadlinesToday === 1 ? ' deadline' : ' deadline-uri'));
-      new Notification('Gibilan — agenda de azi', { body: 'Ai ' + parts.join(' și ') + ' astăzi.', icon: '/logo-c-design.png' });
+      new Notification('Gibilan — agenda de azi', { body: 'Ai ' + parts.join(' și ') + ' astăzi.', icon: '/favicon-192.png' });
     } catch (e) {}
   }
   document.addEventListener('pointerdown', function jvsAskNotif() {

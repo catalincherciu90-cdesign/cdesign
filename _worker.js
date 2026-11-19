@@ -44,7 +44,9 @@ function renderArticle(post) {
 <meta name="description" content="${desc}">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://www.c-design.ro/blog/${post.slug}">
-<link rel="icon" type="image/png" href="/logo-c-design.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://www.c-design.ro/blog/${post.slug}">
 <meta property="og:title" content="${escHtml(post.title)}">
