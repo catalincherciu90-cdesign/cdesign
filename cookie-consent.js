@@ -227,7 +227,7 @@
     });
   }
 
-  // Expose function to reopen banner (for "Setări cookies" link in footer)
+  // Expose function to reopen banner (for "Setări cookie-uri" link in footer)
   window.openCookieConsentBanner = function() {
     const existing = document.getElementById('cookie-consent-banner');
     if (existing) {

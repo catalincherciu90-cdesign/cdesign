@@ -374,7 +374,7 @@
       <nav class="nav-menu">
         <a href="/">Acasă</a>
         <a href="/servicii">Servicii</a>
-        <a href="/#portofoliu">Portofoliu</a>
+        <a href="/portofoliu">Portofoliu</a>
         <a href="/#testimoniale">Recenzii</a>
         <a href="/blog">Blog</a>
         <a href="/demos">Demo-uri</a>
@@ -395,7 +395,7 @@
     <button class="mm-close" id="mmClose" aria-label="Închide meniul">&times;</button>
     <a href="/">Acasă</a>
     <a href="/servicii">Servicii</a>
-    <a href="/#portofoliu">Portofoliu</a>
+    <a href="/portofoliu">Portofoliu</a>
     <a href="/#testimoniale">Recenzii</a>
     <a href="/blog">Blog</a>
         <a href="/demos">Demo-uri</a>
@@ -450,7 +450,7 @@
         <p data-edit="paragraf-1">Site profesional, adaptat pentru telefon și optimizat pentru Google. Livrat în cel mult 14 zile, cu domeniu .ro și găzduire incluse.</p><a class="help-cta" href="/servicii">Descoperă mai mult →</a>
       </div>
       <div class="help-item">
-        <div class="help-head"><span class="help-ico"><svg viewBox="0 0 24 24"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></span><h3 data-edit="card-titlu-2">Pachet Start-Up Online</h3></div>
+        <div class="help-head"><span class="help-ico"><svg viewBox="0 0 24 24"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg></span><h3 data-edit="card-titlu-2">Pachet Start-Up online</h3></div>
         <p data-edit="paragraf-2">Site + logo + pagini de Facebook și Instagram. Tot ce îți trebuie ca să pornești profesionist din prima zi. De la 400€.</p><a class="help-cta" href="/pachet-startup">Descoperă pachetul →</a>
       </div>
       <div class="help-item">
@@ -535,7 +535,7 @@
     </div>
     <div class="demo-grid" id="demoGrid"></div>
     <div style="text-align:center;margin-top:46px">
-      <a href="/#portofoliu" class="btn-primary">Vezi tot portofoliul <span class="arr">→</span></a>
+      <a href="/portofoliu" class="btn-primary">Vezi tot portofoliul <span class="arr">→</span></a>
     </div>
   </section>
 
@@ -668,7 +668,7 @@
       <div class="f-col">
         <h4>Companie</h4>
         <a href="/despre-noi">Despre noi</a>
-        <a href="/#portofoliu">Portofoliu</a>
+        <a href="/portofoliu">Portofoliu</a>
         <a href="/blog">Blog</a>
         <a href="/demos">Demo-uri</a>
         <a href="/#testimoniale">Recenzii</a>
@@ -712,7 +712,7 @@
         fetch('/api/messages', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: name, phone: phone, message: message + '\n\nDesde: Web Design Cluj' })
+          body: JSON.stringify({ name: name, phone: phone, message: message + '\n\nTrimis de pe: web design Cluj' })
         }).then(r => r.json()).then(d => {
           if(d && d.success) {
             msgForm.classList.add('sent');
