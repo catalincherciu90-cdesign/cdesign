@@ -6,7 +6,17 @@
 (function () {
   var GA_ID = 'G-TB9SZT1PVZ';
   var STORE_KEY = 'cd_cookie_consent'; // 'granted' | 'denied'
-  var PRIVACY_URL = '/politica-confidentialitate';
+  var EN = /^en\b/i.test(document.documentElement.lang || '');
+  var PRIVACY_URL = EN ? '/en/privacy-policy' : '/politica-confidentialitate';
+  var T = EN ? {
+    aria: 'Cookie consent', title: 'We respect your privacy 🍪',
+    body: 'We use cookies to understand how the site is used and to improve it. You can accept or reject analytics cookies. See our <a href="' + PRIVACY_URL + '">Privacy policy</a>.',
+    reject: 'Reject', accept: 'Accept', settings: 'Cookie settings'
+  } : {
+    aria: 'Consimțământ pentru cookie-uri', title: 'Îți respectăm confidențialitatea 🍪',
+    body: 'Folosim cookie-uri ca să înțelegem cum este folosit site-ul și să îl putem îmbunătăți. Poți accepta sau refuza cookie-urile de analiză. Vezi <a href="' + PRIVACY_URL + '">Politica de confidențialitate</a>.',
+    reject: 'Refuz', accept: 'Accept', settings: 'Setări cookie-uri'
+  };
 
   // gtag is defined by the inline snippet; define a fallback just in case.
   window.dataLayer = window.dataLayer || [];
@@ -52,14 +62,13 @@
     var box = document.createElement('div');
     box.className = 'cd-cc';
     box.setAttribute('role', 'dialog');
-    box.setAttribute('aria-label', 'Consimțământ pentru cookie-uri');
+    box.setAttribute('aria-label', T.aria);
     box.innerHTML =
-      '<h4>Îți respectăm confidențialitatea 🍪</h4>' +
-      '<p>Folosim cookie-uri ca să înțelegem cum este folosit site-ul și să îl putem îmbunătăți. ' +
-      'Poți accepta sau refuza cookie-urile de analiză. Vezi <a href="' + PRIVACY_URL + '">Politica de confidențialitate</a>.</p>' +
+      '<h4>' + T.title + '</h4>' +
+      '<p>' + T.body + '</p>' +
       '<div class="cd-cc-row">' +
-      '<button class="cd-cc-btn cd-cc-reject" type="button">Refuz</button>' +
-      '<button class="cd-cc-btn cd-cc-accept" type="button">Accept</button>' +
+      '<button class="cd-cc-btn cd-cc-reject" type="button">' + T.reject + '</button>' +
+      '<button class="cd-cc-btn cd-cc-accept" type="button">' + T.accept + '</button>' +
       '</div>';
     document.body.appendChild(box);
 
@@ -87,7 +96,7 @@
       var a = document.createElement('a');
       a.href = '#';
       a.className = 'cd-cc-settings';
-      a.textContent = 'Setări cookie-uri';
+      a.textContent = T.settings;
       a.addEventListener('click', function (e) { e.preventDefault(); showBanner(); });
       span.appendChild(a);
       bar.appendChild(span);

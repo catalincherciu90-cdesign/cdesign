@@ -18,22 +18,32 @@
   }
 
   function createBanner() {
+    const EN = /^en\b/i.test(document.documentElement.lang || '');
+    const T = EN ? {
+      aria: 'Cookie consent', title: 'We use cookies',
+      body: 'We use Google Analytics and Meta Pixel to understand how you use our site. These tools help us improve your experience.',
+      link: '/en/privacy-policy', linkText: 'Read our Privacy policy', accept: 'Accept', decline: 'Essential only'
+    } : {
+      aria: 'Consimțământ pentru cookie-uri', title: 'Folosim cookie-uri',
+      body: 'Utilizăm Google Analytics și Meta Pixel pentru a înțelege cum folosești site-ul nostru. Aceste instrumente ne ajută să îmbunătățim experiența ta.',
+      link: '/politica-confidentialitate', linkText: 'Citește Politica de confidențialitate', accept: 'Accept', decline: 'Doar cele necesare'
+    };
     const banner = document.createElement('div');
     banner.id = 'cookie-consent-banner';
     banner.setAttribute('role', 'dialog');
-    banner.setAttribute('aria-label', 'Consimțământ pentru cookie-uri');
+    banner.setAttribute('aria-label', T.aria);
     banner.innerHTML = `
       <div class="cc-content">
         <div class="cc-header">
-          <h2>Folosim cookie-uri</h2>
+          <h2>${T.title}</h2>
         </div>
         <div class="cc-text">
-          <p>Utilizăm Google Analytics și Meta Pixel pentru a înțelege cum folosești site-ul nostru. Aceste instrumente ne ajută să îmbunătățim experiența ta.</p>
-          <p><a href="/politica-confidentialitate" class="cc-link">Citește Politica de confidențialitate</a></p>
+          <p>${T.body}</p>
+          <p><a href="${T.link}" class="cc-link">${T.linkText}</a></p>
         </div>
         <div class="cc-actions">
-          <button class="cc-btn cc-btn-accept" id="cc-accept">Accept</button>
-          <button class="cc-btn cc-btn-decline" id="cc-decline">Doar cele necesare</button>
+          <button class="cc-btn cc-btn-accept" id="cc-accept">${T.accept}</button>
+          <button class="cc-btn cc-btn-decline" id="cc-decline">${T.decline}</button>
         </div>
       </div>
     `;

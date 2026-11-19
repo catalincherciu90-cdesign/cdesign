@@ -6,9 +6,11 @@
    ════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
+  var EN = /^en\b/i.test(document.documentElement.lang || '');
+  function t(ro, en) { return EN ? en : ro; }
   if (window.__cdAssistant) return; window.__cdAssistant = true;
 
-  var PHONE = '0753 116 155', TEL = '+40753116155', EMAIL_TO = 'office@c-design.ro';
+  var PHONE = EN ? '+40 753 116 155' : '0753 116 155', TEL = '+40753116155', EMAIL_TO = 'office@c-design.ro';
   var history = [];      // {role, content}
   var busy = false, opened = false, greeted = false;
   var leadEmail = '', convId = '';
@@ -76,27 +78,27 @@
 
   /* ── DOM ──────────────────────────────────────────────── */
   var btn = document.createElement('button');
-  btn.id = 'cda-btn'; btn.setAttribute('aria-label', 'Asistent virtual C Design');
+  btn.id = 'cda-btn'; btn.setAttribute('aria-label', t('Asistent virtual C Design', 'C Design virtual assistant'));
   btn.innerHTML = '💬<span class="cda-badge"></span>';
   document.body.appendChild(btn);
 
   var panel = document.createElement('div');
-  panel.id = 'cda-panel'; panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-label', 'Chat asistent C Design');
+  panel.id = 'cda-panel'; panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-label', t('Chat asistent C Design', 'C Design assistant chat'));
   panel.innerHTML = ''
     + '<div class="cda-head"><div class="cda-av">🤖</div>'
-    + '<div><div class="cda-ti">Asistent C Design</div><div class="cda-st"><i></i> online · răspunde acum</div></div>'
-    + '<button class="cda-x" aria-label="Închide">×</button></div>'
+    + '<div><div class="cda-ti">' + t('Asistent C Design', 'C Design assistant') + '</div><div class="cda-st"><i></i> ' + t('online · răspunde acum', 'online · replies now') + '</div></div>'
+    + '<button class="cda-x" aria-label="' + t('Închide', 'Close') + '">×</button></div>'
     + '<div class="cda-log" id="cda-log"></div>'
     + '<div class="cda-chips" id="cda-chips"></div>'
-    + '<div class="cda-cta"><a class="cda-p" href="/programare">📅 Programează</a><a class="cda-s" href="tel:' + TEL + '">📞 Sună</a></div>'
-    + '<div class="cda-in"><input id="cda-input" type="text" placeholder="Scrie un mesaj..." maxlength="600" autocomplete="off"><button id="cda-send" aria-label="Trimite">➤</button></div>';
+    + '<div class="cda-cta"><a class="cda-p" href="' + t('/programare', '/en/book-a-call') + '">📅 ' + t('Programează', 'Book a call') + '</a><a class="cda-s" href="tel:' + TEL + '">📞 ' + t('Sună', 'Call') + '</a></div>'
+    + '<div class="cda-in"><input id="cda-input" type="text" placeholder="' + t('Scrie un mesaj...', 'Type a message...') + '" maxlength="600" autocomplete="off"><button id="cda-send" aria-label="' + t('Trimite', 'Send') + '">➤</button></div>';
   document.body.appendChild(panel);
 
   // Mesaj "teaser" care apare după câteva secunde, lângă bulă
   var teaser = document.createElement('div');
   teaser.className = 'cda-teaser';
-  teaser.innerHTML = '<button class="cda-tx" aria-label="Închide">×</button>'
-    + '<span>👋 Bună! Vrei un site care să-ți aducă clienți? <b>Întreabă-mă orice</b> — răspund pe loc.</span>';
+  teaser.innerHTML = '<button class="cda-tx" aria-label="' + t('Închide', 'Close') + '">×</button>'
+    + '<span>' + t('👋 Bună! Vrei un site care să-ți aducă clienți? <b>Întreabă-mă orice</b> — răspund pe loc.', '👋 Hi! Want a website that brings you customers? <b>Ask me anything</b> — I reply straight away.') + '</span>';
   document.body.appendChild(teaser);
 
   var log = panel.querySelector('#cda-log');
@@ -104,7 +106,7 @@
   var input = panel.querySelector('#cda-input');
   var sendBtn = panel.querySelector('#cda-send');
 
-  var SUGGESTIONS = ['Cât costă un site?', 'În cât timp e gata?', 'Ce include Pachetul Start-Up?', 'Vreau o ofertă'];
+  var SUGGESTIONS = EN ? ['How much does a website cost?', 'How long does it take?', 'What does the Start-up package include?', 'I would like a quote'] : ['Cât costă un site?', 'În cât timp e gata?', 'Ce include Pachetul Start-Up?', 'Vreau o ofertă'];
 
   function esc(s) { return String(s).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
   function scroll() { log.scrollTop = log.scrollHeight; }
@@ -132,7 +134,7 @@
 
   function greet() {
     if (greeted) return; greeted = true;
-    var hi = 'Salut! 👋 Sunt asistentul C Design. Te pot ajuta cu informații despre website-uri, prețuri orientative și o ofertă gratuită. Cu ce începem?';
+    var hi = t('Salut! 👋 Sunt asistentul C Design. Te pot ajuta cu informații despre website-uri, prețuri orientative și o ofertă gratuită. Cu ce începem?', 'Hi! 👋 I\'m the C Design assistant. I can help with information about websites, guide prices and a free quote. Where shall we start?');
     addMsg('bot', hi); history.push({ role: 'assistant', content: hi }); renderChips();
   }
 
@@ -146,16 +148,16 @@
     try {
       var r = await fetch('/api/assistant', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: convId, email: leadEmail, messages: history.slice(-10) })
+        body: JSON.stringify({ id: convId, email: leadEmail, lang: EN ? 'en' : 'ro', messages: history.slice(-10) })
       });
       var d = await r.json();
       typing(false);
       if (d && d.id && d.id !== convId) { convId = d.id; try { localStorage.setItem('cdaId', convId); } catch (e) {} }
-      var reply = (d && d.reply) || 'Hai să discutăm direct: programează o consultanță gratuită sau sună la ' + PHONE + '.';
+      var reply = (d && d.reply) || t('Hai să discutăm direct: programează o consultanță gratuită sau sună la ', 'Let\'s talk directly: book a free consultation or call ') + PHONE + '.';
       addMsg('bot', reply); history.push({ role: 'assistant', content: reply });
     } catch (e) {
       typing(false);
-      addMsg('bot', 'Am o problemă de conexiune. Sună-ne la ' + PHONE + ' sau scrie la ' + EMAIL_TO + ' și îți răspundem rapid.');
+      addMsg('bot', t('Am o problemă de conexiune. Sună-ne la ', 'I have a connection problem. Call us on ') + PHONE + t(' sau scrie la ', ' or email ') + EMAIL_TO + t(' și îți răspundem rapid.', ' and we\'ll get back to you quickly.'));
     }
     busy = false; sendBtn.disabled = false; input.focus();
   }
@@ -170,18 +172,18 @@
 
   function showGate() {
     chips.style.display = 'none'; inBar.style.display = 'none'; ctaBar.style.display = 'none';
-    addMsg('bot', 'Salut! 👋 Sunt asistentul C Design. Înainte să începem, lasă-mi adresa ta de email ca să te putem contacta cu o ofertă personalizată.');
+    addMsg('bot', t('Salut! 👋 Sunt asistentul C Design. Înainte să începem, lasă-mi adresa ta de email ca să te putem contacta cu o ofertă personalizată.', 'Hi! 👋 I\'m the C Design assistant. Before we start, please leave your email address so we can contact you with a tailored quote.'));
     var wrap = document.createElement('div'); wrap.className = 'cda-gate';
-    wrap.innerHTML = '<input id="cda-email" type="email" placeholder="adresa ta de email" autocomplete="email" inputmode="email">'
-      + '<button id="cda-gate-go" type="button">Începe conversația</button>'
+    wrap.innerHTML = '<input id="cda-email" type="email" placeholder="' + t('adresa ta de email', 'your email address') + '" autocomplete="email" inputmode="email">'
+      + '<button id="cda-gate-go" type="button">' + t('Începe conversația', 'Start the conversation') + '</button>'
       + '<div class="cda-gate-err" id="cda-gate-err"></div>'
-      + '<div class="cda-gate-note">Folosim emailul doar ca să-ți răspundem la solicitare. Fără spam.</div>';
+      + '<div class="cda-gate-note">' + t('Folosim emailul doar ca să-ți răspundem la solicitare. Fără spam.', 'We only use your email to reply to your request. No spam.') + '</div>';
     log.appendChild(wrap); scroll();
     var ein = wrap.querySelector('#cda-email'), ego = wrap.querySelector('#cda-gate-go'), eer = wrap.querySelector('#cda-gate-err');
     setTimeout(function () { ein.focus(); }, 150);
     function submit() {
       var v = (ein.value || '').trim();
-      if (!isMail(v)) { eer.textContent = 'Te rog să introduci o adresă de email validă.'; ein.focus(); return; }
+      if (!isMail(v)) { eer.textContent = t('Te rog să introduci o adresă de email validă.', 'Please enter a valid email address.'); ein.focus(); return; }
       leadEmail = v; try { localStorage.setItem('cdaEmail', v); } catch (e) {}
       wrap.remove(); enableChat(); greet();
     }

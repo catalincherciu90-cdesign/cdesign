@@ -13,8 +13,26 @@ function sanitizeHtml(html) {
     .replace(/javascript:/gi, '');
 }
 
-function renderArticle(post) {
-  const date = new Date(post.createdAt).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
+function renderArticle(post, lang) {
+  const EN = lang === 'en';
+  const slugHere = EN ? (post.slug_en || post.slug) : post.slug;
+  const roUrl = 'https://www.c-design.ro/blog/' + post.slug;
+  const enUrl = post.slug_en ? 'https://www.c-design.ro/en/blog/' + post.slug_en : '';
+  const selfUrl = EN ? enUrl : roUrl;
+  const T = EN ? {
+    services: ['/en/services', 'Services'], about: ['/en/about', 'About us'], portfolio: ['/en/portfolio', 'Portfolio'], contact: ['/en/contact', 'Contact'], blog: ['/en/blog', 'Blog'],
+    home: '/en/', book: '/en/book-a-call', bookNow: 'Book now →', menu: 'Open menu', back: '← Back to the blog',
+    ctaH: 'Want a professional website for your business?', ctaP: 'Book a free consultation — no obligation.', ctaBtn: 'Book a free consultation →',
+    phone: '+40 753 116 155', homeLabel: 'C Design – Home page', cookies: 'Cookie settings', locale: 'en_GB'
+  } : {
+    services: ['/servicii', 'Servicii'], about: ['/despre-noi', 'Despre noi'], portfolio: ['/portofoliu', 'Portofoliu'], contact: ['/contact', 'Contact'], blog: ['/blog', 'Blog'],
+    home: '/', book: '/programare', bookNow: 'Programează acum →', menu: 'Deschide meniu', back: '← Înapoi la blog',
+    ctaH: 'Vrei un site profesional pentru afacerea ta?', ctaP: 'Programează o ședință de consultanță gratuită — fără obligații.', ctaBtn: 'Programează o consultanță gratuită →',
+    phone: '0753 116 155', homeLabel: 'C Design – Pagina principală', cookies: 'Setări cookie-uri', locale: 'ro_RO'
+  };
+  const langLink = EN ? '<a href="' + roUrl + '" hreflang="ro" lang="ro" class="nav-phone" aria-label="Versiunea în română">RO</a>'
+    : (enUrl ? '<a href="' + enUrl + '" hreflang="en" lang="en" class="nav-phone" aria-label="English version">EN</a>' : '');
+  const date = new Date(post.createdAt).toLocaleDateString(EN ? 'en-GB' : 'ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
   const plain = post.content.replace(/<[^>]*>/g, '');
   // Titlul paginii este singurul H1: titlurile H1 din conținut devin H2 (SEO)
   const bodyHtml = String(post.content || '').replace(/<h1(\s[^>]*)?>/gi, '<h2$1>').replace(/<\/h1>/gi, '</h2>');
@@ -32,27 +50,31 @@ function renderArticle(post) {
     dateModified: post.updatedAt || post.createdAt,
     author: { '@type': 'Organization', name: 'C Design', url: 'https://www.c-design.ro' },
     publisher: { '@type': 'Organization', name: 'C Design', url: 'https://www.c-design.ro' },
-    mainEntityOfPage: { '@type': 'WebPage', '@id': `https://www.c-design.ro/blog/${post.slug}` },
+    inLanguage: EN ? 'en' : 'ro',
+    mainEntityOfPage: { '@type': 'WebPage', '@id': selfUrl },
   });
   const yr = new Date().getFullYear();
   return `<!DOCTYPE html>
-<html lang="ro">
+<html lang="${EN ? 'en' : 'ro'}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${escHtml(post.title)} – C Design</title>
 <meta name="description" content="${desc}">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://www.c-design.ro/blog/${post.slug}">
+<link rel="canonical" href="${selfUrl}">${enUrl ? `
+<link rel="alternate" hreflang="ro" href="${roUrl}">
+<link rel="alternate" hreflang="en" href="${enUrl}">
+<link rel="alternate" hreflang="x-default" href="${roUrl}">` : ''}
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://www.c-design.ro/blog/${post.slug}">
+<meta property="og:url" content="${selfUrl}">
 <meta property="og:title" content="${escHtml(post.title)}">
 <meta property="og:description" content="${desc}">
 <meta property="og:image" content="https://www.c-design.ro/cover.jpg">
-<meta property="og:locale" content="ro_RO">
+<meta property="og:locale" content="${T.locale}">
 <meta property="og:site_name" content="C Design">
 <meta property="article:published_time" content="${post.createdAt}">
 <meta name="twitter:card" content="summary_large_image">
@@ -144,43 +166,44 @@ fbq('init','893560673744618');fbq('track','PageView');
 <nav>
   <div class="wide">
     <div class="nav-inner">
-      <a href="/" class="logo"><img src="/logo-c-design.png" alt="C Design" style="height:42px;width:auto;display:block;"></a>
+      <a href="${T.home}" class="logo"><img src="/logo-c-design-light.webp" alt="C Design" style="height:42px;width:auto;display:block;"></a>
       <ul class="nav-links" role="list">
-        <li><a href="/servicii">Servicii</a></li>
-        <li><a href="/despre-noi">Despre noi</a></li>
-        <li><a href="/#portofoliu">Portofoliu</a></li>
-        <li><a href="/contact">Contact</a></li>
-        <li><a href="/blog">Blog</a></li>
+        <li><a href="${T.services[0]}">${T.services[1]}</a></li>
+        <li><a href="${T.about[0]}">${T.about[1]}</a></li>
+        <li><a href="${T.portfolio[0]}">${T.portfolio[1]}</a></li>
+        <li><a href="${T.contact[0]}">${T.contact[1]}</a></li>
+        <li><a href="${T.blog[0]}">${T.blog[1]}</a></li>
       </ul>
-      <a href="tel:+40753116155" class="nav-phone">0753 116 155</a>
-      <a href="/programare" class="btn-nav">Programează acum →</a>
-      <button class="hamburger" id="hamburger" aria-label="Deschide meniu" aria-expanded="false"><span></span><span></span><span></span></button>
+      ${langLink}
+      <a href="tel:+40753116155" class="nav-phone">${T.phone}</a>
+      <a href="${T.book}" class="btn-nav">${T.bookNow}</a>
+      <button class="hamburger" id="hamburger" aria-label="${T.menu}" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
   </div>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
-  <a href="/servicii">Servicii</a><a href="/despre-noi">Despre noi</a><a href="/#portofoliu">Portofoliu</a><a href="/contact">Contact</a><a href="/blog">Blog</a>
-  <a href="tel:+40753116155">0753 116 155</a><a href="/programare" class="btn-nav">Programează acum →</a>
+  <a href="${T.services[0]}">${T.services[1]}</a><a href="${T.about[0]}">${T.about[1]}</a><a href="${T.portfolio[0]}">${T.portfolio[1]}</a><a href="${T.contact[0]}">${T.contact[1]}</a><a href="${T.blog[0]}">${T.blog[1]}</a>${langLink}
+  <a href="tel:+40753116155">${T.phone}</a><a href="${T.book}" class="btn-nav">${T.bookNow}</a>
 </div>
 <main>
 <article>
 <div class="container">
-  <a href="/blog" class="art-back">← Înapoi la blog</a>
+  <a href="${T.blog[0]}" class="art-back">${T.back}</a>
   <span class="art-tag">Blog</span>
   <h1 class="art-title">${escHtml(post.title)}</h1>
   <div class="art-meta">${date}</div>
   <div class="art-content">${sanitizeHtml(bodyHtml)}</div>
   <div class="cta-box">
-    <h3>Vrei un site profesional pentru afacerea ta?</h3>
-    <p>Programează o ședință de consultanță gratuită — fără obligații.</p>
-    <a href="/programare" class="btn">Programează o consultanță gratuită →</a>
+    <h3>${T.ctaH}</h3>
+    <p>${T.ctaP}</p>
+    <a href="${T.book}" class="btn">${T.ctaBtn}</a>
   </div>
 </div>
 </article>
 </main>
 <footer>
-  <a href="/" aria-label="C Design – Pagina principală"><img src="/logo-c-design.png" alt="C Design" style="height:32px;width:auto;display:block;margin:0 auto 12px;"></a>
-  <p>© ${yr} C Design · <a href="tel:+40753116155">0753 116 155</a> · <a href="mailto:office@c-design.ro">office@c-design.ro</a> · <a href="/blog">Blog</a> · <a href="#" onclick="window.openCookieConsentBanner();return false;" style="cursor:pointer;">Setări cookie-uri</a></p>
+  <a href="${T.home}" aria-label="${T.homeLabel}"><img src="/logo-c-design-light.webp" alt="C Design" style="height:32px;width:auto;display:block;margin:0 auto 12px;"></a>
+  <p>© ${yr} C Design · <a href="tel:+40753116155">${T.phone}</a> · <a href="mailto:office@c-design.ro">office@c-design.ro</a> · <a href="${T.blog[0]}">Blog</a> · <a href="#" onclick="window.openCookieConsentBanner();return false;" style="cursor:pointer;">${T.cookies}</a></p>
 </footer>
 <script>
 const ham=document.getElementById('hamburger'),mob=document.getElementById('mobileMenu');
@@ -1027,7 +1050,38 @@ const PROJECT_CASE_STUDIES = {
   }
 };
 
-function renderCaseStudy(id, cs) {
+// ── Date pentru versiunea în engleză (fișiere statice en/data/*.json) ──
+const EN_DATA_CACHE = {};
+async function loadEnData(env, request, name) {
+  const hit = EN_DATA_CACHE[name];
+  if (hit && Date.now() - hit.t < 300000) return hit.v;
+  try {
+    const u = new URL(request.url); u.pathname = '/en/data/' + name + '.json'; u.search = '';
+    const r = await env.ASSETS.fetch(new Request(u.toString()));
+    if (!r.ok) return null;
+    const v = await r.json();
+    EN_DATA_CACHE[name] = { t: Date.now(), v };
+    return v;
+  } catch { return null; }
+}
+
+function renderCaseStudy(id, cs, lang) {
+  const EN = lang === 'en';
+  const T = EN ? {
+    home: 'Home', portfolio: 'Portfolio', portfolioSuffix: ' | C Design portfolio',
+    descSuffix: '. C Design case study: what we built, how it looks and what the website can do.',
+    back: '← Portfolio', quote: 'Get a quote', live: 'See the live website ↗', similar: 'I want a similar website',
+    about: 'About the <b>project</b>', features: 'What the <b>website</b> can do', ctaH: 'Want a website <b>like this</b>?',
+    ctaP: 'We build you a clear, fast website designed to bring in customers — at a fixed price.', ctaBtn: 'Get a free quote',
+    homeUrl: '/en/', quoteUrl: '/en/request-a-quote', listUrl: '/en/portfolio', base: '/en/portfolio/', otherLang: 'RO', otherBase: '/portofoliu/'
+  } : {
+    home: 'Acasă', portfolio: 'Portofoliu', portfolioSuffix: ' | Portofoliu C Design',
+    descSuffix: '. Studiu de caz C Design: ce am construit, cum arată și ce funcții are site-ul.',
+    back: '← Portofoliu', quote: 'Cere ofertă', live: 'Vezi site-ul online ↗', similar: 'Vreau un site similar',
+    about: 'Despre <b>proiect</b>', features: 'Ce poate face <b>site-ul</b>', ctaH: 'Vrei un site <b>ca acesta</b>?',
+    ctaP: 'Îți construim un site clar, rapid și gândit să aducă clienți — la preț fix.', ctaBtn: 'Cere o ofertă gratuită',
+    homeUrl: '/', quoteUrl: '/cere-oferta', listUrl: '/portofoliu', base: '/portofoliu/', otherLang: 'EN', otherBase: '/en/portfolio/'
+  };
   const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const metaRows = cs.meta.map(m => `<div class="cs-meta-item"><span class="cs-meta-k">${esc(m[0])}</span><span class="cs-meta-v">${esc(m[1])}</span></div>`).join('');
   const about = cs.about.map(p => `<p>${esc(p)}</p>`).join('');
@@ -1038,27 +1092,32 @@ function renderCaseStudy(id, cs) {
     </div>`).join('');
   const features = cs.features.map(f => `<li>${esc(f)}</li>`).join('');
   // SEO: titlu cu tipul proiectului, descriere completă și date structurate
-  const pageUrl = 'https://www.c-design.ro/portofoliu/' + encodeURIComponent(id);
-  const pageTitle = cs.title + (cs.tag ? ' — ' + cs.tag : '') + ' | Portofoliu C Design';
-  const fullDesc = cs.subtitle + '. Studiu de caz C Design: ce am construit, cum arată și ce funcții are site-ul.';
+  const pageUrl = 'https://www.c-design.ro' + T.base + encodeURIComponent(id);
+  const roUrl = 'https://www.c-design.ro/portofoliu/' + encodeURIComponent(id);
+  const enUrl = 'https://www.c-design.ro/en/portfolio/' + encodeURIComponent(id);
+  const pageTitle = cs.title + (cs.tag ? ' — ' + cs.tag : '') + T.portfolioSuffix;
+  const fullDesc = cs.subtitle + T.descSuffix;
   const pageDesc = fullDesc.length > 160 ? fullDesc.slice(0, 157).replace(/\s+\S*$/, '') + '…' : fullDesc;
   const ldJson = JSON.stringify({
     '@context': 'https://schema.org',
     '@graph': [
       { '@type': 'BreadcrumbList', itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Acasă', item: 'https://www.c-design.ro/' },
-        { '@type': 'ListItem', position: 2, name: 'Portofoliu', item: 'https://www.c-design.ro/portofoliu' },
+        { '@type': 'ListItem', position: 1, name: T.home, item: 'https://www.c-design.ro' + T.homeUrl },
+        { '@type': 'ListItem', position: 2, name: T.portfolio, item: 'https://www.c-design.ro' + T.listUrl },
         { '@type': 'ListItem', position: 3, name: cs.title, item: pageUrl },
       ] },
       { '@type': 'CreativeWork', name: cs.title, headline: cs.title + ' — ' + cs.subtitle, description: pageDesc, url: pageUrl,
-        image: 'https://www.c-design.ro' + cs.cover, inLanguage: 'ro', genre: cs.tag || 'Web design',
+        image: 'https://www.c-design.ro' + cs.cover, inLanguage: EN ? 'en' : 'ro', genre: cs.tag || 'Web design',
         creator: { '@type': 'Organization', name: 'C Design', url: 'https://www.c-design.ro' } },
     ],
   }).replace(/</g, '\\u003c');
-  return `<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  return `<!DOCTYPE html><html lang="${EN ? 'en' : 'ro'}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(pageTitle)}</title>
 <meta name="description" content="${esc(pageDesc)}">
 <link rel="canonical" href="${pageUrl}">
+<link rel="alternate" hreflang="ro" href="${roUrl}">
+<link rel="alternate" hreflang="en" href="${enUrl}">
+<link rel="alternate" hreflang="x-default" href="${roUrl}">
 <meta name="robots" content="index, follow">
 <meta property="og:title" content="${esc(pageTitle)}">
 <meta property="og:description" content="${esc(pageDesc)}">
@@ -1123,29 +1182,29 @@ h1,h2,h3{font-family:'Poppins',sans-serif;color:var(--ink);letter-spacing:-.02em
 @media(max-width:780px){.cs-row{grid-template-columns:1fr;gap:20px}.cs-row.rev .cs-row-img{order:0}.feat ul{grid-template-columns:1fr}.topbar nav .btn-o{display:none}}
 </style></head><body>
 <header class="topbar"><div class="wrap">
-  <a href="/" class="logo">C <b>Design</b></a>
-  <nav><a href="/#proiecte" class="back">← Portofoliu</a><a href="/cere-oferta" class="btn btn-p">Cere ofertă</a></nav>
+  <a href="${T.homeUrl}" class="logo">C <b>Design</b></a>
+  <nav><a href="${T.listUrl}" class="back">${T.back}</a><a href="${T.otherBase}${encodeURIComponent(id)}" class="back" hreflang="${EN ? 'ro' : 'en'}" lang="${EN ? 'ro' : 'en'}" aria-label="${EN ? 'Versiunea în română' : 'English version'}">${T.otherLang}</a><a href="${T.quoteUrl}" class="btn btn-p">${T.quote}</a></nav>
 </div></header>
 <section class="hero"><div class="wrap">
   <span class="tag">${esc(cs.tag)}</span>
   <h1>${esc(cs.title)}</h1>
   <p class="lead">${esc(cs.subtitle)}.</p>
   <div class="hero-actions">
-    ${cs.link ? `<a href="${esc(cs.link)}" target="_blank" rel="noopener" class="btn btn-p">Vezi site-ul online ↗</a>` : ''}
-    <a href="/cere-oferta" class="btn ${cs.link ? 'btn-o' : 'btn-p'}">Vreau un site similar</a>
+    ${cs.link ? `<a href="${esc(cs.link)}" target="_blank" rel="noopener" class="btn btn-p">${T.live}</a>` : ''}
+    <a href="${T.quoteUrl}" class="btn ${cs.link ? 'btn-o' : 'btn-p'}">${T.similar}</a>
   </div>
   <div class="cs-meta">${metaRows}</div>
 </div></section>
 <div class="wrap"><div class="cover"><img src="${esc(cs.cover)}" alt="${esc(cs.title)}"></div></div>
-<section class="about"><div class="wrap"><h2>Despre <b>proiect</b></h2>${about}</div></section>
+<section class="about"><div class="wrap"><h2>${T.about}</h2>${about}</div></section>
 <section class="sections"><div class="wrap">${sections}</div></section>
-<section class="feat"><div class="wrap"><h2>Ce poate face <b>site-ul</b></h2><ul>${features}</ul></div></section>
+<section class="feat"><div class="wrap"><h2>${T.features}</h2><ul>${features}</ul></div></section>
 <section class="cta">
-  <h2>Vrei un site <b>ca acesta</b>?</h2>
-  <p>Îți construim un site clar, rapid și gândit să aducă clienți — la preț fix.</p>
-  <a href="/cere-oferta" class="btn btn-p">Cere o ofertă gratuită</a>
+  <h2>${T.ctaH}</h2>
+  <p>${T.ctaP}</p>
+  <a href="${T.quoteUrl}" class="btn btn-p">${T.ctaBtn}</a>
 </section>
-<footer class="foot">© C Design · <a href="/" style="color:var(--blue)">c-design.ro</a>${cs.link ? ` · <a href="${esc(cs.link)}" target="_blank" rel="noopener" style="color:var(--blue)">${esc(cs.link.replace(/^https?:\/\//, ''))}</a>` : ''}</footer>
+<footer class="foot">© C Design · <a href="${T.homeUrl}" style="color:var(--blue)">c-design.ro</a>${cs.link ? ` · <a href="${esc(cs.link)}" target="_blank" rel="noopener" style="color:var(--blue)">${esc(cs.link.replace(/^https?:\/\//, ''))}</a>` : ''}</footer>
 <script src="/company-info.js" defer></script>
 </body></html>`;
 }
@@ -1818,6 +1877,30 @@ export default {
       return Response.redirect('https://www.c-design.ro' + clean + url.search, 301);
     }
 
+    // ── VERSIUNEA ÎN ENGLEZĂ: pagini generate (studii de caz, articole) ──
+    if (/^\/en\/portfolio\/[^/.]+\/?$/.test(path) && (request.method === 'GET' || request.method === 'HEAD')) {
+      const slug = path.replace('/en/portfolio/', '').replace(/\/$/, '');
+      if (PROJECT_CASE_STUDIES[slug]) {
+        const enAll = await loadEnData(env, request, 'case-studies');
+        const cs = (enAll && enAll[slug]) ? { ...PROJECT_CASE_STUDIES[slug], ...enAll[slug] } : PROJECT_CASE_STUDIES[slug];
+        return new Response(renderCaseStudy(slug, cs, 'en'), {
+          headers: { ...SEC_HEADERS, 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'public,max-age=600' }
+        });
+      }
+    }
+    if (/^\/en\/blog\/[^/.]+\/?$/.test(path) && request.method === 'GET') {
+      const slug = path.replace('/en/blog/', '').replace(/\/$/, '');
+      const posts = await loadEnData(env, request, 'blog-posts');
+      const post = Array.isArray(posts) ? posts.find(p => p.slug_en === slug || p.slug === slug) : null;
+      if (post) {
+        if (post.slug_en && slug !== post.slug_en) return Response.redirect('https://www.c-design.ro/en/blog/' + post.slug_en, 301);
+        return new Response(renderArticle(post, 'en'), {
+          headers: { 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'public,max-age=300' },
+        });
+      }
+      return blogNotFound();
+    }
+
     // ── PORTOFOLIU (galerie cu toate proiectele + filtre) ─────
     if ((path === '/portofoliu' || path === '/portofoliu/') && (request.method === 'GET' || request.method === 'HEAD')) {
       const assetUrl = new URL(request.url);
@@ -1832,7 +1915,7 @@ export default {
       const slug = path.replace('/portofoliu/', '').replace(/\/$/, '');
       const cs = PROJECT_CASE_STUDIES[slug];
       if (cs) {
-        return new Response(renderCaseStudy(slug, cs), {
+        return new Response(renderCaseStudy(slug, cs, 'ro'), {
           headers: { ...SEC_HEADERS, 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'public,max-age=600' }
         });
       }
@@ -1843,7 +1926,7 @@ export default {
     // din KV. Înlocuiește sitemap.xml static (nu mai necesită întreținere).
     if (path === '/sitemap.xml' && request.method === 'GET') {
       const BASE = 'https://www.c-design.ro';
-      const SITE_LASTMOD = '2026-07-08';
+      const SITE_LASTMOD = '2026-11-19';
       const staticPages = [
         { loc: '/',                           cf: 'weekly',  pr: '1.0' },
         { loc: '/servicii',                   cf: 'monthly', pr: '0.9' },
@@ -1892,7 +1975,18 @@ export default {
       ];
       const urlXml = (loc, lastmod, cf, pr) =>
         `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${cf}</changefreq>\n    <priority>${pr}</priority>\n  </url>`;
-      const parts = staticPages.map(p => urlXml(BASE + p.loc, SITE_LASTMOD, p.cf, p.pr));
+      // Versiunea în engleză (/en/…): aceleași pagini, cu adresele lor
+      const EN_OF = { '/': '/en/', '/servicii': '/en/services', '/despre-noi': '/en/about', '/contact': '/en/contact', '/portofoliu': '/en/portfolio',
+        '/parteneri': '/en/partners', '/parteneri/hosting': '/en/partners/hosting', '/parteneri/print': '/en/partners/print', '/programare': '/en/book-a-call',
+        '/pachet-startup': '/en/startup-package', '/abonament-lunar': '/en/monthly-plan', '/blog': '/en/blog', '/demos': '/en/demos', '/cere-oferta': '/en/request-a-quote',
+        '/promo': '/en/promo', '/referral': '/en/referral', '/giveaway': '/en/giveaway', '/web-design-bucuresti': '/en/web-design-bucharest',
+        '/web-design-auto': '/en/web-design-automotive', '/web-design-restaurante': '/en/web-design-restaurants', '/web-design-afaceri-mici': '/en/web-design-small-business',
+        '/politica-confidentialitate': '/en/privacy-policy' };
+      const enLoc = (loc) => EN_OF[loc] || (loc.startsWith('/servicii/') ? '/en/services/' + loc.slice(10)
+        : loc.startsWith('/portofoliu/') ? '/en/portfolio/' + loc.slice(12)
+        : /^\/web-design-[a-z]+$/.test(loc) ? '/en' + loc : null);
+      const enPages = staticPages.map(p => ({ ...p, loc: enLoc(p.loc) })).filter(p => p.loc);
+      const parts = staticPages.concat(enPages).map(p => urlXml(BASE + p.loc, SITE_LASTMOD, p.cf, p.pr));
       // Notă: paginile demo individuale (/demos/*.html) sunt intenționat
       // EXCLUSE din sitemap și marcate noindex — sunt site-uri exemplu, nu
       // conținut de indexat. Galeria /demos rămâne indexată.
@@ -1905,6 +1999,12 @@ export default {
             const d = String(p.updatedAt || p.createdAt || '').slice(0, 10) || SITE_LASTMOD;
             parts.push(urlXml(BASE + '/blog/' + encodeURIComponent(p.slug), d, 'yearly', '0.6'));
           }
+        }
+        const enPosts = await loadEnData(env, request, 'blog-posts');
+        if (Array.isArray(enPosts)) for (const p of enPosts) {
+          if (!p.slug_en) continue;
+          const d = String(p.updatedAt || p.createdAt || '').slice(0, 10) || SITE_LASTMOD;
+          parts.push(urlXml(BASE + '/en/blog/' + encodeURIComponent(p.slug_en), d, 'yearly', '0.5'));
         }
       } catch {}
       const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${parts.join('\n')}\n</urlset>`;
@@ -1975,6 +2075,9 @@ export default {
         const posts = raw ? JSON.parse(raw) : [];
         const post = posts.find(p => p.slug === slug && p.published);
         if (!post) return blogNotFound();
+        const enPosts = await loadEnData(env, request, 'blog-posts');
+        const enMatch = Array.isArray(enPosts) ? enPosts.find(p => p.slug === post.slug) : null;
+        if (enMatch && enMatch.slug_en) post.slug_en = enMatch.slug_en;
         return new Response(renderArticle(post), {
           headers: { 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'public,max-age=300' },
         });
@@ -2202,7 +2305,17 @@ export default {
         // Fallback la proiectele implicite când nu există niciunul salvat
         // (KV lipsă sau listă goală) — ca portofoliul public să nu fie gol.
         if (!Array.isArray(projects) || projects.length === 0) projects = DEFAULT_PROJECTS;
-        return json(projects.sort((a, b) => (a.order || 0) - (b.order || 0)));
+        projects = projects.sort((a, b) => (a.order || 0) - (b.order || 0));
+        // ?lang=en: textele în engleză din en/data/projects.json (unde există) și linkuri spre /en/portfolio
+        if (url.searchParams.get('lang') === 'en') {
+          const tr = (await loadEnData(env, request, 'projects')) || {};
+          projects = projects.map(p => {
+            const t = tr[p.id] || {};
+            const detail = p.detail && /^\/portofoliu\//.test(p.detail) ? p.detail.replace(/^\/portofoliu\//, '/en/portfolio/') : p.detail;
+            return { ...p, tag: t.tag || p.tag, title: t.title || p.title, description: t.description || p.description, detail };
+          });
+        }
+        return json(projects);
       } catch { return json(DEFAULT_PROJECTS); }
     }
 
@@ -3254,10 +3367,12 @@ Cerințe titluri:
     if (path === '/api/assistant' && request.method === 'POST') {
       const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
       const ok = await checkRateLimit(env, 'assistant_' + ip, 40, 3600);
-      if (!ok) return json({ reply: 'Ai trimis multe mesaje într-un timp scurt. Hai să discutăm direct: sună la 0753 116 155 sau scrie la office@c-design.ro. 🙂' }, 200, request);
+      const langEN = /^en/i.test(new URL(request.url).searchParams.get('lang') || '') || /\/en(\/|$)/.test(request.headers.get('Referer') || '');
+      if (!ok) return json({ reply: langEN ? 'You have sent a lot of messages in a short time. Let\'s talk directly: call +40 753 116 155 or email office@c-design.ro. 🙂' : 'Ai trimis multe mesaje într-un timp scurt. Hai să discutăm direct: sună la 0753 116 155 sau scrie la office@c-design.ro. 🙂' }, 200, request);
       const FALLBACK = 'Cel mai simplu e să discutăm direct — programează o consultanță gratuită pe pagina Programare, sună la 0753 116 155 sau scrie la office@c-design.ro și îți facem o ofertă cu preț fix, fără costuri ascunse.';
       if (!env.AI) return json({ reply: FALLBACK }, 200, request);
       const body0 = await request.json().catch(() => ({}));
+      const EN_CHAT = langEN || (body0 && body0.lang === 'en');
       const validEmail = (e) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e);
       const convId = String((body0 && body0.id) || '').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 64) || (crypto.randomUUID ? crypto.randomUUID() : 'c' + Date.now() + Math.random().toString(36).slice(2));
       const email = String((body0 && body0.email) || '').trim().slice(0, 160);
@@ -3330,17 +3445,22 @@ Cerințe titluri:
           + 'NU inventa prețuri exacte (singura cifră permisă: „de la 300 €" pentru Pachetul Startup) — explică faptul că prețul e fix și se stabilește printr-o consultanță gratuită, în funcție de nevoi. '
           + 'Când e potrivit, îndrumă spre acțiune: „programează o consultanță gratuită" (pagina de Programare), sună la 0753 116 155 sau scrie la office@c-design.ro. '
           + 'Dacă întrebarea nu ține de web design sau de serviciile noastre, răspunzi scurt și politicos și revii la cum putem ajuta cu site-ul. Nu promite lucruri pe care agenția nu le oferă.';
-        const messages = [{ role: 'system', content: system }];
+        const systemFinal = EN_CHAT
+          ? system.replace('răspunzi MEREU în limba română', 'răspunzi MEREU în limba engleză (British English), chiar dacă instrucțiunile sunt în română')
+              .replace(/0753 116 155/g, '+40 753 116 155').replace('pagina de Programare', 'pagina Book a call')
+          : system;
+        const messages = [{ role: 'system', content: systemFinal }];
         for (const m of userMsgs) {
           if (m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string') {
             messages.push({ role: m.role, content: m.content.slice(0, 1500) });
           }
         }
         if (messages.length === 1) {
-          return json({ reply: 'Salut! 👋 Sunt asistentul C Design. Cu ce te pot ajuta — un site nou, un redesign sau o ofertă pentru afacerea ta?', id: convId }, 200, request);
+          return json({ reply: EN_CHAT ? 'Hi! 👋 I\'m the C Design assistant. How can I help — a new website, a redesign or a quote for your business?' : 'Salut! 👋 Sunt asistentul C Design. Cu ce te pot ajuta — un site nou, un redesign sau o ofertă pentru afacerea ta?', id: convId }, 200, request);
         }
         const out = await env.AI.run('@cf/meta/llama-3.3-70b-instruct-fp8-fast', { messages, max_tokens: 400 });
-        const reply = (String((out && (out.response || out.result)) || '').trim()) || FALLBACK;
+        const FALLBACK_EN = 'The easiest way is to talk directly — book a free consultation on the Book a call page, call +40 753 116 155 or email office@c-design.ro and we\'ll send you a fixed-price quote with no hidden costs.';
+        const reply = (String((out && (out.response || out.result)) || '').trim()) || (EN_CHAT ? FALLBACK_EN : FALLBACK);
         await logConv(lastUserMsg ? lastUserMsg.content : '', reply);
         return json({ reply, id: convId }, 200, request);
       } catch (e) {

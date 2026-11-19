@@ -1,0 +1,549 @@
+{
+ "expotigla": {
+  "title": "ExpoTigla",
+  "subtitle": "Online shop for complete roofing systems",
+  "tag": "Online shop",
+  "link": "https://expotigla.ro",
+  "cover": "/portofoliu/expotigla/01-hero-pagina-principala.jpg",
+  "meta": [
+   [
+    "Client",
+    "ExpoTigla"
+   ],
+   [
+    "Industry",
+    "Roofing materials"
+   ],
+   [
+    "Project type",
+    "Online shop design & development"
+   ]
+  ],
+  "about": [
+   "ExpoTigla sells roofing materials for homes and industrial buildings, plus consultancy, material calculations and installation. The site had to show that the company doesn't just sell metal sheets, it sells the whole system, and get visitors to a quote or an order as quickly as possible.",
+   "We built a restrained visual identity in gold and anthracite grey, with large photos of roofs and a structure that's easy to follow: from categories to products, then on to the quote request."
+  ],
+  "sections": [
+   [
+    "/portofoliu/expotigla/01-hero-pagina-principala.jpg",
+    "Home page",
+    "The first screen says straight away what the company does: complete roofing systems. A large image, a short message and a single main button. Below the hero, a strip with four selling points: technical advice, material calculations, guaranteed delivery and products with a warranty."
+   ],
+   [
+    "/portofoliu/expotigla/02-categorii-produse.jpg",
+    "Product categories",
+    "The range is split into visual categories (metal roof tiles, standing seam sheets, sandwich panels, rainwater systems, flashings, ventilation, membranes, screws and more). Each card has a photo, a title and a one-line description, so visitors can quickly find the right category."
+   ],
+   [
+    "/portofoliu/expotigla/03-produse-cele-mai-vandute.jpg",
+    "Best sellers",
+    "A carousel of popular products: a variant label, category, price shown as a range (‘from… lei / pc’) and two clear actions: ‘Details’ and ‘Add to cart’."
+   ],
+   [
+    "/portofoliu/expotigla/04-montaj-si-consultanta.jpg",
+    "Installation and advice",
+    "A section dedicated to services: free consultation, material calculations, installation on request and finishing recommendations. Two buttons lead to the services page and to the configurator."
+   ],
+   [
+    "/portofoliu/expotigla/05-sistem-complet-home.jpg",
+    "Complete system",
+    "An illustration of the roof ‘taken apart’ into its components explains the idea of a complete system and links to the configurator."
+   ],
+   [
+    "/portofoliu/expotigla/06-pagina-sistem-complet.jpg",
+    "Complete system page",
+    "A separate page for the configurator, with a layer-by-layer diagram of the roof and the message ‘1 project, 1 quote, 1 consultant’. Below the hero come the partner brands and the benefits of an all-in-one quote."
+   ],
+   [
+    "/portofoliu/expotigla/07-ce-include-sistemul.jpg",
+    "What a complete system includes",
+    "A grid of 8 numbered components (roof covering, flashings, rainwater system, membranes, ventilation, fixings, delivery, installation), each with the option to include it in the quote."
+   ],
+   [
+    "/portofoliu/expotigla/08-garantii-si-recenzii.jpg",
+    "Guarantees and reviews",
+    "Four cards with the company's guarantees (certified quality, delivery in 24–72h, warranty of up to 30 years, technical support), followed by a carousel of Google reviews."
+   ],
+   [
+    "/portofoliu/expotigla/09-cta-oferta-si-footer.jpg",
+    "Quote request and footer",
+    "A gold strip with a clear call to action: send your roof dimensions and get a free quote within 24 hours. The footer groups the products, company pages, contact details, areas served and the ANPC/SOL links."
+   ]
+  ],
+  "features": [
+   "Product catalogue with variants and prices including VAT",
+   "Shopping cart and customer account",
+   "‘Complete system’ configurator for quote requests",
+   "Free quote request form",
+   "On-site chat for quick questions",
+   "Catalogue search",
+   "Guides section"
+  ]
+ },
+ "cosmin-tatulescu": {
+  "title": "Cosmin Tătulescu",
+  "subtitle": "Business website with bookings for Christmas photo sessions",
+  "tag": "Website with bookings",
+  "link": "https://cosmintatulescu.ro",
+  "cover": "/portofoliu/cosmin-tatulescu/01-hero.jpg",
+  "meta": [
+   [
+    "Client",
+    "Cosmin Tătulescu, family photographer"
+   ],
+   [
+    "Location",
+    "Sânpetru, Brașov"
+   ],
+   [
+    "Project type",
+    "Business website with bookings"
+   ]
+  ],
+  "about": [
+   "Christmas sessions are a seasonal service, with a short booking window and lots of repeat questions from parents. The site had to answer them before they were asked: what you get, how much it costs, when there's availability and where the studio is.",
+   "We went for an airy design, with a white and cream background, elegant serif headings and subtle touches of Christmas red. Everything sits on one long page with a fixed menu, so visitors can jump straight to prices, the calendar or the gallery. The site also has an English version."
+  ],
+  "sections": [
+   [
+    "/portofoliu/cosmin-tatulescu/01-hero.jpg",
+    "Hero",
+    "A real photo of the studio set, alongside the heading ‘Christmas photo sessions 2026 in Brașov’ and a warm text about the atmosphere of the session. The main button goes straight to the available days."
+   ],
+   [
+    "/portofoliu/cosmin-tatulescu/02-voi-asa-cum-sunteti.jpg",
+    "Main message",
+    "A short section that sets the tone: no smiles on command, just the family as it really is."
+   ],
+   [
+    "/portofoliu/cosmin-tatulescu/03-ce-include.jpg",
+    "What's included",
+    "Four columns with big, easy-to-read numbers: 45 minutes, 35–50 photos, 3 sets and delivery in about a week, in a private online gallery. Underneath, the offer of prints and canvases, presented as a gift for relatives."
+   ],
+   [
+    "/portofoliu/cosmin-tatulescu/04-preturi-pe-perioade.jpg",
+    "Prices by period",
+    "The price goes up the closer you get to Christmas (450, 500 and 550 lei), which encourages early bookings. Each period has a short label, some of them with a touch of humour."
+   ],
+   [
+    "/portofoliu/cosmin-tatulescu/05-calendar-disponibilitate.jpg",
+    "Availability calendar",
+    "A calendar split into the price periods, with the number of free slots for each day. Two clear options: book a session or give a session as a gift."
+   ],
+   [
+    "/portofoliu/cosmin-tatulescu/06-galerie.jpg",
+    "Gallery",
+    "A selection of photos from previous sessions, with a link to the full gallery."
+   ],
+   [
+    "/portofoliu/cosmin-tatulescu/07-locatie.jpg",
+    "Location",
+    "The address, a landmark, opening hours and nearby towns and villages. The Google map only loads on request, and visitors are told that this means Google receives their IP address."
+   ],
+   [
+    "/portofoliu/cosmin-tatulescu/08-intrebari-frecvente.jpg",
+    "Frequently asked questions",
+    "Nine questions parents often ask (clothing, payment, cancellation, photo delivery, gift sessions), grouped in a compact accordion."
+   ],
+   [
+    "/portofoliu/cosmin-tatulescu/09-contact-si-final.jpg",
+    "Contact and closing",
+    "A simple form with consent to data processing, plus phone, email and social media. The page ends with a holiday message and one more button to the available days."
+   ]
+  ],
+  "features": [
+   "Booking calendar with free slots per day",
+   "Different prices depending on the period",
+   "Gift session option",
+   "Romanian and English versions",
+   "Google map loaded only with the visitor's consent",
+   "FAQ in an accordion",
+   "Contact form with GDPR consent"
+  ]
+ },
+ "traditum": {
+  "title": "Traditum By Victoria",
+  "subtitle": "Business website for an artisan patisserie, with quote requests",
+  "tag": "Business website",
+  "link": "https://traditumbyvictoria.ro",
+  "cover": "/portofoliu/traditum/01-hero.jpg",
+  "meta": [
+   [
+    "Client",
+    "Traditum By Victoria"
+   ],
+   [
+    "Area",
+    "Bucharest and Ilfov"
+   ],
+   [
+    "Project type",
+    "Business website with quote requests"
+   ]
+  ],
+  "about": [
+   "Traditum By Victoria mainly works to order: personalised cakes, dessert tables for weddings and christenings, gift boxes. Most products don't have a fixed price, so the site isn't an online shop. Its job is to build trust and lead visitors to a quote request.",
+   "We went for a warm palette of cream and dark brown, with gold accents, and serif headings that match the idea of a ‘taste of yesteryear’. Product photos take up most of the page, and the ‘Request a quote’ button is always visible in the menu."
+  ],
+  "sections": [
+   [
+    "/portofoliu/traditum/01-hero.jpg",
+    "Hero",
+    "The main message, ‘Artisan desserts with the taste of yesteryear’, with a short description of what's on offer and two actions: see the products or request a quote."
+   ],
+   [
+    "/portofoliu/traditum/02-categorii-produse.jpg",
+    "Product categories",
+    "Five categories (cakes, candy bar, gift boxes, tags, mărțișor charms), each with a photo, a short description and either a price or the label ‘Price on request’, for products priced according to the event."
+   ],
+   [
+    "/portofoliu/traditum/03-despre-noi-si-cifre.jpg",
+    "About us and numbers",
+    "A short section about the bakehouse and the patisserie's philosophy, with four benefits (quality, personalised cakes, online orders, home delivery). Below it, a strip of numbers: 10+ years of experience, 80+ recipes, 120+ varieties, 2500+ customers."
+   ],
+   [
+    "/portofoliu/traditum/04-recenzii.jpg",
+    "Reviews",
+    "Four short customer reviews, with a link to the page with all the reviews."
+   ],
+   [
+    "/portofoliu/traditum/05-cta-si-footer.jpg",
+    "Final call to action and footer",
+    "A dark block that invites visitors to ask for a personalised quote for their event. The footer has the address, phone number, email, main links and legal pages."
+   ],
+   [
+    "/portofoliu/traditum/06-pagina-galerie.jpg",
+    "Gallery page",
+    "A grid of photos of dessert tables and desserts made for customers' events. It shows visitors real results, not stock photos."
+   ],
+   [
+    "/portofoliu/traditum/07-pagina-contact-oferta.jpg",
+    "Contact and quote page",
+    "A quote request form with fields for the type of event and details (date, number of servings, theme), alongside the contact details, opening hours by day and a button straight to WhatsApp."
+   ]
+  ],
+  "features": [
+   "Catalogue by category, with prices or ‘price on request’",
+   "Quote request form tailored to events",
+   "Quick WhatsApp contact button",
+   "Photo gallery of real work",
+   "Reviews page",
+   "Opening hours shown by day",
+   "Frequently asked questions on the contact page"
+  ]
+ },
+ "mrdtf": {
+  "title": "Mr.DTF",
+  "subtitle": "Business website with an order form for DTF printing by the linear metre",
+  "tag": "Business website",
+  "link": "https://mrdtf.ro",
+  "cover": "/portofoliu/mrdtf/01-hero-si-preturi.jpg",
+  "meta": [
+   [
+    "Client",
+    "Mr.DTF (Unilevel Network SRL)"
+   ],
+   [
+    "Location",
+    "Bucharest"
+   ],
+   [
+    "Project type",
+    "Business website with an order form"
+   ]
+  ],
+  "about": [
+   "Mr.DTF's customers are mostly companies and creators who customise textiles. They want to find out three things fast: how much it costs, how much fits on the film and how to send the file. The site answers all three on a single page, with no unnecessary steps.",
+   "The identity starts from the colourful, graffiti-style logo. The rest of the design is clean and bright, with yellow accents on the order buttons and large, easy-to-read headings. For a playful touch, we added an interactive T-shirt to the hero: visitors drag a print onto the T-shirt and instantly see how it would look."
+  ],
+  "sections": [
+   [
+    "/portofoliu/mrdtf/01-hero-si-preturi.jpg",
+    "Hero and prices",
+    "The main message, ‘Quality DTF prints’, puts the 90 cm width front and centre. Right below are the five price tiers per linear metre, from 70 to 55 lei. The best-value tier is highlighted."
+   ],
+   [
+    "/portofoliu/mrdtf/02-tricou-interactiv.jpg",
+    "Interactive T-shirt",
+    "Visitors pick one of five prints and drag it onto the T-shirt. A small touch that makes the page memorable and shows exactly what the product does."
+   ],
+   [
+    "/portofoliu/mrdtf/03-calculator-1-ml.jpg",
+    "‘What fits on 1 linear metre’ calculator",
+    "You choose the format (A5, A4, A3 or 5–20 cm squares) and see how many pieces fit on one metre of film, plus the estimated price per piece at the first and last price tiers. A visual diagram shows how the designs are laid out on the film."
+   ],
+   [
+    "/portofoliu/mrdtf/04-ce-facem-si-cum-functioneaza.jpg",
+    "What we do and how it works",
+    "A grid of workshop photos (film, rolls, colours, the Epson printer) and a four-step process: you send your order, we print it, you receive the parcel, you apply it."
+   ],
+   [
+    "/portofoliu/mrdtf/05-blog-ridicare-footer.jpg",
+    "Blog, order collection and footer",
+    "Two cards: one leads to the blog (application tips, file preparation, washing), the other to the collection address, with a map. The footer has the contact details, opening hours, company details and legal pages."
+   ],
+   [
+    "/portofoliu/mrdtf/06-formular-comanda.jpg",
+    "Order form",
+    "A window with everything needed for an order: contact details, linear metres, individual or company, billing details, a link to the artwork and notes. A message explains what happens after you submit: file confirmation, the invoice and printing once payment is received."
+   ]
+  ],
+  "features": [
+   "Quantity-based price tiers, shown on the first screen",
+   "Calculator for how much fits on 1 linear metre, by format",
+   "Interactive drag-and-drop T-shirt",
+   "Order form with billing details for individuals and companies",
+   "Quick call and contact buttons",
+   "TikTok video integration",
+   "Blog with technical tips"
+  ]
+ },
+ "comstore": {
+  "title": "ComStore Acoperișuri",
+  "subtitle": "Business website for a roof installation and renovation company",
+  "tag": "Business website",
+  "link": "https://comstore-acoperisuri.ro",
+  "cover": "/portofoliu/comstore/01-hero.jpg",
+  "meta": [
+   [
+    "Client",
+    "ComStore Construct SRL"
+   ],
+   [
+    "Industry",
+    "Roof installation & renovation"
+   ],
+   [
+    "Project type",
+    "Business website"
+   ]
+  ],
+  "about": [
+   "ComStore handles everything from measuring up to final installation, including the cost estimate and a 3D rendering of the roof. The typical customer is building a house or renovating their roof and wants to know whether they can trust the team. The site answers that with clearly explained services, real projects, testimonials and well-known brands.",
+   "We used the logo's colours, yellow and anthracite grey, with large photos of roofs. The ‘Get a quote’ button is always visible in the menu, and phone and WhatsApp are just a click away."
+  ],
+  "sections": [
+   [
+    "/portofoliu/comstore/01-hero.jpg",
+    "Hero",
+    "A full-width slider with the message ‘Everything you need for your roof’ and two actions: get a quote or see the products. Below it, a yellow strip with buttons to call and to request a quote."
+   ],
+   [
+    "/portofoliu/comstore/02-servicii.jpg",
+    "Our services",
+    "Five services presented in cards with a photo and a short description: installation, renovation, measurements, cost estimates and 3D renderings."
+   ],
+   [
+    "/portofoliu/comstore/03-6-motive.jpg",
+    "6 reasons to choose us",
+    "A section on a dark background with six numbered points: expertise, quality renovations, precise measurements, clear estimates, meeting deadlines and a warranty."
+   ],
+   [
+    "/portofoliu/comstore/04-proiecte-realizate.jpg",
+    "Completed projects",
+    "Real jobs, each with the name of the material used (for example Lindab double standing seam sheet), so visitors can see what the product looks like once installed."
+   ],
+   [
+    "/portofoliu/comstore/05-testimoniale.jpg",
+    "Testimonials",
+    "Six short reviews, with first name, surname initial and town."
+   ],
+   [
+    "/portofoliu/comstore/06-cta-parteneri-footer.jpg",
+    "Call to action, partners and footer",
+    "A yellow strip with the final call to action for a quote, then the partner logos (Lindab, Velux, Metigla, Wetterbest). The footer has the company details, contact information and the full menu."
+   ]
+  ],
+  "features": [
+   "Hero slider with campaigns (for example, a voucher)",
+   "Quote requests through a form",
+   "WhatsApp button and direct call",
+   "Separate pages for products, projects, campaigns and the blog",
+   "Partners section"
+  ]
+ },
+ "apg-garage": {
+  "title": "APG Garage",
+  "subtitle": "Business website with customer accounts and online bookings for a car repair garage",
+  "tag": "Business website",
+  "cover": "/portofoliu/apg-garage/01-hero.jpg",
+  "meta": [
+   [
+    "Client",
+    "APG Garage"
+   ],
+   [
+    "Location",
+    "Militari, Sector 6, Bucharest"
+   ],
+   [
+    "Project type",
+    "Business website with online bookings"
+   ]
+  ],
+  "about": [
+   "At a car repair garage, people want to find out three things fast: what repairs are done, roughly how much they cost and when they can come in. The site answers all three. It has a list of guide prices by category and an online booking system, so customers no longer have to queue.",
+   "We chose a dark, almost black design, with dramatic workshop photos and condensed, all-caps headings. The feel is that of a professional garage. The ‘Book now’ button appears twice on the home page, and WhatsApp is always available."
+  ],
+  "sections": [
+   [
+    "/portofoliu/apg-garage/01-hero.jpg",
+    "Hero",
+    "A full-screen photo of a mechanic at work, the garage's name in large letters and two actions: online booking and prices."
+   ],
+   [
+    "/portofoliu/apg-garage/02-servicii-si-cifre.jpg",
+    "Services and numbers",
+    "Four main services in simple cards (full service, computer diagnostics, braking system, suspension and steering), with a link to the full list. Below them, three numbers: 10+ years of experience, 500+ customers, 100% transparency."
+   ],
+   [
+    "/portofoliu/apg-garage/03-recenzii.jpg",
+    "Reviews",
+    "A section for customer feedback, with stars and a quote."
+   ],
+   [
+    "/portofoliu/apg-garage/04-cta-si-program.jpg",
+    "Call to action and opening hours",
+    "A second workshop photo, with the call to action ‘Your car, in good hands’, followed by clearly displayed opening hours."
+   ],
+   [
+    "/portofoliu/apg-garage/05-footer.jpg",
+    "Footer",
+    "The services, areas served and car makes repaired, also written with local searches in mind (car repair garage Militari, Sector 6), plus the company details and legal pages."
+   ],
+   [
+    "/portofoliu/apg-garage/06-pagina-preturi.jpg",
+    "Prices page",
+    "Guide prices grouped by category, such as services or brakes, noting whether parts are paid for separately. A note explains that the final price is set after diagnostics."
+   ]
+  ],
+  "features": [
+   "Customer account and online booking",
+   "List of guide prices by category",
+   "Separate pages for each service",
+   "Always-visible WhatsApp button",
+   "Footer text optimised for local searches"
+  ]
+ },
+ "asociatia-roa": {
+  "title": "Asociația RO Administrația",
+  "subtitle": "Business website for an NGO working in education and employment",
+  "tag": "Business website",
+  "link": "https://asociatia-roa.ro",
+  "cover": "/portofoliu/asociatia-roa/01-hero-misiune.jpg",
+  "meta": [
+   [
+    "Client",
+    "Asociația RO Administrația"
+   ],
+   [
+    "Industry",
+    "NGO – education & employment"
+   ],
+   [
+    "Location",
+    "Bucharest"
+   ]
+  ],
+  "about": [
+   "The association works with very different audiences: unemployed young people, adults retraining for a new career, employers and public institutions. Each of them is looking for something different on the site. The structure gives everyone a quick route from the very first screen: European projects, counselling or jobs.",
+   "We chose an institutional blue palette, a nod to the European Union and EU funding, with airy serif headings. The tone is serious but approachable."
+  ],
+  "sections": [
+   [
+    "/portofoliu/asociatia-roa/01-hero-misiune.jpg",
+    "Mission and quick access",
+    "The association's mission, shown in large type, followed by three cards that sort visitors by what they're looking for: European projects, career counselling and jobs."
+   ],
+   [
+    "/portofoliu/asociatia-roa/02-despre-noi.jpg",
+    "What you should know about us",
+    "Three columns with images that sum up the association's work: EU-funded programmes, personalised counselling and an open community."
+   ],
+   [
+    "/portofoliu/asociatia-roa/03-cui-ne-adresam.jpg",
+    "Who we work with and what we offer",
+    "Two clear lists: who can benefit (young people, job seekers, employers) and what they actually get. Below them, a strip with a call to action to get in touch."
+   ],
+   [
+    "/portofoliu/asociatia-roa/04-ce-facem-concret.jpg",
+    "What we actually do",
+    "Six cards on a blue background, each with an icon, a description and its own button: vocational training, career guidance, job placement, European projects, partnerships and volunteer recruitment."
+   ],
+   [
+    "/portofoliu/asociatia-roa/05-cifre-si-contact.jpg",
+    "Numbers and contact",
+    "Animated counters with the association's results (people counselled, young people qualified, rural communities, partners), followed by the contact details and the NGO's registration details."
+   ]
+  ],
+  "features": [
+   "Quick access for three types of visitor",
+   "Dedicated sections for jobs, projects, news and FAQ",
+   "Animated counters for results",
+   "Team page",
+   "Links to Facebook and LinkedIn"
+  ]
+ },
+ "wsd-tractari": {
+  "title": "WSD Logistics",
+  "subtitle": "Landing page for a 24/7 car towing company",
+  "tag": "Landing page",
+  "link": "https://wsdtractari.ro",
+  "cover": "/portofoliu/wsd-tractari/01-hero.jpg",
+  "meta": [
+   [
+    "Client",
+    "WSD Logistics"
+   ],
+   [
+    "Industry",
+    "Car towing & roadside assistance"
+   ],
+   [
+    "Area",
+    "All of Romania"
+   ]
+  ],
+  "about": [
+   "Anyone landing on a towing website is usually at the side of the road, on their phone and stressed. They don't have time to read; they just want a phone number and the reassurance that someone is coming. The site puts the number in the menu, in the yellow bar, in a fixed on-screen button and in the final section. Next to it are quick buttons for WhatsApp and for sending your location.",
+   "The design uses black and yellow, the warning colours of road traffic, with large, condensed headings that are easy to read even on the move. The hero photo shows a real vehicle from the company's fleet."
+  ],
+  "sections": [
+   [
+    "/portofoliu/wsd-tractari/01-hero.jpg",
+    "Hero",
+    "The message ‘Car towing anywhere, any time’, with the ‘Call now’ button front and centre and three key figures: 24/7 service, average arrival time and the number of cities covered. On the right, a photo of the company's flatbed truck in action."
+   ],
+   [
+    "/portofoliu/wsd-tractari/02-banda-urgenta.jpg",
+    "Emergency strip",
+    "A yellow strip with the phone number in large type and a link for sending your location."
+   ],
+   [
+    "/portofoliu/wsd-tractari/03-servicii.jpg",
+    "Services",
+    "Six services presented in a grid: cars, vans and machinery, SUVs and 4x4s, motorway assistance, roadside assistance and flatbed transport."
+   ],
+   [
+    "/portofoliu/wsd-tractari/04-de-ce-noi-si-acoperire.jpg",
+    "Why us and coverage",
+    "Four selling points (fast response, transparent prices, nationwide coverage, ARR-authorised company) and the list of cities served, shown as yellow tags and also designed with local searches in mind."
+   ],
+   [
+    "/portofoliu/wsd-tractari/05-recenzii-si-cta.jpg",
+    "Reviews and final call to action",
+    "Three short reviews, with the city, followed by a yellow block, ‘Stuck on the road?’, with a single call button."
+   ],
+   [
+    "/portofoliu/wsd-tractari/06-footer.jpg",
+    "Footer",
+    "The services, pages for the main cities and the contact details."
+   ]
+  ],
+  "features": [
+   "Fixed call button, always visible on screen",
+   "Quick buttons for WhatsApp and sending your location",
+   "Dedicated city links for local SEO"
+  ]
+ }
+}
