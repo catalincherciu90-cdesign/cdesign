@@ -2934,6 +2934,76 @@ Cerințe titluri:
     }
 
     // ── CLIENȚI ──────────────────────────────────────────────
+    // ── DOCUMENTE CLIENȚI (PDF, private — doar din admin) ─────
+    // Indexul: __client_files__ = [{ id, clientId, name, label, size, uploadedAt }]
+    // Conținutul: __cfile__<id> (binar). Nu se servesc niciodată public.
+    if (path === '/api/client-files' && request.method === 'GET') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const raw = await env.PROGRAMARI.get('__client_files__');
+        let list = raw ? JSON.parse(raw) : [];
+        const cid = url.searchParams.get('client');
+        if (cid) list = list.filter(x => x.clientId === cid);
+        list.sort((a, b) => String(b.uploadedAt).localeCompare(String(a.uploadedAt)));
+        return json(list);
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
+    if (path === '/api/client-files' && request.method === 'POST') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const cid = String(url.searchParams.get('client') || '');
+        const rawClients = await env.PROGRAMARI.get('__clients__');
+        const clients = rawClients ? JSON.parse(rawClients) : [];
+        if (!clients.some(c => c.id === cid)) return json({ error: 'Client negăsit' }, 404);
+        const buf = await request.arrayBuffer();
+        const MAX = 20 * 1024 * 1024;
+        if (!buf.byteLength) return json({ error: 'Fișierul e gol' }, 400);
+        if (buf.byteLength > MAX) return json({ error: 'Fișier prea mare (max 20 MB)' }, 400);
+        const head = new Uint8Array(buf, 0, Math.min(5, buf.byteLength));
+        if (String.fromCharCode(...head) !== '%PDF-') return json({ error: 'Se acceptă doar fișiere PDF' }, 400);
+        let name = String(url.searchParams.get('name') || 'document.pdf').replace(/[\\/\u0000-\u001f"<>]/g, '').trim().slice(0, 140) || 'document.pdf';
+        if (!/\.pdf$/i.test(name)) name += '.pdf';
+        const label = String(url.searchParams.get('label') || '').replace(/[\u0000-\u001f<>]/g, '').trim().slice(0, 120);
+        const id = 'f_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+        await env.PROGRAMARI.put('__cfile__' + id, buf, { metadata: { ct: 'application/pdf', name } });
+        const raw = await env.PROGRAMARI.get('__client_files__');
+        const list = raw ? JSON.parse(raw) : [];
+        const item = { id, clientId: cid, name, label, size: buf.byteLength, uploadedAt: new Date().toISOString() };
+        list.push(item);
+        await env.PROGRAMARI.put('__client_files__', JSON.stringify(list));
+        return json(item);
+      } catch { return json({ error: 'Eroare la încărcare' }, 500); }
+    }
+
+    if (/^\/api\/client-files\/f_[A-Za-z0-9_]+$/.test(path) && request.method === 'GET') {
+      if (!isAdmin(url, env)) return new Response('Acces neautorizat', { status: 401 });
+      try {
+        const id = path.split('/').pop();
+        const obj = await env.PROGRAMARI.getWithMetadata('__cfile__' + id, { type: 'arrayBuffer' });
+        if (!obj.value) return new Response('Fișier negăsit', { status: 404 });
+        const name = (obj.metadata && obj.metadata.name) || 'document.pdf';
+        const ascii = name.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9._ -]/g, '_');
+        const disp = (url.searchParams.get('download') ? 'attachment' : 'inline') + '; filename="' + ascii + '"; filename*=UTF-8\'\'' + encodeURIComponent(name);
+        return new Response(obj.value, { headers: {
+          'Content-Type': 'application/pdf', 'Content-Disposition': disp,
+          'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff', 'X-Robots-Tag': 'noindex'
+        } });
+      } catch { return new Response('Eroare', { status: 500 }); }
+    }
+
+    if (/^\/api\/client-files\/f_[A-Za-z0-9_]+$/.test(path) && request.method === 'DELETE') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.split('/').pop();
+        const raw = await env.PROGRAMARI.get('__client_files__');
+        const list = raw ? JSON.parse(raw) : [];
+        await env.PROGRAMARI.delete('__cfile__' + id);
+        await env.PROGRAMARI.put('__client_files__', JSON.stringify(list.filter(x => x.id !== id)));
+        return json({ ok: true });
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
     if (path === '/api/clients' && request.method === 'GET') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
@@ -2984,6 +3054,16 @@ Cerințe titluri:
         const raw = await env.PROGRAMARI.get('__clients__');
         const clients = raw ? JSON.parse(raw) : [];
         await env.PROGRAMARI.put('__clients__', JSON.stringify(clients.filter(c => c.id !== id)));
+        // documentele clientului se șterg odată cu el
+        try {
+          const rawF = await env.PROGRAMARI.get('__client_files__');
+          const files = rawF ? JSON.parse(rawF) : [];
+          const mine = files.filter(x => x.clientId === id);
+          if (mine.length) {
+            await Promise.all(mine.map(x => env.PROGRAMARI.delete('__cfile__' + x.id)));
+            await env.PROGRAMARI.put('__client_files__', JSON.stringify(files.filter(x => x.clientId !== id)));
+          }
+        } catch {}
         return json({ ok: true });
       } catch { return json({ error: 'Eroare server' }, 500); }
     }
