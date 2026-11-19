@@ -2033,7 +2033,7 @@ export default {
         '/politica-confidentialitate': '/en/privacy-policy' };
       const enLoc = (loc) => EN_OF[loc] || (loc.startsWith('/servicii/') ? '/en/services/' + loc.slice(10)
         : loc.startsWith('/portofoliu/') ? '/en/portfolio/' + loc.slice(12)
-        : /^\/web-design-(cluj|timisoara|brasov|iasi|constanta|sibiu)$/.test(loc) ? '/en' + loc : null);
+        : loc === '/web-design-orase' ? '/en/web-design-cities' : /^\/web-design-[a-z-]+$/.test(loc) ? '/en' + loc : null);
       const enPages = staticPages.map(p => ({ ...p, loc: enLoc(p.loc) })).filter(p => p.loc);
       const parts = staticPages.concat(enPages).map(p => urlXml(BASE + p.loc, SITE_LASTMOD, p.cf, p.pr));
       // Notă: paginile demo individuale (/demos/*.html) sunt intenționat
