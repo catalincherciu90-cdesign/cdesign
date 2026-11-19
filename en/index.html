@@ -102,6 +102,9 @@
   #hero-h1-el .nw{white-space:nowrap}
   #hero-h1-el .hero-rot{margin-top:.22em}
   @media(max-width:340px){.hero-rot{font-size:.88em}}
+  /* EN: the longest rotating text ("the people looking for you") stays on one line */
+  @media(max-width:640px){#hero-h1-el .hero-rot{font-size:min(1em,calc((100vw - 48px) / 12.6))}}
+  @media(min-width:1000px){#hero-h1-el .hero-rot{font-size:min(1em,calc(min(100vw - 72px, 940px) / 12.6))}}
   .hero-rot.swap{opacity:0;transform:translateY(14px)}
   @media(prefers-reduced-motion:reduce){.hero-rot{transition:none}}
   .circle-word .scribble{position:absolute;left:-1%;bottom:-.20em;width:102%;height:.34em;overflow:visible;pointer-events:none}
