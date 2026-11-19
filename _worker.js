@@ -1140,7 +1140,7 @@ h1,h2,h3{font-family:'Poppins',sans-serif;color:var(--ink);letter-spacing:-.02em
 <section class="feat"><div class="wrap"><h2>Ce poate face <b>site-ul</b></h2><ul>${features}</ul></div></section>
 <section class="cta">
   <h2>Vrei un site <b>ca acesta</b>?</h2>
-  <p>Îți construim un site clar, rapid și gândit să aducă clienți — preț fix, livrat în 14 zile.</p>
+  <p>Îți construim un site clar, rapid și gândit să aducă clienți — la preț fix.</p>
   <a href="/cere-oferta" class="btn btn-p">Cere o ofertă gratuită</a>
 </section>
 <footer class="foot">© C Design · <a href="/" style="color:var(--blue)">c-design.ro</a>${cs.link ? ` · <a href="${esc(cs.link)}" target="_blank" rel="noopener" style="color:var(--blue)">${esc(cs.link.replace(/^https?:\/\//, ''))}</a>` : ''}</footer>
@@ -3321,7 +3321,7 @@ Cerințe titluri:
         const lastUserMsg = [...userMsgs].reverse().find(m => m && m.role === 'user' && typeof m.content === 'string');
         const system = 'Ești asistentul virtual al C Design, o agenție de web design din Ilfov și București, care lucrează cu clienți din toată România. '
           + 'Rolul tău: ajuți vizitatorii cu informații despre servicii și îi îndrumi cu căldură să ne contacteze pentru o ofertă personalizată gratuită. '
-          + 'SERVICII: Site de prezentare (livrat în maxim 14 zile, garantat; domeniu .ro și găzduire incluse; mobile-first; SEO de bază inclus). '
+          + 'SERVICII: Site de prezentare (domeniu .ro și găzduire incluse; mobile-first; SEO de bază inclus). '
           + 'Redesign site (modernizare + viteză, fără pierderea poziției pe Google). Design grafic & logo (identitate vizuală). Mentenanță (actualizări, securitate, suport). '
           + 'Pachet Startup: site + logo + prezență online, de la 300 €. Experiență din 2017. '
           + 'REGULI: răspunzi MEREU în limba română, scurt (2-4 propoziții), prietenos, fără jargon tehnic. '
