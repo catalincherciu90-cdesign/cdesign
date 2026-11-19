@@ -278,7 +278,7 @@
   <div id="blog-container" style="max-width:1180px;margin:0 auto">
     <!-- Articles rendered directly in the HTML (for search engines); JS replaces them with the up-to-date list from /en/data/blog-posts.json -->
     <div class="blog-grid">
-      <a href="/en/blog/web-design-de-calitate" class="post-card" aria-label="Quality web design">
+      <a href="/en/blog/quality-web-design" class="post-card" aria-label="Quality web design">
         <span class="post-tag">Blog</span>
         <div class="post-title">Quality web design</div>
         <div class="post-excerpt">Choose a web design service that gives you a solid online presence. Find out what to look for so you make the right choice: in this…</div>
@@ -287,7 +287,7 @@
           <span class="post-read">Read the article →</span>
         </div>
       </a>
-      <a href="/en/blog/web-design-pentru-succes" class="post-card" aria-label="Web design for successful businesses">
+      <a href="/en/blog/web-design-for-successful-businesses" class="post-card" aria-label="Web design for successful businesses">
         <span class="post-tag">Blog</span>
         <div class="post-title">Web design for successful businesses</div>
         <div class="post-excerpt">Find out how quality web design can contribute to the success of your small business. Practical tips for entrepreneurs in Romania.</div>
@@ -296,7 +296,7 @@
           <span class="post-read">Read the article →</span>
         </div>
       </a>
-      <a href="/en/blog/alegerea-web-designerului" class="post-card" aria-label="Choosing a web designer">
+      <a href="/en/blog/choosing-a-web-designer" class="post-card" aria-label="Choosing a web designer">
         <span class="post-tag">Blog</span>
         <div class="post-title">Choosing a web designer</div>
         <div class="post-excerpt">Find the best web designer for your business. Discover practical tips that help you make the right choice and…</div>
@@ -305,7 +305,7 @@
           <span class="post-read">Read the article →</span>
         </div>
       </a>
-      <a href="/en/blog/web-design-pentru-afaceri-mici" class="post-card" aria-label="Web design for small businesses">
+      <a href="/en/blog/web-design-for-small-businesses" class="post-card" aria-label="Web design for small businesses">
         <span class="post-tag">Blog</span>
         <div class="post-title">Web design for small businesses</div>
         <div class="post-excerpt">Find out how quality web design can increase the visibility and sales of your small business. Discover practical tips and examples…</div>
@@ -436,7 +436,7 @@ async function loadBlog() {
       return;
     }
     const cards = posts.map(p => `
-      <a href="/en/blog/${p.slug}" class="post-card reveal" aria-label="${p.title}">
+      <a href="/en/blog/${p.slug_en || p.slug}" class="post-card reveal" aria-label="${p.title}">
         <span class="post-tag">Blog</span>
         <div class="post-title">${p.title}</div>
         <div class="post-excerpt">${p.excerpt || excerpt(p.content)}</div>
