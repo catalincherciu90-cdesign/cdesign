@@ -274,6 +274,15 @@
     .btn-primary,.btn-ghost{width:100%;justify-content:center}
   }
 </style>
+<style id="cta-one-line">
+  /* butoanele „Programează o discuție gratuită” rămân pe un singur rând pe telefon */
+  @media (max-width: 420px) {
+    a[data-edit="buton-1"], a[data-edit="buton-2"] { white-space: nowrap; font-size: .92rem; padding-left: 16px; padding-right: 16px; gap: 8px; }
+  }
+  @media (max-width: 350px) {
+    a[data-edit="buton-1"], a[data-edit="buton-2"] { font-size: .84rem; padding-left: 12px; padding-right: 12px; }
+  }
+</style>
 </head>
 <body>
 
@@ -281,7 +290,7 @@
   <div class="topbar">
     <div class="topbar-inner">
       <span class="promo" data-edit="eticheta-hero-1">
-        <b>OFERTĂ LIMITATĂ:</b> Site + SEO + Google Business — totul de la 400€.
+        <b>OFERTĂ LIMITATĂ:</b> Site + SEO + Google Business — totul de la 400 €.
         <a href="/promo" class="view-deal">Vezi oferta</a>
       </span>
       <div class="topbar-right">
@@ -335,7 +344,7 @@
       <h1 id="hero-h1-el" data-edit="titlu-principal-1">Singuri suntem buni.<br>Cu <span style="color:var(--blue);font-weight:700">partenerii potriviți</span>, compleți.</h1>
       <p class="sub" id="hero-desc-el" data-edit="descriere-hero-1">Un site bun are nevoie de mai mult decât cod: găzduire stabilă, fotografie profesională, materiale tipărite și promovare. Lucrăm cu oameni pe care îi recomandăm fără rezerve.</p>
       <div class="hero-cta">
-        <a href="#contact" class="btn-primary" data-edit="buton-1">Hai să vorbim gratuit <span class="arr">→</span></a>
+        <a href="#contact" class="btn-primary" data-edit="buton-1">Programează o discuție gratuită <span class="arr">→</span></a>
         <a href="/portofoliu" class="btn-ghost" data-edit="buton-secundar-1">Vezi portofoliul</a>
       </div>
     </div>
