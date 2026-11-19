@@ -3819,6 +3819,39 @@ Cerințe titluri:
 
     // ── OFERTĂ PREVIEW (print as PDF) ────────────────────────
 
+    // Editarea unei oferte salvate: același id, număr, dată de emitere și stare;
+    // se actualizează clientul, serviciile, moneda, valabilitatea și notele.
+    if (/^\/api\/oferte\/[^/]+$/.test(path) && request.method === 'PUT') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.slice('/api/oferte/'.length);
+        const body = await request.json().catch(() => ({}));
+        if (!body.client?.name || !Array.isArray(body.servicii) || !body.servicii.length) return json({ error: 'Date incomplete' }, 400);
+        const raw = await env.PROGRAMARI.get('__oferte__');
+        const lista = raw ? JSON.parse(raw) : [];
+        const o = lista.find(x => x.id === id);
+        if (!o) return json({ error: 'Ofertă negăsită' }, 404);
+        o.client = {
+          id: body.client.id || null,
+          name: String(body.client.name).slice(0, 120),
+          email: String(body.client.email || '').slice(0, 120),
+          phone: String(body.client.phone || '').slice(0, 40),
+        };
+        o.servicii = body.servicii.slice(0, 60).map(s => ({
+          id: s.id, nume: String(s.nume || '').slice(0, 120),
+          descriere: String(s.descriere || '').slice(0, 300),
+          pret: parseFloat(s.pret) || 0, moneda: s.moneda || 'EUR', unitate: s.unitate || 'proiect',
+        }));
+        o.moneda = ['EUR', 'RON'].includes(body.moneda) ? body.moneda : (o.moneda || 'EUR');
+        o.valabilitate = String(body.valabilitate || o.valabilitate || '30 zile').slice(0, 30);
+        o.note = String(body.note || '').slice(0, 500);
+        o.updatedAt = new Date().toISOString();
+        o.revizii = (o.revizii || 0) + 1;
+        await env.PROGRAMARI.put('__oferte__', JSON.stringify(lista));
+        return json(o);
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
     // Starea unei oferte: trimisă (așteaptă răspuns) / acceptată / respinsă
     if (/^\/api\/oferte\/[^/]+$/.test(path) && request.method === 'PATCH') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
@@ -3871,8 +3904,9 @@ Cerințe titluri:
 
         const total = (o.servicii || []).reduce((s, sv) => s + parseFloat(sv.pret || 0), 0);
         const dataDoc = new Date(o.createdAt).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
+        const dataRev = o.updatedAt ? new Date(o.updatedAt).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
         const dataExpira = (() => {
-          const d = new Date(o.createdAt);
+          const d = new Date(o.updatedAt || o.createdAt);
           const zile = parseInt(o.valabilitate) || 30;
           d.setDate(d.getDate() + zile);
           return d.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -4001,6 +4035,7 @@ Cerințe titluri:
         <div class="doc-nr">${e(o.numar)}</div>
         <div class="doc-date">
           Emisă: ${dataDoc}<br>
+          ${dataRev ? `Revizuită: ${dataRev}<br>` : ''}
           ${o.valabilitate !== 'la cerere' ? `Valabilă până la: <strong>${dataExpira}</strong>` : 'Valabilitate: la cerere'}
         </div>
       </div>

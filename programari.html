@@ -2142,6 +2142,9 @@
   .of-act.ok { color: #4ade80; border-color: rgba(74,222,128,.45); } .of-act.no { color: #f87171; border-color: rgba(248,113,113,.45); }
   .of-status { background: var(--bg3); color: var(--text); border: 1px solid var(--border-soft); padding: 4px 6px; font-size: .78rem; font-family: 'Share Tech Mono', monospace; }
   .of-status.ok { color: #4ade80; border-color: rgba(74,222,128,.45); } .of-status.no { color: #f87171; border-color: rgba(248,113,113,.45); }
+  .of-edit-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; padding: 12px 14px; font-size: .86rem; color: #fde68a; background: rgba(251,191,36,.08); border: 1px solid rgba(251,191,36,.5); }
+  .of-edit-bar[hidden] { display: none; }
+  .of-edit-cancel { background: none; border: 1px solid rgba(251,191,36,.6); color: #fde68a; padding: 6px 12px; cursor: pointer; font-family: 'Share Tech Mono', monospace; font-size: .74rem; }
   .of-prest { font-size: .78rem; line-height: 1.55; color: var(--text); background: rgba(0,229,255,.04); border: 1px solid var(--border-soft); padding: 10px 12px; }
   .of-prest .of-k { color: var(--muted); font-family: 'Share Tech Mono', monospace; font-size: .68rem; }
   .of-miss { color: #fbbf24; margin-top: 6px; }
@@ -3746,6 +3749,10 @@
 
       <!-- VIEW: GENERATOR -->
       <div id="oferta-view-generator">
+        <div id="oferta-edit-bar" class="of-edit-bar" hidden>
+          <span>&#x270E; Editezi oferta <b id="oferta-edit-nr"></b>. Modific&#259;rile se salveaz&#259; &icirc;n aceea&#537;i ofert&#259;, cu acela&#537;i num&#259;r.</span>
+          <button type="button" class="of-edit-cancel" onclick="anuleazaEditareOferta()">Anuleaz&#259; editarea</button>
+        </div>
         <div style="display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;" class="oferta-grid">
 
           <!-- Stânga: servicii -->
@@ -9641,24 +9648,76 @@
     }
   }
 
+  // ── Editarea unei oferte salvate ──────────────────────────────────
+  let ofertaEditId = null;          // id-ul ofertei editate (null = ofertă nouă)
+  let ofertaEditPret = {};          // prețurile din ofertă pentru serviciile ei (rămân ca în ofertă)
+  let ofertaExtraServ = [];         // servicii din ofertă care nu mai sunt în catalog
+  function svcPentruOferta(id) {
+    const base = allServicii.find(s => s.id === id) || ofertaExtraServ.find(s => s.id === id);
+    if (!base) return null;
+    return ofertaEditPret[id] ? { ...base, ...ofertaEditPret[id] } : base;
+  }
+  function editeazaOferta(id) {
+    const o = (allOferte || []).find(x => x.id === id);
+    if (!o) return;
+    ofertaEditId = id; ofertaEditPret = {}; ofertaExtraServ = [];
+    (o.servicii || []).forEach((sv, i) => {
+      const sid = sv.id || ('ofsvc_' + i);
+      if (allServicii.some(x => x.id === sid)) ofertaEditPret[sid] = { pret: sv.pret, moneda: sv.moneda, nume: sv.nume, descriere: sv.descriere, unitate: sv.unitate };
+      else ofertaExtraServ.push({ id: sid, nume: sv.nume, descriere: sv.descriere, pret: sv.pret, moneda: sv.moneda, unitate: sv.unitate, categorie: '__oferta' });
+    });
+    showOfertaView('generator', document.getElementById('subnav-generator'));
+    renderServiciiLista();
+    const ids = new Set((o.servicii || []).map((sv, i) => sv.id || ('ofsvc_' + i)));
+    document.querySelectorAll('#oferta-servicii-lista input[type=checkbox]').forEach(cb => { cb.checked = ids.has(cb.value); });
+    const sel = document.getElementById('oferta-client-sel');
+    if (sel) { if (typeof populateOfertaClientSel === 'function') populateOfertaClientSel(); sel.value = (o.client && o.client.id && [...sel.options].some(op => op.value === o.client.id)) ? o.client.id : ''; }
+    document.getElementById('oferta-client-name').value = (o.client && o.client.name) || '';
+    document.getElementById('oferta-client-email').value = (o.client && o.client.email) || '';
+    document.getElementById('oferta-client-phone').value = (o.client && o.client.phone) || '';
+    document.getElementById('oferta-moneda').value = o.moneda || 'EUR';
+    const val = document.getElementById('oferta-valabilitate');
+    if (o.valabilitate && ![...val.options].some(op => op.value === o.valabilitate)) { const op = document.createElement('option'); op.value = op.textContent = o.valabilitate; val.appendChild(op); }
+    val.value = o.valabilitate || '30 zile';
+    document.getElementById('oferta-note').value = o.note || '';
+    document.getElementById('oferta-edit-nr').textContent = o.numar || '';
+    document.getElementById('oferta-edit-bar').hidden = false;
+    document.getElementById('oferta-gen-btn').innerHTML = '&#x1F4BE; Salvează modificările';
+    renderOfertaTotal();
+    window.scrollTo(0, 0);
+  }
+  function anuleazaEditareOferta(silent) {
+    ofertaEditId = null; ofertaEditPret = {}; ofertaExtraServ = [];
+    const bar = document.getElementById('oferta-edit-bar'); if (bar) bar.hidden = true;
+    const btn = document.getElementById('oferta-gen-btn'); if (btn) btn.innerHTML = '&#x1F4C4; Genereaz&#x103; PDF';
+    ['oferta-client-name', 'oferta-client-email', 'oferta-client-phone', 'oferta-note'].forEach(i => { const el = document.getElementById(i); if (el) el.value = ''; });
+    const sel = document.getElementById('oferta-client-sel'); if (sel) sel.value = '';
+    document.querySelectorAll('#oferta-servicii-lista input[type=checkbox]').forEach(cb => { cb.checked = false; });
+    renderServiciiLista(); renderOfertaTotal();
+    if (!silent) showToast('Editarea a fost anulată');
+  }
+
   function renderServiciiLista() {
     const wrap = document.getElementById('oferta-servicii-lista');
+    // bifele existente rămân după redesenarea listei (ex. catalogul se reîncarcă în timpul editării)
+    const bifate = new Set([...document.querySelectorAll('#oferta-servicii-lista input[type=checkbox]:checked')].map(cb => cb.value));
     if (!allServicii.length) {
       wrap.innerHTML = '<div class="empty-state" style="text-align:center;padding:24px;"><p style="color:var(--muted);">// Niciun serviciu definit. Mergi la <strong style="color:var(--teal);cursor:pointer;" onclick="showOfertaView(\'servicii\',document.getElementById(\'subnav-servicii\'))">Catalog servicii</strong> pentru a adăuga.</p></div>';
       return;
     }
     const byCat = {};
+    if (ofertaExtraServ.length) byCat['__oferta'] = ofertaExtraServ.slice();
     allServicii.forEach(s => {
       const cat = s.categorie || 'altele';
       if (!byCat[cat]) byCat[cat] = [];
       byCat[cat].push(s);
     });
-    const catOrder = ['pachete', 'web-design', 'seo', 'mentenanta', 'grafic', 'marketing', 'altele'];
+    const catOrder = ['__oferta', 'pachete', 'web-design', 'seo', 'mentenanta', 'grafic', 'marketing', 'altele'];
     const cats = Object.entries(byCat).sort((a, b) => (catOrder.indexOf(a[0]) + 1 || 99) - (catOrder.indexOf(b[0]) + 1 || 99));
     wrap.innerHTML = cats.map(([cat, svcs]) => `
       <div style="margin-bottom:16px;">
-        <div style="font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em;">// ${SVC_CAT_LABEL[cat] || esc(cat)}</div>
-        ${svcs.map(s => `
+        <div style="font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em;">// ${cat === '__oferta' ? 'din oferta salvată (nu mai sunt în catalog)' : (SVC_CAT_LABEL[cat] || esc(cat))}</div>
+        ${svcs.map(s0 => { const s = svcPentruOferta(s0.id) || s0; return `
           <label class="${s.promo ? 'svc-promo' : ''}" style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--bg3);border:1px solid var(--border-soft);border-radius:8px;cursor:pointer;margin-bottom:6px;transition:border-color .2s;"
                  onmouseover="if(!this.classList.contains('svc-promo'))this.style.borderColor='var(--teal-border)'"
                  onmouseout="if(!this.classList.contains('svc-promo'))this.style.borderColor='var(--border-soft)'">
@@ -9673,8 +9732,9 @@
               ${parseFloat(s.pret || 0).toLocaleString('ro-RO')} ${esc(s.moneda || 'EUR')}
               <div style="font-size:.68rem;font-weight:400;color:var(--muted);">/ ${esc(s.unitate || 'proiect')}</div>
             </div>
-          </label>`).join('')}
+          </label>`; }).join('')}
       </div>`).join('');
+    if (bifate.size) wrap.querySelectorAll('input[type=checkbox]').forEach(cb => { if (bifate.has(cb.value)) cb.checked = true; });
   }
 
   function renderOfertaTotal() {
@@ -9683,7 +9743,7 @@
     let total = 0;
     const items = [];
     checkboxes.forEach(cb => {
-      const svc = allServicii.find(s => s.id === cb.value);
+      const svc = svcPentruOferta(cb.value);
       if (!svc) return;
       const pret = parseFloat(svc.pret || 0);
       total += pret;
@@ -9718,7 +9778,7 @@
     if (!clientName) { alert('Completează numele clientului.'); return; }
     const checkboxes = [...document.querySelectorAll('#oferta-servicii-lista input[type=checkbox]:checked')];
     if (!checkboxes.length) { alert('Selectează cel puțin un serviciu.'); return; }
-    const serviciiSelectate = checkboxes.map(cb => allServicii.find(s => s.id === cb.value)).filter(Boolean);
+    const serviciiSelectate = checkboxes.map(cb => svcPentruOferta(cb.value)).filter(Boolean);
     const btn = document.getElementById('oferta-gen-btn');
     btn.disabled = true;
     btn.textContent = 'Se generează...';
@@ -9735,20 +9795,22 @@
         valabilitate: document.getElementById('oferta-valabilitate').value,
         note: document.getElementById('oferta-note').value.trim(),
       };
-      const res = await fetch('/api/oferte?token=' + encodeURIComponent(adminToken), {
-        method: 'POST',
+      const editId = ofertaEditId;
+      const res = await fetch(editId ? '/api/oferte/' + encodeURIComponent(editId) + '?token=' + encodeURIComponent(adminToken) : '/api/oferte?token=' + encodeURIComponent(adminToken), {
+        method: editId ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      if (!res.ok) { alert('Eroare la generare.'); return; }
+      if (!res.ok) { alert(editId ? 'Modificările nu au putut fi salvate.' : 'Eroare la generare.'); return; }
       const data = await res.json();
+      if (editId) { anuleazaEditareOferta(true); showToast('✓ Oferta ' + (data.numar || '') + ' a fost actualizată'); }
       window.open('/oferta-preview/' + data.id + '?token=' + encodeURIComponent(adminToken), '_blank');
       fetchOferte();
       showOfertaView('istoric', document.getElementById('subnav-istoric'));
     } catch { alert('Eroare de rețea.'); }
     finally {
       btn.disabled = false;
-      btn.innerHTML = '&#x1F4C4; Genereaz&#x103; PDF';
+      btn.innerHTML = ofertaEditId ? '&#x1F4BE; Salvează modificările' : '&#x1F4C4; Genereaz&#x103; PDF';
     }
   }
 
@@ -9766,7 +9828,7 @@
   function ofertaExpira(o) {
     const zile = parseInt(o.valabilitate, 10);
     if (!zile || !o.createdAt) return null;            // „la cerere" → fără termen
-    const d = new Date(o.createdAt); d.setDate(d.getDate() + zile); return d;
+    const d = new Date(o.updatedAt || o.createdAt); d.setDate(d.getDate() + zile); return d;   // valabilitatea curge de la ultima revizuire
   }
   function ofertePending() {
     return (allOferte || []).filter(o => (o.status || 'trimisă') === 'trimisă')
@@ -9836,12 +9898,13 @@
             <td style="padding:10px 12px;font-size:.88rem;color:var(--text);">${esc(o.client?.name || '')}
               ${o.client?.email ? `<div style="font-size:.72rem;color:var(--muted);">${esc(o.client.email)}</div>` : ''}
             </td>
-            <td style="padding:10px 12px;font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--muted);">${o.createdAt ? new Date(o.createdAt).toLocaleDateString('ro-RO') : '–'}</td>
+            <td style="padding:10px 12px;font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--muted);">${o.createdAt ? new Date(o.createdAt).toLocaleDateString('ro-RO') : '–'}${o.updatedAt ? `<div style="font-size:.7rem;color:var(--teal);">revizuită ${new Date(o.updatedAt).toLocaleDateString('ro-RO')}</div>` : ''}</td>
             <td style="padding:10px 12px;"><select class="of-status ${esc((o.status || 'trimisă') === 'acceptată' ? 'ok' : (o.status === 'respinsă' ? 'no' : ''))}" onchange="setOfertaStatus('${esc(o.id)}', this.value)" aria-label="Starea ofertei">
               ${['trimisă', 'acceptată', 'respinsă'].map(st => `<option value="${st}"${(o.status || 'trimisă') === st ? ' selected' : ''}>${st === 'trimisă' ? 'În așteptare' : st[0].toUpperCase() + st.slice(1)}</option>`).join('')}
             </select></td>
             <td style="padding:10px 12px;text-align:right;font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--teal);">${total.toLocaleString('ro-RO')} <span style="font-size:.72rem;color:var(--muted);">${esc(o.moneda || 'EUR')}</span></td>
             <td style="padding:10px 12px;white-space:nowrap;">
+              <button class="btn-edit" onclick="editeazaOferta('${esc(o.id)}')" title="Editează oferta" style="font-size:.8rem;margin-right:6px;">&#x270E; Editează</button>
               <button class="btn-edit" onclick="window.open('/oferta-preview/${esc(o.id)}?token=${encodeURIComponent(adminToken)}','_blank')" title="Previzualizare / Print PDF" style="font-size:.8rem;">&#x1F5A8;</button>
             </td>
           </tr>`;
