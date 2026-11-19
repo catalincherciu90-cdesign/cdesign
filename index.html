@@ -97,6 +97,8 @@
   .circle-word{position:relative;display:inline-block;white-space:nowrap;font-weight:700}
   .hero-rot{display:inline-block;color:var(--blue);font-weight:700;transition:opacity .4s ease,transform .4s ease;will-change:opacity,transform}
   #hero-h1-el{line-height:1.14}
+  #hero-h1-el .nw{white-space:nowrap}
+  @media(min-width:1101px){#hero-h1-el{margin-left:-80px;margin-right:-80px}}
   @media(max-width:340px){.hero-rot{font-size:.88em}}
   .hero-rot.swap{opacity:0;transform:translateY(14px)}
   @media(prefers-reduced-motion:reduce){.hero-rot{transition:none}}
@@ -384,7 +386,7 @@
     <div class="hero-scrim"></div>
 
     <div class="hero-content">
-      <h1 id="hero-h1-el">Te aducem mai <span class="circle-word">aproape<svg class="scribble" viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 13 Q 22 3 40 13 T 76 13 T 112 13 T 148 13 T 184 13 T 220 13 T 256 13 T 296 13"/></svg></span><br>de <span class="hero-rot" id="heroRot">clienții tăi</span></h1>
+      <h1 id="hero-h1-el">Te aducem mai <span class="nw"><span class="circle-word">aproape<svg class="scribble" viewBox="0 0 300 24" preserveAspectRatio="none"><path d="M4 13 Q 22 3 40 13 T 76 13 T 112 13 T 148 13 T 184 13 T 220 13 T 256 13 T 296 13"/></svg></span> de</span><br><span class="hero-rot" id="heroRot">clienții tăi</span></h1>
       <p class="sub" id="hero-desc-el">Fie că pornești o afacere, fie că ai deja un brand consacrat, construim website-uri clare, rapide și ușor de găsit pe Google, la prețuri fixe și corecte.</p>
       <div class="hero-cta">
         <a href="#contact" class="btn-primary" data-edit="buton-1">Programează o discuție gratuită <span class="arr">→</span></a>
