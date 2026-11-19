@@ -1,0 +1,42 @@
+{
+ "expotigla": {
+  "tag": "Roofing shop",
+  "title": "ExpoTigla — online roofing shop",
+  "description": "An online shop for a supplier of complete roofing systems: metal roof tiles, standing seam sheets, sandwich panels, rainwater systems and accessories. A catalogue with prices, a ‘Complete system’ configurator, quote requests and technical advice — everything a customer needs to get to a quote quickly."
+ },
+ "cosmin-tatulescu": {
+  "tag": "Photography",
+  "title": "Cosmin Tătulescu — Christmas photo sessions",
+  "description": "A business and booking website for the Christmas photo sessions of a photographer in Brașov. It briefly explains the experience, shows prices by period and uses a calendar to show how many free slots are left each day."
+ },
+ "traditum": {
+  "tag": "Patisserie",
+  "title": "Traditum By Victoria — artisan patisserie",
+  "description": "A business website for an artisan patisserie in Ilfov. Products are grouped by category, and the site puts the gallery of real events and the quote request for cakes and candy bars front and centre."
+ },
+ "mrdtf": {
+  "tag": "DTF printing",
+  "title": "Mr.DTF — DTF printing by the linear metre",
+  "description": "A website for a DTF print workshop in Bucharest. Prices per linear metre are visible on the first screen, a calculator shows how many designs fit on one metre, and orders are sent through a quick form."
+ },
+ "comstore": {
+  "tag": "Roofing",
+  "title": "ComStore — roof installation and renovation",
+  "description": "A business website for a roof installation and renovation company. It puts the services, completed projects and partner brands front and centre, and every section leads to a quote request."
+ },
+ "apg-garage": {
+  "tag": "Car repair garage",
+  "title": "APG Garage — car repair garage",
+  "description": "A website for a car repair garage in Militari, Bucharest. It presents the services and guide prices, and customers can create an account to book online."
+ },
+ "asociatia-roa": {
+  "tag": "NGO",
+  "title": "Asociația RO Administrația — education and employment NGO",
+  "description": "A business website for an NGO that helps young people and vulnerable groups gain qualifications and find work. It explains who the association is for and what it offers, then points visitors to projects, counselling and jobs."
+ },
+ "wsd-tractari": {
+  "tag": "Car towing",
+  "title": "WSD Logistics — 24/7 car towing",
+  "description": "A landing page for a car towing company that works around the clock. Everything is built around one action: someone stuck on the road must be able to call within seconds."
+ }
+}

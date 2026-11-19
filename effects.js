@@ -9,6 +9,7 @@
    ════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
+  var EN_FX = /^en\b/i.test(document.documentElement.lang || '');
   function init() {
     var body = document.body;
     if (!body || !body.hasAttribute('data-fx')) return;
@@ -61,7 +62,7 @@
 
     var dotsBox = document.createElement('div');
     dotsBox.className = 'fx-dots';
-    dotsBox.setAttribute('aria-label', 'Navigare secțiuni');
+    dotsBox.setAttribute('aria-label', EN_FX ? 'Section navigation' : 'Navigare secțiuni');
     body.appendChild(dotsBox);
 
     /* indiciu de scroll pe primul slide — dispare la prima interacțiune */
@@ -100,7 +101,7 @@
       footerEl.appendChild(tgl);
       var closeBtn = document.createElement('button');
       closeBtn.className = 'fx-foot-close';
-      closeBtn.setAttribute('aria-label', 'Închide footer-ul');
+      closeBtn.setAttribute('aria-label', EN_FX ? 'Close footer' : 'Închide footer-ul');
       closeBtn.textContent = '✕';
       footerEl.insertBefore(closeBtn, footerEl.firstChild);
       closeBtn.addEventListener('click', function (e) {
@@ -111,7 +112,7 @@
         e.stopPropagation();
         var open = footerEl.classList.toggle('fx-open');
         tgl.setAttribute('aria-expanded', open);
-        tgl.setAttribute('aria-label', open ? 'Închide footer-ul' : 'Deschide footer-ul complet');
+        tgl.setAttribute('aria-label', open ? (EN_FX ? 'Close footer' : 'Închide footer-ul') : (EN_FX ? 'Open full footer' : 'Deschide footer-ul complet'));
       });
       function closeFooter() {
         footerEl.classList.remove('fx-open');
@@ -167,7 +168,7 @@
       dotsBox.innerHTML = '';
       panels.forEach(function (p, i) {
         var b = document.createElement('button');
-        b.setAttribute('aria-label', 'Secțiunea ' + (i + 1));
+        b.setAttribute('aria-label', (EN_FX ? 'Section ' : 'Secțiunea ') + (i + 1));
         b.addEventListener('click', function () { goTo(i); });
         dotsBox.appendChild(b);
       });

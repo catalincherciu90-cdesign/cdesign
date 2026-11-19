@@ -3,6 +3,7 @@
    Sursa: Admin → Setări → Template contract → date prestator (/api/company).
    Fără CUI salvat se afișează doar denumirea legală. */
 (function () {
+  var EN = /^en\b/i.test(document.documentElement.lang || '');
   function legal(d) {
     return [d.nume, d.cui ? 'CUI ' + d.cui : '', d.regcom ? 'Reg. Com. ' + d.regcom : '']
       .filter(Boolean).join(' · ');
@@ -24,7 +25,7 @@
     // locuri marcate în pagină, de ex. politica de confidențialitate
     Array.prototype.forEach.call(document.querySelectorAll('[data-company="name"]'), function (el) { if (d.nume) el.textContent = d.nume; });
     Array.prototype.forEach.call(document.querySelectorAll('[data-company="legal"]'), function (el) {
-      var rows = [d.cui ? 'CUI: ' + d.cui : '', d.regcom ? 'Nr. Reg. Com.: ' + d.regcom : ''].filter(Boolean);
+      var rows = [d.cui ? (EN ? 'Tax ID (CUI): ' : 'CUI: ') + d.cui : '', d.regcom ? (EN ? 'Trade Register no.: ' : 'Nr. Reg. Com.: ') + d.regcom : ''].filter(Boolean);
       el.textContent = '';
       rows.forEach(function (r) { el.appendChild(document.createTextNode(r)); el.appendChild(document.createElement('br')); });
     });
