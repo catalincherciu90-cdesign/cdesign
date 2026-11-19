@@ -163,22 +163,22 @@ fbq('init','893560673744618');fbq('track','PageView');
 <main>
 <article>
 <div class="container">
-  <a href="/blog" class="art-back">← \xCEnnapoi la blog</a>
+  <a href="/blog" class="art-back">← Înapoi la blog</a>
   <span class="art-tag">Blog</span>
   <h1 class="art-title">${escHtml(post.title)}</h1>
   <div class="art-meta">${date}</div>
   <div class="art-content">${sanitizeHtml(bodyHtml)}</div>
   <div class="cta-box">
     <h3>Vrei un site profesional pentru afacerea ta?</h3>
-    <p>Programează o şedinţă de consultanţă gratuită — fără obligaţii.</p>
-    <a href="/programare" class="btn">Programează consultanţă gratuită →</a>
+    <p>Programează o ședință de consultanță gratuită — fără obligații.</p>
+    <a href="/programare" class="btn">Programează o consultanță gratuită →</a>
   </div>
 </div>
 </article>
 </main>
 <footer>
   <a href="/" aria-label="C Design – Pagina principală"><img src="/logo-c-design.png" alt="C Design" style="height:32px;width:auto;display:block;margin:0 auto 12px;"></a>
-  <p>© ${yr} C Design · <a href="tel:+40753116155">0753 116 155</a> · <a href="mailto:office@c-design.ro">office@c-design.ro</a> · <a href="/blog">Blog</a> · <a href="#" onclick="window.openCookieConsentBanner();return false;" style="cursor:pointer;">Setări cookies</a></p>
+  <p>© ${yr} C Design · <a href="tel:+40753116155">0753 116 155</a> · <a href="mailto:office@c-design.ro">office@c-design.ro</a> · <a href="/blog">Blog</a> · <a href="#" onclick="window.openCookieConsentBanner();return false;" style="cursor:pointer;">Setări cookie-uri</a></p>
 </footer>
 <script>
 const ham=document.getElementById('hamburger'),mob=document.getElementById('mobileMenu');
@@ -301,7 +301,7 @@ async function sendGibilanMorningEmail(env) {
         </tr>`;
       }).join('');
     } else {
-      deadlinesHtml = '<tr><td style="padding:8px 12px;color:#aaa;font-style:italic;font-size:.88rem;">Niciun deadline urgent — respira adânc!</td></tr>';
+      deadlinesHtml = '<tr><td style="padding:8px 12px;color:#aaa;font-style:italic;font-size:.88rem;">Niciun deadline urgent — respiră adânc!</td></tr>';
     }
 
     let todosHtml = '';
@@ -315,7 +315,7 @@ async function sendGibilanMorningEmail(env) {
           </td>
         </tr>`).join('');
     } else {
-      todosHtml = '<tr><td style="padding:8px 12px;color:#aaa;font-style:italic;font-size:.88rem;">Totul bifat! Esti un campion.</td></tr>';
+      todosHtml = '<tr><td style="padding:8px 12px;color:#aaa;font-style:italic;font-size:.88rem;">Totul bifat! Ești un campion.</td></tr>';
     }
 
     const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
@@ -342,7 +342,7 @@ async function sendGibilanMorningEmail(env) {
       <!-- GREETING -->
       <tr><td style="padding:28px 32px 0;border-bottom:1px solid #f0f0f0;">
         <div style="font-size:1.15rem;font-weight:700;color:#060f0f;margin-bottom:6px;">
-          Bună dimineata! ☀️
+          Bună dimineața! ☀️
         </div>
         <div style="font-size:.92rem;color:#555;margin-bottom:20px;line-height:1.6;">
           ${nimicDeRaportat
@@ -694,8 +694,8 @@ async function sendBookingNotification(booking, env) {
         <div style="color:#9aa5b4;font-size:.85rem;margin-top:4px;">Confirmare programare</div>
       </td></tr>
       <tr><td style="padding:32px;">
-        <p style="font-size:1rem;color:#080b0e;margin:0 0 20px;">Bună <strong>${booking.name}</strong>,</p>
-        <p style="font-size:.95rem;color:#444;line-height:1.6;margin:0 0 28px;">Programarea ta a fost primită cu succes. Te vom contacta în maxim <strong>2 ore</strong> pentru confirmare.</p>
+        <p style="font-size:1rem;color:#080b0e;margin:0 0 20px;">Bună, <strong>${booking.name}</strong>,</p>
+        <p style="font-size:.95rem;color:#444;line-height:1.6;margin:0 0 28px;">Programarea ta a fost primită cu succes. Te contactăm în cel mult <strong>2 ore</strong> pentru confirmare.</p>
 
         <div style="background:#f0fffe;border:1px solid #d0f5f2;border-radius:10px;padding:20px 24px;margin-bottom:28px;">
           <div style="font-size:.75rem;color:#6a7585;text-transform:uppercase;letter-spacing:.06em;margin-bottom:16px;">Detalii programare</div>
@@ -746,7 +746,7 @@ async function sendBookingNotification(booking, env) {
       body: JSON.stringify({
         from: 'C Design <notificari@c-design.ro>',
         to: [booking.email],
-        subject: `✅ Programare confirmată — ${booking.date} ora ${booking.time}`,
+        subject: `✅ Programare primită — ${booking.date}, ora ${booking.time}`,
         html: confirmHtml,
       }),
     });
@@ -825,8 +825,8 @@ async function sendContactNotification(contact, env) {
         <div style="color:#9aa5b4;font-size:.85rem;margin-top:4px;">Am primit mesajul tău</div>
       </td></tr>
       <tr><td style="padding:32px;">
-        <p style="font-size:1rem;color:#080b0e;margin:0 0 20px;">Bună <strong>${contact.name}</strong>,</p>
-        <p style="font-size:.95rem;color:#444;line-height:1.6;margin:0 0 28px;">Mulțumim că ne-ai contactat! Am primit mesajul tău și te vom contacta în maxim <strong>2 ore</strong> în timpul programului de lucru (Luni–Vineri, 09:00–18:00).</p>
+        <p style="font-size:1rem;color:#080b0e;margin:0 0 20px;">Bună, <strong>${contact.name}</strong>,</p>
+        <p style="font-size:.95rem;color:#444;line-height:1.6;margin:0 0 28px;">Mulțumim că ne-ai contactat! Am primit mesajul tău și îți răspundem în cel mult <strong>2 ore</strong>, în timpul programului de lucru (luni–vineri, 09:00–18:00).</p>
         <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
           <tr>
             <td style="padding:0 8px 0 0;">
@@ -859,13 +859,13 @@ async function sendContactNotification(contact, env) {
 }
 
 const DEFAULT_PROJECTS = [
-  { id: 'expotigla', emoji: '🏠', tag: 'Magazin acoperișuri', cat: 'constructii', title: 'ExpoTigla — magazin online acoperișuri', description: 'Magazin online pentru un furnizor de sisteme complete de acoperiș: țiglă metalică, tablă fălțuită, panouri sandwich, sisteme pluviale și accesorii. Catalog cu prețuri, configurator „Sistem complet", cerere de ofertă și consultanță tehnică — tot ce îi trebuie clientului ca să ajungă rapid la o ofertă.', image: '/portofoliu/expotigla.jpg', link: 'https://expotigla.ro', detail: '/portofoliu/expotigla', order: 0 },
+  { id: 'expotigla', emoji: '🏠', tag: 'Magazin acoperișuri', cat: 'constructii', title: 'ExpoTigla — magazin online de acoperișuri', description: 'Magazin online pentru un furnizor de sisteme complete de acoperiș: țiglă metalică, tablă fălțuită, panouri sandwich, sisteme pluviale și accesorii. Catalog cu prețuri, configurator „Sistem complet”, cerere de ofertă și consultanță tehnică — tot ce îi trebuie clientului ca să ajungă rapid la o ofertă.', image: '/portofoliu/expotigla.jpg', link: 'https://expotigla.ro', detail: '/portofoliu/expotigla', order: 0 },
   { id: 'cosmin-tatulescu', emoji: '📷', tag: 'Fotografie', cat: 'foto', title: 'Cosmin Tătulescu — ședințe foto de Crăciun', description: 'Site de prezentare și rezervare pentru ședințele foto de Crăciun ale unui fotograf din Brașov. Explică pe scurt experiența, afișează prețurile pe perioade și arată în calendar câte locuri libere mai sunt în fiecare zi.', image: '/portofoliu/cosmin-tatulescu.jpg', link: 'https://cosmintatulescu.ro', detail: '/portofoliu/cosmin-tatulescu', order: 1 },
   { id: 'traditum', emoji: '🎂', tag: 'Cofetărie', cat: 'food', title: 'Traditum By Victoria — cofetărie artizanală', description: 'Site de prezentare pentru o cofetărie artizanală din Ilfov. Produsele sunt grupate pe categorii, iar site-ul pune în față galeria cu evenimente reale și cererea de ofertă pentru torturi și candy bar.', image: '/portofoliu/traditum.jpg', link: 'https://traditumbyvictoria.ro', detail: '/portofoliu/traditum', order: 2 },
   { id: 'mrdtf', emoji: '🖨️', tag: 'Print DTF', cat: 'print', title: 'Mr.DTF — print DTF la metru liniar', description: 'Site pentru un atelier de print DTF din București. Prețurile pe metru liniar sunt vizibile din primul ecran, un calculator arată câte modele încap pe un metru, iar comanda se trimite dintr-un formular rapid.', image: '/portofoliu/mrdtf.jpg', link: 'https://mrdtf.ro', detail: '/portofoliu/mrdtf', order: 3 },
-  { id: 'comstore', emoji: '🛠️', tag: 'Acoperișuri', cat: 'constructii', title: 'ComStore — montaj și renovare acoperișuri', description: 'Site de prezentare pentru o firmă de montaj și renovare acoperișuri. Pune în față serviciile, proiectele realizate și brandurile partenere, iar fiecare secțiune duce spre o cerere de ofertă.', image: '/portofoliu/comstore.jpg', link: 'https://comstore-acoperisuri.ro', detail: '/portofoliu/comstore', order: 4 },
+  { id: 'comstore', emoji: '🛠️', tag: 'Acoperișuri', cat: 'constructii', title: 'ComStore — montaj și renovare de acoperișuri', description: 'Site de prezentare pentru o firmă de montaj și renovare de acoperișuri. Pune în față serviciile, proiectele realizate și brandurile partenere, iar fiecare secțiune duce spre o cerere de ofertă.', image: '/portofoliu/comstore.jpg', link: 'https://comstore-acoperisuri.ro', detail: '/portofoliu/comstore', order: 4 },
   { id: 'apg-garage', emoji: '🔧', tag: 'Service auto', cat: 'auto', title: 'APG Garage — service auto', description: 'Site pentru un service auto din Militari, București. Prezintă serviciile și prețurile orientative, iar clienții își pot face cont pentru a se programa online.', image: '/portofoliu/apg-garage.jpg', detail: '/portofoliu/apg-garage', order: 5 },
-  { id: 'asociatia-roa', emoji: '🤝', tag: 'ONG', cat: 'ong', title: 'Asociația RO Administrația — ONG educație & ocupare', description: 'Site de prezentare pentru un ONG care ajută tinerii și persoanele vulnerabile să se califice și să își găsească un loc de muncă. Explică cui se adresează asociația și ce oferă, apoi trimite spre proiecte, consiliere și joburi.', image: '/portofoliu/asociatia-roa.jpg', link: 'https://asociatia-roa.ro', detail: '/portofoliu/asociatia-roa', order: 6 },
+  { id: 'asociatia-roa', emoji: '🤝', tag: 'ONG', cat: 'ong', title: 'Asociația RO Administrația — ONG de educație și ocupare', description: 'Site de prezentare pentru un ONG care ajută tinerii și persoanele vulnerabile să se califice și să își găsească un loc de muncă. Explică cui se adresează asociația și ce oferă, apoi trimite spre proiecte, consiliere și joburi.', image: '/portofoliu/asociatia-roa.jpg', link: 'https://asociatia-roa.ro', detail: '/portofoliu/asociatia-roa', order: 6 },
   { id: 'wsd-tractari', emoji: '🛻', tag: 'Tractări auto', cat: 'auto', title: 'WSD Logistics — tractări auto non-stop', description: 'Landing page pentru o firmă de tractări auto care lucrează non-stop. Totul e construit în jurul unui singur gest: omul blocat pe drum trebuie să poată suna în câteva secunde.', image: '/portofoliu/wsd-tractari.jpg', link: 'https://wsdtractari.ro', detail: '/portofoliu/wsd-tractari', order: 7 },
 ];
 
@@ -884,13 +884,13 @@ const PROJECT_CASE_STUDIES = {
     sections: [
       ['/portofoliu/expotigla/01-hero-pagina-principala.jpg', 'Pagina principală', 'Primul ecran arată direct ce face firma: sisteme complete de acoperiș. Imagine mare, mesaj scurt și un singur buton principal. Sub hero, o bandă cu patru argumente: consultanță tehnică, calcul de necesar, transport asigurat și produse cu garanție.'],
       ['/portofoliu/expotigla/02-categorii-produse.jpg', 'Categorii de produse', 'Gama este împărțită în categorii vizuale (țiglă metalică, tablă fălțuită, panouri sandwich, sisteme pluviale, tinichigerie, ventilații, folii, șuruburi și altele). Fiecare card are fotografie, titlu și o descriere de un rând, ca vizitatorul să își găsească rapid categoria potrivită.'],
-      ['/portofoliu/expotigla/03-produse-cele-mai-vandute.jpg', 'Cele mai vândute produse', 'Carusel cu produse populare: etichetă de variantă, categorie, preț afișat ca interval („de la… lei / buc”) și două acțiuni clare, Detalii și În coș.'],
+      ['/portofoliu/expotigla/03-produse-cele-mai-vandute.jpg', 'Cele mai vândute produse', 'Carusel cu produse populare: etichetă de variantă, categorie, preț afișat ca interval („de la… lei / buc”) și două acțiuni clare: „Detalii” și „În coș”.'],
       ['/portofoliu/expotigla/04-montaj-si-consultanta.jpg', 'Montaj și consultanță', 'Secțiune dedicată serviciilor: consultanță gratuită, calcul de necesar, montaj la cerere și recomandări de finisaj. Două butoane duc spre pagina de servicii și spre configurator.'],
       ['/portofoliu/expotigla/05-sistem-complet-home.jpg', 'Sistem complet', 'O ilustrație cu acoperișul „desfăcut” în componente explică ideea de sistem complet și trimite spre configurator.'],
       ['/portofoliu/expotigla/06-pagina-sistem-complet.jpg', 'Pagina Sistem complet', 'Pagină separată pentru configurator, cu schema acoperișului strat cu strat și mesajul „1 proiect, 1 ofertă, 1 consultant”. Sub hero apar brandurile partenere și avantajele ofertei integrate.'],
       ['/portofoliu/expotigla/07-ce-include-sistemul.jpg', 'Ce include un sistem complet', 'Grilă cu 8 componente numerotate (învelitoare, tinichigerie, sistem pluvial, membrane, ventilație, fixare, transport, montaj), fiecare cu opțiunea de a fi inclusă în ofertă.'],
       ['/portofoliu/expotigla/08-garantii-si-recenzii.jpg', 'Garanții și recenzii', 'Patru carduri cu garanțiile firmei (calitate certificată, livrare în 24–72h, garanție până la 30 de ani, suport tehnic), urmate de un carusel cu recenzii Google.'],
-      ['/portofoliu/expotigla/09-cta-oferta-si-footer.jpg', 'Cerere de ofertă și footer', 'Bandă aurie cu îndemn clar: trimiți dimensiunile acoperișului și primești o ofertă gratuită în maxim 24 de ore. Footer-ul grupează produsele, paginile companiei, datele de contact, zonele deservite și linkurile ANPC/SOL.']
+      ['/portofoliu/expotigla/09-cta-oferta-si-footer.jpg', 'Cerere de ofertă și footer', 'Bandă aurie cu îndemn clar: trimiți dimensiunile acoperișului și primești o ofertă gratuită în cel mult 24 de ore. Footer-ul grupează produsele, paginile companiei, datele de contact, zonele deservite și linkurile ANPC/SOL.']
     ],
     features: ['Catalog de produse cu variante și prețuri cu TVA', 'Coș de cumpărături și cont de client', 'Configurator „Sistem complet” pentru cerere de ofertă', 'Formular de cerere ofertă gratuită', 'Chat pe site pentru întrebări rapide', 'Căutare în catalog', 'Secțiune de ghiduri']
   },
@@ -900,7 +900,7 @@ const PROJECT_CASE_STUDIES = {
     meta: [['Client', 'Cosmin Tătulescu, fotograf de familie'], ['Locație', 'Sânpetru, Brașov'], ['Tip proiect', 'Site de prezentare cu rezervări']],
     about: [
       'Ședințele de Crăciun sunt un serviciu sezonier, cu o perioadă scurtă de rezervare și multe întrebări repetitive din partea părinților. Site-ul trebuia să răspundă la ele înainte să fie puse: ce primesc, cât costă, când e liber și unde e studioul.',
-      'Am ales un design aerisit, cu fundal alb și crem, titluri serif elegante și accente discrete de roșu de Crăciun. Totul stă pe o singură pagină lungă, cu meniu fix, ca vizitatorul să poată sări direct la prețuri, calendar sau galerie. Site-ul are și versiune în engleză.'
+      'Am ales un design aerisit, cu fundal alb și crem, titluri serif elegante și accente discrete de roșu de Crăciun. Totul stă pe o singură pagină lungă, cu meniu fix, ca vizitatorul să poată sări direct la prețuri, calendar sau galerie. Site-ul are și o versiune în engleză.'
     ],
     sections: [
       ['/portofoliu/cosmin-tatulescu/01-hero.jpg', 'Hero', 'O fotografie reală din decorul studioului, alături de titlul „Ședințe foto de Crăciun 2026 în Brașov” și un text cald despre atmosfera ședinței. Butonul principal duce direct la zilele libere.'],
@@ -940,7 +940,7 @@ const PROJECT_CASE_STUDIES = {
     meta: [['Client', 'Mr.DTF (Unilevel Network SRL)'], ['Locație', 'București'], ['Tip proiect', 'Site de prezentare cu formular de comandă']],
     about: [
       'Clienții Mr.DTF sunt în mare parte firme și creatori care personalizează textile. Ei vor să afle repede trei lucruri: cât costă, cât încape pe folie și cum trimit fișierul. Site-ul răspunde la toate trei pe o singură pagină, fără pași inutili.',
-      'Identitatea pornește de la logo-ul colorat, în stil graffiti. Restul designului e curat și luminos, cu accente galbene pe butoanele de comandă și titluri mari, ușor de citit. Pentru partea de joc am adăugat un tricou interactiv în hero: vizitatorul trage un print peste tricou și vede pe loc cum ar arăta.'
+      'Identitatea pornește de la logo-ul colorat, în stil graffiti. Restul designului e curat și luminos, cu accente galbene pe butoanele de comandă și titluri mari, ușor de citit. Ca element de joc, am adăugat un tricou interactiv în hero: vizitatorul trage un print peste tricou și vede pe loc cum ar arăta.'
     ],
     sections: [
       ['/portofoliu/mrdtf/01-hero-si-preturi.jpg', 'Hero și prețuri', 'Mesajul principal, „Printuri DTF de calitate”, scoate în față avantajul lățimii de 90 cm. Imediat dedesubt sunt cele cinci trepte de preț pe metru liniar, de la 70 la 55 lei. Treapta cea mai avantajoasă e evidențiată.'],
@@ -953,22 +953,22 @@ const PROJECT_CASE_STUDIES = {
     features: ['Prețuri pe trepte de cantitate, afișate din primul ecran', 'Calculator de încadrare pe 1 metru liniar, pe formate', 'Tricou interactiv cu drag and drop', 'Formular de comandă cu date de facturare pentru PF și PJ', 'Butoane rapide de apel și contact', 'Integrare video TikTok', 'Blog cu sfaturi tehnice']
   },
   'comstore': {
-    title: 'ComStore Acoperișuri', subtitle: 'Site de prezentare pentru o firmă de montaj și renovare acoperișuri',
+    title: 'ComStore Acoperișuri', subtitle: 'Site de prezentare pentru o firmă de montaj și renovare de acoperișuri',
     tag: 'Site de prezentare', link: 'https://comstore-acoperisuri.ro', cover: '/portofoliu/comstore/01-hero.jpg',
     meta: [['Client', 'ComStore Construct SRL'], ['Domeniu', 'Montaj & renovare acoperișuri'], ['Tip proiect', 'Site de prezentare']],
     about: [
       'ComStore lucrează de la măsurătoare până la montajul final, inclusiv deviz și randare 3D a acoperișului. Clientul tipic își face casă sau își renovează acoperișul și vrea să știe dacă poate avea încredere în echipă. Site-ul răspunde la asta prin servicii explicate clar, proiecte reale, testimoniale și branduri cunoscute.',
-      'Am folosit culorile logo-ului, galben și gri antracit, cu fotografii mari de acoperișuri. Butonul „Cere ofertă” apare permanent în meniu, iar telefonul și WhatsApp-ul sunt la un click distanță.'
+      'Am folosit culorile logo-ului, galben și gri antracit, cu fotografii mari de acoperișuri. Butonul „Cere ofertă” apare permanent în meniu, iar telefonul și WhatsApp-ul sunt la un clic distanță.'
     ],
     sections: [
-      ['/portofoliu/comstore/01-hero.jpg', 'Hero', 'Slider pe toată lățimea ecranului, cu mesajul „Tot ce ai nevoie pentru acoperișul tău” și două acțiuni: cere o ofertă sau vezi produsele. Sub el, o bandă galbenă cu butoane de apel și de solicitare ofertă.'],
+      ['/portofoliu/comstore/01-hero.jpg', 'Hero', 'Slider pe toată lățimea ecranului, cu mesajul „Tot ce ai nevoie pentru acoperișul tău” și două acțiuni: cere o ofertă sau vezi produsele. Sub el, o bandă galbenă cu butoane pentru apel și pentru cererea de ofertă.'],
       ['/portofoliu/comstore/02-servicii.jpg', 'Serviciile noastre', 'Cinci servicii prezentate în carduri cu fotografie și o descriere scurtă: montaj, renovare, măsurători, creare deviz și randări 3D.'],
       ['/portofoliu/comstore/03-6-motive.jpg', '6 motive să ne alegi', 'Secțiune pe fundal închis, cu șase argumente numerotate: expertiză, renovări de calitate, măsurători precise, devize clare, respectarea termenelor și garanție.'],
       ['/portofoliu/comstore/04-proiecte-realizate.jpg', 'Proiecte realizate', 'Lucrări reale, fiecare cu numele materialului folosit (de exemplu tablă dublufalț Lindab), ca vizitatorul să vadă cum arată produsul montat.'],
       ['/portofoliu/comstore/05-testimoniale.jpg', 'Testimoniale', 'Șase recenzii scurte, cu prenume, inițiala numelui și localitate.'],
       ['/portofoliu/comstore/06-cta-parteneri-footer.jpg', 'Îndemn, parteneri și footer', 'O bandă galbenă cu îndemnul final spre ofertă, apoi logo-urile partenerilor (Lindab, Velux, Metigla, Wetterbest). Footer-ul conține datele firmei, contactul și meniul complet.']
     ],
-    features: ['Slider în hero cu campanii (de exemplu voucher)', 'Cerere de ofertă prin formular', 'Buton WhatsApp și apel direct', 'Pagini separate pentru produse, proiecte, campanii și blog', 'Secțiune de parteneri']
+    features: ['Slider în hero cu campanii (de exemplu, un voucher)', 'Cerere de ofertă prin formular', 'Buton WhatsApp și apel direct', 'Pagini separate pentru produse, proiecte, campanii și blog', 'Secțiune de parteneri']
   },
   'apg-garage': {
     title: 'APG Garage', subtitle: 'Site de prezentare cu cont de client și programări online pentru un service auto',
@@ -980,7 +980,7 @@ const PROJECT_CASE_STUDIES = {
     ],
     sections: [
       ['/portofoliu/apg-garage/01-hero.jpg', 'Hero', 'Fotografie pe tot ecranul, cu un mecanic la lucru, numele service-ului scris mare și două acțiuni: programare online și prețuri.'],
-      ['/portofoliu/apg-garage/02-servicii-si-cifre.jpg', 'Servicii și cifre', 'Patru servicii principale în carduri simple (revizie completă, diagnoză computerizată, sistem de frânare, suspensie și direcție), cu link spre lista completă. Sub ele, trei cifre: 10+ ani experiență, 500+ clienți, 100% transparență.'],
+      ['/portofoliu/apg-garage/02-servicii-si-cifre.jpg', 'Servicii și cifre', 'Patru servicii principale în carduri simple (revizie completă, diagnoză computerizată, sistem de frânare, suspensie și direcție), cu link spre lista completă. Sub ele, trei cifre: 10+ ani de experiență, 500+ clienți, 100% transparență.'],
       ['/portofoliu/apg-garage/03-recenzii.jpg', 'Recenzii', 'Secțiune pentru părerile clienților, cu stele și citat.'],
       ['/portofoliu/apg-garage/04-cta-si-program.jpg', 'Îndemn și program de lucru', 'O a doua fotografie de atelier, cu îndemnul „Mașina ta, pe mâini bune”, urmată de programul de lucru afișat clar.'],
       ['/portofoliu/apg-garage/05-footer.jpg', 'Footer', 'Serviciile, zonele deservite și mărcile reparate, gândite și pentru căutările locale (service auto Militari, Sector 6), plus datele firmei și paginile legale.'],
@@ -1003,7 +1003,7 @@ const PROJECT_CASE_STUDIES = {
       ['/portofoliu/asociatia-roa/04-ce-facem-concret.jpg', 'Ce facem concret', 'Șase carduri pe fundal albastru, fiecare cu iconiță, descriere și buton propriu: formare profesională, consiliere vocațională, mediere pe piața muncii, proiecte europene, parteneriate și recrutare de voluntari.'],
       ['/portofoliu/asociatia-roa/05-cifre-si-contact.jpg', 'Cifre și contact', 'Contoare animate cu rezultatele asociației (persoane consiliate, tineri calificați, localități rurale, parteneri), urmate de datele de contact și datele de înregistrare ale ONG-ului.']
     ],
-    features: ['Acces rapid pe trei tipuri de vizitatori', 'Secțiuni dedicate pentru joburi, proiecte, știri și FAQ', 'Contoare animate pentru rezultate', 'Pagină pentru echipă', 'Legături spre Facebook și LinkedIn']
+    features: ['Acces rapid pentru trei tipuri de vizitatori', 'Secțiuni dedicate pentru joburi, proiecte, știri și FAQ', 'Contoare animate pentru rezultate', 'Pagină pentru echipă', 'Legături spre Facebook și LinkedIn']
   },
   'wsd-tractari': {
     title: 'WSD Logistics', subtitle: 'Landing page pentru o firmă de tractări auto non-stop',
@@ -1014,7 +1014,7 @@ const PROJECT_CASE_STUDIES = {
       'Designul folosește negru și galben, culorile de avertizare din trafic, cu titluri mari și condensate, ușor de citit chiar și din mers. Fotografia din hero arată o mașină reală din flota firmei.'
     ],
     sections: [
-      ['/portofoliu/wsd-tractari/01-hero.jpg', 'Hero', 'Mesajul „Tractări auto oriunde, oricând”, cu butonul „Sună acum” în față și trei cifre-cheie: non-stop 24/7, timp mediu de sosire și numărul de orașe acoperite. În dreapta, o fotografie cu platforma firmei în acțiune.'],
+      ['/portofoliu/wsd-tractari/01-hero.jpg', 'Hero', 'Mesajul „Tractări auto oriunde, oricând”, cu butonul „Sună acum” în prim-plan și trei cifre-cheie: non-stop 24/7, timp mediu de sosire și numărul de orașe acoperite. În dreapta, o fotografie cu platforma firmei în acțiune.'],
       ['/portofoliu/wsd-tractari/02-banda-urgenta.jpg', 'Bandă de urgență', 'O bandă galbenă cu numărul de telefon afișat mare și un link pentru trimiterea locației.'],
       ['/portofoliu/wsd-tractari/03-servicii.jpg', 'Servicii', 'Șase servicii prezentate în grilă: autoturisme, dube și utilaje, SUV și 4x4, asistență pe autostradă, asistență rutieră și transport pe platformă.'],
       ['/portofoliu/wsd-tractari/04-de-ce-noi-si-acoperire.jpg', 'De ce noi și acoperire', 'Patru argumente (răspuns rapid, prețuri transparente, acoperire națională, firmă autorizată ARR) și lista orașelor deservite, prezentate ca etichete galbene, gândită și pentru căutări locale.'],
@@ -1129,7 +1129,7 @@ h1,h2,h3{font-family:'Poppins',sans-serif;color:var(--ink);letter-spacing:-.02em
   <h1>${esc(cs.title)}</h1>
   <p class="lead">${esc(cs.subtitle)}.</p>
   <div class="hero-actions">
-    ${cs.link ? `<a href="${esc(cs.link)}" target="_blank" rel="noopener" class="btn btn-p">Vezi site-ul live ↗</a>` : ''}
+    ${cs.link ? `<a href="${esc(cs.link)}" target="_blank" rel="noopener" class="btn btn-p">Vezi site-ul online ↗</a>` : ''}
     <a href="/cere-oferta" class="btn ${cs.link ? 'btn-o' : 'btn-p'}">Vreau un site similar</a>
   </div>
   <div class="cs-meta">${metaRows}</div>
@@ -1140,7 +1140,7 @@ h1,h2,h3{font-family:'Poppins',sans-serif;color:var(--ink);letter-spacing:-.02em
 <section class="feat"><div class="wrap"><h2>Ce poate face <b>site-ul</b></h2><ul>${features}</ul></div></section>
 <section class="cta">
   <h2>Vrei un site <b>ca acesta</b>?</h2>
-  <p>Îți construim un site clar, rapid și făcut să aducă clienți — preț fix, livrat în 14 zile.</p>
+  <p>Îți construim un site clar, rapid și gândit să aducă clienți — preț fix, livrat în 14 zile.</p>
   <a href="/cere-oferta" class="btn btn-p">Cere o ofertă gratuită</a>
 </section>
 <footer class="foot">© C Design · <a href="/" style="color:var(--blue)">c-design.ro</a>${cs.link ? ` · <a href="${esc(cs.link)}" target="_blank" rel="noopener" style="color:var(--blue)">${esc(cs.link.replace(/^https?:\/\//, ''))}</a>` : ''}</footer>
@@ -1235,6 +1235,69 @@ const COMPANY_DEFAULTS = {
   // Sediul NU este scris în cod (repo public): se citește din registrul ANAF după CUI,
   // doar pentru oferte, contracte și admin — vezi companySediu().
 };
+
+// Corectura de limbă pentru catalogul de servicii deja salvat: se înlocuiesc doar
+// textele identice cu cele inițiale, deci ce a fost modificat din admin rămâne neatins.
+// [id, nume vechi, nume nou, descriere veche, descriere nouă]
+const SVC_TEXT_FIXES = [
+  ['svc_d01', 'Site de Prezentare', 'Site de prezentare', '5 pagini, design responsiv, CMS, Google Analytics, SEO de bază', '5 pagini, design responsiv, CMS, Google Analytics și SEO de bază'],
+  ['svc_d02', 'Site de Prezentare Premium', 'Site de prezentare premium', '10+ pagini, design custom, blog, multilingv, integrări API', 'Peste 10 pagini, design personalizat, blog, mai multe limbi, integrări API'],
+  ['svc_d03', 'Magazin Online (eCommerce)', 'Magazin online (e-commerce)', 'WooCommerce / Shopify, catalog produse, plăți online, livrare', 'WooCommerce sau Shopify, catalog de produse, plăți online, livrare'],
+  ['svc_d04', 'Landing Page', 'Landing page', 'Pagină de conversie optimizată, A/B testing, integrare formulare', 'Pagină optimizată pentru conversii, teste A/B, formulare integrate'],
+  ['svc_d05', 'Redesign Site Existent', 'Redesign pentru site-ul existent', 'Redesign complet cu păstrarea conținutului, migrare date, SEO redirect', 'Redesign complet, cu păstrarea conținutului, migrarea datelor și redirecționări SEO'],
+  ['svc_d06', 'Audit SEO Complet', 'Audit SEO complet', 'Analiză tehnică, cuvinte cheie, concurență, raport cu recomandări', 'Analiză tehnică, cuvinte-cheie, concurență și raport cu recomandări'],
+  ['svc_d07', 'SEO Lunar (Ongoing)', 'SEO lunar', 'Optimizare continuă, content, link building, raport lunar, 15-25 keywords', 'Optimizare continuă, conținut, link building, raport lunar, 15–25 de cuvinte-cheie'],
+  ['svc_d08', 'SEO Local (Google Maps)', 'SEO local (Google Maps)', 'Optimizare Google Business Profile, local citations, recenzii', 'Optimizarea profilului Google Business, listări în directoare locale, recenzii'],
+  ['svc_d09', 'Management Google Ads', 'Administrare Google Ads', 'Setup + optimizare campanii Search/Display/Shopping, raport lunar', 'Configurarea și optimizarea campaniilor Search, Display și Shopping, raport lunar'],
+  ['svc_d10', 'Management Meta Ads', 'Administrare Meta Ads', 'Campanii Facebook & Instagram, A/B testing, retargeting, raport lunar', 'Campanii pe Facebook și Instagram, teste A/B, retargeting, raport lunar'],
+  ['svc_d11', 'Administrare Social Media', 'Administrare social media', '12 postări/lună, copywriting, grafică branded, monitorizare comunitate', '12 postări pe lună, texte, grafică personalizată, monitorizarea comunității'],
+  ['svc_d12', 'Email Marketing / Newsletter', 'Email marketing și newsletter', 'Design template, segmentare listă, trimitere campanii, raport deschideri', 'Design de șablon, segmentarea listei, trimiterea campaniilor, raport de deschideri'],
+  ['svc_d13', 'Mentenanță Site Bază', 'Mentenanță site – nivel de bază', 'Actualizări CMS & plugin-uri, backup lunar, monitoring uptime, 1h suport', 'Actualizări CMS și plugin-uri, backup lunar, monitorizarea funcționării, o oră de suport'],
+  ['svc_d14', 'Mentenanță Site Avansat', 'Mentenanță site – nivel avansat', 'Actualizări, backup săptămânal, securitate, 4h modificări/lună, raport', 'Actualizări, backup săptămânal, securitate, 4 ore de modificări pe lună, raport'],
+  ['svc_d15', 'Logo Design', 'Design de logo', '3 variante de concept, fișiere vectoriale finale (AI, SVG, PNG, PDF)', '3 variante de concept, fișiere finale (AI, SVG, PNG, PDF)'],
+  ['svc_d16', 'Identitate Vizuală Completă', 'Identitate vizuală completă', 'Logo + paletă culori + fonturi + business card + antet + ghid brand', 'Logo, paletă de culori, fonturi, carte de vizită, antet și ghid de brand'],
+  ['svc_d17', 'Integrare Google Search Console', 'Integrare Google Search Console', 'Verificare proprietate, sitemap XML, conectare Google Analytics, raport erori indexare', 'Verificarea proprietății, sitemap XML, conectarea cu Google Analytics, raport cu erorile de indexare'],
+  ['svc_promo', 'Pachet Promo — Ofertă de lansare', 'Pachet promo — ofertă de lansare', 'Site de prezentare (până la 5 pagini) + SEO, apare pe Google + Google Business Profile configurat + conturi Instagram și Facebook. Preț normal 750 EUR.', 'Site de prezentare (până la 5 pagini), optimizare SEO, profil Google Business configurat și conturi de Instagram și Facebook. Preț normal: 750 EUR.'],
+];
+function fixServiciiTexts(lista) {
+  let changed = false;
+  for (const [id, oldN, newN, oldD, newD] of SVC_TEXT_FIXES) {
+    const svc = lista.find(x => x.id === id);
+    if (!svc) continue;
+    if (svc.nume === oldN && oldN !== newN) { svc.nume = newN; changed = true; }
+    if (svc.descriere === oldD && oldD !== newD) { svc.descriere = newD; changed = true; }
+  }
+  return changed;
+}
+
+// Corectura de limbă pentru cele 4 articole de blog salvate în baza de date (noiembrie 2026).
+// Se aplică o singură dată și doar articolelor neschimbate între timp (titlul vechi și
+// conținutul identic, verificat prin SHA-256); un articol editat din admin rămâne neatins.
+const BLOG_TEXT_FIXES = [{"slug": "web-design-de-calitate", "oldTitle": "Web Design de Calitate", "oldHash": "561498036433afb67f769df7a0440438991535b06d52248796e525c597c27968", "title": "Web design de calitate", "excerpt": "Alege un serviciu de web design care îți asigură o prezență online solidă. Află ce să urmărești ca să faci alegerea potrivită: în acest articol găsești sfaturi practice și exemple concrete pentru a alege cel mai bun serviciu de web design pentru afacerea ta.", "content": "<h1>Ce să cauți la un serviciu de web design</h1>\n  <p>Pentru orice afacere, o prezență online solidă a devenit astăzi indispensabilă. Un site bine conceput te ajută nu doar să atragi clienți noi, ci și să îți dezvolți brandul și să te diferențiezi de concurență. Dar, cu atâtea opțiuni disponibile, cum alegi cel mai bun serviciu de web design pentru nevoile tale? În acest articol trecem în revistă factorii-cheie de care trebuie să ții cont ca să faci o alegere în cunoștință de cauză.</p>\n\n  <h2>Experiență și portofoliu</h2>\n  <p>Când cauți un serviciu de web design, experiența și portofoliul sunt printre primele lucruri pe care ar trebui să le verifici. O echipă cu experiență îți va înțelege mai bine nevoile și va crea un site care să se potrivească perfect cu obiectivele afacerii tale. Un portofoliu variat și de calitate arată că echipa se poate adapta la proiecte și nevoi diverse.</p>\n\n  <h2>SEO și optimizare pentru motoarele de căutare</h2>\n  <p>Un site, oricât de frumos și de bine conceput ar fi, nu își atinge potențialul dacă nu este optimizat pentru motoarele de căutare. De aceea, serviciul de web design pe care îl alegi ar trebui să ofere și servicii de SEO. O echipă care înțelege importanța optimizării pentru motoarele de căutare îți poate ajuta site-ul să urce în topul rezultatelor, crescând astfel vizibilitatea și traficul.</p>\n\n  <h2>Conținut de calitate și strategie de conținut</h2>\n  <p>Conținutul este cel mai important element al site-ului tău. Trebuie să fie relevant, atractiv și să le ofere valoare vizitatorilor. Un serviciu de web design bun ar trebui să ofere și creare de conținut sau, cel puțin, să te ajute să construiești o strategie de conținut eficientă. Aici intră atât textele, cât și imaginile, videoclipurile și alte elemente media, îmbinate astfel încât să spună povestea brandului tău într-un mod atractiv și captivant.</p>\n\n  <h2>Servicii de întreținere și actualizare</h2>\n  <p>Un site nu este un proiect pe care îl termini o dată pentru totdeauna, ci mai degrabă un organism viu, care are nevoie de întreținere și actualizări regulate. Alege un serviciu de web design care oferă și întreținere, ca să te asiguri că site-ul tău rămâne securizat, actualizat și performant pe termen lung.</p>\n\n  <h2>Comunicare și suport</h2>\n  <p>Comunicarea eficientă este cheia succesului în orice proiect. Echipa de web design pe care o alegi ar trebui să ofere un suport excelent și să fie disponibilă oricând pentru a-ți răspunde la întrebări. O comunicare bună te ajută să înțelegi procesul de design și să contribui activ la crearea unui site care să îți reflecte perfect viziunea și obiectivele.</p>\n\n  <h2>Preț și valoare</h2>\n  <p>Când alegi un serviciu de web design, prețul este un factor important, dar nu ar trebui să fie singurul criteriu. În loc să cauți doar cea mai ieftină variantă, gândește-te la valoarea pe care o primești. Un site bine conceput și funcțional poate fi o investiție pe termen lung, care te ajută să îți dezvolți afacerea și să îți mărești veniturile.</p>\n\n  <h2>Concluzii</h2>\n  <p>Alegerea serviciului de web design potrivit poate fi o decizie crucială pentru succesul online al afacerii tale. Dacă iei în calcul factori precum experiența, SEO, calitatea conținutului, serviciile de întreținere, comunicarea și raportul calitate-preț, poți găsi o echipă care să îți creeze un site ce răspunde tuturor nevoilor tale și te ajută să îți atingi obiectivele de afaceri. Nu uita: un site nu înseamnă doar prezență online, ci și o oportunitate de a construi o comunitate, de a atrage clienți potențiali și de a-ți dezvolta brandul.</p>"}, {"slug": "web-design-pentru-succes", "oldTitle": "Web Design pentru Succes", "oldHash": "ad64549513d05155a6375e3d052250aede19440eccb1f1e4c01705ddebdce88c", "title": "Web design pentru afaceri de succes", "excerpt": "Află cum un web design de calitate poate contribui la succesul afacerii tale mici. Sfaturi practice pentru antreprenorii din România.", "content": "<h1>Web design pentru afaceri de succes</h1>\n    <p>Fie că afacerea ta e mică sau mare, a fi vizibil online nu mai e un lux, ci o necesitate. Un site bine conceput nu doar te ajută să îți faci cunoscută marca, ci poate fi și un instrument puternic pentru a atrage clienți și a crește vânzările. În acest articol vorbim despre importanța web designului pentru afacerile mici din România și îți dăm sfaturi practice pentru a crea un site de succes.</p>\n\n    <h2>De ce este important web designul pentru afacerile mici?</h2>\n    <p>Un site profesionist și atractiv poate schimba semnificativ felul în care clienții potențiali îți percep afacerea. El nu doar prezintă produsele sau serviciile oferite, ci reflectă și valorile și personalitatea brandului. Un design de calitate poate inspira încredere, iar încrederea este un factor-cheie în decizia de cumpărare.</p>\n\n    <h2>Ce caracteristici ar trebui să aibă un site de succes?</h2>\n    <ul>\n      <li><strong>Design responsiv:</strong> Site-ul tău ar trebui să se adapteze perfect la orice dispozitiv, de la telefon la computer, pentru a le oferi utilizatorilor o experiență plăcută.</li>\n      <li><strong>Conținut relevant și actualizat:</strong> Informațiile prezentate ar trebui să fie pertinente, ușor de înțeles și actualizate regulat, ca să mențină interesul clienților.</li>\n      <li><strong>Navigare ușoară:</strong> O structură clară și intuitivă a site-ului îi ajută pe clienți să găsească rapid ceea ce caută.</li>\n      <li><strong>Optimizare pentru motoarele de căutare (SEO):</strong> Un site optimizat SEO își poate crește vizibilitatea în rezultatele căutărilor, aducând mai mulți clienți potențiali.</li>\n    </ul>\n\n    <h2>Sfaturi practice pentru un web design de succes</h2>\n    <p>Pentru a crea un site care să atragă și să păstreze clienții, ține cont de următoarele sfaturi:</p>\n    <ul>\n      <li><strong>Stabilește-ți obiectivele:</strong> Înainte de a începe proiectul, clarifică ce vrei să obții cu site-ul tău și cui te adresezi.</li>\n      <li><strong>Alege culori și fonturi care reflectă brandul tău:</strong> Ele te ajută să construiești o identitate puternică și coerentă.</li>\n      <li><strong>Investește în imagini de calitate:</strong> Imaginile bine alese pot face o mare diferență în prezentarea produselor sau serviciilor tale.</li>\n      <li><strong>Asigură-te că site-ul tău este securizat:</strong> O conexiune HTTPS și măsurile de securitate potrivite protejează datele clienților și inspiră încredere.</li>\n    </ul>\n\n    <h2>Concluzii</h2>\n    <p>Un web design de calitate nu este doar o chestiune de estetică, ci poate fi un factor-cheie pentru succesul afacerii tale. Dacă înțelegi cât contează un site bine conceput și aplici sfaturile practice de mai sus, îți poți consolida prezența online, poți atrage mai mulți clienți și, în final, poți avea mai mult succes pe piața din România.</p>"}, {"slug": "alegerea-web-designerului", "oldTitle": "Alegerea Web Designerului", "oldHash": "15bc1548926dba959a858bde4f2fc827ad27378458ada656da6f71757066ae58", "title": "Alegerea web designerului", "excerpt": "Găsește cel mai bun web designer pentru afacerea ta. Descoperă sfaturi practice care te ajută să faci alegerea potrivită și să îmbunătățești prezența online a afacerii tale.", "content": "<h1>5 sfaturi pentru alegerea celui mai bun web designer</h1>\n    <p>Oricât de mică sau de mare ar fi afacerea ta, felul în care se prezintă pe internet contează astăzi mai mult ca oricând. Un site bine conceput și funcțional poate face diferența între succes și eșec. Dar cum alegi cel mai bun web designer pentru afacerea ta? În acest articol găsești 5 sfaturi practice care te vor ajuta să faci alegerea potrivită.</p>\n    <h2>Sfatul 1: Definește-ți obiectivele și nevoile</h2>\n    <p>Înainte să începi să cauți un web designer, este important să îți definești clar obiectivele și nevoile afacerii. Ce vrei să obții cu site-ul tău? Vrei să crești vânzările, să promovezi un produs sau un serviciu ori să construiești o comunitate în jurul brandului tău? Dacă îți cunoști obiectivele, vei găsi mai ușor un web designer care îți poate satisface nevoile specifice.</p>\n    <h2>Sfatul 2: Caută portofolii și recomandări</h2>\n    <p>Caută web designeri care au un portofoliu solid și care pot prezenta exemple concrete de proiecte asemănătoare cu ce ai tu nevoie. Verifică și recomandările altor clienți, ca să îți faci o idee despre calitatea muncii și profesionalismul designerului. Un portofoliu puternic și recomandările pozitive sunt indicatori importanți ai capacității designerului de a livra rezultate de calitate.</p>\n    <h2>Sfatul 3: Evaluează abilitățile tehnice și creative</h2>\n    <p>Un web designer bun trebuie să aibă atât abilități tehnice, cât și creative. Evaluează dacă designerul are cunoștințe solide în tehnologii web precum HTML, CSS și JavaScript și dacă are experiență cu sisteme de administrare a conținutului (CMS), cum ar fi WordPress. De asemenea, verifică dacă are o abordare creativă și inovatoare în realizarea website-urilor, potrivită cu identitatea și obiectivele brandului tău.</p>\n    <h2>Sfatul 4: Ia în calcul experiența și prețurile</h2>\n    <p>Experiența și prețurile sunt factori importanți atunci când alegi un web designer. Caută designeri care au experiență în realizarea de website-uri pentru afaceri asemănătoare cu a ta și care oferă prețuri competitive. Totuși, nu uita că cel mai ieftin nu este întotdeauna cel mai bun. Evaluează raportul calitate-preț și alege varianta care se potrivește cel mai bine bugetului și obiectivelor tale.</p>\n    <h2>Sfatul 5: Urmărește comunicarea și suportul</h2>\n    <p>Comunicarea eficientă și suportul după lansare sunt esențiale pentru ca site-ul tău să funcționeze optim și orice problemă să fie rezolvată rapid. Alege un web designer care oferă suport prompt și care e dispus să colaboreze cu tine pe termen lung pentru a-ți întreține și actualiza site-ul.</p>\n    <p>Așadar, alegerea celui mai bun web designer pentru afacerea ta cere o abordare atentă și bine gândită. Dacă îți definești obiectivele, cauți portofolii și recomandări, evaluezi abilitățile tehnice și creative, iei în calcul experiența și prețurile și te asiguri că ai parte de o comunicare bună și de suport, poți găsi un partener care să te ajute să construiești o prezență online puternică și de succes.</p>"}, {"slug": "web-design-pentru-afaceri-mici", "oldTitle": "Web Design pentru Afaceri Mici", "oldHash": "59aadcc11028086a602712b49cc5bb04ceb13eaf44b28f1dd5c59ee5ff9ecf4b", "title": "Web design pentru afaceri mici", "excerpt": "Află cum un web design de calitate poate crește vizibilitatea și vânzările afacerii tale mici. Descoperă sfaturi practice și exemple concrete care te ajută să îți dezvolți prezența online.", "content": "<h1>Web design pentru afaceri mici: ghidul complet</h1>\n  <p>Astăzi, orice afacere, indiferent de mărime, are nevoie de o prezență online bine pusă la punct. Pentru afacerile mici din România, un web design de calitate poate face diferența între succes și eșec. În acest articol îți arătăm de ce contează web designul pentru afacerile mici, îți dăm sfaturi practice pentru a crea un site de succes și îți prezentăm exemple concrete care te pot inspira să îți dezvolți prezența online.</p>\n\n  <h2>De ce este important web designul pentru afacerile mici?</h2>\n  <p>Un web design bine realizat nu este doar o chestiune de estetică: el joacă un rol esențial în crearea unei impresii pozitive asupra clienților potențiali și în consolidarea identității de brand. Un site bine conceput poate:</p>\n  <ul>\n    <li>Crește vizibilitatea și accesibilitatea afacerii tale pentru un public mai larg.</li>\n    <li>Îmbunătăți experiența utilizatorilor, determinându-i pe clienți să petreacă mai mult timp pe site și să exploreze mai multe pagini.</li>\n    <li>Spori încrederea în brand și credibilitatea acestuia, prin prezentarea coerentă a valorilor și a misiunii afacerii.</li>\n    <li>Optimiza conversiile, transformând vizitatorii în clienți prin îndemnuri la acțiune (call-to-action) clare și ușor de folosit.</li>\n  </ul>\n\n  <h2>Sfaturi practice pentru un web design de succes</h2>\n  <p>Pentru a crea un site care să atragă și să rețină clienții, ține cont de următoarele sfaturi:</p>\n  <ul>\n    <li><strong>Simplitate și claritate:</strong> Nu încărca site-ul cu prea mult conținut sau cu funcționalități inutile. Concentrează-te pe esențial și asigură-te că mesajul tău este clar și concis.</li>\n    <li><strong>Experiența pe mobil:</strong> Majoritatea utilizatorilor accesează website-urile de pe dispozitive mobile. Asigură-te că site-ul tău este responsiv și oferă o experiență plăcută pe orice dispozitiv.</li>\n    <li><strong>Conținut de calitate:</strong> Investește în conținut relevant, actualizat și de înaltă calitate. Acesta poate include texte, imagini, videoclipuri și articole de blog care le oferă valoare clienților tăi.</li>\n    <li><strong>Optimizare pentru motoarele de căutare (SEO):</strong> Înțelege importanța SEO și aplică principiile de bază pentru a îmbunătăți vizibilitatea site-ului tău în rezultatele căutărilor.</li>\n  </ul>\n\n  <h2>Exemple concrete și inspirație</h2>\n  <p>Ca să vezi ce poate face un web design bine realizat, să luăm exemplul unei mici afaceri cu obiecte de design din București. Cu un site modern, cu imagini de înaltă calitate și descrieri detaliate ale produselor, această afacere a reușit să își crească vânzările online cu peste 50% în doar 6 luni.</p>\n  <p>Un alt exemplu este o cafenea din Cluj-Napoca, care și-a lansat un site cu comandă online și plată cu cardul, reducând astfel timpul de așteptare și crescând satisfacția clienților.</p>\n\n  <h2>Concluzii</h2>\n  <p>Un web design de calitate este o investiție esențială pentru orice afacere mică ce vrea să prospere în mediul digital de astăzi. Dacă aplici sfaturile practice de mai sus și te inspiri din exemplele concrete prezentate, poți crea un site care nu doar îți reprezintă cu succes afacerea, ci și atrage și păstrează clienți, contribuind astfel, în final, la creșterea și dezvoltarea ei.</p>"}];
+async function sha256Hex(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(String(str)));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+let blogTextFixDone = false;
+async function fixBlogTexts(env) {
+  if (blogTextFixDone) return;
+  try {
+    if (await env.PROGRAMARI.get('__blog_text_fix_v1__')) { blogTextFixDone = true; return; }
+    const raw = await env.PROGRAMARI.get('__blog__');
+    const posts = raw ? JSON.parse(raw) : [];
+    let changed = false;
+    for (const f of BLOG_TEXT_FIXES) {
+      const p = posts.find(x => x.slug === f.slug);
+      if (!p || p.title !== f.oldTitle) continue;
+      if ((await sha256Hex(p.content || '')) !== f.oldHash) continue;
+      p.title = f.title; p.excerpt = f.excerpt; p.content = f.content; p.updatedAt = new Date().toISOString();
+      changed = true;
+    }
+    if (changed) await env.PROGRAMARI.put('__blog__', JSON.stringify(posts));
+    await env.PROGRAMARI.put('__blog_text_fix_v1__', new Date().toISOString());
+    blogTextFixDone = true;
+  } catch {}
+}
 
 const SVC_CATEGORII = ['pachete', 'web-design', 'seo', 'mentenanta', 'grafic', 'marketing', 'altele'];
 
@@ -1567,12 +1630,12 @@ async function sendFriendDiscountEmail(env, rec) {
   const html =
     '<div style="font-family:system-ui,Arial,sans-serif;max-width:520px;margin:0 auto;color:#2E3436;">' +
       '<h2 style="color:#008587;">Ai primit un cadou de bun venit!</h2>' +
-      '<p>Salut ' + escHtml(rec.friendName) + ',</p>' +
+      '<p>Salut, ' + escHtml(rec.friendName) + ',</p>' +
       '<p><strong>' + escHtml(rec.referrerName) + '</strong> crede că C Design îți poate ajuta afacerea online și te-a recomandat — și asta vine cu un cadou.</p>' +
       '<p style="font-size:1rem;">Iată reducerea ta de <strong>' + escHtml(String(rec.friendPct)) + '% pentru primul tău proiect</strong>:</p>' +
       '<p style="text-align:center;margin:22px 0;"><span style="display:inline-block;font-family:monospace;font-size:1.5rem;font-weight:700;letter-spacing:2px;color:#008587;background:#e9f6f6;border:1px dashed #00AAAC;border-radius:10px;padding:14px 26px;">' + escHtml(rec.friendCode) + '</span></p>' +
       '<p>Menționează acest cod când ceri o ofertă la <a href="https://www.c-design.ro/cere-oferta" style="color:#008587;">www.c-design.ro/cere-oferta</a> sau răspunde direct la acest email.</p>' +
-      '<p style="color:#8b94a3;font-size:.85rem;">Fără presiune — suntem aici când ești gata. — Echipa C Design</p>' +
+      '<p style="color:#8b94a3;font-size:.85rem;">Fără presiune — te așteptăm când ești gata. — Echipa C Design</p>' +
     '</div>';
   return sendEmail(env, { to: rec.friendContact, replyTo, subject: 'Reducerea ta de ' + rec.friendPct + '% de la C Design', html });
 }
@@ -1588,11 +1651,11 @@ async function sendReferrerCodeEmail(env, rec, pct, cap) {
   const replyTo = (await getOwnerEmail(env)) || (env.NOTIFY_EMAIL || NOTIFY_EMAIL);
   const html =
     '<div style="font-family:system-ui,Arial,sans-serif;max-width:520px;margin:0 auto;color:#2E3436;">' +
-      '<h2 style="color:#008587;">Mulțumim că răspândești vestea!</h2>' +
-      '<p>Salut ' + escHtml(rec.referrerName) + ',</p>' +
+      '<h2 style="color:#008587;">Mulțumim că ne recomanzi!</h2>' +
+      '<p>Salut, ' + escHtml(rec.referrerName) + ',</p>' +
       '<p>Iată codul tău personal de referral — este al tău și rămâne mereu același:</p>' +
       '<p style="text-align:center;margin:22px 0;"><span style="display:inline-block;font-family:monospace;font-size:1.5rem;font-weight:700;letter-spacing:2px;color:#008587;background:#e9f6f6;border:1px dashed #00AAAC;border-radius:10px;padding:14px 26px;">' + escHtml(rec.referrerCode) + '</span></p>' +
-      '<p>Fiecare prieten pe care îl recomanzi și care se înscrie adaugă <strong>' + escHtml(String(pct)) + '%</strong> la el — cumulând până la <strong>' + escHtml(String(cap)) + '%</strong> reducere la proiectul tău următor. Codul rămâne același; valoarea lui crește pe măsură ce mai mulți prieteni se alătură.</p>' +
+      '<p>Fiecare prieten pe care îl recomanzi și care se înscrie adaugă <strong>' + escHtml(String(pct)) + '%</strong> la valoarea lui — cumulat, până la <strong>' + escHtml(String(cap)) + '%</strong> reducere la următorul tău proiect. Codul rămâne același; valoarea lui crește pe măsură ce se alătură mai mulți prieteni.</p>' +
       '<p>Recomandă mai mulți prieteni oricând la <a href="https://www.c-design.ro/referral" style="color:#008587;">www.c-design.ro/referral</a> și menționează codul când ești gata să folosești reducerea.</p>' +
       '<p style="color:#8b94a3;font-size:.85rem;">— Echipa C Design</p>' +
     '</div>';
@@ -1607,14 +1670,14 @@ async function sendReferrerConversionEmail(env, rec, value, cap) {
   const html =
     '<div style="font-family:system-ui,Arial,sans-serif;max-width:520px;margin:0 auto;color:#2E3436;">' +
       '<h2 style="color:#008587;">Reducerea ta a crescut!</h2>' +
-      '<p>Salut ' + escHtml(rec.referrerName) + ',</p>' +
+      '<p>Salut, ' + escHtml(rec.referrerName) + ',</p>' +
       '<p>Vești bune — <strong>' + escHtml(rec.friendName) + '</strong> a devenit client C Design. Mulțumim pentru recomandare!</p>' +
       '<p>Codul tău de referral valorează acum:</p>' +
       '<p style="text-align:center;margin:20px 0;"><span style="display:inline-block;font-family:\'Poppins\',system-ui,sans-serif;font-size:2rem;font-weight:700;color:#008587;">' + escHtml(String(value)) + '% reducere</span><br>' +
         '<span style="font-family:monospace;font-size:1.05rem;font-weight:700;letter-spacing:2px;color:#2E3436;background:#e9f6f6;border:1px dashed #00AAAC;border-radius:8px;padding:6px 16px;display:inline-block;margin-top:8px;">' + escHtml(rec.referrerCode || '') + '</span></p>' +
       '<p>' + (atCap
         ? 'Ai atins maximul — felicitări! Menționează codul când ești gata să îl folosești.'
-        : 'Continuă să crească pe măsură ce mai mulți prieteni se înscriu (până la ' + escHtml(String(cap)) + '%). Menționează codul când ești gata să folosești reducerea.') + '</p>' +
+        : 'Valoarea codului continuă să crească pe măsură ce se înscriu mai mulți prieteni (până la ' + escHtml(String(cap)) + '%). Menționează codul când ești gata să folosești reducerea.') + '</p>' +
       '<p style="color:#8b94a3;font-size:.85rem;">— Echipa C Design</p>' +
     '</div>';
   return sendEmail(env, { to: rec.referrerEmail, replyTo, subject: 'Reducerea ta de referral este acum de ' + value + '%', html });
@@ -1832,6 +1895,7 @@ export default {
       // EXCLUSE din sitemap și marcate noindex — sunt site-uri exemplu, nu
       // conținut de indexat. Galeria /demos rămâne indexată.
       try {
+        await fixBlogTexts(env);
         const raw = await env.PROGRAMARI.get('__blog__');
         if (raw) {
           const posts = JSON.parse(raw).filter(p => p.published && p.slug);
@@ -1904,6 +1968,7 @@ export default {
     if (/^\/blog\/[^/]+$/.test(path) && request.method === 'GET') {
       const slug = path.slice(6);
       try {
+        await fixBlogTexts(env);
         const raw = await env.PROGRAMARI.get('__blog__');
         const posts = raw ? JSON.parse(raw) : [];
         const post = posts.find(p => p.slug === slug && p.published);
@@ -2057,12 +2122,12 @@ export default {
       try {
         const { name, phone, email, service, message } = await request.json();
         if (!name || !phone || !email || !message)
-          return json({ error: 'Câmpuri obligatorii lipsă' }, 400);
+          return json({ error: 'Completează câmpurile obligatorii.' }, 400);
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const phoneRegex = /^[\d\s\+\-\(\)]{7,20}$/;
-        if (!emailRegex.test(email)) return json({ error: 'Email invalid' }, 400);
-        if (!phoneRegex.test(phone)) return json({ error: 'Telefon invalid' }, 400);
-        if (name.length < 2) return json({ error: 'Nume invalid' }, 400);
+        if (!emailRegex.test(email)) return json({ error: 'Adresa de email nu este validă.' }, 400);
+        if (!phoneRegex.test(phone)) return json({ error: 'Numărul de telefon nu este valid.' }, 400);
+        if (name.length < 2) return json({ error: 'Numele nu este valid.' }, 400);
         const contact = { name, phone, email, service: service || 'Nespecificat', message };
         // Salvează mesajul în admin (KV), pe lângă notificarea pe email.
         try {
@@ -2073,7 +2138,7 @@ export default {
         notifyPush({ title: '✉️ Mesaj nou — ' + String(contact.service).slice(0, 60), body: String(name).slice(0, 60) + ': ' + String(message).replace(/\s+/g, ' ').slice(0, 140), tab: 'mesaje', tag: 'mesaj' });
         await sendContactNotification(contact, env);
         return json({ success: true });
-      } catch { return json({ error: 'Eroare server' }, 500); }
+      } catch { return json({ error: 'A apărut o eroare. Încearcă din nou.' }, 500); }
     }
 
     // ── BOOKINGS ──────────────────────────────────────────────
@@ -2085,14 +2150,14 @@ export default {
       try {
         const { name, phone, email, service, date, time, message } = await request.json();
         if (!name || !phone || !email || !date || !time)
-          return json({ error: 'Câmpuri obligatorii lipsă' }, 400);
+          return json({ error: 'Completează câmpurile obligatorii.' }, 400);
         const id = `booking_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
         const booking = { id, name, phone, email, service: service || 'Nespecificat', date, time, message: message || '', status: 'nou', createdAt: new Date().toISOString() };
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const phoneRegex = /^[\d\s\+\-\(\)]{7,20}$/;
-        if (!emailRegex.test(booking.email)) return json({error:'Email invalid'}, 400);
-        if (!phoneRegex.test(booking.phone)) return json({error:'Telefon invalid'}, 400);
-        if (!booking.name || booking.name.length < 2) return json({error:'Nume invalid'}, 400);
+        if (!emailRegex.test(booking.email)) return json({error:'Adresa de email nu este validă.'}, 400);
+        if (!phoneRegex.test(booking.phone)) return json({error:'Numărul de telefon nu este valid.'}, 400);
+        if (!booking.name || booking.name.length < 2) return json({error:'Numele nu este valid.'}, 400);
         await env.PROGRAMARI.put(id, JSON.stringify(booking));
         const raw = await env.PROGRAMARI.get('__index__');
         const index = raw ? JSON.parse(raw) : [];
@@ -2101,7 +2166,7 @@ export default {
         notifyPush({ title: '📅 Programare nouă', body: String(name).slice(0, 60) + ' · ' + String(date).slice(0, 20) + ' ' + String(time).slice(0, 10) + ' · ' + String(booking.service).slice(0, 60), tab: 'bookings', tag: 'programare' });
         await sendBookingNotification(booking, env);
         return json({ success: true, id });
-      } catch { return json({ error: 'Eroare server' }, 500); }
+      } catch { return json({ error: 'A apărut o eroare. Încearcă din nou.' }, 500); }
     }
 
     if (path === '/api/bookings' && request.method === 'GET') {
@@ -2375,6 +2440,7 @@ Cerințe titluri:
 
     if (path === '/api/blog' && request.method === 'GET') {
       try {
+        await fixBlogTexts(env);
         const raw = await env.PROGRAMARI.get('__blog__');
         const posts = raw ? JSON.parse(raw) : [];
         const all = url.searchParams.get('all') === '1' && isAdmin(url, env);
@@ -3187,7 +3253,7 @@ Cerințe titluri:
       const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
       const ok = await checkRateLimit(env, 'assistant_' + ip, 40, 3600);
       if (!ok) return json({ reply: 'Ai trimis multe mesaje într-un timp scurt. Hai să discutăm direct: sună la 0753 116 155 sau scrie la office@c-design.ro. 🙂' }, 200, request);
-      const FALLBACK = 'Cel mai simplu e să discutăm direct — programează o consultanță gratuită pe pagina de Programare, sună la 0753 116 155 sau scrie la office@c-design.ro și îți facem o ofertă fixă, fără costuri ascunse.';
+      const FALLBACK = 'Cel mai simplu e să discutăm direct — programează o consultanță gratuită pe pagina Programare, sună la 0753 116 155 sau scrie la office@c-design.ro și îți facem o ofertă cu preț fix, fără costuri ascunse.';
       if (!env.AI) return json({ reply: FALLBACK }, 200, request);
       const body0 = await request.json().catch(() => ({}));
       const validEmail = (e) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e);
@@ -3335,7 +3401,7 @@ Cerințe titluri:
         const email = String(b.email || '').trim();
         const service = String(b.service || 'Formular').trim();
         const message = String(b.message || '').trim();
-        if (!name || !message || (!phone && !email)) return json({ error: 'Câmpuri obligatorii lipsă' }, 400);
+        if (!name || !message || (!phone && !email)) return json({ error: 'Completează câmpurile obligatorii.' }, 400);
         const mid = 'msg_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
         const rec = { id: mid, name: name.slice(0, 120), phone: phone.slice(0, 40), email: email.slice(0, 160), service: service.slice(0, 80), message: message.slice(0, 5000), createdAt: Date.now(), status: 'nou', ip };
         try {
@@ -3344,7 +3410,7 @@ Cerințe titluri:
         notifyPush({ title: '✉️ Mesaj nou — ' + rec.service.slice(0, 60), body: rec.name.slice(0, 60) + ': ' + rec.message.replace(/\s+/g, ' ').slice(0, 140), tab: 'mesaje', tag: 'mesaj' });
         try { await sendContactNotification({ name: rec.name, phone: rec.phone || '-', email: rec.email || '-', service: rec.service, message: rec.message }, env); } catch (e) {}
         return json({ success: true });
-      } catch { return json({ error: 'Eroare server' }, 500); }
+      } catch { return json({ error: 'A apărut o eroare. Încearcă din nou.' }, 500); }
     }
 
     // Mesaje contact (admin) — listă
@@ -3600,11 +3666,12 @@ Cerințe titluri:
         const raw = await env.PROGRAMARI.get('__servicii__');
         // Servicii noi adăugate după seed inițial — migrare automată
         const migrations = [
-          { id:'svc_d17', nume:'Integrare Google Search Console', descriere:'Verificare proprietate, sitemap XML, conectare Google Analytics, raport erori indexare', pret:120, moneda:'EUR', unitate:'proiect', categorie:'seo' },
-          { id:'svc_promo', nume:'Pachet Promo — Ofertă de lansare', descriere:'Site de prezentare (până la 5 pagini) + SEO, apare pe Google + Google Business Profile configurat + conturi Instagram și Facebook. Preț normal 750 EUR.', pret:400, moneda:'EUR', unitate:'proiect', categorie:'pachete', promo:true },
+          { id:'svc_d17', nume:'Integrare Google Search Console', descriere:'Verificarea proprietății, sitemap XML, conectarea cu Google Analytics, raport cu erorile de indexare', pret:120, moneda:'EUR', unitate:'proiect', categorie:'seo' },
+          { id:'svc_promo', nume:'Pachet promo — ofertă de lansare', descriere:'Site de prezentare (până la 5 pagini), optimizare SEO, profil Google Business configurat și conturi de Instagram și Facebook. Preț normal: 750 EUR.', pret:400, moneda:'EUR', unitate:'proiect', categorie:'pachete', promo:true },
         ];
         if (raw !== null) {
           const lista = JSON.parse(raw);
+          if (fixServiciiTexts(lista)) await env.PROGRAMARI.put('__servicii__', JSON.stringify(lista));
           // Fiecare serviciu nou se adaugă o singură dată; dacă îl ștergi din catalog, nu mai revine.
           let applied = [];
           try { applied = JSON.parse(await env.PROGRAMARI.get('__servicii_migrations__') || '[]'); } catch {}
@@ -3623,22 +3690,22 @@ Cerințe titluri:
         }
         // Prima accesare — seed cu servicii tipice agenție web design România
         const defaults = [
-          { id:'svc_d01', nume:'Site de Prezentare', descriere:'5 pagini, design responsiv, CMS, Google Analytics, SEO de bază', pret:899, moneda:'EUR', unitate:'proiect', categorie:'web-design' },
-          { id:'svc_d02', nume:'Site de Prezentare Premium', descriere:'10+ pagini, design custom, blog, multilingv, integrări API', pret:1800, moneda:'EUR', unitate:'proiect', categorie:'web-design' },
-          { id:'svc_d03', nume:'Magazin Online (eCommerce)', descriere:'WooCommerce / Shopify, catalog produse, plăți online, livrare', pret:2500, moneda:'EUR', unitate:'proiect', categorie:'web-design' },
-          { id:'svc_d04', nume:'Landing Page', descriere:'Pagină de conversie optimizată, A/B testing, integrare formulare', pret:450, moneda:'EUR', unitate:'proiect', categorie:'web-design' },
-          { id:'svc_d05', nume:'Redesign Site Existent', descriere:'Redesign complet cu păstrarea conținutului, migrare date, SEO redirect', pret:700, moneda:'EUR', unitate:'proiect', categorie:'web-design' },
-          { id:'svc_d06', nume:'Audit SEO Complet', descriere:'Analiză tehnică, cuvinte cheie, concurență, raport cu recomandări', pret:300, moneda:'EUR', unitate:'proiect', categorie:'seo' },
-          { id:'svc_d07', nume:'SEO Lunar (Ongoing)', descriere:'Optimizare continuă, content, link building, raport lunar, 15-25 keywords', pret:400, moneda:'EUR', unitate:'lună', categorie:'seo' },
-          { id:'svc_d08', nume:'SEO Local (Google Maps)', descriere:'Optimizare Google Business Profile, local citations, recenzii', pret:250, moneda:'EUR', unitate:'lună', categorie:'seo' },
-          { id:'svc_d09', nume:'Management Google Ads', descriere:'Setup + optimizare campanii Search/Display/Shopping, raport lunar', pret:350, moneda:'EUR', unitate:'lună', categorie:'marketing' },
-          { id:'svc_d10', nume:'Management Meta Ads', descriere:'Campanii Facebook & Instagram, A/B testing, retargeting, raport lunar', pret:350, moneda:'EUR', unitate:'lună', categorie:'marketing' },
-          { id:'svc_d11', nume:'Administrare Social Media', descriere:'12 postări/lună, copywriting, grafică branded, monitorizare comunitate', pret:300, moneda:'EUR', unitate:'lună', categorie:'marketing' },
-          { id:'svc_d12', nume:'Email Marketing / Newsletter', descriere:'Design template, segmentare listă, trimitere campanii, raport deschideri', pret:200, moneda:'EUR', unitate:'lună', categorie:'marketing' },
-          { id:'svc_d13', nume:'Mentenanță Site Bază', descriere:'Actualizări CMS & plugin-uri, backup lunar, monitoring uptime, 1h suport', pret:100, moneda:'EUR', unitate:'lună', categorie:'mentenanta' },
-          { id:'svc_d14', nume:'Mentenanță Site Avansat', descriere:'Actualizări, backup săptămânal, securitate, 4h modificări/lună, raport', pret:200, moneda:'EUR', unitate:'lună', categorie:'mentenanta' },
-          { id:'svc_d15', nume:'Logo Design', descriere:'3 variante de concept, fișiere vectoriale finale (AI, SVG, PNG, PDF)', pret:350, moneda:'EUR', unitate:'proiect', categorie:'grafic' },
-          { id:'svc_d16', nume:'Identitate Vizuală Completă', descriere:'Logo + paletă culori + fonturi + business card + antet + ghid brand', pret:800, moneda:'EUR', unitate:'proiect', categorie:'grafic' },
+          { id:'svc_d01', nume:'Site de prezentare', descriere:'5 pagini, design responsiv, CMS, Google Analytics și SEO de bază', pret:899, moneda:'EUR', unitate:'proiect', categorie:'web-design' },
+          { id:'svc_d02', nume:'Site de prezentare premium', descriere:'Peste 10 pagini, design personalizat, blog, mai multe limbi, integrări API', pret:1800, moneda:'EUR', unitate:'proiect', categorie:'web-design' },
+          { id:'svc_d03', nume:'Magazin online (e-commerce)', descriere:'WooCommerce sau Shopify, catalog de produse, plăți online, livrare', pret:2500, moneda:'EUR', unitate:'proiect', categorie:'web-design' },
+          { id:'svc_d04', nume:'Landing page', descriere:'Pagină optimizată pentru conversii, teste A/B, formulare integrate', pret:450, moneda:'EUR', unitate:'proiect', categorie:'web-design' },
+          { id:'svc_d05', nume:'Redesign pentru site-ul existent', descriere:'Redesign complet, cu păstrarea conținutului, migrarea datelor și redirecționări SEO', pret:700, moneda:'EUR', unitate:'proiect', categorie:'web-design' },
+          { id:'svc_d06', nume:'Audit SEO complet', descriere:'Analiză tehnică, cuvinte-cheie, concurență și raport cu recomandări', pret:300, moneda:'EUR', unitate:'proiect', categorie:'seo' },
+          { id:'svc_d07', nume:'SEO lunar', descriere:'Optimizare continuă, conținut, link building, raport lunar, 15–25 de cuvinte-cheie', pret:400, moneda:'EUR', unitate:'lună', categorie:'seo' },
+          { id:'svc_d08', nume:'SEO local (Google Maps)', descriere:'Optimizarea profilului Google Business, listări în directoare locale, recenzii', pret:250, moneda:'EUR', unitate:'lună', categorie:'seo' },
+          { id:'svc_d09', nume:'Administrare Google Ads', descriere:'Configurarea și optimizarea campaniilor Search, Display și Shopping, raport lunar', pret:350, moneda:'EUR', unitate:'lună', categorie:'marketing' },
+          { id:'svc_d10', nume:'Administrare Meta Ads', descriere:'Campanii pe Facebook și Instagram, teste A/B, retargeting, raport lunar', pret:350, moneda:'EUR', unitate:'lună', categorie:'marketing' },
+          { id:'svc_d11', nume:'Administrare social media', descriere:'12 postări pe lună, texte, grafică personalizată, monitorizarea comunității', pret:300, moneda:'EUR', unitate:'lună', categorie:'marketing' },
+          { id:'svc_d12', nume:'Email marketing și newsletter', descriere:'Design de șablon, segmentarea listei, trimiterea campaniilor, raport de deschideri', pret:200, moneda:'EUR', unitate:'lună', categorie:'marketing' },
+          { id:'svc_d13', nume:'Mentenanță site – nivel de bază', descriere:'Actualizări CMS și plugin-uri, backup lunar, monitorizarea funcționării, o oră de suport', pret:100, moneda:'EUR', unitate:'lună', categorie:'mentenanta' },
+          { id:'svc_d14', nume:'Mentenanță site – nivel avansat', descriere:'Actualizări, backup săptămânal, securitate, 4 ore de modificări pe lună, raport', pret:200, moneda:'EUR', unitate:'lună', categorie:'mentenanta' },
+          { id:'svc_d15', nume:'Design de logo', descriere:'3 variante de concept, fișiere finale (AI, SVG, PNG, PDF)', pret:350, moneda:'EUR', unitate:'proiect', categorie:'grafic' },
+          { id:'svc_d16', nume:'Identitate vizuală completă', descriere:'Logo, paletă de culori, fonturi, carte de vizită, antet și ghid de brand', pret:800, moneda:'EUR', unitate:'proiect', categorie:'grafic' },
           ...migrations.filter(m => m.categorie !== 'pachete'),
         ];
         defaults.unshift(...migrations.filter(m => m.categorie === 'pachete'));
@@ -3934,7 +4001,7 @@ Cerințe titluri:
         <div class="doc-nr">${e(o.numar)}</div>
         <div class="doc-date">
           Emisă: ${dataDoc}<br>
-          ${o.valabilitate !== 'la cerere' ? `Valabilă până: <strong>${dataExpira}</strong>` : 'Valabilitate: la cerere'}
+          ${o.valabilitate !== 'la cerere' ? `Valabilă până la: <strong>${dataExpira}</strong>` : 'Valabilitate: la cerere'}
         </div>
       </div>
     </div>
@@ -4141,6 +4208,8 @@ Cerințe titluri:
         const preaviz       = parseInt(t.preaviz)       || 15;
         const ndaAni        = parseInt(t.ndaAni)        || 2;
         const penalitatiPct = parseFloat(t.penalitatiPct) || 0.1;
+        // „de” după numeral: 20 de zile, 30 de zile, dar 15 zile, 101 zile
+        const deN = (n) => { n = parseInt(n); return (n >= 20 && (n % 100 === 0 || n % 100 >= 20)) ? 'de ' : ''; };
 
         function e(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
         function fmtDate(d) {
@@ -4209,7 +4278,7 @@ Cerințe titluri:
   <div class="header">
     <div class="logo">${e(prest.nume)}</div>
     <div class="logo-sub">${prest.web ? e(prest.web) + ' | ' : ''}${prest.email ? e(prest.email) : ''}${prest.tel ? ' | ' + e(prest.tel) : ''}</div>
-    <div class="contract-title">Contract de Prestări Servicii</div>
+    <div class="contract-title">Contract de prestări servicii</div>
     <div class="contract-nr">Nr. <strong>${e(c.numar)}</strong> / Data: <strong>${fmtDate(c.dataSemnare)}</strong></div>
   </div>
 
@@ -4222,7 +4291,7 @@ Cerințe titluri:
           <div class="party-label">Prestator</div>
           <div class="party-name">${e(prest.nume)}</div>
           ${prest.cui ? `<div class="party-detail">CUI: ${e(prest.cui)}</div>` : ''}
-          ${prest.regcom ? `<div class="party-detail">Reg.Com.: ${e(prest.regcom)}</div>` : ''}
+          ${prest.regcom ? `<div class="party-detail">Reg. Com.: ${e(prest.regcom)}</div>` : ''}
           ${prest.adresa ? `<div class="party-detail">${e(prest.adresa)}</div>` : ''}
           ${prest.email ? `<div class="party-detail">${e(prest.email)}</div>` : ''}
           ${prest.tel ? `<div class="party-detail">${e(prest.tel)}</div>` : ''}
@@ -4234,7 +4303,7 @@ Cerințe titluri:
           <div class="party-label">Beneficiar</div>
           <div class="party-name">${e(c.client.name)}</div>
           ${c.client.cui ? `<div class="party-detail">CUI/CNP: ${e(c.client.cui)}</div>` : ''}
-          ${c.client.regCom ? `<div class="party-detail">Reg.Com.: ${e(c.client.regCom)}</div>` : ''}
+          ${c.client.regCom ? `<div class="party-detail">Reg. Com.: ${e(c.client.regCom)}</div>` : ''}
           ${c.client.adresa ? `<div class="party-detail">${e(c.client.adresa)}</div>` : ''}
           ${c.client.email ? `<div class="party-detail">${e(c.client.email)}</div>` : ''}
           ${c.client.iban ? `<div class="party-detail">IBAN: ${e(c.client.iban)}${c.client.banca ? ' · ' + e(c.client.banca) : ''}</div>` : ''}
@@ -4260,7 +4329,7 @@ Cerințe titluri:
     <div class="art-title">Art. ${nrArt()} — Durata contractului și termene de livrare</div>
     <div class="art-body">
       <p>Prezentul contract intră în vigoare la data semnării de către ambele părți și este valabil până la finalizarea și recepția tuturor serviciilor prevăzute la Art. 2.</p>
-      <p>Termenul de realizare și livrare a serviciilor este de <strong>${e(c.termen)} ${e(c.termenUnit)}</strong>, calculat de la data achitării avansului prevăzut la Art. 4.</p>
+      <p>Termenul de realizare și livrare a serviciilor este de <strong>${e(c.termen)} ${/^\d+$/.test(String(c.termen).trim()) ? deN(c.termen) : ''}${e(c.termenUnit)}</strong>, calculat de la data achitării avansului prevăzut la Art. 4.</p>
       <p>Termenul poate fi prelungit cu acordul scris al ambelor părți sau în situații de forță majoră.</p>
     </div>
   </div>
@@ -4270,7 +4339,7 @@ Cerințe titluri:
     <div class="art-title">Art. ${nrArt()} — Prețul și modalitatea de plată</div>
     <div class="art-body">
       <div class="total-box">
-        <span class="total-label">Valoare totală contract:</span>
+        <span class="total-label">Valoarea totală a contractului:</span>
         <span class="total-val">${c.total.toLocaleString('ro-RO')} ${e(c.moneda)}</span>
       </div>
       <ul>
@@ -4288,9 +4357,9 @@ Cerințe titluri:
     <div class="art-body">
       <ul>
         <li>Să execute serviciile prevăzute la Art. 2 cu profesionalism și în termenul stabilit;</li>
-        <li>Să informeze Beneficiarul cu privire la stadiul lucrărilor la solicitarea acestuia;</li>
+        <li>Să informeze Beneficiarul cu privire la stadiul lucrărilor, la solicitarea acestuia;</li>
         <li>Să solicite Beneficiarului materialele și informațiile necesare (texte, imagini, date de acces) în timp util;</li>
-        <li>Să corecteze orice deficiențe constatate în perioada de garanție de <strong>${garantie} de zile</strong> de la recepția finală, care nu sunt imputabile Beneficiarului;</li>
+        <li>Să corecteze orice deficiențe constatate în perioada de garanție de <strong>${garantie} ${deN(garantie)}zile</strong> de la recepția finală, care nu sunt imputabile Beneficiarului;</li>
         <li>Să păstreze confidențialitatea informațiilor comunicate de Beneficiar pe durata contractului.</li>
       </ul>
     </div>
@@ -4335,7 +4404,7 @@ Cerințe titluri:
   <div class="art">
     <div class="art-title">Art. ${nrArt()} — Reziliere</div>
     <div class="art-body">
-      <p>Oricare dintre părți poate rezilia prezentul contract cu un preaviz de <strong>${preaviz} zile</strong>, în cazul în care cealaltă parte nu își îndeplinește obligațiile contractuale și nu remediază situația în termenul de preaviz.</p>
+      <p>Oricare dintre părți poate rezilia prezentul contract cu un preaviz de <strong>${preaviz} ${deN(preaviz)}zile</strong>, în cazul în care cealaltă parte nu își îndeplinește obligațiile contractuale și nu remediază situația în termenul de preaviz.</p>
       <p>În cazul rezilierii din culpa Beneficiarului, avansul achitat nu se restituie; în cazul rezilierii din culpa Prestatorului, acesta va restitui avansul și va preda lucrările efectuate până la data rezilierii.</p>
     </div>
   </div>
@@ -4344,8 +4413,8 @@ Cerințe titluri:
   <div class="art">
     <div class="art-title">Art. ${nrArt()} — Forță majoră</div>
     <div class="art-body">
-      <p>Niciuna dintre părți nu va fi răspunzătoare pentru neexecutarea obligațiilor contractuale cauzate de evenimente de forță majoră (calamități naturale, acte de autoritate publică, pandemii, etc.).</p>
-      <p>Partea afectată are obligația de a notifica cealaltă parte în termen de <strong>5 zile</strong> de la apariția evenimentului. Dacă forța majoră depășește <strong>30 de zile</strong>, oricare parte poate rezilia contractul fără daune-interese.</p>
+      <p>Niciuna dintre părți nu va fi răspunzătoare pentru neexecutarea obligațiilor contractuale cauzată de evenimente de forță majoră (calamități naturale, acte de autoritate publică, pandemii etc.).</p>
+      <p>Partea afectată are obligația de a notifica cealaltă parte în termen de <strong>5 zile</strong> de la apariția evenimentului. Dacă forța majoră depășește <strong>30 de zile</strong>, oricare dintre părți poate rezilia contractul fără daune-interese.</p>
     </div>
   </div>
 
@@ -4393,7 +4462,7 @@ Cerințe titluri:
         const referrerName = String(b.referrerName || '').trim().slice(0, 120);
         const friendName = String(b.friendName || '').trim().slice(0, 120);
         const friendContact = String(b.friendContact || '').trim().slice(0, 160);
-        if (referrerName.length < 2 || friendName.length < 2 || !friendContact) return json({ error: 'Câmpuri obligatorii lipsă' }, 400);
+        if (referrerName.length < 2 || friendName.length < 2 || !friendContact) return json({ error: 'Completează câmpurile obligatorii.' }, 400);
         const rec = {
           id: 'ref_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
           referrerName,
@@ -4431,14 +4500,14 @@ Cerințe titluri:
           await sendEmail(env, {
             to: await notifyRecipients(env),
             subject: 'Referral nou — ' + referrerName,
-            html: '<p><strong>' + escHtml(referrerName) + '</strong> a recomandat pe <strong>' + escHtml(friendName) + '</strong>.</p>'
+            html: '<p><strong>' + escHtml(referrerName) + '</strong> l-a recomandat pe <strong>' + escHtml(friendName) + '</strong>.</p>'
               + '<p>Referent: ' + escHtml(rec.referrerEmail || '—') + ' · ' + escHtml(rec.referrerPhone || '—') + '<br>'
               + 'Prieten: ' + escHtml(friendContact) + (rec.friendBusiness ? ' · ' + escHtml(rec.friendBusiness) : '') + '</p>'
               + (rec.note ? '<p>Notă: ' + escHtml(rec.note) + '</p>' : '')
           });
         } catch {}
         return json({ success: true, id: rec.id });
-      } catch { return json({ error: 'Eroare server' }, 500); }
+      } catch { return json({ error: 'A apărut o eroare. Încearcă din nou.' }, 500); }
     }
     if (path === '/api/referrals' && request.method === 'GET') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);

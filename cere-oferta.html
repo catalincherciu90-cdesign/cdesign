@@ -9,8 +9,8 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3VR7JC1QW"></script>
 <script>gtag('js',new Date());gtag('config','G-K3VR7JC1QW',{anonymize_ip:true});</script>
 <script src="/analytics.js" defer></script>
-<title>Cere o ofertă — C Design | Spune-ne ce ai nevoie</title>
-<meta name="description" content="Cere o ofertă gratuită și fără obligații de la C Design. Selectează serviciile de care ai nevoie — design web, e-commerce, aplicații, SEO, marketing, hosting — și o să-ți răspundem.">
+<title>Cere o ofertă — C Design | Spune-ne de ce ai nevoie</title>
+<meta name="description" content="Cere o ofertă gratuită și fără obligații de la C Design. Selectează serviciile de care ai nevoie — design web, e-commerce, aplicații, SEO, marketing, hosting — și îți răspundem.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://www.c-design.ro/cere-oferta">
 <link rel="icon" type="image/png" href="/logo-c-design.png">
@@ -121,7 +121,7 @@
       <nav class="nav-menu">
         <a href="/">Acasă</a>
         <a href="/servicii">Servicii</a>
-        <a href="/#portofoliu">Portofoliu</a>
+        <a href="/portofoliu">Portofoliu</a>
         <a href="/#testimoniale">Recenzii</a>
         <a href="/blog">Blog</a>
         <a href="/demos">Demo-uri</a>
@@ -129,17 +129,17 @@
       <div class="nav-right">
         <a href="#contact" class="contact-link">Contact</a>
         <a href="/cere-oferta" class="btn-quote">Cere ofertă</a>
-        <button class="burger" id="burger" aria-label="Deschide meniu"><span></span><span></span><span></span></button>
+        <button class="burger" id="burger" aria-label="Deschide meniul"><span></span><span></span><span></span></button>
       </div>
     </div>
   </header>
 
   <div class="backdrop" id="backdrop"></div>
   <nav class="mobile-menu" id="mobileMenu">
-    <button class="mm-close" id="mmClose" aria-label="Închide meniu">&times;</button>
+    <button class="mm-close" id="mmClose" aria-label="Închide meniul">&times;</button>
     <a href="/">Acasă</a>
     <a href="/servicii">Servicii</a>
-    <a href="/#portofoliu">Portofoliu</a>
+    <a href="/portofoliu">Portofoliu</a>
     <a href="/#testimoniale">Recenzii</a>
     <a href="/blog">Blog</a>
         <a href="/demos">Demo-uri</a>
@@ -149,15 +149,15 @@
 
   <section class="q-hero">
     <span class="eyebrow">Cere o ofertă</span>
-    <h1>Spune-ne ce ai nevoie, <b>cere o ofertă gratuită</b></h1>
-    <p>Selectează serviciile care te interesează și lasă-ți detaliile — o să-ți trimitem o ofertă personalizată, fără obligații, în maxim o zi lucrătoare.</p>
+    <h1>Spune-ne de ce ai nevoie și <b>cere o ofertă gratuită</b></h1>
+    <p>Selectează serviciile care te interesează și lasă-ne datele tale — îți trimitem o ofertă personalizată, fără obligații, în cel mult o zi lucrătoare.</p>
   </section>
 
   <section class="quote">
     <form class="quote-form" id="quoteForm">
       <div class="q-body">
         <div class="q-step">1. Ce servicii te interesează?</div>
-        <div class="q-hint">Selectează cât de multe dorești — sau nici una, și spune-ne direct în mesaj.</div>
+        <div class="q-hint">Selectează oricâte vrei — sau niciunul și spune-ne direct în mesaj.</div>
         <div id="qCats"></div>
 
         <div class="q-divider"></div>
@@ -168,21 +168,21 @@
           <div class="field"><label for="q-name">Numele tău</label><input type="text" id="q-name" name="name" placeholder="Ionescu Ioan" required></div>
           <div class="field"><label for="q-phone">Telefon</label><input type="tel" id="q-phone" name="phone" placeholder="0753 000 000" required></div>
           <div class="field full"><label for="q-email">Email</label><input type="email" id="q-email" name="email" placeholder="tu@exemplu.ro" required></div>
-          <div class="field full"><label class="q-comp-toggle" style="display:flex;align-items:center;gap:9px;cursor:pointer;font-weight:400;margin-bottom:0"><input type="checkbox" id="q-isCompany" style="width:auto;padding:0;margin:0"> Facturez o firmă / business?</label></div>
+          <div class="field full"><label class="q-comp-toggle" style="display:flex;align-items:center;gap:9px;cursor:pointer;font-weight:400;margin-bottom:0"><input type="checkbox" id="q-isCompany" style="width:auto;padding:0;margin:0"> Vrei factura pe firmă?</label></div>
           <div class="field full" id="q-companyFields" style="display:none">
             <div class="field" style="margin-bottom:12px"><input type="text" id="q-company" placeholder="Numele firmei"></div>
             <div class="field" style="margin-bottom:12px"><input type="text" id="q-companyReg" placeholder="Cod fiscal / CIF (opțional)"></div>
             <div class="field"><input type="text" id="q-companyAddress" placeholder="Adresa firmei"></div>
           </div>
-          <div class="field full"><label for="q-message">Altceva? <span style="color:var(--muted);font-weight:400">(opțional)</span></label><textarea id="q-message" name="message" placeholder="Spune-ne despre proiectul tău, buget sau termen de livrare..."></textarea></div>
+          <div class="field full"><label for="q-message">Altceva? <span style="color:var(--muted);font-weight:400">(opțional)</span></label><textarea id="q-message" name="message" placeholder="Spune-ne despre proiectul tău, bugetul sau termenul de livrare dorit..."></textarea></div>
         </div>
         <button type="submit" class="q-submit">Cere oferta <span>→</span></button>
-        <div class="q-note">Fără obligații. Nu vom partaja datele tale. Răspundem în maxim o zi lucrătoare.</div>
+        <div class="q-note">Fără obligații. Nu transmitem datele tale nimănui. Răspundem în cel mult o zi lucrătoare.</div>
       </div>
       <div class="q-success">
         <div class="ok">✅</div>
         <h3>Cererea de ofertă a fost trimisă!</h3>
-        <p>Mulțumim — am primit cererea și o să vorbim curând cu o ofertă personalizată.</p>
+        <p>Mulțumim — am primit cererea și revenim în curând cu o ofertă personalizată.</p>
       </div>
     </form>
   </section>
@@ -191,7 +191,7 @@
     <div class="footer-inner">
       <div class="f-brand">
         <img src="/logo-c-design.webp" alt="C Design">
-        <p>Agenție web din România care construiește site-uri moderne, rapide și care transformă vizitatori în clienți — cu prețuri oneste și fixe.</p>
+        <p>Agenție web din România care construiește website-uri moderne, rapide, care transformă vizitatorii în clienți — cu prețuri fixe și oneste.</p>
         <div class="f-social">
           <a href="https://www.facebook.com/cdesignro" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M13 22v-8h2.7l.4-3H13V9.2c0-.9.3-1.5 1.6-1.5H16V5.1C15.7 5 14.7 5 13.6 5 11.2 5 9.7 6.4 9.7 9v2H7v3h2.7v8z"/></svg></a>
           <a href="https://www.instagram.com/cdesignro" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.3 2.2.4.5.2.9.5 1.3.9.4.4.7.8.9 1.3.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 1.8-.4 2.2-.2.5-.5.9-.9 1.3-.4.4-.8.7-1.3.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.3-2.2-.4a3.5 3.5 0 0 1-1.3-.9 3.5 3.5 0 0 1-.9-1.3c-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-1.8.4-2.2.2-.5.5-.9.9-1.3.4-.4.8-.7 1.3-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 3.2A6.6 6.6 0 1 0 12 18.6 6.6 6.6 0 0 0 12 5.4zm0 10.9a4.3 4.3 0 1 1 0-8.6 4.3 4.3 0 0 1 0 8.6zm6.8-11.2a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg></a>
@@ -208,14 +208,14 @@
       </div>
       <div class="f-col">
         <h4>Industrii</h4>
-        <a href="/web-design-restaurante">Web Design Restaurante</a>
-        <a href="/web-design-auto">Web Design Auto</a>
-        <a href="/web-design-afaceri-mici">Web Design Afaceri Mici</a>
+        <a href="/web-design-restaurante">Web design pentru restaurante</a>
+        <a href="/web-design-auto">Web design auto</a>
+        <a href="/web-design-afaceri-mici">Web design pentru afaceri mici</a>
       </div>
       <div class="f-col">
         <h4>Companie</h4>
         <a href="/despre-noi">Despre noi</a>
-        <a href="/#portofoliu">Portofoliu</a>
+        <a href="/portofoliu">Portofoliu</a>
         <a href="/blog">Blog</a>
         <a href="/#testimoniale">Recenzii</a>
       </div>
@@ -224,12 +224,12 @@
         <a href="tel:+40753116155"><svg viewBox="0 0 24 24"><path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 4.5 5.7 2 2 0 0 1 6.5 3.5Z"/></svg> 0753 116 155</a>
         <a href="#contact"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4V5Z"/></svg> Trimite mesaj</a>
         <a href="mailto:office@c-design.ro"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg> office@c-design.ro</a>
-        <div class="fi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg> Luni–Vineri · 9:00–18:00</div>
+        <div class="fi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg> Luni–vineri · 9:00–18:00</div>
       </div>
     </div>
     <div class="footer-bottom">
       <span>© 2026 C Design. Toate drepturile rezervate.</span>
-      <span><a href="/politica-confidentialitate">Politică de Confidențialitate</a></span>
+      <span><a href="/politica-confidentialitate">Politica de confidențialitate</a></span>
     </div>
   </footer>
 
@@ -245,14 +245,14 @@
 
     // build service checkboxes
     var CATS=[
-      {name:'Design & Dezvoltare Web',items:['Design web personalizat','Landing pages','Webflow / Wix / Squarespace','Redesign & Mobile-first']},
-      {name:'E-commerce',items:['Magazin WooCommerce','Magazin Shopify','Magazin PrestaShop','Plăți și Abonamente']},
-      {name:'Aplicații Web Custom',items:['CRM personalizat','Extensii WordPress & Module','Sisteme de Rezervări','Portale & Integrări API']},
-      {name:'AI & Automatizare',items:['Chatbot IA / Asistent','Generare Conținut IA','Automatizare Workflow']},
-      {name:'SEO & Conținut',items:['Audit SEO Tehnic','SEO Local','SEO On-page & Cuvinte-cheie','Conținut Blog & Analize']},
-      {name:'Marketing & Social',items:['Gestionare Social Media','Email Marketing','Automatizare Email']},
-      {name:'Hosting, Performance & Securitate',items:['Hosting (propriu sau Cloudflare)','Optimizare Viteză','SSL, Backup-uri & Securizare']},
-      {name:'Mentenanță & Branding',items:['Mentenanță & Suport','Branding & Logo Design','Planuri de Îngrijire Site']}
+      {name:'Design și dezvoltare web',items:['Design web personalizat','Landing pages','Webflow / Wix / Squarespace','Redesign și adaptare pentru telefon']},
+      {name:'E-commerce',items:['Magazin WooCommerce','Magazin Shopify','Magazin PrestaShop','Plăți și abonamente']},
+      {name:'Aplicații web personalizate',items:['CRM personalizat','Extensii și module WordPress','Sisteme de rezervări','Portaluri și integrări API']},
+      {name:'AI și automatizare',items:['Chatbot / asistent AI','Generare de conținut cu AI','Automatizarea fluxurilor de lucru']},
+      {name:'SEO și conținut',items:['Audit SEO tehnic','SEO local','SEO on-page și cuvinte-cheie','Articole de blog și analize']},
+      {name:'Marketing și social media',items:['Administrare social media','Email marketing','Automatizare email']},
+      {name:'Hosting, performanță și securitate',items:['Hosting (propriu sau Cloudflare)','Optimizarea vitezei','SSL, backup-uri și securizare']},
+      {name:'Mentenanță și branding',items:['Mentenanță și suport','Branding și design de logo','Planuri de întreținere a site-ului']}
     ];
     function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
     document.getElementById('qCats').innerHTML=CATS.map(function(cat){
@@ -281,8 +281,8 @@
       var email=val('q-email');
       var company=val('q-company');
       var note=val('q-message');
-      if(name.length<2||phone.length<7){alert('Vă rugăm să introduceți numele și numărul de telefon.');return;}
-      if(!email){alert('Vă rugăm să introduceți adresa de email.');return;}
+      if(name.length<2||phone.length<7){alert('Te rugăm să introduci numele și numărul de telefon.');return;}
+      if(!email){alert('Te rugăm să introduci adresa de email.');return;}
       var selected=Array.prototype.slice.call(document.querySelectorAll('.chip input:checked')).map(function(c){return c.value;});
       var btn=form.querySelector('.q-submit');
       btn.disabled=true;btn.style.opacity='.6';
@@ -307,7 +307,7 @@
           form.classList.add('sent');
           window.scrollTo({top:form.getBoundingClientRect().top+window.scrollY-120,behavior:'smooth'});
         })
-        .catch(function(){btn.disabled=false;btn.style.opacity='1';alert('Ceva nu a funcționat. Vă rugăm să încercați din nou sau să ne sunați.');});
+        .catch(function(){btn.disabled=false;btn.style.opacity='1';alert('Ceva nu a funcționat. Te rugăm să încerci din nou sau să ne suni.');});
     });
   </script>
   <script>

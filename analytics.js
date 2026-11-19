@@ -52,10 +52,10 @@
     var box = document.createElement('div');
     box.className = 'cd-cc';
     box.setAttribute('role', 'dialog');
-    box.setAttribute('aria-label', 'Consimțământ cookies');
+    box.setAttribute('aria-label', 'Consimțământ pentru cookie-uri');
     box.innerHTML =
       '<h4>Îți respectăm confidențialitatea 🍪</h4>' +
-      '<p>Folosim cookies ca să înțelegem cum este folosit site-ul și să îl putem îmbunătăți. ' +
+      '<p>Folosim cookie-uri ca să înțelegem cum este folosit site-ul și să îl putem îmbunătăți. ' +
       'Poți accepta sau refuza cookie-urile de analiză. Vezi <a href="' + PRIVACY_URL + '">Politica de confidențialitate</a>.</p>' +
       '<div class="cd-cc-row">' +
       '<button class="cd-cc-btn cd-cc-reject" type="button">Refuz</button>' +
@@ -87,7 +87,7 @@
       var a = document.createElement('a');
       a.href = '#';
       a.className = 'cd-cc-settings';
-      a.textContent = 'Setări cookies';
+      a.textContent = 'Setări cookie-uri';
       a.addEventListener('click', function (e) { e.preventDefault(); showBanner(); });
       span.appendChild(a);
       bar.appendChild(span);
