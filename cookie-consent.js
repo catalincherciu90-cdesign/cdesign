@@ -21,19 +21,19 @@
     const banner = document.createElement('div');
     banner.id = 'cookie-consent-banner';
     banner.setAttribute('role', 'dialog');
-    banner.setAttribute('aria-label', 'Consimțământ pentru cookies');
+    banner.setAttribute('aria-label', 'Consimțământ pentru cookie-uri');
     banner.innerHTML = `
       <div class="cc-content">
         <div class="cc-header">
-          <h2>Utilizăm cookies</h2>
+          <h2>Folosim cookie-uri</h2>
         </div>
         <div class="cc-text">
           <p>Utilizăm Google Analytics și Meta Pixel pentru a înțelege cum folosești site-ul nostru. Aceste instrumente ne ajută să îmbunătățim experiența ta.</p>
-          <p><a href="/politica-confidentialitate" class="cc-link">Citește Politica de Confidențialitate</a></p>
+          <p><a href="/politica-confidentialitate" class="cc-link">Citește Politica de confidențialitate</a></p>
         </div>
         <div class="cc-actions">
           <button class="cc-btn cc-btn-accept" id="cc-accept">Accept</button>
-          <button class="cc-btn cc-btn-decline" id="cc-decline">Doar Necesare</button>
+          <button class="cc-btn cc-btn-decline" id="cc-decline">Doar cele necesare</button>
         </div>
       </div>
     `;

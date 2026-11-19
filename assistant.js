@@ -96,7 +96,7 @@
   var teaser = document.createElement('div');
   teaser.className = 'cda-teaser';
   teaser.innerHTML = '<button class="cda-tx" aria-label="Închide">×</button>'
-    + '<span>👋 Bună! Vrei un site care îți aduce clienți? <b>Întreabă-mă orice</b> — răspund pe loc.</span>';
+    + '<span>👋 Bună! Vrei un site care să-ți aducă clienți? <b>Întreabă-mă orice</b> — răspund pe loc.</span>';
   document.body.appendChild(teaser);
 
   var log = panel.querySelector('#cda-log');
@@ -104,7 +104,7 @@
   var input = panel.querySelector('#cda-input');
   var sendBtn = panel.querySelector('#cda-send');
 
-  var SUGGESTIONS = ['Cât costă un site?', 'În cât timp e gata?', 'Ce include Pachetul Startup?', 'Vreau o ofertă'];
+  var SUGGESTIONS = ['Cât costă un site?', 'În cât timp e gata?', 'Ce include Pachetul Start-Up?', 'Vreau o ofertă'];
 
   function esc(s) { return String(s).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
   function scroll() { log.scrollTop = log.scrollHeight; }
@@ -151,7 +151,7 @@
       var d = await r.json();
       typing(false);
       if (d && d.id && d.id !== convId) { convId = d.id; try { localStorage.setItem('cdaId', convId); } catch (e) {} }
-      var reply = (d && d.reply) || 'Hai să discutăm direct: programează o consultație gratuită sau sună la ' + PHONE + '.';
+      var reply = (d && d.reply) || 'Hai să discutăm direct: programează o consultanță gratuită sau sună la ' + PHONE + '.';
       addMsg('bot', reply); history.push({ role: 'assistant', content: reply });
     } catch (e) {
       typing(false);
@@ -181,7 +181,7 @@
     setTimeout(function () { ein.focus(); }, 150);
     function submit() {
       var v = (ein.value || '').trim();
-      if (!isMail(v)) { eer.textContent = 'Te rog introdu o adresă de email validă.'; ein.focus(); return; }
+      if (!isMail(v)) { eer.textContent = 'Te rog să introduci o adresă de email validă.'; ein.focus(); return; }
       leadEmail = v; try { localStorage.setItem('cdaEmail', v); } catch (e) {}
       wrap.remove(); enableChat(); greet();
     }
