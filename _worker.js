@@ -1984,6 +1984,42 @@ export default {
         { loc: '/web-design-auto',            cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-restaurante',     cf: 'monthly', pr: '0.8' },
         { loc: '/web-design-afaceri-mici',    cf: 'monthly', pr: '0.8' },
+        { loc: '/web-design-orase',           cf: 'monthly', pr: '0.7' },
+        { loc: '/web-design-ilfov', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-ploiesti', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-pitesti', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-targoviste', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-giurgiu', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-calarasi', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-slobozia', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-alexandria', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-suceava', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-botosani', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-piatra-neamt', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-bacau', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-vaslui', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-focsani', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-galati', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-targu-mures', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-alba-iulia', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-bistrita', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-sfantu-gheorghe', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-miercurea-ciuc', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-deva', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-zalau', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-oradea', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-arad', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-satu-mare', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-baia-mare', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-resita', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-drobeta-turnu-severin', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-craiova', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-targu-jiu', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-slatina', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-ramnicu-valcea', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-braila', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-buzau', cf: 'monthly', pr: '0.6' },
+        { loc: '/web-design-tulcea', cf: 'monthly', pr: '0.6' },
         { loc: '/politica-confidentialitate', cf: 'yearly',  pr: '0.3' },
       ];
       const urlXml = (loc, lastmod, cf, pr) =>
@@ -1997,7 +2033,7 @@ export default {
         '/politica-confidentialitate': '/en/privacy-policy' };
       const enLoc = (loc) => EN_OF[loc] || (loc.startsWith('/servicii/') ? '/en/services/' + loc.slice(10)
         : loc.startsWith('/portofoliu/') ? '/en/portfolio/' + loc.slice(12)
-        : /^\/web-design-[a-z]+$/.test(loc) ? '/en' + loc : null);
+        : loc === '/web-design-orase' ? '/en/web-design-cities' : /^\/web-design-[a-z-]+$/.test(loc) ? '/en' + loc : null);
       const enPages = staticPages.map(p => ({ ...p, loc: enLoc(p.loc) })).filter(p => p.loc);
       const parts = staticPages.concat(enPages).map(p => urlXml(BASE + p.loc, SITE_LASTMOD, p.cf, p.pr));
       // Notă: paginile demo individuale (/demos/*.html) sunt intenționat
