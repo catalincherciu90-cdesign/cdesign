@@ -132,7 +132,7 @@
 
   function greet() {
     if (greeted) return; greeted = true;
-    var hi = 'Salut! 👋 Sunt asistentul C Design. Te pot ajuta cu informații despre site-uri, prețuri orientative și o ofertă gratuită. Cu ce începem?';
+    var hi = 'Salut! 👋 Sunt asistentul C Design. Te pot ajuta cu informații despre website-uri, prețuri orientative și o ofertă gratuită. Cu ce începem?';
     addMsg('bot', hi); history.push({ role: 'assistant', content: hi }); renderChips();
   }
 
