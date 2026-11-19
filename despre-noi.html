@@ -257,6 +257,15 @@
     .btn-primary,.btn-ghost{width:100%;justify-content:center}
   }
 </style>
+<style id="cta-one-line">
+  /* butoanele „Programează o discuție gratuită” rămân pe un singur rând pe telefon */
+  @media (max-width: 420px) {
+    a[data-edit="buton-1"], a[data-edit="buton-2"] { white-space: nowrap; font-size: .92rem; padding-left: 16px; padding-right: 16px; gap: 8px; }
+  }
+  @media (max-width: 350px) {
+    a[data-edit="buton-1"], a[data-edit="buton-2"] { font-size: .84rem; padding-left: 12px; padding-right: 12px; }
+  }
+</style>
 </head>
 <body>
 
@@ -264,7 +273,7 @@
   <div class="topbar">
     <div class="topbar-inner">
       <span class="promo" data-edit="eticheta-hero-1">
-        <b>OFERTĂ LIMITATĂ:</b> Site + SEO + Google Business — totul de la 400€.
+        <b>OFERTĂ LIMITATĂ:</b> Site + SEO + Google Business — totul de la 400 €.
         <a href="/promo" class="view-deal">Vezi oferta</a>
       </span>
       <div class="topbar-right">
@@ -321,7 +330,7 @@
       <h1 id="hero-h1-el" data-edit="titlu-principal-1">Facem website-uri care aduc <span style="color:var(--blue)">clienți</span>, nu premii.</h1>
       <p class="sub" id="hero-desc-el" data-edit="descriere-hero-1">Agenție de web design din Ilfov care lucrează cu afaceri mici din toată România — online, rapid, la preț fix. Fără termeni tehnici, fără surprize la factură.</p>
       <div class="hero-cta">
-        <a href="#contact" class="btn-primary" data-edit="buton-1">Hai să vorbim gratuit <span class="arr">→</span></a>
+        <a href="#contact" class="btn-primary" data-edit="buton-1">Programează o discuție gratuită <span class="arr">→</span></a>
         <a href="/portofoliu" class="btn-ghost" data-edit="buton-secundar-1">Vezi portofoliul</a>
       </div>
       <div style="display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-top:56px">
@@ -342,7 +351,7 @@
           <p data-edit="paragraf-despre-2">Cu o experiență de peste 10 ani în web design, lucrăm atât cu afaceri mici și antreprenori la început de drum, cât și cu companii consacrate care vor să-și modernizeze prezența online. Am livrat peste 120 de proiecte pentru antreprenori, meșteri, firme de servicii, magazine și companii din toată România. Nu suntem o agenție mare cu zeci de conturi — suntem o echipă care răspunde direct și știe ce construiește. Și, mai presus de toate, ne facem treaba cu drag și plăcere — ne place cu adevărat ceea ce construim, iar lucrul ăsta se vede în fiecare proiect pe care îl predăm.</p>
           <p data-edit="paragraf-despre-3">Colaborăm online sau cu vizită la client — tu alegi cum e mai comod. Indiferent de format, fiecare proiect vine cu termen garantat de 14 zile, preț stabilit din start și zero costuri ascunse — ce stabilim la început, atât plătești la final. Livrăm site, branding, SEO local sau configurarea conturilor de social media, totul gata de folosit, nu o schiță pe care să o termini tu.</p>
         </div>
-        <a href="#contact" class="btn-primary about-cta" data-edit="buton-2">Hai să vorbim gratuit <span class="arr">→</span></a>
+        <a href="#contact" class="btn-primary about-cta" data-edit="buton-2">Programează o discuție gratuită <span class="arr">→</span></a>
       </div>
       <div class="about-carousel" id="aboutCarousel" aria-label="Portofoliu">
         <div class="ac-slides" id="acSlides"></div>
