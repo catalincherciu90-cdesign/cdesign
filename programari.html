@@ -2596,6 +2596,16 @@
             <div id="cd-deadlines"></div>
           </div>
 
+          <!-- Oferte client -->
+          <div class="client-section client-docs" id="cd-oferte-section">
+            <div class="client-section-title">
+              <span>&#x1F4CB; Oferte</span>
+              <button class="client-add-inline" onclick="clientNewOferta()">+ ofert&#259; nou&#259;</button>
+            </div>
+            <div id="cd-oferte-sum" class="cd-doc-hint" style="margin-top:0"></div>
+            <div id="cd-oferte"></div>
+          </div>
+
           <!-- Documente client (PDF) -->
           <div class="client-section client-docs" id="cd-docs-section">
             <div class="client-section-title">
@@ -5992,6 +6002,79 @@
       ${pj ? `<div class="client-info-item" style="grid-column:1/-1"><button class="client-btn-sm" onclick="copyClientData('${esc(c.id)}')">📋 Copiază datele firmei</button></div>` : ''}`;
     renderClientDetail(id);
     loadClientDocs(id);
+    loadClientOferte(id);
+  }
+
+  // ── Ofertele unui client ──
+  // Legătura: oferta salvată cu clientul ales din listă are client.id; ofertele mai vechi
+  // (fără id) se potrivesc după numele sau emailul clientului.
+  function ofertePentruClient(c) {
+    const n = String(c.name || '').trim().toLowerCase(), e = String(c.email || '').trim().toLowerCase();
+    return (allOferte || []).filter(o => {
+      const oc = o.client || {};
+      if (oc.id) return oc.id === c.id;
+      return (n && String(oc.name || '').trim().toLowerCase() === n) || (e && String(oc.email || '').trim().toLowerCase() === e);
+    }).sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
+  }
+  async function loadClientOferte(id) {
+    const wrap = document.getElementById('cd-oferte'); if (!wrap) return;
+    if (!allOferte || !allOferte.length) { wrap.innerHTML = '<div class="gib-empty">Se încarcă…</div>'; try { await fetchOferte(); } catch (e) {} }
+    if (selectedClientId === id) renderClientOferte();
+  }
+  function renderClientOferte() {
+    const wrap = document.getElementById('cd-oferte'), sum = document.getElementById('cd-oferte-sum');
+    const c = (clientsData || []).find(x => x.id === selectedClientId);
+    if (!wrap || !c) return;
+    const list = ofertePentruClient(c);
+    const tot = o => (o.servicii || []).reduce((s, sv) => s + parseFloat(sv.pret || 0), 0);
+    const fmt = (v, m) => v.toLocaleString('ro-RO') + ' ' + (m || 'EUR');
+    if (sum) {
+      if (list.length) {
+        const acc = list.filter(o => o.status === 'acceptată'), pend = list.filter(o => (o.status || 'trimisă') === 'trimisă');
+        const accTot = {}; acc.forEach(o => { const m = o.moneda || 'EUR'; accTot[m] = (accTot[m] || 0) + tot(o); });
+        sum.textContent = list.length + (list.length === 1 ? ' ofertă' : ' oferte') + ' · ' + pend.length + ' în așteptare · ' + acc.length + ' acceptat' + (acc.length === 1 ? 'ă' : 'e')
+          + (acc.length ? ' (' + Object.keys(accTot).map(m => fmt(accTot[m], m)).join(' + ') + ')' : '');
+      } else sum.textContent = '';
+    }
+    if (!list.length) { wrap.innerHTML = '<div class="gib-empty">Nicio ofertă pentru acest client.</div>'; return; }
+    const azi = new Date(); azi.setHours(0, 0, 0, 0);
+    wrap.innerHTML = list.map(o => {
+      const st = o.status || 'trimisă';
+      let when = '';
+      if (st === 'trimisă') {
+        const exp = ofertaExpira(o);
+        if (exp) { const e0 = new Date(exp); e0.setHours(0, 0, 0, 0); const z = Math.round((e0 - azi) / 864e5);
+          when = z < 0 ? ' · <span style="color:#ff5f57;font-weight:700;">expirată</span>' : z === 0 ? ' · <span style="color:#ff5f57;font-weight:700;">expiră azi</span>' : ' · <span style="color:' + (z <= 3 ? '#febc2e' : 'inherit') + ';">expiră în ' + z + (z === 1 ? ' zi' : ' zile') + '</span>'; }
+      }
+      const svc = (o.servicii || []).map(sv => sv.nume).filter(Boolean);
+      return `<div class="cd-doc">
+        <span class="cd-doc-ico">📋</span>
+        <div class="cd-doc-main">
+          <a class="cd-doc-name" href="#" onclick="window.open('/oferta-preview/${esc(o.id)}?token=${encodeURIComponent(adminToken)}','_blank');return false;" title="Deschide oferta">${esc(o.numar || 'Ofertă')} · ${fmt(tot(o), esc(o.moneda || 'EUR'))}</a>
+          <div class="cd-doc-meta">${o.createdAt ? new Date(o.createdAt).toLocaleDateString('ro-RO') : '–'}${o.updatedAt ? ' · revizuită ' + new Date(o.updatedAt).toLocaleDateString('ro-RO') : ''}${when}${svc.length ? ' · ' + esc(svc.slice(0, 3).join(', ')) + (svc.length > 3 ? ' +' + (svc.length - 3) : '') : ''}</div>
+        </div>
+        <select class="of-status ${st === 'acceptată' ? 'ok' : st === 'respinsă' ? 'no' : ''}" onchange="setOfertaStatus('${esc(o.id)}', this.value).then(renderClientOferte)" aria-label="Starea ofertei">
+          ${['trimisă', 'acceptată', 'respinsă'].map(x => `<option value="${x}"${st === x ? ' selected' : ''}>${x === 'trimisă' ? 'În așteptare' : x[0].toUpperCase() + x.slice(1)}</option>`).join('')}
+        </select>
+        <button class="cd-doc-act" onclick="clientEditOferta('${esc(o.id)}')" title="Editează oferta">✎</button>
+      </div>`;
+    }).join('');
+  }
+  function ofertaTabBtn() { return document.querySelector('[onclick*="switchTab(\'oferte\'"]'); }
+  async function clientEditOferta(id) {
+    switchTab('oferte', ofertaTabBtn());
+    try { await fetchServicii(); } catch (e) {}
+    editeazaOferta(id);
+  }
+  async function clientNewOferta() {
+    const cid = selectedClientId; if (!cid) return;
+    switchTab('oferte', ofertaTabBtn());
+    try { await fetchServicii(); } catch (e) {}
+    if (typeof ofertaEditId !== 'undefined' && ofertaEditId && typeof anuleazaEditareOferta === 'function') anuleazaEditareOferta(true);
+    showOfertaView('generator', document.getElementById('subnav-generator'));
+    populateOfertaClientSel();
+    const sel = document.getElementById('oferta-client-sel');
+    if (sel) { sel.value = cid; onOfertaClientChange(cid); }
   }
 
   // ── Documente client (PDF) ──
