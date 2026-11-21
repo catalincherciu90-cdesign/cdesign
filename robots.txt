@@ -3,10 +3,12 @@
 User-agent: *
 Allow: /
 
+# Adminul (/programari) nu e blocat aici intenționat: are meta noindex,
+# pe care Google trebuie să o poată citi ca să nu indexeze adresa.
 # Fișiere de sistem — nu trebuie indexate
-Disallow: /programari
-Disallow: /programari.html
 Disallow: /*.json$
+# datele publice ale blogului în engleză (folosite la afișarea paginii /en/blog)
+Allow: /en/data/
 Disallow: /aplicatie/
 # API: doar datele publice afișate pe pagini rămân accesibile (Google le folosește la randare)
 Allow: /api/projects
