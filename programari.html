@@ -1773,6 +1773,19 @@
   .cd-doc-meta{font-size:.7rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .cd-doc-act{background:none;border:1px solid var(--teal-border);color:var(--text);border-radius:6px;padding:5px 8px;cursor:pointer;font-size:.8rem;text-decoration:none;flex-shrink:0}
   .cd-doc-act:hover{border-color:var(--teal)}
+  /* notițe întâlniri */
+  .gib-note-btn{opacity:.55}.gib-note-btn.has{opacity:1}
+  .note-item{cursor:pointer}
+  .note-item .gib-title small{display:block;font-size:.72rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  #noteModalOverlay .modal{max-height:calc(100vh - 40px);overflow-y:auto}
+  #noteModalOverlay .cl-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:14px}
+  #noteModalOverlay .cl-field{margin-bottom:14px;min-width:0}
+  #noteModalOverlay .cl-field .f-label{margin-bottom:6px}
+  #noteModalOverlay .f-input{margin:0 !important;width:100%}
+  #noteModalOverlay textarea.f-input{resize:vertical;line-height:1.5;font-family:inherit}
+  .note-meta{font-size:.72rem;color:var(--muted);margin:-4px 0 12px}
+  .note-btns{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  @media(max-width:600px){#noteModalOverlay .cl-row{grid-template-columns:1fr}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 <style id="jvs-window-shape">
@@ -2268,6 +2281,7 @@
       <div class="gib-quick" id="gib-quick" aria-label="Acces rapid">
         <button type="button" class="gq-tile" onclick="agendaOpen('todos')"><span class="gq-ico" aria-hidden="true">&#x2705;</span><span class="gq-lab">Task-uri</span><span class="gq-badge gq-count" data-count="todos"></span></button>
         <button type="button" class="gq-tile" onclick="agendaOpen('meetings')"><span class="gq-ico" aria-hidden="true">&#x1F550;</span><span class="gq-lab">&Icirc;nt&acirc;lniri</span><span class="gq-badge gq-count" data-count="meetings"></span></button>
+        <button type="button" class="gq-tile" onclick="agendaOpen('notes')"><span class="gq-ico" aria-hidden="true">&#x1F4DD;</span><span class="gq-lab">Noti&#x21B;e</span></button>
         <button type="button" class="gq-tile" onclick="agendaOpen('deadlines')"><span class="gq-ico" aria-hidden="true">&#x26A0;&#xFE0F;</span><span class="gq-lab">Deadline-uri</span><span class="gq-badge gq-count" data-count="deadlines"></span></button>
         <button type="button" class="gq-tile" onclick="quickOpen('bookings')"><span class="gq-ico" aria-hidden="true">&#x1F4C5;</span><span class="gq-lab">Program&#259;ri</span></button>
         <button type="button" class="gq-tile" onclick="quickOpen('mesaje')"><span class="gq-ico" aria-hidden="true">&#x1F4E8;</span><span class="gq-lab">Mesaje</span><span class="gq-badge" data-for="mesaje-tab-badge"></span></button>
@@ -2408,6 +2422,7 @@
         <button type="button" class="agenda-chip active" data-view="all" onclick="agendaShow('all')">Toate</button>
         <button type="button" class="agenda-chip" data-view="todos" onclick="agendaShow('todos')">&#x2705; Task-uri <span class="agenda-count" data-count="todos"></span></button>
         <button type="button" class="agenda-chip" data-view="meetings" onclick="agendaShow('meetings')">&#x1F550; &Icirc;nt&acirc;lniri <span class="agenda-count" data-count="meetings"></span></button>
+        <button type="button" class="agenda-chip" data-view="notes" onclick="agendaShow('notes')">&#x1F4DD; Noti&#x21B;e <span class="agenda-count" data-count="notes"></span></button>
         <button type="button" class="agenda-chip" data-view="deadlines" onclick="agendaShow('deadlines')">&#x26A0; Deadline-uri <span class="agenda-count" data-count="deadlines"></span></button>
         <button type="button" class="agenda-chip" data-view="oferte" onclick="agendaShow('oferte')">&#x1F4C4; Oferte <span class="agenda-count" data-count="oferte"></span></button>
         <button type="button" class="agenda-chip" data-view="bookings" onclick="agendaShow('bookings')">&#x1F4C5; Program&#259;ri <span class="agenda-count" data-count="bookings"></span></button>
@@ -2455,6 +2470,16 @@
             <button class="gib-save" onclick="addMeeting()">Salveaz&#259;</button>
           </div>
           <div id="gib-meetings-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
+        </div>
+
+        <!-- Notițe de la întâlniri -->
+        <div class="gib-section" data-sec="notes">
+          <div class="agenda-sec-head">
+            <div class="gib-section-title">&#x1F4DD; NOTI&#x21A;E &Icirc;NT&Acirc;LNIRI</div>
+            <button type="button" class="gib-add-btn agenda-add" onclick="openNoteEditor()">+ Noti&#x21B;&#259;</button>
+          </div>
+          <input class="gib-input" type="search" id="gib-notes-search" placeholder="Caut&#259; &icirc;n noti&#x21B;e (titlu, client, text)&hellip;" oninput="renderNotesList()" style="margin-bottom:10px;">
+          <div id="gib-notes-list"><div class="gib-empty">Se &icirc;ncarc&#259;...</div></div>
         </div>
 
         <!-- Deadline-uri -->
@@ -2594,6 +2619,15 @@
               <button class="gib-save" onclick="addDeadlineForClient()">Salveaz&#259;</button>
             </div>
             <div id="cd-deadlines"></div>
+          </div>
+
+          <!-- Notițe întâlniri client -->
+          <div class="client-section client-docs" id="cd-notes-section">
+            <div class="client-section-title">
+              <span>&#x1F4DD; Noti&#x21B;e &icirc;nt&acirc;lniri</span>
+              <button class="client-add-inline" onclick="openNoteEditor(null, { clientId: selectedClientId })">+ noti&#x21B;&#259;</button>
+            </div>
+            <div id="cd-notes"></div>
           </div>
 
           <!-- Oferte client -->
@@ -4130,6 +4164,39 @@
   </div>
 
 </div>
+<div class="modal-overlay" id="noteModalOverlay">
+  <div class="modal" style="max-width:720px;">
+    <div class="cl-head">
+      <h3 id="noteModalTitle">Noti&#x21B;&#259; nou&#259;</h3>
+      <button type="button" class="cl-close" onclick="closeNoteEditor()" aria-label="&Icirc;nchide">&times;</button>
+    </div>
+    <input type="hidden" id="noteId"><input type="hidden" id="noteMeetingId">
+    <div class="f-row cl-row">
+      <div class="cl-field"><label class="f-label" for="noteTitle">// titlu</label>
+        <input class="f-input" type="text" id="noteTitle" maxlength="160" placeholder="Ex: Discu&#x21B;ie site nou"></div>
+      <div class="cl-field"><label class="f-label" for="noteDate">// data</label>
+        <input class="f-input" type="date" id="noteDate" style="color-scheme:dark;"></div>
+    </div>
+    <div class="f-row cl-row">
+      <div class="cl-field"><label class="f-label" for="noteClient">// client</label>
+        <select class="f-input" id="noteClient"><option value="">— f&#x103;r&#x103; client —</option></select></div>
+      <div class="cl-field"><label class="f-label" for="noteParticipants">// participan&#x21B;i</label>
+        <input class="f-input" type="text" id="noteParticipants" maxlength="300" placeholder="Cine a fost la discu&#x21B;ie"></div>
+    </div>
+    <div class="cl-field"><label class="f-label" for="noteContent">// ce s-a discutat</label>
+      <textarea class="f-input" id="noteContent" rows="9" maxlength="20000" placeholder="Ce vrea clientul, buget, termene, idei, decizii&hellip;"></textarea></div>
+    <div class="cl-field"><label class="f-label" for="noteActions">// pa&#x219;i urm&#259;tori (c&acirc;te unul pe r&acirc;nd)</label>
+      <textarea class="f-input" id="noteActions" rows="4" maxlength="5000" placeholder="Trimit oferta p&acirc;n&#259; vineri&#10;Clientul trimite logo-ul &#x219;i textele"></textarea></div>
+    <div class="note-meta" id="noteMeta"></div>
+    <div class="note-btns">
+      <button type="button" class="btn-add" id="noteSaveBtn" onclick="saveNote()">Salveaz&#259;</button>
+      <button type="button" class="btn-edit" onclick="notesToTodos()" title="Fiecare r&acirc;nd din pa&#x219;ii urm&#259;tori devine un task &icirc;n Agend&#259;">&#x2795; Task-uri din pa&#x219;ii urm&#259;tori</button>
+      <button type="button" class="btn-edit" onclick="copyNote()">&#x1F4CB; Copiaz&#259;</button>
+      <button type="button" class="btn-edit" id="noteDelBtn" onclick="deleteNote()" style="margin-left:auto;color:#f87171;">&#x1F5D1; &#x15E;terge</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="clientModalOverlay">
   <div class="modal" style="max-width:600px;">
     <div class="cl-head">
@@ -4669,7 +4736,7 @@
   function agendaShow(view) {
     const panel = document.getElementById('panel-agenda');
     if (!panel) return;
-    const v = ['todos', 'meetings', 'deadlines', 'oferte', 'bookings'].indexOf(view) >= 0 ? view : 'all';
+    const v = ['todos', 'meetings', 'notes', 'deadlines', 'oferte', 'bookings'].indexOf(view) >= 0 ? view : 'all';
     panel.setAttribute('data-view', v);
     panel.querySelectorAll('.agenda-chip').forEach(c => c.classList.toggle('active', c.getAttribute('data-view') === v));
     panel.querySelectorAll('.gib-section[data-sec]').forEach(sec => { sec.style.display = (v === 'all' || sec.getAttribute('data-sec') === v) ? '' : 'none'; });
@@ -6003,6 +6070,7 @@
     renderClientDetail(id);
     loadClientDocs(id);
     loadClientOferte(id);
+    if (notesData && notesData.length) renderClientNotes(); else fetchNotes();
   }
 
   // ── Ofertele unui client ──
@@ -6798,6 +6866,7 @@
       if (!res.ok) return;
       gibData = await res.json();
       renderGibilanDate();
+      fetchNotes();
       renderGibilanMeetings();
       renderGibilanTodos();
       renderGibilanTodosDone();
@@ -6842,6 +6911,123 @@
     await loadGibilan();
   }
 
+  // ── NOTIȚE DE LA ÎNTÂLNIRI ──
+  var notesData = [];
+  function noteUrl(id) { return '/api/meeting-notes' + (id ? '/' + encodeURIComponent(id) : '') + '?token=' + encodeURIComponent(adminToken); }
+  async function fetchNotes() {
+    if (!adminToken) return;
+    try { const r = await fetch(noteUrl()); if (r.ok) notesData = await r.json(); } catch (e) {}
+    if (!Array.isArray(notesData)) notesData = [];
+    renderNotesList(); renderClientNotes();
+    if (typeof renderGibilanMeetings === 'function' && gibData) renderGibilanMeetings();
+  }
+  function noteClientName(n) { const c = (clientsData || []).find(x => x.id === n.clientId); return c ? c.name : ''; }
+  function noteItemHtml(n, withClient) {
+    const cl = withClient ? noteClientName(n) : '';
+    const prev = String(n.content || '').replace(/\s+/g, ' ').trim().slice(0, 140);
+    const nAct = String(n.actions || '').split('\n').filter(x => x.trim()).length;
+    return `<div class="gib-item note-item" onclick="openNoteEditor('${esc(n.id)}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter')openNoteEditor('${esc(n.id)}')">
+      <span style="font-size:.72rem;color:var(--teal);flex-shrink:0;font-family:monospace;">${formatDate(n.date)}</span>
+      <span class="gib-title" style="min-width:0;">${esc(n.title || 'Notiță')}${cl ? ` <span class="gib-client-badge">${esc(cl)}</span>` : ''}
+        <small>${prev ? esc(prev) : '<i>fără text</i>'}${nAct ? ` · ${nAct} ${nAct === 1 ? 'pas următor' : 'pași următori'}` : ''}</small></span>
+    </div>`;
+  }
+  function renderNotesList() {
+    const wrap = document.getElementById('gib-notes-list'); if (!wrap) return;
+    const q = String((document.getElementById('gib-notes-search') || {}).value || '').trim().toLowerCase();
+    let list = notesData || [];
+    if (q) list = list.filter(n => [n.title, n.content, n.actions, n.participants, noteClientName(n)].join(' ').toLowerCase().includes(q));
+    wrap.innerHTML = list.length ? list.slice(0, 60).map(n => noteItemHtml(n, true)).join('')
+      : `<div class="gib-empty">${q ? 'Nicio notiță găsită.' : 'Nicio notiță încă. Apasă „+ Notiță” sau 📝 la o întâlnire.'}</div>`;
+  }
+  function renderClientNotes() {
+    const wrap = document.getElementById('cd-notes'); if (!wrap || !selectedClientId) return;
+    const list = (notesData || []).filter(n => n.clientId === selectedClientId);
+    wrap.innerHTML = list.length ? list.map(n => noteItemHtml(n, false)).join('') : '<div class="gib-empty">Nicio notiță de la întâlniri.</div>';
+  }
+  function fillNoteClients(cur) {
+    const sel = document.getElementById('noteClient'); if (!sel) return;
+    sel.innerHTML = '<option value="">— fără client —</option>' + (clientsData || []).map(c => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');
+    sel.value = cur || '';
+  }
+  function openNoteEditor(id, preset) {
+    const n = id ? (notesData || []).find(x => x.id === id) : null;
+    const p = preset || {};
+    document.getElementById('noteModalTitle').textContent = n ? 'Notiță întâlnire' : 'Notiță nouă';
+    document.getElementById('noteId').value = n ? n.id : '';
+    document.getElementById('noteMeetingId').value = n ? (n.meetingId || '') : (p.meetingId || '');
+    document.getElementById('noteTitle').value = n ? n.title : (p.title || '');
+    document.getElementById('noteDate').value = n ? (n.date || '') : (p.date || new Date().toISOString().slice(0, 10));
+    fillNoteClients(n ? n.clientId : p.clientId);
+    document.getElementById('noteParticipants').value = n ? (n.participants || '') : '';
+    document.getElementById('noteContent').value = n ? (n.content || '') : '';
+    document.getElementById('noteActions').value = n ? (n.actions || '') : '';
+    document.getElementById('noteDelBtn').style.display = n ? '' : 'none';
+    document.getElementById('noteMeta').textContent = n && n.updatedAt ? 'Ultima modificare: ' + new Date(n.updatedAt).toLocaleString('ro-RO', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+    document.getElementById('noteModalOverlay').classList.add('open');
+    setTimeout(() => document.getElementById(n || p.title ? 'noteContent' : 'noteTitle').focus(), 60);
+  }
+  function openNoteForMeeting(mid) {
+    const ex = (notesData || []).find(n => n.meetingId === mid);
+    if (ex) return openNoteEditor(ex.id);
+    const m = (gibData.meetings || []).find(x => x.id === mid) || {};
+    openNoteEditor(null, { meetingId: mid, title: m.title || '', date: m.date || '', clientId: m.clientId || '' });
+  }
+  function closeNoteEditor() { document.getElementById('noteModalOverlay').classList.remove('open'); }
+  function noteForm() {
+    return {
+      title: document.getElementById('noteTitle').value.trim(), date: document.getElementById('noteDate').value,
+      clientId: document.getElementById('noteClient').value || null, meetingId: document.getElementById('noteMeetingId').value || null,
+      participants: document.getElementById('noteParticipants').value.trim(),
+      content: document.getElementById('noteContent').value, actions: document.getElementById('noteActions').value,
+    };
+  }
+  async function saveNote(keepOpen) {
+    const id = document.getElementById('noteId').value, body = noteForm();
+    if (!body.title && !body.content.trim()) { showToast('Scrie un titlu sau ce s-a discutat'); return null; }
+    const btn = document.getElementById('noteSaveBtn'); btn.disabled = true;
+    try {
+      const r = await fetch(noteUrl(id), { method: id ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) { showToast(d.error || 'Nu am putut salva notița'); return null; }
+      document.getElementById('noteId').value = d.id;
+      showToast('Notiță salvată');
+      await fetchNotes();
+      if (!keepOpen) closeNoteEditor();
+      return d;
+    } catch (e) { showToast('Eroare de conexiune'); return null; }
+    finally { btn.disabled = false; }
+  }
+  async function deleteNote() {
+    const id = document.getElementById('noteId').value; if (!id) return;
+    if (!confirm('Ștergi notița? Nu se poate recupera.')) return;
+    const r = await fetch(noteUrl(id), { method: 'DELETE' });
+    if (!r.ok) { showToast('Nu am putut șterge notița'); return; }
+    closeNoteEditor(); showToast('Notiță ștearsă'); fetchNotes();
+  }
+  async function notesToTodos() {
+    const lines = document.getElementById('noteActions').value.split('\n').map(x => x.replace(/^[-•*\d.)\s]+/, '').trim()).filter(Boolean);
+    if (!lines.length) { showToast('Scrie întâi pașii următori, câte unul pe rând'); return; }
+    if (!confirm('Creez ' + lines.length + (lines.length === 1 ? ' task' : ' task-uri') + ' în Agendă din pașii următori?')) return;
+    const saved = await saveNote(true); if (!saved) return;
+    let ok = 0;
+    for (const title of lines) {
+      try {
+        const r = await fetch('/api/gibilan/todo?token=' + encodeURIComponent(adminToken), { method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: title.slice(0, 200), dueDate: '', priority: 'normal', clientId: saved.clientId || '' }) });
+        if (r.ok) ok++;
+      } catch (e) {}
+    }
+    showToast(ok + (ok === 1 ? ' task creat' : ' task-uri create') + ' în Agendă');
+    if (typeof loadGibilan === 'function') loadGibilan();
+  }
+  async function copyNote() {
+    const b = noteForm(), cl = (clientsData || []).find(c => c.id === b.clientId);
+    const txt = [b.title || 'Notiță întâlnire', [b.date ? formatDate(b.date) : '', cl ? cl.name : '', b.participants].filter(Boolean).join(' · '), '',
+      b.content.trim(), b.actions.trim() ? '\nPași următori:\n' + b.actions.trim().split('\n').filter(x => x.trim()).map(x => '- ' + x.trim()).join('\n') : ''].join('\n').trim();
+    try { await navigator.clipboard.writeText(txt); showToast('Notița a fost copiată'); } catch (e) { prompt('Copiază notița:', txt); }
+  }
+
   function renderGibilanMeetings() {
     const wrap = document.getElementById('gib-meetings-list');
     if (!wrap) return;
@@ -6857,6 +7043,7 @@
           ${client ? `<span class="gib-client-badge" onclick="switchTab('clients',document.querySelector('[onclick*=clients]'));showClientDetail('${esc(client.id)}')">${esc(client.name)}</span>` : ''}
         </span>
         ${clientSelectHtml('meeting', m.id, m.clientId)}
+        <button class="gib-del gib-note-btn${(notesData || []).some(n => n.meetingId === m.id) ? ' has' : ''}" onclick="openNoteForMeeting('${esc(m.id)}')" title="Noti&#x21B;e de la &icirc;nt&acirc;lnire">&#x1F4DD;</button>
         <button class="gib-del" onclick="deleteGibilanItem('meeting','${esc(m.id)}')" title="&#x15C;terge">&#x1F5D1;</button>
       </div>`;
     }).join('');
