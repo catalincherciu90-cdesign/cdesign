@@ -2943,6 +2943,62 @@ Cerințe titluri:
     }
 
     // ── CLIENȚI ──────────────────────────────────────────────
+    // ── NOTIȚE DE LA ÎNTÂLNIRI (admin) ────────────────────────
+    // __meeting_notes__ = [{ id, title, date, clientId, meetingId, participants, content, actions, createdAt, updatedAt }]
+    if (path === '/api/meeting-notes' || /^\/api\/meeting-notes\/n_[A-Za-z0-9_]+$/.test(path)) {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      const KEY = '__meeting_notes__';
+      const clean = (b, prev) => {
+        const str = (v, n) => String(v == null ? '' : v).replace(/\u0000/g, '').slice(0, n);
+        const o = { ...(prev || {}) };
+        if (b.title !== undefined) o.title = str(b.title, 160).trim();
+        if (b.date !== undefined) o.date = /^\d{4}-\d{2}-\d{2}$/.test(String(b.date)) ? String(b.date) : '';
+        if (b.clientId !== undefined) o.clientId = str(b.clientId, 64) || null;
+        if (b.meetingId !== undefined) o.meetingId = str(b.meetingId, 64) || null;
+        if (b.participants !== undefined) o.participants = str(b.participants, 300).trim();
+        if (b.content !== undefined) o.content = str(b.content, 20000);
+        if (b.actions !== undefined) o.actions = str(b.actions, 5000);
+        return o;
+      };
+      try {
+        const raw = await env.PROGRAMARI.get(KEY);
+        const list = raw ? JSON.parse(raw) : [];
+        if (path === '/api/meeting-notes' && request.method === 'GET') {
+          const cid = url.searchParams.get('client');
+          const out = cid ? list.filter(n => n.clientId === cid) : list;
+          return json(out.sort((a, b) => String(b.date || b.createdAt).localeCompare(String(a.date || a.createdAt))));
+        }
+        if (path === '/api/meeting-notes' && request.method === 'POST') {
+          const n = clean(await request.json().catch(() => ({})));
+          if (!n.title && !n.content) return json({ error: 'Scrie un titlu sau conținutul notiței' }, 400);
+          const now = new Date().toISOString();
+          const note = { id: 'n_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7), title: n.title || 'Notiță întâlnire',
+            date: n.date || now.slice(0, 10), clientId: n.clientId || null, meetingId: n.meetingId || null,
+            participants: n.participants || '', content: n.content || '', actions: n.actions || '', createdAt: now, updatedAt: now };
+          list.push(note);
+          await env.PROGRAMARI.put(KEY, JSON.stringify(list));
+          return json(note);
+        }
+        const id = path.split('/').pop();
+        const idx = list.findIndex(n => n.id === id);
+        if (idx === -1) return json({ error: 'Notiță negăsită' }, 404);
+        if (request.method === 'PUT') {
+          const n = clean(await request.json().catch(() => ({})), list[idx]);
+          if (!n.title) n.title = 'Notiță întâlnire';
+          n.updatedAt = new Date().toISOString();
+          list[idx] = n;
+          await env.PROGRAMARI.put(KEY, JSON.stringify(list));
+          return json(n);
+        }
+        if (request.method === 'DELETE') {
+          list.splice(idx, 1);
+          await env.PROGRAMARI.put(KEY, JSON.stringify(list));
+          return json({ ok: true });
+        }
+        return json({ error: 'Metodă nepermisă' }, 405);
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
     // ── DOCUMENTE CLIENȚI (PDF, private — doar din admin) ─────
     // Indexul: __client_files__ = [{ id, clientId, name, label, size, uploadedAt }]
     // Conținutul: __cfile__<id> (binar). Nu se servesc niciodată public.
