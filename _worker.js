@@ -526,8 +526,8 @@ const CONTENT_PAGES = {
   'despre-noi': '/despre-noi.html',
   'contact': '/contact.html',
   'parteneri': '/parteneri.html',
-  'partener-hosting': '/partener-hosting.html',
-  'partener-print': '/partener-print.html',
+  'partener-hosting': '/parteneri/hosting.html',
+  'partener-print': '/parteneri/print.html',
   'pachet-startup': '/pachet-startup.html',
   'abonament-lunar': '/abonament-lunar.html',
   'web-design-bucuresti': '/web-design-bucuresti.html',
@@ -1824,6 +1824,15 @@ export default {
       return Response.redirect(url.toString(), 301);
     }
 
+    // ── Adrese vechi / variante cu slash final → adresa canonică (301) ──
+    if (request.method === 'GET' || request.method === 'HEAD') {
+      const OLD_301 = { '/partener-hosting': '/parteneri/hosting', '/partener-hosting/': '/parteneri/hosting', '/partener-print': '/parteneri/print', '/partener-print/': '/parteneri/print' };
+      if (OLD_301[path]) return Response.redirect('https://www.c-design.ro' + OLD_301[path] + url.search, 301);
+      if (/^\/(blog|en\/blog|portofoliu|en\/portfolio)\/[^/.]+\/$/.test(path)) {
+        return Response.redirect('https://www.c-design.ro' + path.slice(0, -1) + url.search, 301);
+      }
+    }
+
     // ── MAINTENANCE MODE ──────────────────────────────────────
     // Skip maintenance check for: admin API, admin page, static assets, token bypass
     const isAdminReq = path === '/programari' || path === '/programari.html' || path.startsWith('/api/');
@@ -1937,7 +1946,7 @@ export default {
     // ── SITEMAP DINAMIC ───────────────────────────────────────
     // Generat la cerere: paginile statice + articolele de blog publicate
     // din KV. Înlocuiește sitemap.xml static (nu mai necesită întreținere).
-    if (path === '/sitemap.xml' && request.method === 'GET') {
+    if (path === '/sitemap.xml' && (request.method === 'GET' || request.method === 'HEAD')) {
       const BASE = 'https://www.c-design.ro';
       const SITE_LASTMOD = '2026-11-19';
       const staticPages = [
