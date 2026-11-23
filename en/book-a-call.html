@@ -497,7 +497,7 @@
         });
         if (res.ok) {
           if (typeof fbq === 'function') fbq('track', 'Lead');
-          if (typeof gtag !== 'undefined') gtag('event', 'generate_lead', { value: 300, currency: 'EUR', event_category: 'booking' });
+          if (typeof gtag !== 'undefined') gtag('event', 'generate_lead', { value: 400, currency: 'EUR', event_category: 'booking' });
           btn.textContent = '✓ Booking sent! We’ll contact you within 2 hours to confirm.';
           btn.style.background = '#28c840';
           this.reset();
