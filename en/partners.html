@@ -599,9 +599,10 @@
           if (r.ok) {
             msgForm.classList.add('sent');
             msgForm.reset();
-          }
+          } else { alert('Your message could not be sent. Please try again or call us on +40 753 116 155.'); }
         }).catch(function(err) {
           console.error('Form error:', err);
+          alert('Your message could not be sent. Please try again or call us on +40 753 116 155.');
         });
       });
     }
