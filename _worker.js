@@ -1806,6 +1806,13 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = url.pathname;
+    // Autentificare admin și prin antet (Authorization: Bearer <token>), pe lângă ?token=.
+    // Tokenul valid din antet e trecut în url, ca toate verificările isAdmin(url, env) să-l vadă.
+    {
+      const m = /^Bearer\s+(\S+)$/i.exec(request.headers.get('Authorization') || '');
+      const adminTok = env.ADMIN_TOKEN || ADMIN_TOKEN;
+      if (m && adminTok && m[1] === adminTok && !url.searchParams.has('token')) url.searchParams.set('token', m[1]);
+    }
     // Notificare push către telefoanele abonate, fără să întârzie răspunsul.
     const notifyPush = (payload) => {
       try { const p = pushNotifyAll(env, payload); if (ctx && typeof ctx.waitUntil === 'function') ctx.waitUntil(p); } catch {}
