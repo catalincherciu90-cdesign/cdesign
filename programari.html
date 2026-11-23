@@ -10797,7 +10797,8 @@
     }
   };
 
-  jvsBeams.init();
+  // Liniile dintre reactor și carduri au fost scoase la cererea proprietarului: nu mai pornim animația.
+  jvsBeams.start = function () {};
 
   // 3) COUNT-UP ANIMATION for stats
   const jvsCountUp = {
