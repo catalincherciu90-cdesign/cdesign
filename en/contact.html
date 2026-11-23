@@ -489,7 +489,7 @@ document.getElementById('contactForm').addEventListener('submit', async function
     });
     if (res.ok) {
       if (typeof fbq === 'function') fbq('track', 'Lead');
-      if (typeof gtag !== 'undefined') gtag('event', 'generate_lead', { value: 300, currency: 'EUR', event_category: 'contact' });
+      if (typeof gtag !== 'undefined') gtag('event', 'generate_lead', { value: 400, currency: 'EUR', event_category: 'contact' });
       btn.textContent = '✓ Message sent! We’ll get back to you within 2 hours.';
       btn.style.background = '#28c840';
       this.classList.add('sent');
