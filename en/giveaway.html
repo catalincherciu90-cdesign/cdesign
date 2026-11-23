@@ -287,7 +287,7 @@
       <div>
         <span class="ph-badge">🎁 Free, no strings attached</span>
         <h1>Win a <b>free website</b></h1>
-        <p class="sub">We are giving one lucky winner a complete, professional website. Entering takes less than a minute — and <b>everyone who enters gets <span class="giv-pct">15%</span> off</b> their first project, whether they win or not. No catches, no hidden costs.</p>
+        <p class="sub">We’re giving one winner a complete, professional website. Entering takes less than a minute — and <b>everyone who enters gets <span class="giv-pct">15%</span> off</b> their first project, whether they win or not. No catches, no hidden costs.</p>
         <div class="ph-cta">
           <a href="#enter" class="btn-primary">Enter the giveaway <span>→</span></a>
           <span class="ph-trust">✔ Free &nbsp;·&nbsp; ✔ Everyone wins something</span>
@@ -326,7 +326,7 @@
       <div class="rewards-head">
         <span class="eyebrow" style="justify-content:center">Nobody leaves empty-handed</span>
         <h2>One big winner — <b>and a discount for everyone</b></h2>
-        <p>It’s simple and fair. One person wins the website, and everyone else goes home with a real discount.</p>
+        <p>It’s simple and fair. One person wins the website, and everyone else gets a genuine discount.</p>
       </div>
       <div class="rewards-grid">
         <div class="reward-card">
@@ -352,7 +352,7 @@
       <div class="steps">
         <div class="step"><div class="num">1</div><h3>Follow us on Instagram</h3><p>Follow our account so you don’t miss the winner announcement.</p><a id="igStepLink" href="#" target="_blank" rel="noopener" class="step-link">Follow us on Instagram →</a></div>
         <div class="step"><div class="num">2</div><h3>Like our Facebook page</h3><p>Like the C Design page on Facebook so we stay in touch.</p><a id="fbStepLink" href="#" target="_blank" rel="noopener" class="step-link">Like on Facebook →</a></div>
-        <div class="step"><div class="num">3</div><h3>Fill in the form</h3><p>Send the form below and you are in the prize draw. We pick a winner at random — and everyone gets <span class="giv-pct">15%</span> off.</p><a href="#enter" class="step-link">Go to the form →</a></div>
+        <div class="step"><div class="num">3</div><h3>Fill in the form</h3><p>Send the form below and you’re in the prize draw. We pick a winner at random — and everyone gets <span class="giv-pct">15%</span> off.</p><a href="#enter" class="step-link">Go to the form →</a></div>
       </div>
     </div>
   </section>
@@ -363,7 +363,7 @@
       <div class="pf-info">
         <span class="eyebrow">Enter the giveaway</span>
         <h2>Want a <b>free website?</b></h2>
-        <p>Fill in your details below and you are in. We will send you a confirmation email and your <span class="giv-pct">15%</span> code — and if you are lucky, we will contact you to build your website.</p>
+        <p>Fill in your details below and you’re in. We’ll send you a confirmation email and your <span class="giv-pct">15%</span> code, and if you win, we’ll be in touch to build your website.</p>
         <ul class="pf-points">
           <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Follow on Instagram + like on Facebook</li>
           <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> <span class="giv-pct">15%</span> off, guaranteed</li>
@@ -388,8 +388,8 @@
         </div>
         <label class="pf-check"><input type="checkbox" name="consent" id="giveConsent" required> I agree to receive messages about this giveaway and the <span class="giv-pct">15%</span> discount, and I accept the <a href="/en/privacy-policy" target="_blank" rel="noopener">Privacy policy</a>. *</label>
         <button type="submit" class="btn-primary">Enter the giveaway <span>→</span></button>
-        <div class="pf-note">Free. We will not share your details and you can unsubscribe at any time. <a href="#terms" style="color:var(--teal-dk);text-decoration:underline">The giveaway rules apply</a>.</div>
-        <div class="pf-success" style="display:none">✅ You’re in! We have received your entry and will email you your <span class="giv-pct">15%</span> discount code. Good luck! 🍀</div>
+        <div class="pf-note">Free. We never share your details and you can unsubscribe at any time. <a href="#terms" style="color:var(--teal-dk);text-decoration:underline">The giveaway rules apply</a>.</div>
+        <div class="pf-success" style="display:none">✅ You’re in! We’ve received your entry and will email you your <span class="giv-pct">15%</span> discount code. Good luck! 🍀</div>
       </form>
     </div>
   </section>
@@ -547,7 +547,7 @@
         e.preventDefault();
         var btn = f.querySelector('button[type=submit]');
         var name=g('name'), email=g('email'), phone=g('phone'), business=g('business'), area=g('area'), message=g('message');
-        if(!name || !email || !phone){ alert('Please fill in your name, email and phone number.'); return; }
+        if(!name || !email || !phone){ alert('Please enter your name, email and phone number.'); return; }
         if(!f.elements['followIg'] || !f.elements['followIg'].checked){ alert('To enter, please confirm that you follow us on Instagram.'); return; }
         if(!f.elements['likeFb'] || !f.elements['likeFb'].checked){ alert('To enter, please confirm that you like our Facebook page.'); return; }
         if(!f.elements['consent'] || !f.elements['consent'].checked){ alert('Please tick the consent box to enter.'); return; }
@@ -572,10 +572,10 @@
               ['name','email','phone','business','area','message'].forEach(function(n){ if(f.elements[n]) f.elements[n].value=''; });
             } else {
               btn.disabled=false; btn.textContent='Enter the giveaway →';
-              alert((d && d.error) || 'Something went wrong. Call us on +40 753 116 155.');
+              alert((d && d.error) || 'Something went wrong. Please call us on +40 753 116 155.');
             }
           })
-          .catch(function(){ btn.disabled=false; btn.textContent='Enter the giveaway →'; alert('Network error. Call us on +40 753 116 155.'); });
+          .catch(function(){ btn.disabled=false; btn.textContent='Enter the giveaway →'; alert('Connection problem. Please call us on +40 753 116 155.'); });
       });
     })();
   </script>

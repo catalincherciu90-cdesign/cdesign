@@ -27,7 +27,7 @@ function renderArticle(post, lang) {
   } : {
     services: ['/servicii', 'Servicii'], about: ['/despre-noi', 'Despre noi'], portfolio: ['/portofoliu', 'Portofoliu'], contact: ['/contact', 'Contact'], blog: ['/blog', 'Blog'],
     home: '/', book: '/programare', bookNow: 'Programează acum →', menu: 'Deschide meniu', back: '← Înapoi la blog',
-    ctaH: 'Vrei un site profesional pentru afacerea ta?', ctaP: 'Programează o ședință de consultanță gratuită — fără obligații.', ctaBtn: 'Programează o consultanță gratuită →',
+    ctaH: 'Vrei un site pentru afacerea ta?', ctaP: 'Programează o discuție gratuită. Fără nicio obligație.', ctaBtn: 'Programează o discuție gratuită →',
     phone: '0753 116 155', homeLabel: 'C Design – Pagina principală', cookies: 'Setări cookie-uri', locale: 'ro_RO'
   };
   const langLink = EN ? '<a href="' + roUrl + '" hreflang="ro" lang="ro" class="nav-phone" aria-label="Versiunea în română">RO</a>'
@@ -917,7 +917,7 @@ const PROJECT_CASE_STUDIES = {
       ['/portofoliu/expotigla/08-garantii-si-recenzii.jpg', 'Garanții și recenzii', 'Patru carduri cu garanțiile firmei (calitate certificată, livrare în 24–72h, garanție până la 30 de ani, suport tehnic), urmate de un carusel cu recenzii Google.'],
       ['/portofoliu/expotigla/09-cta-oferta-si-footer.jpg', 'Cerere de ofertă și footer', 'Bandă aurie cu îndemn clar: trimiți dimensiunile acoperișului și primești o ofertă gratuită în cel mult 24 de ore. Footer-ul grupează produsele, paginile companiei, datele de contact, zonele deservite și linkurile ANPC/SOL.']
     ],
-    features: ['Catalog de produse cu variante și prețuri cu TVA', 'Coș de cumpărături și cont de client', 'Configurator „Sistem complet” pentru cerere de ofertă', 'Formular de cerere ofertă gratuită', 'Chat pe site pentru întrebări rapide', 'Căutare în catalog', 'Secțiune de ghiduri']
+    features: ['Catalog de produse cu variante și prețuri cu TVA', 'Coș de cumpărături și cont de client', 'Configurator „Sistem complet” pentru cerere de ofertă', 'Formular de cerere de ofertă gratuită', 'Chat pe site pentru întrebări rapide', 'Căutare în catalog', 'Secțiune de ghiduri']
   },
   'cosmin-tatulescu': {
     title: 'Cosmin Tătulescu', subtitle: 'Site de prezentare și rezervări pentru ședințe foto de Crăciun',
@@ -928,7 +928,7 @@ const PROJECT_CASE_STUDIES = {
       'Am ales un design aerisit, cu fundal alb și crem, titluri serif elegante și accente discrete de roșu de Crăciun. Totul stă pe o singură pagină lungă, cu meniu fix, ca vizitatorul să poată sări direct la prețuri, calendar sau galerie. Site-ul are și o versiune în engleză.'
     ],
     sections: [
-      ['/portofoliu/cosmin-tatulescu/01-hero.jpg', 'Hero', 'O fotografie reală din decorul studioului, alături de titlul „Ședințe foto de Crăciun 2026 în Brașov” și un text cald despre atmosfera ședinței. Butonul principal duce direct la zilele libere.'],
+      ['/portofoliu/cosmin-tatulescu/01-hero.jpg', 'Primul ecran', 'O fotografie reală din decorul studioului, alături de titlul „Ședințe foto de Crăciun 2026 în Brașov” și un text cald despre atmosfera ședinței. Butonul principal duce direct la zilele libere.'],
       ['/portofoliu/cosmin-tatulescu/02-voi-asa-cum-sunteti.jpg', 'Mesajul principal', 'O secțiune scurtă care fixează tonul: fără zâmbete la comandă, doar familia așa cum este.'],
       ['/portofoliu/cosmin-tatulescu/03-ce-include.jpg', 'Ce include', 'Patru coloane cu cifre mari și ușor de citit: 45 de minute, 35–50 de fotografii, 3 decoruri și livrare în aproximativ o săptămână, în galerie online privată. Dedesubt, oferta de tablouri și canvasuri, prezentată ca un cadou pentru rude.'],
       ['/portofoliu/cosmin-tatulescu/04-preturi-pe-perioade.jpg', 'Prețuri pe perioade', 'Prețul crește cu cât te apropii de Crăciun, ceea ce încurajează rezervările din timp. Fiecare perioadă are o etichetă scurtă, unele cu umor.'],
@@ -949,12 +949,12 @@ const PROJECT_CASE_STUDIES = {
       'Am mers pe o paletă caldă, crem și maro închis, cu accente aurii, și pe titluri serif care se potrivesc cu ideea de „gust de altădată”. Fotografiile cu produse ocupă cea mai mare parte din pagină, iar butonul „Solicită ofertă” apare permanent în meniu.'
     ],
     sections: [
-      ['/portofoliu/traditum/01-hero.jpg', 'Hero', 'Mesajul principal, „Deserturi artizanale, cu gustul de altădată”, însoțit de o scurtă descriere a ofertei și de două acțiuni: vezi produsele sau solicită o ofertă.'],
+      ['/portofoliu/traditum/01-hero.jpg', 'Primul ecran', 'Mesajul principal, „Deserturi artizanale, cu gustul de altădată”, însoțit de o scurtă descriere a ofertei și de două acțiuni: vezi produsele sau solicită o ofertă.'],
       ['/portofoliu/traditum/02-categorii-produse.jpg', 'Categorii de produse', 'Cinci categorii (torturi, candy bar, cutii cadou, taguri, mărțișoare), fiecare cu fotografie, descriere scurtă și preț sau eticheta „Preț la cerere”, pentru produsele care se calculează în funcție de eveniment.'],
       ['/portofoliu/traditum/03-despre-noi-si-cifre.jpg', 'Despre noi și cifre', 'O secțiune scurtă despre laborator și filozofia cofetăriei, cu patru avantaje (calitate, torturi personalizate, comenzi online, livrare la domiciliu). Sub ea, o bandă cu cifre: 10+ ani de experiență, 80+ rețete, 120+ sortimente, 2500+ clienți.'],
       ['/portofoliu/traditum/04-recenzii.jpg', 'Recenzii', 'Patru recenzii scurte de la clienți, cu link spre pagina cu toate recenziile.'],
       ['/portofoliu/traditum/05-cta-si-footer.jpg', 'Îndemn final și footer', 'Un bloc închis la culoare care invită la o ofertă personalizată pentru evenimente. Footer-ul conține adresa, telefonul, emailul, linkurile principale și paginile legale.'],
-      ['/portofoliu/traditum/06-pagina-galerie.jpg', 'Pagina Galerie', 'Grilă de fotografii cu mese dulci și deserturi pregătite pentru evenimentele clienților. Le arată vizitatorilor rezultate reale, nu poze de stoc.'],
+      ['/portofoliu/traditum/06-pagina-galerie.jpg', 'Pagina Galerie', 'Grilă de fotografii cu mese dulci și deserturi pregătite pentru evenimentele clienților. Vizitatorii văd rezultate reale, nu poze de stoc.'],
       ['/portofoliu/traditum/07-pagina-contact-oferta.jpg', 'Pagina Contact și ofertă', 'Formular de cerere de ofertă cu câmpuri pentru tipul evenimentului și detalii (dată, număr de porții, temă), alături de datele de contact, programul pe zile și un buton direct spre WhatsApp.']
     ],
     features: ['Catalog pe categorii, cu prețuri sau „preț la cerere”', 'Formular de cerere de ofertă adaptat pentru evenimente', 'Buton de contact rapid pe WhatsApp', 'Galerie foto cu lucrări reale', 'Pagină de recenzii', 'Program de lucru afișat pe zile', 'Întrebări frecvente pe pagina de contact']
@@ -968,7 +968,7 @@ const PROJECT_CASE_STUDIES = {
       'Identitatea pornește de la logo-ul colorat, în stil graffiti. Restul designului e curat și luminos, cu accente galbene pe butoanele de comandă și titluri mari, ușor de citit. Ca element de joc, am adăugat un tricou interactiv în hero: vizitatorul trage un print peste tricou și vede pe loc cum ar arăta.'
     ],
     sections: [
-      ['/portofoliu/mrdtf/01-hero-si-preturi.jpg', 'Hero și prețuri', 'Mesajul principal, „Printuri DTF de calitate”, scoate în față avantajul lățimii de 90 cm. Imediat dedesubt sunt cele cinci trepte de preț pe metru liniar, iar prețul scade pe măsură ce comanda crește. Treapta cea mai avantajoasă e evidențiată.'],
+      ['/portofoliu/mrdtf/01-hero-si-preturi.jpg', 'Primul ecran și prețurile', 'Mesajul principal, „Printuri DTF de calitate”, scoate în față avantajul lățimii de 90 cm. Imediat dedesubt sunt cele cinci trepte de preț pe metru liniar, iar prețul scade pe măsură ce comanda crește. Treapta cea mai avantajoasă e evidențiată.'],
       ['/portofoliu/mrdtf/02-tricou-interactiv.jpg', 'Tricou interactiv', 'Vizitatorul alege unul dintre cele cinci printuri și îl trage peste tricou. Un element mic, care face pagina memorabilă și arată direct ce face produsul.'],
       ['/portofoliu/mrdtf/03-calculator-1-ml.jpg', 'Calculator „Ce încape pe 1 ml”', 'Alegi formatul (A5, A4, A3 sau pătrate de 5–20 cm) și vezi câte bucăți încap pe un metru de folie, plus prețul estimat pe bucată la primele și la ultimele trepte de preț. O schemă vizuală arată așezarea modelelor pe folie.'],
       ['/portofoliu/mrdtf/04-ce-facem-si-cum-functioneaza.jpg', 'Ce facem și cum funcționează', 'O grilă cu fotografii din atelier (folie, role, culori, imprimanta Epson) și un proces în patru pași: trimiți comanda, noi imprimăm, primești coletul, tu aplici.'],
@@ -986,7 +986,7 @@ const PROJECT_CASE_STUDIES = {
       'Am folosit culorile logo-ului, galben și gri antracit, cu fotografii mari de acoperișuri. Butonul „Cere ofertă” apare permanent în meniu, iar telefonul și WhatsApp-ul sunt la un clic distanță.'
     ],
     sections: [
-      ['/portofoliu/comstore/01-hero.jpg', 'Hero', 'Slider pe toată lățimea ecranului, cu mesajul „Tot ce ai nevoie pentru acoperișul tău” și două acțiuni: cere o ofertă sau vezi produsele. Sub el, o bandă galbenă cu butoane pentru apel și pentru cererea de ofertă.'],
+      ['/portofoliu/comstore/01-hero.jpg', 'Primul ecran', 'Slider pe toată lățimea ecranului, cu mesajul „Tot ce ai nevoie pentru acoperișul tău” și două acțiuni: cere o ofertă sau vezi produsele. Sub el, o bandă galbenă cu butoane pentru apel și pentru cererea de ofertă.'],
       ['/portofoliu/comstore/02-servicii.jpg', 'Serviciile noastre', 'Cinci servicii prezentate în carduri cu fotografie și o descriere scurtă: montaj, renovare, măsurători, creare deviz și randări 3D.'],
       ['/portofoliu/comstore/03-6-motive.jpg', '6 motive să ne alegi', 'Secțiune pe fundal închis, cu șase argumente numerotate: expertiză, renovări de calitate, măsurători precise, devize clare, respectarea termenelor și garanție.'],
       ['/portofoliu/comstore/04-proiecte-realizate.jpg', 'Proiecte realizate', 'Lucrări reale, fiecare cu numele materialului folosit (de exemplu tablă dublufalț Lindab), ca vizitatorul să vadă cum arată produsul montat.'],
@@ -1004,7 +1004,7 @@ const PROJECT_CASE_STUDIES = {
       'Am ales un design întunecat, aproape negru, cu fotografii dramatice din atelier și titluri condensate, cu majuscule. Atmosfera e una de garaj profesionist. Butonul „Programează-te acum” apare de două ori pe prima pagină, iar WhatsApp-ul e disponibil permanent.'
     ],
     sections: [
-      ['/portofoliu/apg-garage/01-hero.jpg', 'Hero', 'Fotografie pe tot ecranul, cu un mecanic la lucru, numele service-ului scris mare și două acțiuni: programare online și prețuri.'],
+      ['/portofoliu/apg-garage/01-hero.jpg', 'Primul ecran', 'Fotografie pe tot ecranul, cu un mecanic la lucru, numele service-ului scris mare și două acțiuni: programare online și prețuri.'],
       ['/portofoliu/apg-garage/02-servicii-si-cifre.jpg', 'Servicii și cifre', 'Patru servicii principale în carduri simple (revizie completă, diagnoză computerizată, sistem de frânare, suspensie și direcție), cu link spre lista completă. Sub ele, trei cifre: 10+ ani de experiență, 500+ clienți, 100% transparență.'],
       ['/portofoliu/apg-garage/03-recenzii.jpg', 'Recenzii', 'Secțiune pentru părerile clienților, cu stele și citat.'],
       ['/portofoliu/apg-garage/04-cta-si-program.jpg', 'Îndemn și program de lucru', 'O a doua fotografie de atelier, cu îndemnul „Mașina ta, pe mâini bune”, urmată de programul de lucru afișat clar.'],
@@ -1039,10 +1039,10 @@ const PROJECT_CASE_STUDIES = {
       'Designul folosește negru și galben, culorile de avertizare din trafic, cu titluri mari și condensate, ușor de citit chiar și din mers. Fotografia din hero arată o mașină reală din flota firmei.'
     ],
     sections: [
-      ['/portofoliu/wsd-tractari/01-hero.jpg', 'Hero', 'Mesajul „Tractări auto oriunde, oricând”, cu butonul „Sună acum” în prim-plan și trei cifre-cheie: non-stop 24/7, timp mediu de sosire și numărul de orașe acoperite. În dreapta, o fotografie cu platforma firmei în acțiune.'],
+      ['/portofoliu/wsd-tractari/01-hero.jpg', 'Primul ecran', 'Mesajul „Tractări auto oriunde, oricând”, cu butonul „Sună acum” în prim-plan și trei cifre-cheie: non-stop 24/7, timp mediu de sosire și numărul de orașe acoperite. În dreapta, o fotografie cu platforma firmei în acțiune.'],
       ['/portofoliu/wsd-tractari/02-banda-urgenta.jpg', 'Bandă de urgență', 'O bandă galbenă cu numărul de telefon afișat mare și un link pentru trimiterea locației.'],
       ['/portofoliu/wsd-tractari/03-servicii.jpg', 'Servicii', 'Șase servicii prezentate în grilă: autoturisme, dube și utilaje, SUV și 4x4, asistență pe autostradă, asistență rutieră și transport pe platformă.'],
-      ['/portofoliu/wsd-tractari/04-de-ce-noi-si-acoperire.jpg', 'De ce noi și acoperire', 'Patru argumente (răspuns rapid, prețuri transparente, acoperire națională, firmă autorizată ARR) și lista orașelor deservite, prezentate ca etichete galbene, gândită și pentru căutări locale.'],
+      ['/portofoliu/wsd-tractari/04-de-ce-noi-si-acoperire.jpg', 'De ce noi și acoperire', 'Patru argumente (răspuns rapid, prețuri transparente, acoperire națională, firmă autorizată ARR) și lista orașelor deservite, prezentată ca etichete galbene și gândită și pentru căutările locale.'],
       ['/portofoliu/wsd-tractari/05-recenzii-si-cta.jpg', 'Recenzii și îndemn final', 'Trei recenzii scurte, cu oraș, urmate de un bloc galben, „Ești blocat pe drum?”, cu un singur buton de apel.'],
       ['/portofoliu/wsd-tractari/06-footer.jpg', 'Footer', 'Serviciile, pagini pentru principalele orașe și contactul.']
     ],
@@ -1079,7 +1079,7 @@ function renderCaseStudy(id, cs, lang) {
     descSuffix: '. Studiu de caz C Design: ce am construit, cum arată și ce funcții are site-ul.',
     back: '← Portofoliu', quote: 'Cere ofertă', live: 'Vezi site-ul online ↗', similar: 'Vreau un site similar',
     about: 'Despre <b>proiect</b>', features: 'Ce poate face <b>site-ul</b>', ctaH: 'Vrei un site <b>ca acesta</b>?',
-    ctaP: 'Îți construim un site clar, rapid și gândit să aducă clienți — la preț fix.', ctaBtn: 'Cere o ofertă gratuită',
+    ctaP: 'Îți construim un site clar și rapid, gândit pentru clienții tăi, la preț fix.', ctaBtn: 'Cere o ofertă gratuită',
     homeUrl: '/', quoteUrl: '/cere-oferta', listUrl: '/portofoliu', base: '/portofoliu/', otherLang: 'EN', otherBase: '/en/portfolio/'
   };
   const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -1655,7 +1655,7 @@ async function promoPagePublished(env, key) {
 function blogNotFound() {
   return new Response('<!DOCTYPE html><html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Articolul nu a fost găsit | C Design</title></head>'
     + '<body style="font-family:system-ui,sans-serif;text-align:center;padding:80px 20px;color:#334155"><h1 style="font-size:1.6rem">Articolul nu a fost găsit</h1>'
-    + '<p>Este posibil să fi fost mutat sau șters.</p><p><a href="/blog" style="color:#00a8a8;font-weight:600">Vezi toate articolele</a> · <a href="/" style="color:#00a8a8;font-weight:600">Prima pagină</a></p></body></html>',
+    + '<p>Se poate să fi fost mutat sau șters.</p><p><a href="/blog" style="color:#00a8a8;font-weight:600">Vezi toate articolele</a> · <a href="/" style="color:#00a8a8;font-weight:600">Pagina principală</a></p></body></html>',
     { status: 404, headers: { 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'no-store' } });
 }
 function promoDraft404() {
