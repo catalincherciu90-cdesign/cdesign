@@ -194,7 +194,7 @@
   <div class="topbar">
     <div class="topbar-inner">
       <span class="promo">
-        <b>OFERTĂ LIMITATĂ:</b> Site + SEO + Google Business — totul de la 400 €.
+        <b>Ofertă limitată:</b> Site + SEO + Google Business — totul de la 400 €.
         <a href="/promo" class="view-deal">Vezi oferta</a>
       </span>
       <div class="topbar-right">
@@ -269,7 +269,7 @@
       <div class="rewards-head">
         <span class="eyebrow" style="justify-content:center">Două recompense, o recomandare</span>
         <h2>Amândoi <b>câștigați</b></h2>
-        <p>Cei mai buni clienți ai noștri vin din recomandări — așa că, atunci când ne recomanzi, ne asigurăm că amândoi sunteți mulțumiți.</p>
+        <p>O recomandare e cel mai frumos început de colaborare — așa că, atunci când ne recomanzi, ne asigurăm că amândoi sunteți mulțumiți.</p>
       </div>
       <div class="rewards-grid">
         <div class="reward-card">
@@ -282,7 +282,7 @@
           <div class="reward-ico"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg></div>
           <div class="rc-who">Prietenul tău primește</div>
           <h3><span class="ref-f">10%</span> reducere</h3>
-          <p>O reducere reală la primul proiect — un bun venit călduros și un motiv în plus să spună „da” prezenței online.</p>
+          <p>O reducere la primul proiect: un bun venit călduros și un motiv în plus să facă pasul spre prezența online.</p>
         </div>
       </div>
     </div>
@@ -406,8 +406,8 @@
         var btn = f.querySelector('button[type=submit]');
         var name=g('name'), email=g('email'), phone=g('phone');
         var friendName=g('friendName'), friendContact=g('friendContact'), friendBusiness=g('friendBusiness'), message=g('message');
-        if(!name || !email){ alert('Te rugăm să îți introduci numele și emailul.'); return; }
-        if(!friendName || !friendContact){ alert('Te rugăm să introduci numele și datele de contact ale prietenului.'); return; }
+        if(!name || !email){ alert('Te rugăm să completezi numele și emailul tău.'); return; }
+        if(!friendName || !friendContact){ alert('Te rugăm să completezi numele și datele de contact ale prietenului.'); return; }
         btn.disabled = true; btn.textContent = 'Se trimite…';
         fetch('/api/referrals', { method:'POST', headers:{'Content-Type':'application/json'},
           body: JSON.stringify({ referrerName:name, referrerEmail:email, referrerPhone:phone, friendName:friendName, friendContact:friendContact, friendBusiness:friendBusiness, note:message }) })
@@ -420,10 +420,10 @@
               ['name','email','phone','friendName','friendContact','friendBusiness','message'].forEach(function(n){ if(f.elements[n]) f.elements[n].value=''; });
             } else {
               btn.disabled=false; btn.textContent='Trimite recomandarea →';
-              alert((d && d.error) || 'Ceva nu a mers bine. Te rugăm să ne suni la 0753 116 155.');
+              alert((d && d.error) || 'Ceva nu a mers cum trebuie. Ne poți suna la 0753 116 155.');
             }
           })
-          .catch(function(){ btn.disabled=false; btn.textContent='Trimite recomandarea →'; alert('Eroare de rețea. Te rugăm să ne suni la 0753 116 155.'); });
+          .catch(function(){ btn.disabled=false; btn.textContent='Trimite recomandarea →'; alert('Conexiunea s-a întrerupt. Încearcă din nou sau sună-ne la 0753 116 155.'); });
       });
     })();
   </script>
