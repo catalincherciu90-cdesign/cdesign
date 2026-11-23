@@ -1809,18 +1809,22 @@ export default {
     // Autentificare admin și prin antet (Authorization: Bearer <token>), pe lângă ?token=.
     // Tokenul valid din antet e trecut în url, ca toate verificările isAdmin(url, env) să-l vadă.
     {
-      const m = /^Bearer\s+(\S+)$/i.exec(request.headers.get('Authorization') || '');
+      const auth = request.headers.get('Authorization') || '';
       const adminTok = env.ADMIN_TOKEN || ADMIN_TOKEN;
-      if (m && adminTok && m[1] === adminTok && !url.searchParams.has('token')) url.searchParams.set('token', m[1]);
-    }
-    // TEMPORAR (diagnostic): spune doar dacă antetul Authorization ajunge și dacă se potrivește — fără valoare.
-    if (path === '/api/_authcheck') {
-      const h = request.headers.get('Authorization') || '';
-      const m2 = /^(\S+)\s+(.*)$/.exec(h);
-      const tok = m2 ? m2[2] : h;
-      const at = env.ADMIN_TOKEN || ADMIN_TOKEN || '';
-      return json({ present: !!h, scheme: m2 ? m2[1] : '', len: tok.length, adminLen: at.length, match: !!at && tok === at,
-        trimMatch: !!at && tok.trim() === at, hasSpaces: /\s/.test(tok), bearerTwice: /^bearer\s/i.test(tok) });
+      const adminUser = env.ADMIN_USER || ADMIN_USER;
+      let ok = false;
+      const mb = /^Bearer\s+(\S+)$/i.exec(auth);
+      if (mb && adminTok && mb[1] === adminTok) ok = true;
+      // Basic: aceleași date ca la logarea în admin (utilizator + parolă)
+      const mB = /^Basic\s+([A-Za-z0-9+/=]+)$/i.exec(auth);
+      if (!ok && mB && adminTok) {
+        try {
+          const dec = new TextDecoder().decode(Uint8Array.from(atob(mB[1]), c => c.charCodeAt(0)));
+          const i = dec.indexOf(':');
+          if (i > 0 && dec.slice(0, i) === adminUser && dec.slice(i + 1) === adminTok) ok = true;
+        } catch {}
+      }
+      if (ok && !url.searchParams.has('token')) url.searchParams.set('token', adminTok);
     }
     // Notificare push către telefoanele abonate, fără să întârzie răspunsul.
     const notifyPush = (payload) => {
