@@ -160,20 +160,20 @@
   <section class="q-hero">
     <span class="eyebrow">Cere o ofertă</span>
     <h1>Spune-ne de ce ai nevoie și <b>cere o ofertă gratuită</b></h1>
-    <p>Selectează serviciile care te interesează și lasă-ne datele tale — îți trimitem o ofertă personalizată, fără obligații, în cel mult o zi lucrătoare.</p>
+    <p>Alege serviciile care te interesează și lasă-ne datele tale. Îți trimitem o ofertă personalizată, fără obligații, în cel mult o zi lucrătoare.</p>
   </section>
 
   <section class="quote">
     <form class="quote-form" id="quoteForm">
       <div class="q-body">
         <div class="q-step">1. Ce servicii te interesează?</div>
-        <div class="q-hint">Selectează oricâte vrei — sau niciunul și spune-ne direct în mesaj.</div>
+        <div class="q-hint">Alege oricâte vrei sau niciunul. Ne poți spune direct în mesaj ce ai în minte.</div>
         <div id="qCats"></div>
 
         <div class="q-divider"></div>
 
         <div class="q-step">2. Datele tale</div>
-        <div class="q-hint" style="margin-bottom:16px">Ca să-ți trimitem oferta.</div>
+        <div class="q-hint" style="margin-bottom:16px">Ca să știm unde să-ți trimitem oferta.</div>
         <div class="q-fields">
           <div class="field"><label for="q-name">Numele tău</label><input type="text" id="q-name" name="name" placeholder="Ionescu Ioan" required></div>
           <div class="field"><label for="q-phone">Telefon</label><input type="tel" id="q-phone" name="phone" placeholder="0753 000 000" required></div>
@@ -186,13 +186,13 @@
           </div>
           <div class="field full"><label for="q-message">Altceva? <span style="color:var(--muted);font-weight:400">(opțional)</span></label><textarea id="q-message" name="message" placeholder="Spune-ne despre proiectul tău, bugetul sau termenul de livrare dorit..."></textarea></div>
         </div>
-        <button type="submit" class="q-submit">Cere oferta <span>→</span></button>
+        <button type="submit" class="q-submit">Cere ofertă <span>→</span></button>
         <div class="q-note">Fără obligații. Nu transmitem datele tale nimănui. Răspundem în cel mult o zi lucrătoare.</div>
       </div>
       <div class="q-success">
         <div class="ok">✅</div>
-        <h3>Cererea de ofertă a fost trimisă!</h3>
-        <p>Mulțumim — am primit cererea și revenim în curând cu o ofertă personalizată.</p>
+        <h3>Am primit cererea ta!</h3>
+        <p>Mulțumim! Revenim în curând cu o ofertă personalizată.</p>
       </div>
     </form>
   </section>
@@ -292,8 +292,8 @@
       var email=val('q-email');
       var company=val('q-company');
       var note=val('q-message');
-      if(name.length<2||phone.length<7){alert('Te rugăm să introduci numele și numărul de telefon.');return;}
-      if(!email){alert('Te rugăm să introduci adresa de email.');return;}
+      if(name.length<2||phone.length<7){alert('Ne ajută să te putem contacta: te rugăm să completezi numele și numărul de telefon.');return;}
+      if(!email){alert('Te rugăm să adaugi și adresa de email, ca să-ți putem trimite oferta.');return;}
       var selected=Array.prototype.slice.call(document.querySelectorAll('.chip input:checked')).map(function(c){return c.value;});
       var btn=form.querySelector('.q-submit');
       btn.disabled=true;btn.style.opacity='.6';
@@ -318,7 +318,7 @@
           form.classList.add('sent');
           window.scrollTo({top:form.getBoundingClientRect().top+window.scrollY-120,behavior:'smooth'});
         })
-        .catch(function(){btn.disabled=false;btn.style.opacity='1';alert('Ceva nu a funcționat. Te rugăm să încerci din nou sau să ne suni.');});
+        .catch(function(){btn.disabled=false;btn.style.opacity='1';alert('Ceva nu a mers cum trebuie. Te rugăm să încerci din nou sau să ne suni la 0753 116 155.');});
     });
   </script>
   <script>

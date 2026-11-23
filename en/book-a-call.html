@@ -251,7 +251,7 @@
     <div class="page-hero-inner">
       <span class="eyebrow">Free consultation</span>
       <h1>Book a meeting</h1>
-      <p>30 minutes to talk about your business, what you need and how we can help. No obligation, no pressure.</p>
+      <p>30 minutes to talk about your business, what you need and how we can help. No obligation and no pressure.</p>
     </div>
   </section>
 
@@ -269,7 +269,7 @@
           </li>
           <li>
             <div class="step-num">02</div>
-            <div class="step-text"><strong>The consultation — 30 minutes</strong><span>We talk about your business, your goals and the solution that suits you best.</span></div>
+            <div class="step-text"><strong>The consultation — 30 minutes</strong><span>We talk about your business, your goals and what would suit you best.</span></div>
           </li>
           <li>
             <div class="step-num">03</div>
@@ -336,9 +336,9 @@
               <option>Something else</option>
             </select>
           </div>
-          <div class="f-group"><label class="f-label" for="fmsg">Message (optional)</label><textarea class="f-input" id="fmsg" name="message" placeholder="Tell us briefly about your business..."></textarea></div>
+          <div class="f-group"><label class="f-label" for="fmsg">Message (optional)</label><textarea class="f-input" id="fmsg" name="message" placeholder="Tell us a little about your business..."></textarea></div>
           <button type="submit" class="btn-submit">Confirm booking</button>
-          <p class="f-note">We’ll contact you within 2 hours to confirm. The consultation is 100% free.</p>
+          <p class="f-note">We’ll contact you within 2 hours to confirm. The consultation is completely free.</p>
         </form>
       </div>
 
@@ -457,7 +457,7 @@
           const d = new Date(this.value + 'T12:00:00');
           const dow = d.getDay();
           if (!(cfg.workingDays||defaults.workingDays).includes(dow) || blocked.includes(this.value)) {
-            this.setCustomValidity('This day isn’t available. Please choose a working day.');
+            this.setCustomValidity('We’re not available that day. Please choose a working day.');
             this.reportValidity();
             this.value = '';
           } else {
@@ -478,7 +478,7 @@
       const date  = this.querySelector('#fdate').value;
       const time  = this.querySelector('#ftime').value;
       if (!name || !phone || !email || !date || !time) {
-        btn.textContent = 'Please fill in the fields marked *';
+        btn.textContent = 'Please complete the fields marked *';
         btn.style.background = '#e05252';
         setTimeout(() => { btn.textContent = 'Confirm booking'; btn.style.background = ''; }, 3000);
         return;
@@ -498,14 +498,14 @@
         if (res.ok) {
           if (typeof fbq === 'function') fbq('track', 'Lead');
           if (typeof gtag !== 'undefined') gtag('event', 'generate_lead', { value: 400, currency: 'EUR', event_category: 'booking' });
-          btn.textContent = '✓ Booking sent! We’ll contact you within 2 hours to confirm.';
+          btn.textContent = '✓ Thank you! We’ll contact you within 2 hours to confirm.';
           btn.style.background = '#28c840';
           this.reset();
           document.getElementById('fdate').min = new Date().toISOString().split('T')[0];
           setTimeout(() => { btn.textContent = 'Confirm booking'; btn.style.background = ''; btn.disabled = false; }, 7000);
         } else { throw new Error(); }
       } catch {
-        btn.textContent = 'Error — please try again or call us directly';
+        btn.textContent = 'Something went wrong. Please try again or give us a call.';
         btn.style.background = '#e05252';
         btn.disabled = false;
         setTimeout(() => { btn.textContent = 'Confirm booking'; btn.style.background = ''; }, 4000);
