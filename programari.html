@@ -10889,8 +10889,8 @@
         const k = this.canvas.width / r.width;                 // pixeli canvas per pixel ecran
         const dx = clientX - (r.left + r.width / 2), dy = clientY - (r.top + r.height / 2);
         const d = Math.hypot(dx, dy) || 1;
-        const maxOff = this.canvas.width * 0.13;              // cât de departe poate merge pupila
-        const f = Math.min(d / 260, 1);                         // aproape de centru → mișcare mai mică
+        const maxOff = this.canvas.width * 0.24;              // cât de departe poate merge pupila
+        const f = Math.min(d / 200, 1);                         // aproape de centru → mișcare mai mică
         this.tx = dx / d * maxOff * f; this.ty = dy / d * maxOff * f;
         if (d < r.width * 0.1) { this.tx = dx * k * 0.5; this.ty = dy * k * 0.5; }
       };
@@ -10919,9 +10919,9 @@
     draw() {
       const ctx = this.ctx, W = this.canvas.width, maxR = W / 2 - 10;
       // pupila (nucleul) urmărește cursorul; stelele și aura se mișcă mai puțin → adâncime
-      const cx = W / 2 + this.ex * 0.15, cy = W / 2 + this.ey * 0.15;
+      const cx = W / 2 + this.ex * 0.22, cy = W / 2 + this.ey * 0.22;
       const px = W / 2 + this.ex, py = W / 2 + this.ey;
-      const sx0 = W / 2 + this.ex * 0.35, sy0 = W / 2 + this.ey * 0.35;
+      const sx0 = W / 2 + this.ex * 0.45, sy0 = W / 2 + this.ey * 0.45;
       ctx.clearRect(0, 0, W, W);
       const al = this.alert;
       let g = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR);
