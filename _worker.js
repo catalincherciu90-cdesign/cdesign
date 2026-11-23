@@ -1042,7 +1042,7 @@ const PROJECT_CASE_STUDIES = {
       ['/portofoliu/wsd-tractari/01-hero.jpg', 'Primul ecran', 'Mesajul „Tractări auto oriunde, oricând”, cu butonul „Sună acum” în prim-plan și trei cifre-cheie: non-stop 24/7, timp mediu de sosire și numărul de orașe acoperite. În dreapta, o fotografie cu platforma firmei în acțiune.'],
       ['/portofoliu/wsd-tractari/02-banda-urgenta.jpg', 'Bandă de urgență', 'O bandă galbenă cu numărul de telefon afișat mare și un link pentru trimiterea locației.'],
       ['/portofoliu/wsd-tractari/03-servicii.jpg', 'Servicii', 'Șase servicii prezentate în grilă: autoturisme, dube și utilaje, SUV și 4x4, asistență pe autostradă, asistență rutieră și transport pe platformă.'],
-      ['/portofoliu/wsd-tractari/04-de-ce-noi-si-acoperire.jpg', 'De ce noi și acoperire', 'Patru argumente (răspuns rapid, prețuri transparente, acoperire națională, firmă autorizată ARR) și lista orașelor deservite, prezentată ca etichete galbene și gândită și pentru căutările locale.'],
+      ['/portofoliu/wsd-tractari/04-de-ce-noi-si-acoperire.jpg', 'De ce noi și acoperire', 'Patru argumente (răspuns rapid, prețuri transparente, acoperire națională, firmă autorizată ARR) și lista orașelor deservite, prezentată sub formă de etichete galbene și gândită inclusiv pentru căutările locale.'],
       ['/portofoliu/wsd-tractari/05-recenzii-si-cta.jpg', 'Recenzii și îndemn final', 'Trei recenzii scurte, cu oraș, urmate de un bloc galben, „Ești blocat pe drum?”, cu un singur buton de apel.'],
       ['/portofoliu/wsd-tractari/06-footer.jpg', 'Footer', 'Serviciile, pagini pentru principalele orașe și contactul.']
     ],
