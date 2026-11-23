@@ -1813,6 +1813,15 @@ export default {
       const adminTok = env.ADMIN_TOKEN || ADMIN_TOKEN;
       if (m && adminTok && m[1] === adminTok && !url.searchParams.has('token')) url.searchParams.set('token', m[1]);
     }
+    // TEMPORAR (diagnostic): spune doar dacă antetul Authorization ajunge și dacă se potrivește — fără valoare.
+    if (path === '/api/_authcheck') {
+      const h = request.headers.get('Authorization') || '';
+      const m2 = /^(\S+)\s+(.*)$/.exec(h);
+      const tok = m2 ? m2[2] : h;
+      const at = env.ADMIN_TOKEN || ADMIN_TOKEN || '';
+      return json({ present: !!h, scheme: m2 ? m2[1] : '', len: tok.length, adminLen: at.length, match: !!at && tok === at,
+        trimMatch: !!at && tok.trim() === at, hasSpaces: /\s/.test(tok), bearerTwice: /^bearer\s/i.test(tok) });
+    }
     // Notificare push către telefoanele abonate, fără să întârzie răspunsul.
     const notifyPush = (payload) => {
       try { const p = pushNotifyAll(env, payload); if (ctx && typeof ctx.waitUntil === 'function') ctx.waitUntil(p); } catch {}
