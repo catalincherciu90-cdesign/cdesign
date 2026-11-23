@@ -237,7 +237,7 @@
   <div class="topbar">
     <div class="topbar-inner">
       <span class="promo">
-        <b>OFERTĂ LIMITATĂ:</b> Site + SEO + Google Business — totul de la 400 €.
+        <b>Ofertă limitată:</b> Site + SEO + Google Business — totul de la 400 €.
         <a href="/" class="view-deal">Vezi oferta</a>
       </span>
       <div class="topbar-right">
@@ -287,7 +287,7 @@
       <div>
         <span class="ph-badge">🎁 Gratuit, fără obligații</span>
         <h1>Câștigă un <b>site gratuit</b></h1>
-        <p class="sub">Oferim unui norocos un site complet și profesional. Participi în mai puțin de un minut — și <b>toți cei care se înscriu primesc <span class="giv-pct">15%</span> reducere</b> la primul proiect, indiferent dacă câștigă sau nu. Fără capcane, fără costuri ascunse.</p>
+        <p class="sub">Oferim unui participant norocos un site complet și profesional. Te înscrii în mai puțin de un minut, iar <b>toți cei care se înscriu primesc <span class="giv-pct">15%</span> reducere</b> la primul proiect, indiferent dacă câștigă sau nu. Fără capcane, fără costuri ascunse.</p>
         <div class="ph-cta">
           <a href="#enter" class="btn-primary">Intră în concurs <span>→</span></a>
           <span class="ph-trust">✔ Gratuit &nbsp;·&nbsp; ✔ Toți câștigă ceva</span>
@@ -326,7 +326,7 @@
       <div class="rewards-head">
         <span class="eyebrow" style="justify-content:center">Nimeni nu pleacă cu mâinile goale</span>
         <h2>Un mare câștigător — <b>și reducere pentru toți</b></h2>
-        <p>E simplu și corect. Unul câștigă site-ul, iar ceilalți pleacă acasă cu o reducere reală.</p>
+        <p>E simplu și corect. Unul câștigă site-ul, iar ceilalți primesc o reducere.</p>
       </div>
       <div class="rewards-grid">
         <div class="reward-card">
@@ -350,7 +350,7 @@
     <div class="sb-inner">
       <h2>Cum participi — <b>3 pași simpli</b></h2>
       <div class="steps">
-        <div class="step"><div class="num">1</div><h3>Urmărește-ne pe Instagram</h3><p>Abonează-te la contul nostru ca să nu ratezi anunțul câștigătorului.</p><a id="igStepLink" href="#" target="_blank" rel="noopener" class="step-link">Urmărește-ne pe Instagram →</a></div>
+        <div class="step"><div class="num">1</div><h3>Urmărește-ne pe Instagram</h3><p>Urmărește contul nostru, ca să afli printre primii cine a câștigat.</p><a id="igStepLink" href="#" target="_blank" rel="noopener" class="step-link">Urmărește-ne pe Instagram →</a></div>
         <div class="step"><div class="num">2</div><h3>Apreciază pagina noastră de Facebook</h3><p>Apreciază pagina C Design de pe Facebook ca să rămânem în legătură.</p><a id="fbStepLink" href="#" target="_blank" rel="noopener" class="step-link">Apreciază pe Facebook →</a></div>
         <div class="step"><div class="num">3</div><h3>Completează formularul</h3><p>Trimite formularul de mai jos și intri în tragerea la sorți. Selectăm un câștigător la întâmplare — și toți primesc <span class="giv-pct">15%</span> reducere.</p><a href="#enter" class="step-link">Mergi la formular →</a></div>
       </div>
@@ -550,7 +550,7 @@
         if(!name || !email || !phone){ alert('Te rugăm să completezi numele, emailul și telefonul.'); return; }
         if(!f.elements['followIg'] || !f.elements['followIg'].checked){ alert('Ca să participi, confirmă că ne urmărești pe Instagram.'); return; }
         if(!f.elements['likeFb'] || !f.elements['likeFb'].checked){ alert('Ca să participi, confirmă că ne apreciezi pagina de Facebook.'); return; }
-        if(!f.elements['consent'] || !f.elements['consent'].checked){ alert('Bifează căsuța de acord ca să poți participa.'); return; }
+        if(!f.elements['consent'] || !f.elements['consent'].checked){ alert('Te rugăm să bifezi căsuța de acord, ca să poți participa.'); return; }
         var body = 'PARTICIPARE CONCURS — premiu site gratuit';
         body += '\n\nNume: ' + name;
         body += '\nEmail: ' + email;
@@ -572,10 +572,10 @@
               ['name','email','phone','business','area','message'].forEach(function(n){ if(f.elements[n]) f.elements[n].value=''; });
             } else {
               btn.disabled=false; btn.textContent='Intră în concurs →';
-              alert((d && d.error) || 'Ceva n-a mers bine. Sună-ne la 0753 116 155.');
+              alert((d && d.error) || 'Ceva nu a mers cum trebuie. Ne poți suna la 0753 116 155.');
             }
           })
-          .catch(function(){ btn.disabled=false; btn.textContent='Intră în concurs →'; alert('Eroare de rețea. Sună-ne la 0753 116 155.'); });
+          .catch(function(){ btn.disabled=false; btn.textContent='Intră în concurs →'; alert('Conexiunea s-a întrerupt. Încearcă din nou sau sună-ne la 0753 116 155.'); });
       });
     })();
   </script>

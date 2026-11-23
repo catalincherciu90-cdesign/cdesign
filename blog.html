@@ -10,7 +10,7 @@
 <script>gtag('js',new Date());gtag('config','G-K3VR7JC1QW',{anonymize_ip:true});</script>
 <script src="/analytics.js" defer></script>
 <title>Blog – C Design | Web design în România</title>
-<meta name="description" content="Articole despre web design, prezență online și sfaturi practice pentru afaceri mici din România. Citește ghiduri și studii de caz.">
+<meta name="description" content="Articole despre web design, prezență online și sfaturi practice pentru afaceri mici din România. Ghiduri scrise pe înțelesul tuturor.">
 <meta name="robots" content="index, follow">
 <meta name="keywords" content="web design Romania, blog web design, prezenta online, afaceri mici, ghid web design">
 <meta name="author" content="C-Design">
@@ -217,7 +217,7 @@
   <div class="topbar">
     <div class="topbar-inner">
       <span class="promo">
-        <b>OFERTĂ LIMITATĂ:</b> Site + SEO + Google Business — totul de la 400 €.
+        <b>Ofertă limitată:</b> site + SEO + Google Business, totul de la 400 €.
         <a href="/promo" class="view-deal">Vezi oferta</a>
       </span>
       <div class="topbar-right">
@@ -276,7 +276,7 @@
   <div class="blog-hero-content">
     <div class="blog-eyebrow">✍ Blog</div>
     <h1>Resurse pentru afacerea ta online</h1>
-    <p>Ghiduri practice, sfaturi de web design și strategii de prezență online pentru antreprenorii din România.</p>
+    <p>Ghiduri practice și sfaturi simple despre web design și prezența online, pentru antreprenorii din România.</p>
   </div>
 </section>
 
@@ -354,7 +354,7 @@
   <div class="footer-inner">
     <div class="f-brand">
       <img src="/logo-c-design-light.webp" alt="C Design">
-      <p>Web design profesional pentru afaceri mici din toată România. Construim website-uri care aduc clienți reali.</p>
+      <p>Web design pentru afaceri mici din toată România. Construim site-uri care te ajută să ajungi la clienți.</p>
       <div class="f-social" id="footerSocial"></div>
     </div>
     <div class="f-col">
@@ -363,7 +363,7 @@
       <a href="/pachet-startup">Pachet Start-Up</a>
       <a href="/servicii">Redesign site</a>
       <a href="/servicii">Design grafic</a>
-      <a href="/servicii">Mentenanță</a>
+      <a href="/servicii">Mentenanță și găzduire</a>
     </div>
     <div class="f-col">
       <h4>Industrii</h4>
@@ -449,7 +449,7 @@ async function loadBlog() {
     const res = await fetch('/api/blog');
     const posts = await res.json();
     if (!Array.isArray(posts) || posts.length === 0) {
-      container.innerHTML = `<div class="blog-empty"><div class="blog-empty-icon">✍️</div><h3>Articolele apar în curând</h3><p>Lucrăm la conținut util pentru tine. Revino în curând!</p></div>`;
+      container.innerHTML = `<div class="blog-empty"><div class="blog-empty-icon">✍️</div><h3>Articolele apar în curând</h3><p>Lucrăm la conținut util pentru tine. Revino curând.</p></div>`;
       return;
     }
     const cards = posts.map(p => `
@@ -466,7 +466,7 @@ async function loadBlog() {
     observeReveals();
   } catch (err) {
     // rămân articolele deja afișate în pagină; mesajul de eroare apare doar dacă nu există niciunul
-    if (!container.querySelector('.post-card')) container.innerHTML = `<div class="blog-empty"><div class="blog-empty-icon">⚠️</div><h3>Eroare la încărcare</h3><p>Încearcă din nou mai târziu.</p></div>`;
+    if (!container.querySelector('.post-card')) container.innerHTML = `<div class="blog-empty"><div class="blog-empty-icon">⚠️</div><h3>Nu am putut încărca articolele</h3><p>Te rugăm să încerci din nou puțin mai târziu.</p></div>`;
   }
 }
 
