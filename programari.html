@@ -533,7 +533,7 @@
       0%,100%{transform:translateY(0) scale(1);filter:drop-shadow(0 0 14px rgba(0,229,255,.35)) brightness(1)}
       50%{transform:translateY(-4px) scale(1.07);filter:drop-shadow(0 0 38px rgba(0,229,255,.9)) brightness(1.25)}
     }
-    #jvs-galaxy.clippy-body{animation:jvs-reactor-pulse 2.4s ease-in-out infinite;transform-origin:50% 50%;will-change:transform,filter}
+    #jvs-galaxy.clippy-body{animation:jvs-reactor-pulse 1.2s ease-in-out infinite;transform-origin:50% 50%;will-change:transform,filter}
     @media(prefers-reduced-motion:reduce){#jvs-galaxy.clippy-body{animation:none}}
     @keyframes clippy-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
@@ -10876,11 +10876,28 @@
   // GALAXIE — reactorul Gibilan ca disc spiral pe canvas
   const jvsGalaxy = {
     canvas: null, ctx: null, stars: [], raf: null, t: 0, running: false, alert: false,
+    // „ochiul”: centrul luminos (pupila) se uită spre cursor; ex/ey = poziția curentă, tx/ty = ținta
+    ex: 0, ey: 0, tx: 0, ty: 0,
     init() {
       this.canvas = document.getElementById('jvs-galaxy');
       if (!this.canvas) return;
       this.ctx = this.canvas.getContext('2d');
       this.build();
+      const look = (clientX, clientY) => {
+        const r = this.canvas.getBoundingClientRect();
+        if (!r.width) return;
+        const k = this.canvas.width / r.width;                 // pixeli canvas per pixel ecran
+        const dx = clientX - (r.left + r.width / 2), dy = clientY - (r.top + r.height / 2);
+        const d = Math.hypot(dx, dy) || 1;
+        const maxOff = this.canvas.width * 0.13;              // cât de departe poate merge pupila
+        const f = Math.min(d / 260, 1);                         // aproape de centru → mișcare mai mică
+        this.tx = dx / d * maxOff * f; this.ty = dy / d * maxOff * f;
+        if (d < r.width * 0.1) { this.tx = dx * k * 0.5; this.ty = dy * k * 0.5; }
+      };
+      window.addEventListener('mousemove', e => look(e.clientX, e.clientY), { passive: true });
+      window.addEventListener('touchmove', e => { const t0 = e.touches && e.touches[0]; if (t0) look(t0.clientX, t0.clientY); }, { passive: true });
+      document.addEventListener('mouseleave', () => { this.tx = 0; this.ty = 0; });
+      window.addEventListener('blur', () => { this.tx = 0; this.ty = 0; });
     },
     build() {
       const W = this.canvas.width, maxR = W / 2 - 10, arms = 3, twist = 2.6;
@@ -10900,7 +10917,11 @@
       }
     },
     draw() {
-      const ctx = this.ctx, W = this.canvas.width, cx = W / 2, cy = W / 2, maxR = W / 2 - 10;
+      const ctx = this.ctx, W = this.canvas.width, maxR = W / 2 - 10;
+      // pupila (nucleul) urmărește cursorul; stelele și aura se mișcă mai puțin → adâncime
+      const cx = W / 2 + this.ex * 0.15, cy = W / 2 + this.ey * 0.15;
+      const px = W / 2 + this.ex, py = W / 2 + this.ey;
+      const sx0 = W / 2 + this.ex * 0.35, sy0 = W / 2 + this.ey * 0.35;
       ctx.clearRect(0, 0, W, W);
       const al = this.alert;
       let g = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR);
@@ -10908,17 +10929,17 @@
       g.addColorStop(0.45, al ? 'rgba(255,60,60,0.07)' : 'rgba(90,120,255,0.06)');
       g.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, maxR, 0, 6.2832); ctx.fill();
-      const pulse = 0.85 + 0.15 * Math.sin(this.t * (al ? 0.09 : 0.04));
-      let c = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 0.24);
+      const pulse = 0.8 + 0.2 * Math.sin(this.t * (al ? 0.16 : 0.09));
+      let c = ctx.createRadialGradient(px, py, 0, px, py, maxR * 0.24);
       c.addColorStop(0, 'rgba(255,255,255,' + (0.95 * pulse) + ')');
       c.addColorStop(0.5, al ? 'rgba(255,150,120,' + (0.55 * pulse) + ')' : 'rgba(185,240,255,' + (0.5 * pulse) + ')');
       c.addColorStop(1, al ? 'rgba(255,70,60,0)' : 'rgba(0,229,255,0)');
-      ctx.fillStyle = c; ctx.beginPath(); ctx.arc(cx, cy, maxR * 0.24, 0, 6.2832); ctx.fill();
+      ctx.fillStyle = c; ctx.beginPath(); ctx.arc(px, py, maxR * 0.24, 0, 6.2832); ctx.fill();
       const rot = this.t * 0.0035;
       ctx.globalCompositeOperation = 'lighter';
       for (const s of this.stars) {
         const a = s.base + rot;
-        const x = cx + s.r * Math.cos(a), y = cy + s.r * Math.sin(a);
+        const x = sx0 + s.r * Math.cos(a), y = sy0 + s.r * Math.sin(a);
         const tw = 0.5 + 0.5 * Math.sin(this.t * 0.05 * s.tw + s.ph);
         ctx.fillStyle = s.col + (0.3 + 0.6 * tw) + ')';
         ctx.beginPath(); ctx.arc(x, y, s.size, 0, 6.2832); ctx.fill();
@@ -10927,7 +10948,10 @@
     },
     loop() {
       if (!this.running) return;
-      if (!document.hidden) { this.t++; this.draw(); }
+      if (!document.hidden) {
+        this.ex += (this.tx - this.ex) * 0.12; this.ey += (this.ty - this.ey) * 0.12;
+        this.t++; this.draw();
+      }
       this.raf = requestAnimationFrame(() => this.loop());
     },
     start() {
