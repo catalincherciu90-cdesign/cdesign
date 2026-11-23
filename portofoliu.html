@@ -8,7 +8,7 @@
 <script>gtag('js',new Date());gtag('config','G-TB9SZT1PVZ',{anonymize_ip:true});</script>
 <script src="/analytics.js" defer></script>
 <title>Portofoliu — Proiecte livrate | C Design</title>
-<meta name="description" content="Portofoliul C Design: website-uri reale livrate clienților din domenii diferite. Vezi fiecare proiect în detaliu și site-ul live.">
+<meta name="description" content="Portofoliul C Design: site-uri reale, create pentru clienți din domenii diferite. Vezi fiecare proiect în detaliu și site-ul live.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://www.c-design.ro/portofoliu">
 <link rel="alternate" hreflang="ro" href="https://www.c-design.ro/portofoliu" data-hl>
@@ -22,7 +22,7 @@
 <meta property="og:url" content="https://www.c-design.ro/portofoliu">
 <meta property="og:title" content="Portofoliu — Proiecte livrate | C Design">
 <meta property="og:image" content="https://www.c-design.ro/cover.jpg">
-<meta property="og:description" content="Website-uri reale livrate de C Design — vezi fiecare proiect în detaliu.">
+<meta property="og:description" content="Site-uri reale, create de C Design — vezi fiecare proiect în detaliu.">
 <meta property="og:site_name" content="C Design">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -144,7 +144,7 @@
   <section class="d-hero">
     <span class="eyebrow">Proiecte livrate</span>
     <h1>Portofoliu — <b>rezultate reale</b></h1>
-    <p>Website-uri construite și lansate pentru clienții noștri. Filtrează pe categorie, intră în fiecare proiect și vezi-l live.</p>
+    <p>Site-uri create și lansate pentru clienții noștri. Alege o categorie, intră în fiecare proiect și vezi-l live.</p>
   </section>
 
   <section class="d-section">
@@ -165,14 +165,14 @@
   <section class="cta-band">
     <h2>Vrei un site ca acestea?</h2>
     <p>Îți construim un site clar, rapid și gândit să aducă clienți — la preț fix.</p>
-    <a href="/cere-oferta" class="btn-primary">Cere o ofertă gratuită <span>→</span></a>
+    <a href="/cere-oferta" class="btn-primary">Cere ofertă <span>→</span></a>
   </section>
 
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="f-brand">
         <img src="/logo-c-design-light.webp" alt="C Design">
-        <p>Agenție web din România care construiește website-uri moderne, rapide, care transformă vizitatorii în clienți — la prețuri fixe și corecte.</p>
+        <p>Agenție web din România. Construim, la prețuri fixe și corecte, site-uri clare și rapide, care îi ajută pe vizitatori să devină clienți.</p>
       </div>
       <div class="f-col">
         <h4>Companie</h4>
@@ -187,13 +187,13 @@
         <a href="/servicii">Site de prezentare</a>
         <a href="/pachet-startup">Pachet Start-Up</a>
         <a href="/servicii">Redesign site</a>
-        <a href="/servicii">Mentenanță</a>
+        <a href="/servicii">Mentenanță și găzduire</a>
       </div>
       <div class="f-col">
         <h4>Contact</h4>
         <a href="tel:+40753116155">0753 116 155</a>
         <a href="mailto:office@c-design.ro">office@c-design.ro</a>
-        <a href="/cere-oferta">Cere o ofertă</a>
+        <a href="/cere-oferta">Cere ofertă</a>
       </div>
     </div>
     <div class="footer-bottom">
@@ -246,7 +246,7 @@
     function renderGrid(){
       var grid=document.getElementById('projGrid'); if(!grid) return;
       var items=curCat?allProj.filter(function(p){return projCat(p)===curCat;}):allProj;
-      if(!items.length){ grid.innerHTML='<div class="d-loading">Nu sunt proiecte în această categorie.</div>'; return; }
+      if(!items.length){ grid.innerHTML='<div class="d-loading">Încă nu avem proiecte în această categorie.</div>'; return; }
       grid.innerHTML=items.map(card).join('');
     }
     fetch('/api/projects').then(function(r){return r.ok?r.json():[];}).then(function(list){

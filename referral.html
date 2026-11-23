@@ -194,7 +194,7 @@
   <div class="topbar">
     <div class="topbar-inner">
       <span class="promo">
-        <b>OFERTĂ LIMITATĂ:</b> Site + SEO + Google Business — totul de la 400 €.
+        <b>Ofertă limitată:</b> Site + SEO + Google Business — totul de la 400 €.
         <a href="/promo" class="view-deal">Vezi oferta</a>
       </span>
       <div class="topbar-right">
@@ -269,7 +269,7 @@
       <div class="rewards-head">
         <span class="eyebrow" style="justify-content:center">Două recompense, o recomandare</span>
         <h2>Amândoi <b>câștigați</b></h2>
-        <p>Cei mai buni clienți ai noștri vin din recomandări — așa că, atunci când ne recomanzi, ne asigurăm că amândoi sunteți mulțumiți.</p>
+        <p>O recomandare e cel mai frumos început de colaborare — așa că, atunci când ne recomanzi, ne asigurăm că amândoi sunteți mulțumiți.</p>
       </div>
       <div class="rewards-grid">
         <div class="reward-card">
@@ -282,7 +282,7 @@
           <div class="reward-ico"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg></div>
           <div class="rc-who">Prietenul tău primește</div>
           <h3><span class="ref-f">10%</span> reducere</h3>
-          <p>O reducere reală la primul proiect — un bun venit călduros și un motiv în plus să spună „da” prezenței online.</p>
+          <p>O reducere la primul proiect: un bun venit călduros și un motiv în plus să facă pasul spre prezența online.</p>
         </div>
       </div>
     </div>
@@ -341,7 +341,7 @@
     <div class="footer-inner">
       <div class="f-brand">
         <img src="/logo-c-design-light.webp" alt="C Design">
-        <p>Agenție web din România care construiește website-uri moderne, rapide și care transformă vizitatorii în clienți — la prețuri fixe și corecte.</p>
+        <p>Agenție web din România. Construim, la prețuri fixe și corecte, site-uri clare și rapide, care îi ajută pe vizitatori să devină clienți.</p>
         <div class="f-social">
           <a href="https://www.facebook.com/cdesignro" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M13 22v-8h2.7l.4-3H13V9.2c0-.9.3-1.5 1.6-1.5H16V5.1C15.7 5 14.7 5 13.6 5 11.2 5 9.7 6.4 9.7 9v2H7v3h2.7v8z"/></svg></a>
           <a href="https://www.instagram.com/cdesignro" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.3 2.2.4.5.2.9.5 1.3.9.4.4.7.8.9 1.3.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 1.8-.4 2.2-.2.5-.5.9-.9 1.3-.4.4-.8.7-1.3.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.3-2.2-.4a3.5 3.5 0 0 1-1.3-.9 3.5 3.5 0 0 1-.9-1.3c-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-1.8.4-2.2.2-.5.5-.9.9-1.3.4-.4.8-.7 1.3-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 3.2A6.6 6.6 0 1 0 12 18.6 6.6 6.6 0 0 0 12 5.4zm0 10.9a4.3 4.3 0 1 1 0-8.6 4.3 4.3 0 0 1 0 8.6zm6.8-11.2a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg></a>
@@ -406,8 +406,8 @@
         var btn = f.querySelector('button[type=submit]');
         var name=g('name'), email=g('email'), phone=g('phone');
         var friendName=g('friendName'), friendContact=g('friendContact'), friendBusiness=g('friendBusiness'), message=g('message');
-        if(!name || !email){ alert('Te rugăm să îți introduci numele și emailul.'); return; }
-        if(!friendName || !friendContact){ alert('Te rugăm să introduci numele și datele de contact ale prietenului.'); return; }
+        if(!name || !email){ alert('Te rugăm să completezi numele și emailul tău.'); return; }
+        if(!friendName || !friendContact){ alert('Te rugăm să completezi numele și datele de contact ale prietenului.'); return; }
         btn.disabled = true; btn.textContent = 'Se trimite…';
         fetch('/api/referrals', { method:'POST', headers:{'Content-Type':'application/json'},
           body: JSON.stringify({ referrerName:name, referrerEmail:email, referrerPhone:phone, friendName:friendName, friendContact:friendContact, friendBusiness:friendBusiness, note:message }) })
@@ -420,10 +420,10 @@
               ['name','email','phone','friendName','friendContact','friendBusiness','message'].forEach(function(n){ if(f.elements[n]) f.elements[n].value=''; });
             } else {
               btn.disabled=false; btn.textContent='Trimite recomandarea →';
-              alert((d && d.error) || 'Ceva nu a mers bine. Te rugăm să ne suni la 0753 116 155.');
+              alert((d && d.error) || 'Ceva nu a mers cum trebuie. Ne poți suna la 0753 116 155.');
             }
           })
-          .catch(function(){ btn.disabled=false; btn.textContent='Trimite recomandarea →'; alert('Eroare de rețea. Te rugăm să ne suni la 0753 116 155.'); });
+          .catch(function(){ btn.disabled=false; btn.textContent='Trimite recomandarea →'; alert('Conexiunea s-a întrerupt. Încearcă din nou sau sună-ne la 0753 116 155.'); });
       });
     })();
   </script>
