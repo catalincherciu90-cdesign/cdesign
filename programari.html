@@ -535,6 +535,14 @@
     }
     #jvs-galaxy.clippy-body{animation:jvs-reactor-pulse 1.2s ease-in-out infinite;transform-origin:50% 50%;will-change:transform,filter}
     @media(prefers-reduced-motion:reduce){#jvs-galaxy.clippy-body{animation:none}}
+    /* ochiul Gibilan plutitor pe celelalte pagini */
+    #jvs-eye-float{position:fixed;right:16px;top:50%;width:96px;height:96px;margin-top:-48px;padding:0;border:0;background:none;cursor:pointer;z-index:95;display:none;border-radius:50%}
+    #jvs-eye-float.on{display:block}
+    #jvs-eye-float{box-shadow:0 0 0 1px rgba(0,229,255,.35),0 0 0 6px rgba(0,229,255,.06),0 0 22px rgba(0,229,255,.25);background:radial-gradient(circle,rgba(0,40,50,.55),rgba(0,10,14,.75))}
+    #jvs-eye-float canvas{width:100%;height:100%;display:block;border-radius:50%;animation:jvs-reactor-pulse 1.2s ease-in-out infinite;transform-origin:50% 50%}
+    #jvs-eye-float:focus-visible{outline:2px solid var(--teal);outline-offset:4px}
+    @media(max-width:700px){#jvs-eye-float{width:64px;height:64px;top:auto;bottom:88px;margin-top:0;right:10px}}
+    @media(prefers-reduced-motion:reduce){#jvs-eye-float canvas{animation:none}}
     @keyframes clippy-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
     /* HUD Rings - Rotating Concentric Circles */
@@ -10878,8 +10886,8 @@
     canvas: null, ctx: null, stars: [], raf: null, t: 0, running: false, alert: false,
     // „ochiul”: centrul luminos (pupila) se uită spre cursor; ex/ey = poziția curentă, tx/ty = ținta
     ex: 0, ey: 0, tx: 0, ty: 0,
-    init() {
-      this.canvas = document.getElementById('jvs-galaxy');
+    init(id) {
+      this.canvas = document.getElementById(id || 'jvs-galaxy');
       if (!this.canvas) return;
       this.ctx = this.canvas.getContext('2d');
       this.build();
@@ -10963,6 +10971,31 @@
   };
   jvsGalaxy.init();
   jvsGalaxy.start();
+
+  // Ochiul Gibilan plutitor, în dreapta, pe celelalte pagini din admin (click → Gibilan)
+  (function jvsEyeFloat() {
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.id = 'jvs-eye-float'; btn.title = 'Gibilan'; btn.setAttribute('aria-label', 'Deschide Gibilan');
+    btn.innerHTML = '<canvas id="jvs-eye-float-c" width="200" height="200"></canvas>';
+    document.body.appendChild(btn);
+    const eye = { ...jvsGalaxy, canvas: null, ctx: null, stars: [], raf: null, t: 0, running: false, ex: 0, ey: 0, tx: 0, ty: 0 };
+    eye.init('jvs-eye-float-c');
+    btn.addEventListener('click', () => {
+      const tb = document.querySelector('[onclick*="switchTab(\'gibilan\'"]');
+      if (typeof switchTab === 'function') switchTab('gibilan', tb);
+    });
+    function sync() {
+      const g = document.getElementById('panel-gibilan');
+      const show = !!adminToken && !!g && !g.classList.contains('active');
+      btn.classList.toggle('on', show);
+      if (show && !eye.running) eye.start();
+      if (!show && eye.running) { eye.running = false; if (eye.raf) cancelAnimationFrame(eye.raf); }
+    }
+    const g = document.getElementById('panel-gibilan');
+    if (g) new MutationObserver(sync).observe(g, { attributes: true, attributeFilter: ['class'] });
+    setInterval(sync, 1500);
+    sync();
+  })();
 
   // Pornire fiabila (apelurile bare ocolesc wrapperele pe window):
   // particulele pornesc mereu; beam-urile pornesc cand reactorul e vizibil.
