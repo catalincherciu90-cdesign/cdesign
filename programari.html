@@ -528,6 +528,13 @@
     #jvs-mic-btn.listening{color:#ff5f57;border-color:#ff5f57;text-shadow:0 0 8px rgba(255,95,87,.6);animation:jvs-mic-pulse 1s ease-in-out infinite;}
     @keyframes jvs-mic-pulse{0%,100%{box-shadow:0 0 8px rgba(255,95,87,.35)}50%{box-shadow:0 0 18px rgba(255,95,87,.75)}}
     @keyframes clippy-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+    /* reactorul Gibilan pulsează: crește ușor și strălucește mai tare, ca o inimă */
+    @keyframes jvs-reactor-pulse{
+      0%,100%{transform:translateY(0) scale(1);filter:drop-shadow(0 0 14px rgba(0,229,255,.35)) brightness(1)}
+      50%{transform:translateY(-4px) scale(1.07);filter:drop-shadow(0 0 38px rgba(0,229,255,.9)) brightness(1.25)}
+    }
+    #jvs-galaxy.clippy-body{animation:jvs-reactor-pulse 2.4s ease-in-out infinite;transform-origin:50% 50%;will-change:transform,filter}
+    @media(prefers-reduced-motion:reduce){#jvs-galaxy.clippy-body{animation:none}}
     @keyframes clippy-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
     /* HUD Rings - Rotating Concentric Circles */
