@@ -4684,7 +4684,7 @@ Cerințe titluri:
     <!-- HEADER -->
     <div class="header">
       <div>
-        <div class="brand-name">C<span> Design</span></div>
+        <div class="brand-name"><img src="/logo-c-design.png" width="190" height="55" alt="C Design" style="width:190px;height:auto;display:block;"></div>
         <div class="brand-details">
           <div style="font-weight:600;color:#475569;">${e(prest.nume)}</div>
           ${prest.web ? `<div>${e(prest.web)}</div>` : ''}
