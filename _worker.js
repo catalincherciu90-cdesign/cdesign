@@ -1504,9 +1504,9 @@ function renderContractCD(c, prest, opts) {
   } else {
     pretP.push('În cadrul prezentului contract, părțile convin ca tariful pentru fiecare serviciu solicitat să fie stabilit la momentul formulării cererii de prestare a acestuia. Prețul final va fi comunicat și agreat de ambele părți înainte de începerea executării serviciului, asigurându-se astfel transparența și conformitatea cu nevoile Beneficiarului.');
   }
-  if (Number(c.mentenantaLunara) > 0) pretP.push(`Tariful pentru mentenanța lunară a site-ului web este de <strong>${nr(c.mentenantaLunara)} ${m}/lună</strong>, facturat lunar.`);
-  if (m === 'EUR' || c.pretMod !== 'fix') pretP.push('Pentru sumele exprimate în EUR se va factura echivalentul în RON, calculat la cursul de schimb BNR din ziua facturării.');
-  pretP.push('Decontarea sumelor cuvenite Prestatorului se va efectua în contul bancar menționat în partea introductivă, pe baza documentelor prevăzute de lege (facturi, devize, chitanțe, procese-verbale de recepție etc.).');
+  if (Number(c.mentenantaLunara) > 0) pretP.push(`Tariful pentru mentenanța lunară a site-ului web este de <strong>${nr(c.mentenantaLunara)} ${m}/lună</strong>, achitat lunar.`);
+  if (m === 'EUR' || c.pretMod !== 'fix') pretP.push('Sumele exprimate în EUR se achită în RON, la cursul de schimb BNR din ziua plății.');
+  pretP.push('Decontarea sumelor cuvenite Prestatorului se va efectua în contul bancar menționat în partea introductivă, pe baza documentelor prevăzute de lege (chitanțe, procese-verbale de recepție etc.).');
   pretP.push('Prețul serviciilor externalizate se poate modifica de către Prestator, cu aprobarea Beneficiarului.');
 
   const art = (() => { let n = 0; return () => ++n; })();
@@ -1548,7 +1548,7 @@ function renderContractCD(c, prest, opts) {
       ]),
       'Beneficiarul se obligă:',
       ol([
-        `să achite lucrările efectuate de Prestator în cel mult ${zile(c.termenPlata)} de la data primirii facturii; pentru întârzierea plății după data scadentă se vor factura penalități de ${nr(c.penPlata)}% pe zi din valoarea facturii fiscale, până la achitarea acesteia;`,
+        `să achite lucrările efectuate de Prestator în cel mult ${zile(c.termenPlata)} de la data solicitării plății; pentru întârzierea plății după data scadentă se vor calcula penalități de ${nr(c.penPlata)}% pe zi din suma datorată, până la achitarea acesteia;`,
         'să pună la dispoziția Prestatorului datele, informațiile și documentele necesare și să creeze condiții corespunzătoare de lucru;',
         'să nu efectueze, pe parcursul executării lucrărilor, modificări sau adaptări la cele preluate, fără acordul scris al Prestatorului;',
         'să pună la dispoziția Prestatorului informațiile și materialele pe care le va conține pagina web;',

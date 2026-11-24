@@ -4091,7 +4091,7 @@
               <details class="cnt-more">
                 <summary>Termene &#x219;i penalit&#x103;&#x21B;i</summary>
                 <div class="cnt-row" style="margin-top:10px;">
-                  <div class="f-group"><label class="f-label">// plat&#x103; factur&#x103; (zile)</label><input class="f-input" type="number" id="cnt-termen-plata" value="15" min="1" style="margin-top:4px;"></div>
+                  <div class="f-group"><label class="f-label">// termen de plat&#x103; (zile)</label><input class="f-input" type="number" id="cnt-termen-plata" value="15" min="1" style="margin-top:4px;"></div>
                   <div class="f-group"><label class="f-label">// penalit&#x103;&#x21B;i plat&#x103; (%/zi)</label><input class="f-input" type="number" id="cnt-pen-plata" value="0.5" min="0" step="0.01" style="margin-top:4px;"></div>
                 </div>
                 <div class="cnt-row">
@@ -6230,7 +6230,7 @@
         </div>
         <a class="cd-doc-act" href="${docUrl(d, true)}" title="Descarcă">⬇</a>
         <button class="cd-doc-act" onclick="deleteClientDoc('${esc(d.id)}')" title="Șterge">🗑</button>
-      </div>`).join('') : '<div class="gib-empty">Niciun document. Încarcă un PDF (contract, ofertă, factură, brief).</div>';
+      </div>`).join('') : '<div class="gib-empty">Niciun document. Încarcă un PDF (contract, ofertă, brief).</div>';
   }
   async function uploadClientDocs(fileList) {
     const id = selectedClientId; if (!id) return;
