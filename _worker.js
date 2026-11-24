@@ -1615,6 +1615,8 @@ function renderContractCD(c, prest, opts) {
   const css = `
   body{font-family:'Times New Roman',Times,serif;color:#111;font-size:12pt;line-height:1.5;margin:0;background:#fff}
   .page{max-width:780px;margin:0 auto;padding:48px 44px 90px}
+  .logo{text-align:center;margin:0 0 18px}
+  .logo img{width:170px;height:auto;display:inline-block}
   h1{font-size:15pt;text-align:center;text-transform:uppercase;letter-spacing:.04em;margin:0 0 4px}
   .nr-data{text-align:center;font-weight:bold;margin:0 0 26px}
   h2{font-size:12pt;margin:18px 0 6px;text-transform:none}
@@ -1682,6 +1684,7 @@ function renderContractCD(c, prest, opts) {
     ? `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>${e(title)}</title><!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]--><style>@page Section1{size:595.3pt 841.9pt;margin:2cm 2cm 2cm 2.2cm}div.Section1{page:Section1}${css}</style></head><body><div class="Section1">`
     : `<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>${e(title)}</title><style>${css}${pagedCss}</style><style data-pagedjs-ignore>${screenCss}</style></head><body><div class="page">`;
   return `${head}
+  <div class="logo"><img src="${forWord ? 'https://www.c-design.ro' : ''}/logo-c-design.png" width="170" height="49" alt="C Design"></div>
   <h1>Contract de prestări servicii informatice</h1>
   <div class="nr-data">Nr. ${e(c.numar)} din ${d2(c.dataSemnare)}</div>
   ${body}
