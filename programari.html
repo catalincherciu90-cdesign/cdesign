@@ -2315,6 +2315,7 @@
         <button type="button" class="gq-tile" onclick="quickOpen('clients')"><span class="gq-ico" aria-hidden="true">&#x1F465;</span><span class="gq-lab">Clien&#x21B;i</span></button>
         <button type="button" class="gq-tile" onclick="quickOpen('crm')"><span class="gq-ico" aria-hidden="true">&#x1F4CB;</span><span class="gq-lab">CRM</span></button>
         <button type="button" class="gq-tile" onclick="agendaOpen('oferte')"><span class="gq-ico" aria-hidden="true">&#x1F9FE;</span><span class="gq-lab">Oferte</span><span class="gq-badge gq-count" data-count="oferte"></span></button>
+        <button type="button" class="gq-tile" onclick="quickContracte()"><span class="gq-ico" aria-hidden="true">&#x270D;&#xFE0F;</span><span class="gq-lab">Contracte</span></button>
         <button type="button" class="gq-tile" onclick="quickOpen('cheltuieli')"><span class="gq-ico" aria-hidden="true">&#x1F4B8;</span><span class="gq-lab">Cheltuieli</span></button>
         <button type="button" class="gq-tile" onclick="quickOpen('projects')"><span class="gq-ico" aria-hidden="true">&#x1F5BC;&#xFE0F;</span><span class="gq-lab">Portofoliu</span></button>
         <button type="button" class="gq-tile" onclick="quickOpen('settings')"><span class="gq-ico" aria-hidden="true">&#x2699;&#xFE0F;</span><span class="gq-lab">Set&#x103;ri</span></button>
@@ -4780,6 +4781,11 @@
   }
 
   // Acces rapid de pe prima pagină: deschide tabul cerut
+  function quickContracte() {
+    quickOpen('oferte');
+    if (typeof showOfertaView === 'function') showOfertaView('contracte', document.getElementById('subnav-contracte'));
+    window.scrollTo(0, 0);
+  }
   function quickOpen(tab) {
     const btn = document.querySelector('.tab[onclick*="\'' + tab + '\'"]');
     if (btn) { btn.click(); window.scrollTo(0, 0); }
