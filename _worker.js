@@ -1586,7 +1586,7 @@ function renderContractCD(c, prest, opts) {
       'Notificările verbale nu se iau în considerare de niciuna dintre părți dacă nu sunt confirmate prin una dintre modalitățile prevăzute la alineatele precedente.',
     ]),
     section('Încetarea contractului', [
-      'Prezentul contract încetează de plin drept, fără a mai fi necesară intervenția unui tribunal arbitral sau a unei instanțe judecătorești, în cazul în care una dintre părți:',
+      'Prezentul contract încetează de plin drept, fără a mai fi necesară intervenția unei instanțe judecătorești, în cazul în care una dintre părți:',
       ol([
         'nu ia măsuri, în termen de 30 de zile de la data primirii notificării prin care i s-a adus la cunoștință că nu și-a executat ori își execută în mod necorespunzător oricare dintre obligațiile ce îi revin;',
         'este declarată în incapacitate de plată sau a fost declanșată procedura de lichidare judiciară (faliment) înainte de începerea executării clauzelor prezentului contract;',
@@ -1599,9 +1599,9 @@ function renderContractCD(c, prest, opts) {
     ]),
     section('Soluționarea litigiilor', [
       'Părțile au convenit ca toate neînțelegerile privind validitatea prezentului contract sau rezultate din interpretarea, executarea ori încetarea acestuia să fie rezolvate pe cale amiabilă de reprezentanții lor.',
-      'În cazul în care rezolvarea eventualelor litigii nu este posibilă pe cale amiabilă, părțile se vor adresa instanțelor judecătorești.',
-      'Orice litigiu decurgând din sau în legătură cu prezentul contract, inclusiv referitor la încheierea, executarea ori desființarea lui, dacă nu se poate rezolva pe cale amiabilă de reprezentanții părților, se va soluționa prin arbitrajul Curții de Arbitraj Comercial Internațional de pe lângă Camera de Comerț și Industrie a României, în conformitate cu Regulile de procedură arbitrală ale acestei Curți.',
-      'Hotărârea arbitrală este definitivă și obligatorie.',
+      B.tip === 'pf'
+        ? 'În cazul în care rezolvarea eventualelor litigii nu este posibilă pe cale amiabilă, acestea vor fi soluționate de instanțele judecătorești competente.'
+        : 'În cazul în care rezolvarea eventualelor litigii nu este posibilă pe cale amiabilă, acestea vor fi soluționate de instanțele judecătorești competente de la sediul Prestatorului.',
     ]),
     section('Clauze finale', [
       'Modificarea prezentului contract se face numai prin act adițional încheiat între părțile contractante.',
