@@ -1465,6 +1465,7 @@ function renderContractCD(c, prest, opts) {
       B.cui ? `având codul unic de înregistrare ${e(B.cui)}` : '',
       B.regCom ? `numărul de ordine în Registrul Comerțului ${e(B.regCom)}` : '',
       B.iban ? `cont bancar ${e(B.iban)}${B.banca ? ', deschis la ' + e(B.banca) : ''}` : '',
+      B.email ? `e-mail ${e(B.email)}` : '',
       B.repr ? `reprezentată prin ${e(B.repr)}${B.functie ? ', în calitate de ' + e(B.functie) : ''}` : '',
     ]) + ', denumită în continuare <strong>BENEFICIAR</strong>, pe de altă parte,';
   }
@@ -1579,9 +1580,9 @@ function renderContractCD(c, prest, opts) {
       'Dacă, în termen de 30 de zile de la producere, evenimentul respectiv nu încetează, părțile au dreptul să își notifice încetarea de plin drept a prezentului contract, fără ca vreuna dintre ele să pretindă daune-interese.',
     ]),
     section('Notificările între părți', [
-      'În accepțiunea părților contractante, orice notificare adresată de una dintre acestea celeilalte este valabil îndeplinită dacă este transmisă la adresa/sediul prevăzut în partea introductivă a prezentului contract.',
+      'În accepțiunea părților contractante, orice notificare adresată de una dintre acestea celeilalte este valabil îndeplinită dacă este transmisă la adresa/sediul sau la adresa de e-mail prevăzute în partea introductivă a prezentului contract.',
       'În cazul în care notificarea se face pe cale poștală, ea va fi transmisă prin scrisoare recomandată, cu confirmare de primire (A.R.), și se consideră primită de destinatar la data menționată de oficiul poștal primitor pe această confirmare.',
-      'Dacă notificarea se trimite prin telefax, ea se consideră primită în prima zi lucrătoare după cea în care a fost expediată.',
+      'Dacă notificarea se trimite prin e-mail, la adresa de e-mail prevăzută în partea introductivă, ea se consideră primită în prima zi lucrătoare după cea în care a fost expediată.',
       'Notificările verbale nu se iau în considerare de niciuna dintre părți dacă nu sunt confirmate prin una dintre modalitățile prevăzute la alineatele precedente.',
     ]),
     section('Încetarea contractului', [
