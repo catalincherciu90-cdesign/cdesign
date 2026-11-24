@@ -1777,6 +1777,17 @@
     }
 
   /* documente client */
+  .cnt-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+  .cnt-side{position:sticky;top:80px}
+  .cnt-check{display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:.85rem;color:var(--soft);margin:8px 0 6px}
+  .cnt-check input{accent-color:var(--teal);width:16px;height:16px;margin-top:2px;flex-shrink:0}
+  .cnt-ob-txt{min-height:50px;font-size:.82rem;margin:0 0 6px 24px;width:calc(100% - 24px)}
+  .cnt-more{margin-top:4px;border-top:1px solid var(--border-soft);padding-top:10px}
+  .cnt-more summary{cursor:pointer;font-size:.82rem;color:var(--teal);font-weight:600}
+  .oferta-grid>div{min-width:0}
+  #oferta-view-contracte .f-select,#oferta-view-contracte .f-input{max-width:100%}
+  @media(max-width:900px){.cnt-side{position:static}.oferta-grid{grid-template-columns:1fr !important}}
+  @media(max-width:600px){.cnt-row{grid-template-columns:1fr}}
   .client-docs{grid-column:1/-1}
   .client-docs.drag{outline:2px dashed var(--teal);outline-offset:4px}
   .cd-doc-hint{font-size:.72rem;color:var(--muted);margin:6px 0 10px}
@@ -2633,6 +2644,15 @@
             </div>
             <div id="cd-oferte-sum" class="cd-doc-hint" style="margin-top:0"></div>
             <div id="cd-oferte"></div>
+          </div>
+
+          <!-- Contracte client -->
+          <div class="client-section client-docs" id="cd-contracte-section">
+            <div class="client-section-title">
+              <span>&#x1F4DD; Contracte</span>
+              <button class="client-add-inline" onclick="clientNewContract()">+ contract nou</button>
+            </div>
+            <div id="cd-contracte"></div>
           </div>
 
           <!-- Documente client (PDF) -->
@@ -3906,19 +3926,22 @@
         <div id="oferte-istoric-lista"><div class="loading">Se &icirc;ncarc&#259;...</div></div>
       </div>
 
-      <!-- VIEW: CONTRACTE -->
+      <!-- VIEW: CONTRACTE (modelul C Design — contract de prestări servicii informatice) -->
       <div id="oferta-view-contracte" style="display:none;">
         <div style="display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start;" class="oferta-grid">
 
           <!-- Stânga: formular -->
           <div>
-            <div style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);margin-bottom:16px;">// genereaz&#x103; contract de prest&#x103;ri servicii</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+              <div id="cnt-form-title" style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);">// contract nou de prest&#x103;ri servicii informatice</div>
+              <button type="button" class="btn-edit" id="cnt-cancel-edit" onclick="cntResetForm(true)" style="display:none;font-size:.78rem;">&#x2715; Renun&#x21B;&#x103; la editare</button>
+            </div>
 
             <!-- Import din ofertă -->
             <div style="background:rgba(0,168,168,.06);border:1px solid var(--teal-border);border-radius:10px;padding:14px 16px;margin-bottom:20px;">
               <div class="f-label" style="margin-bottom:8px;">// import&#x103; din ofert&#x103; existent&#x103; (op&#x21B;ional)</div>
               <div style="display:flex;gap:8px;">
-                <select class="f-select" id="cnt-din-oferta" style="flex:1;">
+                <select class="f-select" id="cnt-din-oferta" style="flex:1;min-width:0;">
                   <option value="">— sau completeaz&#x103; manual mai jos —</option>
                 </select>
                 <button class="btn-save" onclick="importaOfertaInContract()" style="white-space:nowrap;padding:0 16px;height:42px;">&#x2191; Import&#x103;</button>
@@ -3930,122 +3953,157 @@
             <select class="f-select" id="cnt-client-sel" onchange="contractFromClient(this.value)" style="margin-bottom:10px;">
               <option value="">— alege un client salvat (completeaz&#x103; automat) —</option>
             </select>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+            <div class="cnt-row">
+              <div class="f-group" style="margin:0;">
+                <label class="f-label">// tip beneficiar</label>
+                <select class="f-select" id="cnt-client-tip" onchange="cntTipChange()" style="margin-top:4px;">
+                  <option value="pj">Firm&#x103; / asocia&#x21B;ie (PJ)</option>
+                  <option value="pf">Persoan&#x103; fizic&#x103;</option>
+                </select>
+              </div>
               <div class="f-group" style="margin:0;">
                 <label class="f-label">// denumire / nume *</label>
-                <input class="f-input" type="text" id="cnt-client-name" placeholder="ex: SC Firma SRL / Ion Popescu" style="margin-top:4px;">
-              </div>
-              <div class="f-group" style="margin:0;">
-                <label class="f-label">// CUI / CNP (op&#x21B;ional)</label>
-                <input class="f-input" type="text" id="cnt-client-cui" placeholder="ex: RO12345678" style="margin-top:4px;">
+                <input class="f-input" type="text" id="cnt-client-name" placeholder="ex: Firma SRL / Ion Popescu" style="margin-top:4px;">
               </div>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+            <div class="cnt-row">
               <div class="f-group" style="margin:0;">
-                <label class="f-label">// adres&#x103;</label>
-                <input class="f-input" type="text" id="cnt-client-adresa" placeholder="ex: Str. Exemplu nr.1, Bucure&#x219;ti" style="margin-top:4px;">
+                <label class="f-label" id="cnt-adresa-lbl">// sediu social</label>
+                <input class="f-input" type="text" id="cnt-client-adresa" placeholder="ex: Str. Exemplu nr. 1, Bucure&#x219;ti" style="margin-top:4px;">
               </div>
               <div class="f-group" style="margin:0;">
                 <label class="f-label">// email</label>
                 <input class="f-input" type="email" id="cnt-client-email" placeholder="client@firma.ro" style="margin-top:4px;">
               </div>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+            <div class="cnt-row cnt-pj">
               <div class="f-group" style="margin:0;">
-                <label class="f-label">// nr. Reg. Com. (firme)</label>
+                <label class="f-label">// CUI</label>
+                <input class="f-input" type="text" id="cnt-client-cui" placeholder="ex: RO12345678" style="margin-top:4px;">
+              </div>
+              <div class="f-group" style="margin:0;">
+                <label class="f-label">// nr. Reg. Com. (op&#x21B;ional)</label>
                 <input class="f-input" type="text" id="cnt-client-regcom" placeholder="ex: J40/1234/2020" style="margin-top:4px;">
               </div>
+            </div>
+            <div class="cnt-row cnt-pj">
               <div class="f-group" style="margin:0;">
-                <label class="f-label">// reprezentant legal (firme)</label>
-                <input class="f-input" type="text" id="cnt-client-repr" placeholder="ex: Ion Popescu, Administrator" style="margin-top:4px;">
+                <label class="f-label">// reprezentat prin</label>
+                <input class="f-input" type="text" id="cnt-client-repr" placeholder="ex: Ion Popescu" style="margin-top:4px;">
+              </div>
+              <div class="f-group" style="margin:0;">
+                <label class="f-label">// &#xEE;n calitate de</label>
+                <input class="f-input" type="text" id="cnt-client-functie" placeholder="ex: Administrator" style="margin-top:4px;">
               </div>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+            <div class="cnt-row cnt-pj">
               <div class="f-group" style="margin:0;">
-                <label class="f-label">// IBAN</label>
+                <label class="f-label">// IBAN (op&#x21B;ional)</label>
                 <input class="f-input" type="text" id="cnt-client-iban" placeholder="RO.." style="margin-top:4px;">
               </div>
               <div class="f-group" style="margin:0;">
-                <label class="f-label">// banca</label>
+                <label class="f-label">// banca (op&#x21B;ional)</label>
                 <input class="f-input" type="text" id="cnt-client-banca" placeholder="ex: Banca Transilvania" style="margin-top:4px;">
               </div>
             </div>
+            <div class="cnt-row cnt-pf" style="display:none;">
+              <div class="f-group" style="margin:0;">
+                <label class="f-label">// CNP (op&#x21B;ional)</label>
+                <input class="f-input" type="text" id="cnt-client-cnp" placeholder="13 cifre" maxlength="13" style="margin-top:4px;">
+              </div>
+              <div></div>
+            </div>
 
             <!-- Obiect -->
-            <div style="font-size:.8rem;font-weight:600;color:var(--soft);margin-bottom:10px;font-family:'Share Tech Mono',monospace;">// obiect &amp; servicii</div>
-            <div class="f-group">
-              <label class="f-label">// descriere obiect contract *</label>
-              <textarea class="f-input" id="cnt-obiect" placeholder="ex: Realizare site de prezentare, optimizare SEO &#x219;i mentenan&#x21B;&#x103; lunar&#x103;" style="min-height:60px;margin-top:4px;"></textarea>
+            <div style="font-size:.8rem;font-weight:600;color:var(--soft);margin:22px 0 10px;font-family:'Share Tech Mono',monospace;">// obiectul contractului</div>
+            <label class="cnt-check"><input type="checkbox" id="cnt-ob-site" onchange="cntObToggle()"> <span>a) Realizare site web</span></label>
+            <textarea class="f-input cnt-ob-txt" id="cnt-ob-site-txt" style="min-height:62px;"></textarea>
+            <label class="cnt-check"><input type="checkbox" id="cnt-ob-ment"> <span>b) Mentenan&#x21B;&#x103; site web (backup, securitate &#x219;i actualiz&#x103;ri, actualizare con&#x21B;inut &#x219;i re&#x21B;ele sociale, SEO)</span></label>
+            <label class="cnt-check"><input type="checkbox" id="cnt-ob-echip" onchange="cntObToggle()"> <span>c) Mentenan&#x21B;&#x103; echipamente IT</span></label>
+            <textarea class="f-input cnt-ob-txt" id="cnt-ob-echip-txt" style="min-height:44px;"></textarea>
+            <div class="f-group" style="margin-top:10px;">
+              <label class="f-label">// alte servicii (op&#x21B;ional, apar ca punct separat)</label>
+              <textarea class="f-input" id="cnt-ob-alte" placeholder="ex: realizarea identit&#x103;&#x21B;ii vizuale (logo, culori, fonturi)" style="min-height:44px;margin-top:4px;"></textarea>
             </div>
             <div class="f-group">
-              <label class="f-label">// servicii detaliate (ap&#x103;r&#x103; &#xEE;n contract)</label>
-              <textarea class="f-input" id="cnt-servicii-text" placeholder="1. Site de prezentare — 5 pagini — 899 EUR&#10;2. SEO de baz&#x103; — inclus&#10;3. Mentenan&#x21B;&#x103; lunar&#x103; — 100 EUR/lun&#x103;" style="min-height:100px;font-family:'Share Tech Mono',monospace;font-size:.82rem;margin-top:4px;"></textarea>
+              <label class="f-label">// detalierea serviciilor (op&#x21B;ional, c&#xE2;te unul pe r&#xE2;nd)</label>
+              <textarea class="f-input" id="cnt-servicii-text" placeholder="Site de prezentare — 5 pagini&#10;Domeniu .ro &#x219;i g&#x103;zduire pentru 1 an" style="min-height:80px;font-family:'Share Tech Mono',monospace;font-size:.82rem;margin-top:4px;"></textarea>
             </div>
           </div>
 
           <!-- Dreapta: termeni -->
-          <div style="position:sticky;top:80px;">
+          <div class="cnt-side">
             <div style="background:var(--bg3);border:1px solid var(--border-soft);border-radius:12px;padding:20px;">
               <div style="font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--muted);margin-bottom:14px;">// termeni contract</div>
 
+              <div class="cnt-row" style="margin-bottom:0;">
+                <div class="f-group">
+                  <label class="f-label">// nr. contract</label>
+                  <input class="f-input" type="text" id="cnt-numar" placeholder="automat" maxlength="30" style="margin-top:4px;">
+                </div>
+                <div class="f-group">
+                  <label class="f-label">// data</label>
+                  <input class="f-input" type="date" id="cnt-data" style="margin-top:4px;">
+                </div>
+              </div>
+
               <div class="f-group">
-                <label class="f-label">// valoare total&#x103; *</label>
+                <label class="f-label">// durata contractului</label>
                 <div style="display:flex;gap:6px;margin-top:4px;">
-                  <input class="f-input" type="number" id="cnt-total" placeholder="0" min="0" style="flex:1;" oninput="updateCntAvans()">
-                  <select class="f-select" id="cnt-moneda" style="width:80px;" onchange="updateCntAvans()">
-                    <option value="EUR">EUR</option>
-                    <option value="RON">RON</option>
-                  </select>
+                  <input class="f-input" type="number" id="cnt-durata-nr" value="1" min="1" max="99" style="width:70px;">
+                  <select class="f-select" id="cnt-durata-unit"><option value="ani">an / ani</option><option value="luni">lun&#x103; / luni</option></select>
                 </div>
               </div>
 
               <div class="f-group">
-                <label class="f-label">// avans</label>
-                <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
-                  <input class="f-input" type="number" id="cnt-avans-pct" value="50" min="0" max="100" style="width:70px;" oninput="updateCntAvans()">
-                  <span style="color:var(--muted);font-size:.85rem;">%</span>
-                  <span style="color:var(--teal);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.9rem;" id="cnt-avans-val">= 0</span>
+                <label class="f-label">// pre&#x21B;</label>
+                <select class="f-select" id="cnt-pret-mod" onchange="cntPretMod()" style="margin-top:4px;">
+                  <option value="cerere">Tarif stabilit la fiecare solicitare</option>
+                  <option value="fix">Pre&#x21B; fix pentru serviciile din contract</option>
+                </select>
+              </div>
+              <div id="cnt-fix-box" style="display:none;">
+                <div class="f-group">
+                  <label class="f-label">// valoare total&#x103;</label>
+                  <div style="display:flex;gap:6px;margin-top:4px;">
+                    <input class="f-input" type="number" id="cnt-total" placeholder="0" min="0" step="0.01" style="flex:1;min-width:0;" oninput="updateCntAvans()">
+                    <select class="f-select" id="cnt-moneda" style="width:84px;" onchange="updateCntAvans()"><option value="EUR">EUR</option><option value="RON">RON</option></select>
+                  </div>
+                </div>
+                <div class="f-group">
+                  <label class="f-label">// avans la semnare</label>
+                  <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
+                    <input class="f-input" type="number" id="cnt-avans-pct" value="50" min="0" max="100" style="width:70px;" oninput="updateCntAvans()">
+                    <span style="color:var(--muted);font-size:.85rem;">%</span>
+                    <span id="cnt-avans-val" style="color:var(--teal);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="f-group">
+                <label class="f-label">// mentenan&#x21B;&#x103; lunar&#x103; (op&#x21B;ional)</label>
+                <div style="display:flex;gap:6px;align-items:center;margin-top:4px;">
+                  <input class="f-input" type="number" id="cnt-ment-lunar" placeholder="0" min="0" step="0.01" style="flex:1;min-width:0;">
+                  <span id="cnt-ment-moneda" style="color:var(--muted);font-size:.85rem;white-space:nowrap;">EUR / lun&#x103;</span>
                 </div>
               </div>
 
-              <div class="f-group" style="display:flex;justify-content:space-between;align-items:center;">
-                <label class="f-label" style="margin:0;">// rest la finalizare</label>
-                <span id="cnt-rest-val" style="color:var(--soft);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.9rem;">0</span>
-              </div>
-
-              <div class="f-group">
-                <label class="f-label">// termen livrare</label>
-                <div style="display:flex;gap:6px;margin-top:4px;">
-                  <input class="f-input" type="number" id="cnt-termen" value="30" min="1" style="width:65px;">
-                  <select class="f-select" id="cnt-termen-unit">
-                    <option value="zile lucr&#x103;toare">zile lucr&#x103;toare</option>
-                    <option value="zile calendaristice">zile calendaristice</option>
-                    <option value="s&#x103;pt&#x103;m&#xE2;ni">s&#x103;pt&#x103;m&#xE2;ni</option>
-                  </select>
+              <details class="cnt-more">
+                <summary>Termene &#x219;i penalit&#x103;&#x21B;i</summary>
+                <div class="cnt-row" style="margin-top:10px;">
+                  <div class="f-group"><label class="f-label">// plat&#x103; factur&#x103; (zile)</label><input class="f-input" type="number" id="cnt-termen-plata" value="15" min="1" style="margin-top:4px;"></div>
+                  <div class="f-group"><label class="f-label">// penalit&#x103;&#x21B;i plat&#x103; (%/zi)</label><input class="f-input" type="number" id="cnt-pen-plata" value="0.5" min="0" step="0.01" style="margin-top:4px;"></div>
                 </div>
-              </div>
+                <div class="cnt-row">
+                  <div class="f-group"><label class="f-label">// penalit&#x103;&#x21B;i neexecutare (%/zi)</label><input class="f-input" type="number" id="cnt-pen-gen" value="0.1" min="0" step="0.01" style="margin-top:4px;"></div>
+                  <div class="f-group"><label class="f-label">// &#x219;tergere lucrare dac&#x103; nu se pl&#x103;te&#x219;te (zile lucr.)</label><input class="f-input" type="number" id="cnt-zile-sterg" value="15" min="1" style="margin-top:4px;"></div>
+                </div>
+                <div class="f-group"><label class="f-label">// num&#x103;r exemplare</label><input class="f-input" type="number" id="cnt-exemplare" value="2" min="1" max="10" style="margin-top:4px;width:80px;"></div>
+              </details>
 
-              <div class="f-group">
-                <label class="f-label">// data semn&#x103;rii</label>
-                <input class="f-input" type="date" id="cnt-data" style="margin-top:4px;">
-              </div>
-
-              <div class="f-group" style="margin-bottom:0;">
-                <label class="f-label" style="margin-bottom:8px;">// clauze op&#x21B;ionale</label>
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.83rem;color:var(--soft);margin-bottom:7px;">
-                  <input type="checkbox" id="cnt-clauza-conf" checked style="accent-color:var(--teal);width:15px;height:15px;"> Confiden&#x21B;ialitate (NDA)
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.83rem;color:var(--soft);margin-bottom:7px;">
-                  <input type="checkbox" id="cnt-clauza-pen" style="accent-color:var(--teal);width:15px;height:15px;"> Penaliz&#x103;ri &#xEE;nt&#xE2;rziere (0,1%/zi)
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.83rem;color:var(--soft);">
-                  <input type="checkbox" id="cnt-clauza-ip" checked style="accent-color:var(--teal);width:15px;height:15px;"> Drepturi proprietate intelectual&#x103;
-                </label>
-              </div>
-
-              <button id="cnt-gen-btn" onclick="genereazaContract()" style="width:100%;margin-top:18px;background:var(--teal);color:#060f0f;font-weight:700;font-size:.9rem;padding:12px;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;">
-                &#x1F4DD; Genereaz&#x103; Contract PDF
+              <button id="cnt-gen-btn" onclick="genereazaContract()" style="width:100%;margin-top:16px;background:var(--teal);color:#060f0f;font-weight:700;font-size:.9rem;padding:12px;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;">
+                &#x1F4DD; Genereaz&#x103; contractul
               </button>
+              <div style="font-size:.74rem;color:var(--muted);margin-top:10px;line-height:1.5;">Se deschide contractul gata de printat sau salvat ca PDF; de acolo &#xEE;l po&#x21B;i desc&#x103;rca &#x219;i &#xEE;n Word. Datele firmei C Design vin din Set&#x103;ri &rarr; Template contract.</div>
             </div>
           </div>
         </div>
@@ -6065,6 +6123,7 @@
     renderClientDetail(id);
     loadClientDocs(id);
     loadClientOferte(id);
+    loadClientContracte(id);
     if (notesData && notesData.length) renderClientNotes(); else fetchNotes();
   }
 
@@ -9996,9 +10055,8 @@
     if (view === 'servicii') renderServicii();
     if (view === 'istoric') renderOfertaIstoric();
     if (view === 'contracte') {
-      renderContracteIstoric(); populateCntOfertaSel();
-      document.getElementById('cnt-data').value = new Date().toISOString().slice(0,10);
-      prefillContractDefaults();
+      renderContracteIstoric(); populateCntOfertaSel(); populateContractClientSel();
+      if (!cntEditId && !document.getElementById('cnt-client-name').value.trim()) cntResetForm(true);
     }
   }
 
@@ -10358,163 +10416,296 @@
     } catch { alert('Eroare la ștergere.'); }
   }
 
-  // ── CONTRACTE ─────────────────────────────────────────────
+  // ── CONTRACTE (modelul C Design — contract de prestări servicii informatice) ──
 
   let allContracte = [];
+  let cntEditId = null;      // contractul deschis la editare
+  let cntClientId = null;    // clientul salvat legat de contract
+  const CNT_OB_SITE = 'realizarea site-ului web — furnizarea unei platforme digitale moderne, pe deplin conforme cu cerințele legislative în vigoare, care să nu presupună niciun efort din partea Beneficiarului pentru menținerea constantă a acestei conformități';
+  const CNT_OB_ECHIP = 'mentenanța echipamentelor IT aflate în dotarea Beneficiarului';
+  const cntEl = id => document.getElementById(id);
+  const cntSet = (id, v) => { const el = cntEl(id); if (el) el.value = v == null ? '' : v; };
+  const cntVal = id => { const el = cntEl(id); return el ? el.value.trim() : ''; };
+
+  function cntTipChange() {
+    const pf = cntVal('cnt-client-tip') === 'pf';
+    document.querySelectorAll('#oferta-view-contracte .cnt-pj').forEach(x => x.style.display = pf ? 'none' : '');
+    document.querySelectorAll('#oferta-view-contracte .cnt-pf').forEach(x => x.style.display = pf ? '' : 'none');
+    const l = cntEl('cnt-adresa-lbl'); if (l) l.textContent = pf ? '// domiciliu' : '// sediu social';
+  }
+  function cntObToggle() {
+    cntEl('cnt-ob-site-txt').style.display = cntEl('cnt-ob-site').checked ? '' : 'none';
+    cntEl('cnt-ob-echip-txt').style.display = cntEl('cnt-ob-echip').checked ? '' : 'none';
+  }
+  function cntPretMod() {
+    cntEl('cnt-fix-box').style.display = cntVal('cnt-pret-mod') === 'fix' ? '' : 'none';
+    updateCntAvans();
+  }
+  function updateCntAvans() {
+    const total = parseFloat(cntVal('cnt-total')) || 0;
+    const pct = Math.min(100, Math.max(0, parseFloat(cntVal('cnt-avans-pct')) || 0));
+    const m = cntVal('cnt-moneda') || 'EUR';
+    const f = v => v.toLocaleString('ro-RO', { maximumFractionDigits: 2 });
+    const av = Math.round(total * pct) / 100;
+    const out = cntEl('cnt-avans-val');
+    if (out) out.textContent = total ? `= ${f(av)} ${m} · rest ${f(total - av)} ${m}` : '';
+    const mm = cntEl('cnt-ment-moneda'); if (mm) mm.textContent = m + ' / lună';
+  }
 
   async function prefillContractDefaults() {
     try {
       const d = await fetch('/api/contract-template?token=' + encodeURIComponent(adminToken)).then(r => r.json());
-      if (d.avansPct) document.getElementById('cnt-avans-pct').value = d.avansPct;
-      if (d.termen) document.getElementById('cnt-termen').value = d.termen;
+      if (cntEditId) return;
+      if (d.avansPct) cntSet('cnt-avans-pct', d.avansPct);
       updateCntAvans();
     } catch {}
   }
-
-  function updateCntAvans() {
-    const total = parseFloat(document.getElementById('cnt-total').value) || 0;
-    const pct = parseFloat(document.getElementById('cnt-avans-pct').value) || 0;
-    const moneda = document.getElementById('cnt-moneda').value;
-    const avans = total * pct / 100;
-    const rest = total - avans;
-    document.getElementById('cnt-avans-val').textContent = '= ' + avans.toLocaleString('ro-RO', {maximumFractionDigits:2}) + ' ' + moneda;
-    document.getElementById('cnt-rest-val').textContent = rest.toLocaleString('ro-RO', {maximumFractionDigits:2}) + ' ' + moneda;
+  function cntNextNumber() {
+    const max = (allContracte || []).filter(c => c.model === 'cd2').reduce((mx, c) => Math.max(mx, parseInt(c.numar) || 0), 0);
+    return String(max + 1);
+  }
+  function cntResetForm(keepView) {
+    cntEditId = null; cntClientId = null;
+    ['cnt-client-name', 'cnt-client-adresa', 'cnt-client-email', 'cnt-client-cui', 'cnt-client-regcom', 'cnt-client-repr', 'cnt-client-functie',
+     'cnt-client-iban', 'cnt-client-banca', 'cnt-client-cnp', 'cnt-ob-alte', 'cnt-servicii-text', 'cnt-total', 'cnt-ment-lunar', 'cnt-numar'].forEach(id => cntSet(id, ''));
+    cntSet('cnt-client-sel', ''); cntSet('cnt-din-oferta', ''); cntSet('cnt-client-tip', 'pj');
+    cntEl('cnt-ob-site').checked = true; cntEl('cnt-ob-ment').checked = true; cntEl('cnt-ob-echip').checked = false;
+    cntSet('cnt-ob-site-txt', CNT_OB_SITE); cntSet('cnt-ob-echip-txt', CNT_OB_ECHIP);
+    cntSet('cnt-durata-nr', 1); cntSet('cnt-durata-unit', 'ani'); cntSet('cnt-pret-mod', 'cerere');
+    cntSet('cnt-moneda', 'EUR'); cntSet('cnt-avans-pct', 50);
+    cntSet('cnt-termen-plata', 15); cntSet('cnt-pen-plata', 0.5); cntSet('cnt-pen-gen', 0.1); cntSet('cnt-zile-sterg', 15); cntSet('cnt-exemplare', 2);
+    cntSet('cnt-data', new Date().toISOString().slice(0, 10));
+    const nr = cntEl('cnt-numar'); if (nr) nr.placeholder = 'automat: ' + cntNextNumber();
+    cntEl('cnt-form-title').textContent = '// contract nou de prestări servicii informatice';
+    cntEl('cnt-cancel-edit').style.display = 'none';
+    cntEl('cnt-gen-btn').innerHTML = '&#x1F4DD; Generează contractul';
+    cntTipChange(); cntObToggle(); cntPretMod();
+    prefillContractDefaults();
   }
 
   function populateCntOfertaSel() {
-    const sel = document.getElementById('cnt-din-oferta');
+    const sel = cntEl('cnt-din-oferta');
     if (!sel) return;
+    const cur = sel.value;
     sel.innerHTML = '<option value="">— sau completează manual mai jos —</option>' +
       [...allOferte].sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||'')).map(o =>
         `<option value="${esc(o.id)}">${esc(o.numar)} — ${esc(o.client?.name||'')} — ${new Date(o.createdAt).toLocaleDateString('ro-RO')}</option>`
       ).join('');
+    sel.value = cur;
   }
-
   function populateContractClientSel() {
-    const sel = document.getElementById('cnt-client-sel'); if (!sel) return;
+    const sel = cntEl('cnt-client-sel'); if (!sel) return;
     const cur = sel.value;
     sel.innerHTML = '<option value="">— alege un client salvat (completează automat) —</option>' +
       (clientsData || []).map(c => `<option value="${esc(c.id)}">${esc(c.name)}${c.type === 'pj' ? ' (firmă)' : ''}</option>`).join('');
     sel.value = cur;
   }
   function contractFromClient(id) {
-    const c = (clientsData || []).find(x => x.id === id); if (!c) return;
-    const set = (k, v) => { const el = document.getElementById(k); if (el) el.value = v || ''; };
-    set('cnt-client-name', c.name); set('cnt-client-email', c.email);
-    set('cnt-client-cui', c.cui); set('cnt-client-adresa', clientFullAddress(c));
-    set('cnt-client-regcom', c.regCom); set('cnt-client-iban', c.iban); set('cnt-client-banca', c.banca);
-    set('cnt-client-repr', [c.repr, c.reprFunctie].filter(Boolean).join(', '));
+    const c = (clientsData || []).find(x => x.id === id); if (!c) { cntClientId = null; return; }
+    cntClientId = c.id;
+    cntSet('cnt-client-tip', c.type === 'pj' ? 'pj' : 'pf');
+    cntSet('cnt-client-name', c.name); cntSet('cnt-client-email', c.email);
+    cntSet('cnt-client-adresa', clientFullAddress(c));
+    cntSet('cnt-client-cui', c.cui); cntSet('cnt-client-regcom', c.regCom);
+    cntSet('cnt-client-iban', c.iban); cntSet('cnt-client-banca', c.banca);
+    cntSet('cnt-client-repr', c.repr); cntSet('cnt-client-functie', c.reprFunctie);
+    cntTipChange();
   }
 
   function importaOfertaInContract() {
-    const id = document.getElementById('cnt-din-oferta').value;
+    const id = cntVal('cnt-din-oferta');
     if (!id) return;
     const o = allOferte.find(x => x.id === id);
     if (!o) return;
-    document.getElementById('cnt-client-name').value = o.client?.name || '';
-    document.getElementById('cnt-client-email').value = o.client?.email || '';
-    // dacă oferta e legată de un client salvat, se completează și datele firmei
+    cntSet('cnt-client-name', o.client?.name || '');
+    cntSet('cnt-client-email', o.client?.email || '');
     if (o.client?.id && (clientsData || []).some(c => c.id === o.client.id)) {
       contractFromClient(o.client.id);
-      const sel = document.getElementById('cnt-client-sel'); if (sel) sel.value = o.client.id;
+      cntSet('cnt-client-sel', o.client.id);
     }
     const total = (o.servicii||[]).reduce((s,sv) => s + parseFloat(sv.pret||0), 0);
-    document.getElementById('cnt-total').value = total;
-    document.getElementById('cnt-moneda').value = o.moneda || 'EUR';
-    document.getElementById('cnt-obiect').value = (o.servicii||[]).map(s => s.nume).join(', ');
-    document.getElementById('cnt-servicii-text').value = (o.servicii||[]).map((s,i) =>
-      `${i+1}. ${s.nume}${s.descriere ? ' — ' + s.descriere : ''} — ${parseFloat(s.pret||0).toLocaleString('ro-RO')} ${s.moneda||o.moneda}`
-    ).join('\n');
-    updateCntAvans();
+    cntSet('cnt-pret-mod', 'fix'); cntSet('cnt-total', total); cntSet('cnt-moneda', o.moneda || 'EUR');
+    cntSet('cnt-servicii-text', (o.servicii||[]).map(s =>
+      `${s.nume}${s.descriere ? ' — ' + s.descriere : ''} — ${parseFloat(s.pret||0).toLocaleString('ro-RO')} ${s.moneda||o.moneda||'EUR'}`
+    ).join('\n'));
+    cntPretMod();
+  }
+
+  function cntCollect() {
+    return {
+      numar: cntVal('cnt-numar'),
+      dataSemnare: cntVal('cnt-data'),
+      clientId: cntClientId,
+      client: {
+        tip: cntVal('cnt-client-tip'), name: cntVal('cnt-client-name'), adresa: cntVal('cnt-client-adresa'),
+        email: cntVal('cnt-client-email'), cui: cntVal('cnt-client-cui'), regCom: cntVal('cnt-client-regcom'),
+        repr: cntVal('cnt-client-repr'), functie: cntVal('cnt-client-functie'),
+        iban: cntVal('cnt-client-iban'), banca: cntVal('cnt-client-banca'), cnp: cntVal('cnt-client-cnp'),
+      },
+      obiect: {
+        site: cntEl('cnt-ob-site').checked ? (cntVal('cnt-ob-site-txt') || CNT_OB_SITE) : '',
+        mentenanta: cntEl('cnt-ob-ment').checked,
+        echipamente: cntEl('cnt-ob-echip').checked ? (cntVal('cnt-ob-echip-txt') || CNT_OB_ECHIP) : '',
+        alte: cntVal('cnt-ob-alte'),
+      },
+      serviciiText: cntVal('cnt-servicii-text'),
+      durataNr: cntVal('cnt-durata-nr'), durataUnit: cntVal('cnt-durata-unit'),
+      pretMod: cntVal('cnt-pret-mod'), total: cntVal('cnt-total'), moneda: cntVal('cnt-moneda'),
+      avansPct: cntVal('cnt-avans-pct'), mentenantaLunara: cntVal('cnt-ment-lunar'),
+      termenPlata: cntVal('cnt-termen-plata'), penPlata: cntVal('cnt-pen-plata'), penGen: cntVal('cnt-pen-gen'),
+      zileStergere: cntVal('cnt-zile-sterg'), exemplare: cntVal('cnt-exemplare'),
+      ofertaId: cntVal('cnt-din-oferta') || null,
+    };
+  }
+
+  function cntPreviewUrl(id, word) {
+    return '/contract-preview/' + encodeURIComponent(id) + '?token=' + encodeURIComponent(adminToken) + (word ? '&format=doc' : '');
   }
 
   async function genereazaContract() {
-    const clientName = document.getElementById('cnt-client-name').value.trim();
-    const obiect = document.getElementById('cnt-obiect').value.trim();
-    const total = parseFloat(document.getElementById('cnt-total').value);
-    if (!clientName || !obiect || isNaN(total)) {
-      alert('Completează: denumire client, obiect contract și valoare totală.');
-      return;
-    }
-    const btn = document.getElementById('cnt-gen-btn');
+    const p = cntCollect();
+    if (!p.client.name) { alert('Completează numele beneficiarului.'); return; }
+    if (!p.obiect.site && !p.obiect.mentenanta && !p.obiect.echipamente && !p.obiect.alte) { alert('Alege cel puțin un serviciu la obiectul contractului.'); return; }
+    if (p.pretMod === 'fix' && !(parseFloat(p.total) > 0)) { alert('Completează valoarea totală (sau alege „Tarif stabilit la fiecare solicitare”).'); return; }
+    // fereastra se deschide imediat (altfel browserul o poate bloca)
+    const win = window.open('', '_blank');
+    const btn = cntEl('cnt-gen-btn');
     btn.disabled = true; btn.textContent = 'Se generează...';
     try {
-      const payload = {
-        client: {
-          name: clientName,
-          cui: document.getElementById('cnt-client-cui').value.trim(),
-          adresa: document.getElementById('cnt-client-adresa').value.trim(),
-          email: document.getElementById('cnt-client-email').value.trim(),
-          regCom: document.getElementById('cnt-client-regcom').value.trim(),
-          repr: document.getElementById('cnt-client-repr').value.trim(),
-          iban: document.getElementById('cnt-client-iban').value.trim(),
-          banca: document.getElementById('cnt-client-banca').value.trim(),
-        },
-        obiect,
-        serviciiText: document.getElementById('cnt-servicii-text').value.trim(),
-        total,
-        moneda: document.getElementById('cnt-moneda').value,
-        avansPct: parseFloat(document.getElementById('cnt-avans-pct').value) || 50,
-        termen: document.getElementById('cnt-termen').value || '30',
-        termenUnit: document.getElementById('cnt-termen-unit').value,
-        dataSemnare: document.getElementById('cnt-data').value || new Date().toISOString().slice(0,10),
-        clauze: {
-          confidentialitate: document.getElementById('cnt-clauza-conf').checked,
-          penalitati: document.getElementById('cnt-clauza-pen').checked,
-          ip: document.getElementById('cnt-clauza-ip').checked,
-        },
-        ofertaId: document.getElementById('cnt-din-oferta').value || null,
-      };
-      const res = await fetch('/api/contracte?token=' + encodeURIComponent(adminToken), {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+      const editing = cntEditId;
+      const res = await fetch(editing ? '/api/contracte/' + encodeURIComponent(editing) + '?token=' + encodeURIComponent(adminToken)
+                                      : '/api/contracte?model=cd2&token=' + encodeURIComponent(adminToken), {
+        method: editing ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(p)
       });
-      if (!res.ok) { alert('Eroare la generare.'); return; }
-      const data = await res.json();
-      window.open('/contract-preview/' + data.id + '?token=' + encodeURIComponent(adminToken), '_blank');
-      fetchContracte();
-    } catch { alert('Eroare de rețea.'); }
-    finally { btn.disabled = false; btn.innerHTML = '&#x1F4DD; Genereaz&#x103; Contract PDF'; }
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) { if (win) win.close(); alert(data.error || 'Nu am putut genera contractul.'); return; }
+      if (win) win.location.href = cntPreviewUrl(data.id); else window.location.href = cntPreviewUrl(data.id);
+      showToast(editing ? 'Contract actualizat' : 'Contract generat: nr. ' + data.numar);
+      await fetchContracte();
+      cntResetForm(true);
+      if (typeof renderClientContracte === 'function') renderClientContracte();
+    } catch { if (win) win.close(); alert('Eroare de rețea.'); }
+    finally { btn.disabled = false; if (!cntEditId) btn.innerHTML = '&#x1F4DD; Generează contractul'; }
+  }
+
+  function editeazaContract(id) {
+    const c = (allContracte || []).find(x => x.id === id);
+    if (!c || c.model !== 'cd2') return;
+    switchTab('oferte', ofertaTabBtn());
+    showOfertaView('contracte', cntEl('subnav-contracte'));
+    cntResetForm(true);
+    cntEditId = c.id; cntClientId = c.clientId || null;
+    const B = c.client || {}, ob = c.obiect || {};
+    cntSet('cnt-numar', c.numar); cntSet('cnt-data', c.dataSemnare);
+    cntSet('cnt-client-sel', c.clientId || '');
+    cntSet('cnt-client-tip', B.tip || 'pj'); cntSet('cnt-client-name', B.name); cntSet('cnt-client-adresa', B.adresa);
+    cntSet('cnt-client-email', B.email); cntSet('cnt-client-cui', B.cui); cntSet('cnt-client-regcom', B.regCom);
+    cntSet('cnt-client-repr', B.repr); cntSet('cnt-client-functie', B.functie); cntSet('cnt-client-iban', B.iban);
+    cntSet('cnt-client-banca', B.banca); cntSet('cnt-client-cnp', B.cnp);
+    cntEl('cnt-ob-site').checked = !!ob.site; cntSet('cnt-ob-site-txt', ob.site || CNT_OB_SITE);
+    cntEl('cnt-ob-ment').checked = !!ob.mentenanta;
+    cntEl('cnt-ob-echip').checked = !!ob.echipamente; cntSet('cnt-ob-echip-txt', ob.echipamente || CNT_OB_ECHIP);
+    cntSet('cnt-ob-alte', ob.alte); cntSet('cnt-servicii-text', c.serviciiText);
+    cntSet('cnt-durata-nr', c.durataNr); cntSet('cnt-durata-unit', c.durataUnit);
+    cntSet('cnt-pret-mod', c.pretMod); cntSet('cnt-total', c.total || ''); cntSet('cnt-moneda', c.moneda);
+    cntSet('cnt-avans-pct', c.avansPct); cntSet('cnt-ment-lunar', c.mentenantaLunara || '');
+    cntSet('cnt-termen-plata', c.termenPlata); cntSet('cnt-pen-plata', c.penPlata); cntSet('cnt-pen-gen', c.penGen);
+    cntSet('cnt-zile-sterg', c.zileStergere); cntSet('cnt-exemplare', c.exemplare);
+    cntEl('cnt-form-title').textContent = '// editezi contractul nr. ' + c.numar;
+    cntEl('cnt-cancel-edit').style.display = '';
+    cntEl('cnt-gen-btn').innerHTML = '&#x1F4BE; Salvează modificările';
+    cntTipChange(); cntObToggle(); cntPretMod();
+    cntEl('oferta-view-contracte').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  async function stergeContract(id) {
+    const c = (allContracte || []).find(x => x.id === id); if (!c) return;
+    if (!confirm('Ștergi contractul nr. ' + c.numar + ' (' + (c.client?.name || '') + ')? Nu se poate recupera.')) return;
+    const r = await fetch('/api/contracte/' + encodeURIComponent(id) + '?token=' + encodeURIComponent(adminToken), { method: 'DELETE' });
+    if (!r.ok) { showToast('Nu am putut șterge contractul'); return; }
+    if (cntEditId === id) cntResetForm(true);
+    showToast('Contract șters');
+    await fetchContracte();
+    if (typeof renderClientContracte === 'function') renderClientContracte();
   }
 
   async function fetchContracte() {
     try {
       const res = await fetch('/api/contracte?token=' + encodeURIComponent(adminToken));
       allContracte = await res.json();
+      if (!Array.isArray(allContracte)) allContracte = [];
       renderContracteIstoric();
       populateCntOfertaSel();
+      const nr = cntEl('cnt-numar'); if (nr && !cntEditId) nr.placeholder = 'automat: ' + cntNextNumber();
     } catch {}
   }
 
+  function cntValoare(c) {
+    if (c.model === 'cd2' && c.pretMod !== 'fix') return c.mentenantaLunara > 0 ? parseFloat(c.mentenantaLunara).toLocaleString('ro-RO') + ' ' + esc(c.moneda || 'EUR') + '/lună' : 'la cerere';
+    return parseFloat(c.total || 0).toLocaleString('ro-RO') + ' ' + esc(c.moneda || 'EUR');
+  }
+  function cntActions(c) {
+    return `<button class="cd-doc-act" onclick="window.open(cntPreviewUrl('${esc(c.id)}'),'_blank')" title="Deschide / printează PDF">&#x1F5A8;</button>` +
+      (c.model === 'cd2' ? `<a class="cd-doc-act" href="${cntPreviewUrl(c.id, true)}" title="Descarcă Word">W</a>
+       <button class="cd-doc-act" onclick="editeazaContract('${esc(c.id)}')" title="Editează">&#x270E;</button>` : '') +
+      `<button class="cd-doc-act" onclick="stergeContract('${esc(c.id)}')" title="Șterge">&#x1F5D1;</button>`;
+  }
+
   function renderContracteIstoric() {
-    const wrap = document.getElementById('contracte-istoric-lista');
+    const wrap = cntEl('contracte-istoric-lista');
     if (!wrap) return;
     if (!allContracte.length) {
       wrap.innerHTML = '<div class="empty-state"><p>// Niciun contract generat încă.</p></div>';
       return;
     }
     const sorted = [...allContracte].sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
-    wrap.innerHTML = '<div class="table-wrap"><table style="width:100%;border-collapse:collapse;">' +
-      '<thead><tr style="font-family:\'Share Tech Mono\',monospace;font-size:.72rem;color:var(--muted);border-bottom:1px solid var(--border);">' +
-      '<th style="text-align:left;padding:8px 12px;">Nr. contract</th>' +
-      '<th style="text-align:left;padding:8px 12px;">Client</th>' +
-      '<th style="text-align:left;padding:8px 12px;">Data</th>' +
-      '<th style="text-align:right;padding:8px 12px;">Valoare</th>' +
-      '<th style="padding:8px 12px;"></th>' +
-      '</tr></thead><tbody>' +
-      sorted.map(c => `
-        <tr style="border-bottom:1px solid var(--border);transition:background .15s;"
-            onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''">
-          <td style="padding:10px 12px;font-family:'Share Tech Mono',monospace;font-size:.82rem;color:var(--teal);">${esc(c.numar||'')}</td>
-          <td style="padding:10px 12px;font-size:.88rem;color:var(--text);">${esc(c.client?.name||'')}
-            ${c.client?.email ? `<div style="font-size:.72rem;color:var(--muted);">${esc(c.client.email)}</div>` : ''}
-          </td>
-          <td style="padding:10px 12px;font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--muted);">${c.dataSemnare ? formatDate(c.dataSemnare) : (c.createdAt ? new Date(c.createdAt).toLocaleDateString('ro-RO') : '–')}</td>
-          <td style="padding:10px 12px;text-align:right;font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--teal);">${parseFloat(c.total||0).toLocaleString('ro-RO')} <span style="font-size:.72rem;color:var(--muted);">${esc(c.moneda||'EUR')}</span></td>
-          <td style="padding:10px 12px;white-space:nowrap;">
-            <button class="btn-edit" onclick="window.open('/contract-preview/${esc(c.id)}?token=${encodeURIComponent(adminToken)}','_blank')" title="Previzualizare / Print PDF" style="font-size:.85rem;">&#x1F5A8;</button>
-          </td>
-        </tr>`).join('') +
-      '</tbody></table></div>';
+    wrap.innerHTML = sorted.map(c => `
+      <div class="cd-doc">
+        <span class="cd-doc-ico">&#x1F4DD;</span>
+        <div class="cd-doc-main">
+          <a class="cd-doc-name" href="${cntPreviewUrl(c.id)}" target="_blank" rel="noopener">Nr. ${esc(c.numar||'')} — ${esc(c.client?.name||'')}</a>
+          <div class="cd-doc-meta">${c.dataSemnare ? formatDate(c.dataSemnare) : '–'} · ${cntValoare(c)}${c.model === 'cd2' ? '' : ' · model vechi'}</div>
+        </div>
+        ${cntActions(c)}
+      </div>`).join('');
+  }
+
+  // ── Contractele unui client (în fișa clientului) ──
+  function contractePentruClient(c) {
+    const n = String(c.name || '').trim().toLowerCase();
+    return (allContracte || []).filter(x => x.clientId ? x.clientId === c.id : (n && String(x.client?.name || '').trim().toLowerCase() === n))
+      .sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
+  }
+  async function loadClientContracte(id) {
+    const wrap = cntEl('cd-contracte'); if (!wrap) return;
+    if (!allContracte.length) { wrap.innerHTML = '<div class="gib-empty">Se încarcă…</div>'; try { await fetchContracte(); } catch (e) {} }
+    if (selectedClientId === id) renderClientContracte();
+  }
+  function renderClientContracte() {
+    const wrap = cntEl('cd-contracte');
+    const c = (clientsData || []).find(x => x.id === selectedClientId);
+    if (!wrap || !c) return;
+    const list = contractePentruClient(c);
+    wrap.innerHTML = list.length ? list.map(x => `
+      <div class="cd-doc">
+        <span class="cd-doc-ico">&#x1F4DD;</span>
+        <div class="cd-doc-main">
+          <a class="cd-doc-name" href="${cntPreviewUrl(x.id)}" target="_blank" rel="noopener">Contract nr. ${esc(x.numar || '')}</a>
+          <div class="cd-doc-meta">${x.dataSemnare ? formatDate(x.dataSemnare) : '–'} · ${cntValoare(x)}</div>
+        </div>
+        ${cntActions(x)}
+      </div>`).join('') : '<div class="gib-empty">Niciun contract. Apasă „+ contract nou” ca să generezi unul cu datele clientului.</div>';
+  }
+  async function clientNewContract() {
+    const cid = selectedClientId; if (!cid) return;
+    switchTab('oferte', ofertaTabBtn());
+    if (!allContracte.length) { try { await fetchContracte(); } catch (e) {} }
+    showOfertaView('contracte', cntEl('subnav-contracte'));
+    cntResetForm(true);
+    populateContractClientSel();
+    cntSet('cnt-client-sel', cid);
+    contractFromClient(cid);
+    cntEl('oferta-view-contracte').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   // ===== JARVIS ANIMATIONS =====

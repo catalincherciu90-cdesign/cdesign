@@ -1364,6 +1364,293 @@ const SVC_CATEGORII = ['pachete', 'web-design', 'seo', 'mentenanta', 'grafic', '
 
 // Câmpurile salvate pentru un client (persoană fizică sau firmă), curățate și
 // limitate. Orice alt câmp trimis este ignorat.
+// ── CONTRACT DE PRESTĂRI SERVICII INFORMATICE (modelul C Design, „cd2”) ──
+// Textul urmează contractul-model al firmei (Word), cu diacritice și corecturi de limbă.
+// Datele prestatorului vin din Setări → Template contract (KV), nu din cod.
+const CD2_DEFAULTS = {
+  obiect: {
+    site: 'realizarea site-ului web — furnizarea unei platforme digitale moderne, pe deplin conforme cu cerințele legislative în vigoare, care să nu presupună niciun efort din partea Beneficiarului pentru menținerea constantă a acestei conformități',
+    mentenanta: true,
+    echipamente: 'mentenanța echipamentelor IT aflate în dotarea Beneficiarului',
+  },
+  termenPlata: 15, penPlata: 0.5, penGen: 0.1, zileStergere: 15, exemplare: 2,
+};
+
+function cleanContractCD(b, prev) {
+  const p = prev || {};
+  const str = (v, n) => String(v == null ? '' : v).replace(/[\u0000-\u0008\u000b-\u001f]/g, ' ').trim().slice(0, n);
+  const num = (v, def, min, max) => { const x = parseFloat(String(v).replace(',', '.')); return isFinite(x) ? Math.min(max, Math.max(min, x)) : def; };
+  const bc = b.client || {};
+  const ob = b.obiect || {};
+  const out = {
+    model: 'cd2',
+    numar: str(b.numar, 30),
+    dataSemnare: /^\d{4}-\d{2}-\d{2}$/.test(String(b.dataSemnare)) ? String(b.dataSemnare) : new Date().toISOString().slice(0, 10),
+    clientId: str(b.clientId, 64) || null,
+    client: {
+      tip: bc.tip === 'pf' ? 'pf' : 'pj',
+      name: str(bc.name, 160), cui: str(bc.cui, 40), regCom: str(bc.regCom, 40),
+      adresa: str(bc.adresa, 260), email: str(bc.email, 160),
+      iban: str(bc.iban, 40).toUpperCase(), banca: str(bc.banca, 80),
+      repr: str(bc.repr, 120), functie: str(bc.functie, 80), cnp: str(bc.cnp, 20),
+    },
+    obiect: {
+      site: ob.site ? str(ob.site === true ? CD2_DEFAULTS.obiect.site : ob.site, 600) : '',
+      mentenanta: !!ob.mentenanta,
+      echipamente: ob.echipamente ? str(ob.echipamente === true ? CD2_DEFAULTS.obiect.echipamente : ob.echipamente, 400) : '',
+      alte: str(ob.alte, 1000),
+    },
+    serviciiText: str(b.serviciiText, 3000),
+    durataNr: num(b.durataNr, 1, 1, 99),
+    durataUnit: b.durataUnit === 'luni' ? 'luni' : 'ani',
+    pretMod: b.pretMod === 'fix' ? 'fix' : 'cerere',
+    total: num(b.total, 0, 0, 1e9),
+    moneda: b.moneda === 'RON' ? 'RON' : 'EUR',
+    avansPct: num(b.avansPct, 50, 0, 100),
+    mentenantaLunara: num(b.mentenantaLunara, 0, 0, 1e7),
+    termenPlata: num(b.termenPlata, 15, 1, 365),
+    penPlata: num(b.penPlata, 0.5, 0, 10),
+    penGen: num(b.penGen, 0.1, 0, 10),
+    zileStergere: num(b.zileStergere, 15, 1, 365),
+    exemplare: num(b.exemplare, 2, 1, 10),
+    ofertaId: str(b.ofertaId, 64) || null,
+  };
+  out.total = Math.round(out.total * 100) / 100;
+  // câmpurile vechi folosite în listă (istoric)
+  out.termen = p.termen || '';
+  return out;
+}
+
+function renderContractCD(c, prest, opts) {
+  const forWord = !!(opts && opts.word);
+  const e = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const d2 = (iso) => { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(iso || '')); return m ? `${m[3]}.${m[2]}.${m[1]}` : '__________'; };
+  const nr = (x) => Number(x).toLocaleString('ro-RO', { maximumFractionDigits: 2 });
+  // „de” după numeral: 20 de zile, 30 de zile, dar 15 zile
+  const deN = (n) => { n = Math.floor(Number(n)); return (n >= 20 && (n % 100 === 0 || n % 100 >= 20)) ? 'de ' : ''; };
+  const zile = (n) => `${nr(n)} ${deN(n)}${Number(n) === 1 ? 'zi' : 'zile'}`;
+  const durata = c.durataUnit === 'luni'
+    ? (Number(c.durataNr) === 1 ? '1 (o) lună' : `${nr(c.durataNr)} ${deN(c.durataNr)}luni`)
+    : (Number(c.durataNr) === 1 ? '1 (un) an' : `${nr(c.durataNr)} ${deN(c.durataNr)}ani`);
+  const exemplareTxt = { 1: '1 (un) exemplar', 2: '2 (două) exemplare', 3: '3 (trei) exemplare' }[c.exemplare] || `${c.exemplare} exemplare`;
+  const B = c.client || {};
+  const join = (arr) => arr.filter(Boolean).join(', ');
+
+  // Prestatorul
+  const [prReprNume, ...prReprRest] = String(prest.repr || '').split(',');
+  const prFunctie = prReprRest.join(',').trim() || 'Administrator';
+  const prestTxt = join([
+    `<strong>${e(prest.nume)}</strong>`,
+    prest.adresa ? `cu sediul social în ${e(prest.adresa)}` : '',
+    prest.cui ? `având codul unic de înregistrare ${e(prest.cui)}` : '',
+    prest.regcom ? `numărul de ordine în Registrul Comerțului ${e(prest.regcom)}` : '',
+    prest.iban ? `cont bancar ${e(prest.iban)}${prest.banca ? ', deschis la ' + e(prest.banca) : ''}` : '',
+    prest.tel ? `telefon ${e(prest.tel)}` : '',
+    prest.email ? `e-mail ${e(prest.email)}` : '',
+    prReprNume.trim() ? `reprezentată prin ${e(prReprNume.trim())}, având funcția de ${e(prFunctie)}` : '',
+  ]) + ', denumită în continuare <strong>PRESTATOR</strong>, pe de o parte, și';
+
+  let benefTxt;
+  if (B.tip === 'pf') {
+    benefTxt = join([
+      `<strong>${e(B.name)}</strong>`,
+      B.adresa ? `cu domiciliul în ${e(B.adresa)}` : '',
+      B.cnp ? `CNP ${e(B.cnp)}` : '',
+      B.email ? `e-mail ${e(B.email)}` : '',
+    ]) + ', denumit(ă) în continuare <strong>BENEFICIAR</strong>, pe de altă parte,';
+  } else {
+    benefTxt = join([
+      `<strong>${e(B.name)}</strong>`,
+      B.adresa ? `cu sediul social în ${e(B.adresa)}` : '',
+      B.cui ? `având codul unic de înregistrare ${e(B.cui)}` : '',
+      B.regCom ? `numărul de ordine în Registrul Comerțului ${e(B.regCom)}` : '',
+      B.iban ? `cont bancar ${e(B.iban)}${B.banca ? ', deschis la ' + e(B.banca) : ''}` : '',
+      B.repr ? `reprezentată prin ${e(B.repr)}${B.functie ? ', în calitate de ' + e(B.functie) : ''}` : '',
+    ]) + ', denumită în continuare <strong>BENEFICIAR</strong>, pe de altă parte,';
+  }
+
+  // Obiectul
+  const ob = c.obiect || {};
+  const lit = (() => { let i = 0; return () => 'abcdefghij'[i++] + ')'; })();
+  const obItems = [];
+  if (ob.site) obItems.push(`<li><span class="l">${lit()}</span> ${e(ob.site)};</li>`);
+  if (ob.mentenanta) obItems.push(`<li><span class="l">${lit()}</span> mentenanța site-ului web; mentenanța lunară înseamnă:
+      <ul class="dash">
+        <li>– backup — salvarea de siguranță a site-ului web, atât pe serverul Beneficiarului, cât și pe suportul de backup al Prestatorului;</li>
+        <li>– asigurarea securității prin actualizarea modulelor CMS și a platformei, logare, găzduire etc.;</li>
+        <li>– actualizarea conținutului (text, poze, video etc.) și postări pe rețelele de socializare;</li>
+        <li>– optimizarea pentru motoarele de căutare;</li>
+      </ul></li>`);
+  if (ob.echipamente) obItems.push(`<li><span class="l">${lit()}</span> ${e(ob.echipamente)};</li>`);
+  if (ob.alte) obItems.push(`<li><span class="l">${lit()}</span> ${e(ob.alte)};</li>`);
+  if (obItems.length) {
+    const L = obItems.length - 1;
+    obItems[L] = obItems[L].includes('class="dash"') ? obItems[L].replace('motoarele de căutare;', 'motoarele de căutare.') : obItems[L].replace(/;(<\/li>)$/, '.$1');
+  }
+  const servLines = String(c.serviciiText || '').split('\n').map(s => s.trim()).filter(Boolean);
+
+  // Prețul
+  const m = c.moneda || 'EUR';
+  let pretP = [];
+  if (c.pretMod === 'fix') {
+    pretP.push(`Prețul serviciilor prevăzute la art. 2 este de <strong>${nr(c.total)} ${m}</strong>.`);
+    const pct = Number(c.avansPct) || 0;
+    if (pct > 0 && pct < 100) {
+      const av = Math.round(c.total * pct) / 100, rest = Math.round((c.total - av) * 100) / 100;
+      pretP.push(`Plata se face astfel: un avans de ${nr(pct)}% (${nr(av)} ${m}) la semnarea contractului, iar diferența de ${nr(rest)} ${m} la recepția lucrării.`);
+    } else if (pct >= 100) pretP.push('Plata se face integral la semnarea contractului.');
+    else pretP.push('Plata se face integral la recepția lucrării.');
+  } else {
+    pretP.push('În cadrul prezentului contract, părțile convin ca tariful pentru fiecare serviciu solicitat să fie stabilit la momentul formulării cererii de prestare a acestuia. Prețul final va fi comunicat și agreat de ambele părți înainte de începerea executării serviciului, asigurându-se astfel transparența și conformitatea cu nevoile Beneficiarului.');
+  }
+  if (Number(c.mentenantaLunara) > 0) pretP.push(`Tariful pentru mentenanța lunară a site-ului web este de <strong>${nr(c.mentenantaLunara)} ${m}/lună</strong>, facturat lunar.`);
+  if (m === 'EUR' || c.pretMod !== 'fix') pretP.push('Pentru sumele exprimate în EUR se va factura echivalentul în RON, calculat la cursul de schimb BNR din ziua facturării.');
+  pretP.push('Decontarea sumelor cuvenite Prestatorului se va efectua în contul bancar menționat în partea introductivă, pe baza documentelor prevăzute de lege (facturi, devize, chitanțe, procese-verbale de recepție etc.).');
+  pretP.push('Prețul serviciilor externalizate se poate modifica de către Prestator, cu aprobarea Beneficiarului.');
+
+  const art = (() => { let n = 0; return () => ++n; })();
+  const section = (title, paras) => { const n = art(); let k = 0; return `
+  <div class="art"><h2>Art. ${n}. ${title}</h2>${paras.map(p => typeof p === 'string' ? `<p><span class="nr">${n}.${++k}.</span> ${p}</p>` : p.raw).join('')}</div>`; };
+  const ol = (items) => ({ raw: `<ul class="lit">${items.map((t, i) => `<li><span class="l">${'abcdefghijkl'[i]})</span> ${t}</li>`).join('')}</ul>` });
+
+  const body = [
+    section('Părțile contractante', [
+      { raw: `<p>${prestTxt}</p>` },
+      { raw: `<p>${benefTxt}</p>` },
+      { raw: '<p>au convenit să încheie prezentul contract de prestări servicii, cu respectarea următoarelor clauze:</p>' },
+    ]),
+    section('Obiectul contractului', [
+      'Obiectul prezentului contract îl reprezintă:',
+      { raw: `<ul class="lit">${obItems.join('')}</ul>` },
+      ...(servLines.length ? ['Serviciile contractate sunt detaliate mai jos:', { raw: `<ul class="dash">${servLines.map(s => `<li>– ${e(s)}</li>`).join('')}</ul>` }] : []),
+      'Cererile de schimbare a soluțiilor avizate și/sau solicitările de lucrări suplimentare ale Beneficiarului vor fi analizate de Prestator, iar în caz de acceptare vor fi considerate lucrări noi, care vor face obiectul unor acte adiționale la prezentul contract.',
+      'Beneficiarul poate verifica, pe parcursul executării lucrărilor, modul în care Prestatorul îndeplinește clauzele contractului.',
+      'Prestatorul își rezervă dreptul de autor asupra lucrărilor informatice realizate cu ocazia instalării și punerii în funcțiune a sistemului informatic la Beneficiar.',
+    ]),
+    section('Durata contractului', [
+      `Durata contractului este de ${durata} de la data semnării contractului de către ambele părți.`,
+      'Prezentul contract se poate prelungi cu acordul părților, prin semnarea unui act adițional.',
+    ]),
+    section('Prețul contractului', pretP),
+    section('Obligațiile părților', [
+      'Prestatorul se obligă:',
+      ol([
+        'să asigure buna funcționare a produselor informatice contractate, conform specificațiilor din anexele/comenzile în baza cărora au fost instalate și puse în funcțiune, fără modificări funcționale;',
+        'să se încadreze în condițiile minimale prevăzute pentru buna executare a fiecărei lucrări în parte;',
+        'să instaleze și să pună în funcțiune modulele prevăzute de prezentul contract și, eventual, de actele adiționale la acesta;',
+        'să stabilească, de comun acord cu Beneficiarul, termenele de predare a lucrărilor și să le respecte;',
+        'să asigure instruirea personalului Beneficiarului, în vederea exploatării corecte a sistemului informatic;',
+        'să păstreze confidențialitatea lucrărilor, conform prevederilor privind confidențialitatea din prezentul contract;',
+        'să presteze serviciile asumate prin prezentul contract, inclusiv rezervarea domeniului, în termenul convenit;',
+        'să notifice Beneficiarul cu privire la finalizarea paginii web și să participe la recepția acesteia;',
+        'să realizeze punctual serviciile contractate de Beneficiar, conform specificațiilor fiecărei anexe în parte.',
+      ]),
+      'Beneficiarul se obligă:',
+      ol([
+        `să achite lucrările efectuate de Prestator în cel mult ${zile(c.termenPlata)} de la data primirii facturii; pentru întârzierea plății după data scadentă se vor factura penalități de ${nr(c.penPlata)}% pe zi din valoarea facturii fiscale, până la achitarea acesteia;`,
+        'să pună la dispoziția Prestatorului datele, informațiile și documentele necesare și să creeze condiții corespunzătoare de lucru;',
+        'să nu efectueze, pe parcursul executării lucrărilor, modificări sau adaptări la cele preluate, fără acordul scris al Prestatorului;',
+        'să pună la dispoziția Prestatorului informațiile și materialele pe care le va conține pagina web;',
+        'să își asume corectitudinea informațiilor comunicate, care vor fi incluse în cuprinsul paginii web;',
+        'să comunice periodic Prestatorului propuneri de actualizare a paginii web, împreună cu materialele necesare.',
+      ]),
+      'Prestatorul nu răspunde de eventualele disfuncționalități cauzate de modificarea de către terțe părți a produselor/serviciilor livrate Beneficiarului sau de gestionarea necorespunzătoare, de către Beneficiar, a produselor/serviciilor și a actualizărilor rezultate în cadrul acestui contract. În aceste situații, garanția oferită de Prestator pentru serviciile prestate se anulează în totalitate.',
+      'Prestatorul are dreptul de a prezenta rezultatul serviciilor prestate în cadrul acestui contract în pagina sa de portofoliu sau în alte materiale de prezentare, doar cu titlu de prezentare, fără a încălca în vreun fel confidențialitatea contractului.',
+    ]),
+    section('Confidențialitatea contractului', [
+      'Fiecare parte se obligă să nu facă cunoscut contractul sau orice prevedere a acestuia unei terțe părți, în afara persoanelor implicate în îndeplinirea contractului, și să nu utilizeze informațiile și documentele obținute sau la care are acces în perioada de derulare a contractului ori în perioada de negociere în alt scop decât acela de a-și îndeplini obligațiile contractuale.',
+      'Fiecare parte se obligă să păstreze confidențialitatea datelor, documentelor și a oricăror informații legate de intrarea în vigoare, încheierea, executarea și încetarea prezentului contract.',
+      'Niciuna dintre părți nu va putea folosi informațiile confidențiale pentru desfășurarea altor activități decât cele pe care le implică intrarea în vigoare, încheierea, interpretarea, executarea și încetarea prezentului contract.',
+      'Niciuna dintre părți nu va divulga informațiile confidențiale prevăzute mai sus unei terțe părți (alta decât proprii angajați, ale căror responsabilități impun cunoașterea respectivelor informații) fără a obține în prealabil consimțământul scris și expres al celeilalte părți.',
+      'O parte contractantă va fi exonerată de răspundere pentru dezvăluirea de informații referitoare la contract dacă:',
+      ol([
+        'informația era cunoscută părții contractante înainte ca ea să fi fost primită de la cealaltă parte contractantă;',
+        'informația a fost dezvăluită după ce a fost obținut acordul scris al celeilalte părți contractante pentru o asemenea dezvăluire;',
+        'dezvăluirea este prevăzută de lege sau a fost cerută de o instanță judecătorească ori de o altă autoritate competentă.',
+      ]),
+    ]),
+    section('Penalități', [
+      `În cazul în care una dintre părți nu își îndeplinește obligațiile contractuale sau le îndeplinește în mod necorespunzător, se obligă să plătească celeilalte părți penalități de ${nr(c.penGen)}% pe zi de întârziere din valoarea nerealizată a prețului contractului.`,
+      `Dacă, după analiza ambelor părți, se constată că site-ul web corespunde cerințelor, iar plata nu se face integral în cel mult ${zile(c.zileStergere).replace(/zile$/, 'zile lucrătoare').replace(/zi$/, 'zi lucrătoare')} de la recepția site-ului web, Prestatorul își rezervă dreptul de a șterge de pe site-ul web toată munca prestată (texte, poze, videoclipuri etc.).`,
+    ]),
+    section('Forța majoră', [
+      'Niciuna dintre părțile contractante nu răspunde de neexecutarea la termen și/sau de executarea în mod necorespunzător — total sau parțial — a oricărei obligații care îi revine în baza prezentului contract, dacă neexecutarea sau executarea necorespunzătoare a obligației respective a fost cauzată de forța majoră, așa cum este definită de lege.',
+      'Partea care invocă forța majoră este obligată să notifice celeilalte părți, în termen de 30 de zile, producerea evenimentului și să ia toate măsurile posibile în vederea limitării consecințelor lui.',
+      'Dacă, în termen de 30 de zile de la producere, evenimentul respectiv nu încetează, părțile au dreptul să își notifice încetarea de plin drept a prezentului contract, fără ca vreuna dintre ele să pretindă daune-interese.',
+    ]),
+    section('Notificările între părți', [
+      'În accepțiunea părților contractante, orice notificare adresată de una dintre acestea celeilalte este valabil îndeplinită dacă este transmisă la adresa/sediul prevăzut în partea introductivă a prezentului contract.',
+      'În cazul în care notificarea se face pe cale poștală, ea va fi transmisă prin scrisoare recomandată, cu confirmare de primire (A.R.), și se consideră primită de destinatar la data menționată de oficiul poștal primitor pe această confirmare.',
+      'Dacă notificarea se trimite prin telefax, ea se consideră primită în prima zi lucrătoare după cea în care a fost expediată.',
+      'Notificările verbale nu se iau în considerare de niciuna dintre părți dacă nu sunt confirmate prin una dintre modalitățile prevăzute la alineatele precedente.',
+    ]),
+    section('Încetarea contractului', [
+      'Prezentul contract încetează de plin drept, fără a mai fi necesară intervenția unui tribunal arbitral sau a unei instanțe judecătorești, în cazul în care una dintre părți:',
+      ol([
+        'nu ia măsuri, în termen de 30 de zile de la data primirii notificării prin care i s-a adus la cunoștință că nu și-a executat ori își execută în mod necorespunzător oricare dintre obligațiile ce îi revin;',
+        'este declarată în incapacitate de plată sau a fost declanșată procedura de lichidare judiciară (faliment) înainte de începerea executării clauzelor prezentului contract;',
+        'cesionează drepturile și obligațiile sale prevăzute de prezentul contract fără acordul celeilalte părți.',
+      ]),
+      'Contractul poate înceta, de asemenea, dacă ambele părți convin astfel, precum și din orice alte cauze prevăzute de lege.',
+      'Partea care invocă o cauză de încetare a prevederilor prezentului contract o va notifica celeilalte părți cu cel puțin 30 de zile înainte de data la care încetarea urmează să își producă efectele.',
+      'Rezilierea prezentului contract nu va avea niciun efect asupra obligațiilor deja scadente între părțile contractante.',
+      'Prevederile prezentului articol nu înlătură răspunderea părții care, în mod culpabil, a cauzat încetarea contractului.',
+    ]),
+    section('Soluționarea litigiilor', [
+      'Părțile au convenit ca toate neînțelegerile privind validitatea prezentului contract sau rezultate din interpretarea, executarea ori încetarea acestuia să fie rezolvate pe cale amiabilă de reprezentanții lor.',
+      'În cazul în care rezolvarea eventualelor litigii nu este posibilă pe cale amiabilă, părțile se vor adresa instanțelor judecătorești.',
+      'Orice litigiu decurgând din sau în legătură cu prezentul contract, inclusiv referitor la încheierea, executarea ori desființarea lui, dacă nu se poate rezolva pe cale amiabilă de reprezentanții părților, se va soluționa prin arbitrajul Curții de Arbitraj Comercial Internațional de pe lângă Camera de Comerț și Industrie a României, în conformitate cu Regulile de procedură arbitrală ale acestei Curți.',
+      'Hotărârea arbitrală este definitivă și obligatorie.',
+    ]),
+    section('Clauze finale', [
+      'Modificarea prezentului contract se face numai prin act adițional încheiat între părțile contractante.',
+      'Prezentul contract se semnează pe fiecare pagină.',
+      `Prezentul contract s-a încheiat astăzi, ${d2(c.dataSemnare)}, în ${exemplareTxt}, câte un exemplar pentru fiecare parte.`,
+    ]),
+  ].join('');
+
+  const benefSemn = B.tip === 'pf' ? '' : (B.repr || '');
+  const title = `Contract nr. ${c.numar} din ${d2(c.dataSemnare)} – ${B.name}`;
+  const css = `
+  body{font-family:'Times New Roman',Times,serif;color:#111;font-size:12pt;line-height:1.5;margin:0;background:#fff}
+  .page{max-width:780px;margin:0 auto;padding:48px 44px 90px}
+  h1{font-size:15pt;text-align:center;text-transform:uppercase;letter-spacing:.04em;margin:0 0 4px}
+  .nr-data{text-align:center;font-weight:bold;margin:0 0 26px}
+  h2{font-size:12pt;margin:18px 0 6px;text-transform:none}
+  p{margin:0 0 7px;text-align:justify}
+  .nr{font-weight:bold}
+  ul{margin:2px 0 8px;padding-left:0;list-style:none}
+  ul.lit>li{margin:0 0 5px 22px;text-indent:-20px;text-align:justify}
+  ul.lit .l{display:inline-block;width:20px;text-indent:0}
+  ul.dash>li{margin:0 0 3px 38px;text-indent:-12px;text-align:justify}
+  table.semn{width:100%;margin-top:44px;border-collapse:collapse}
+  table.semn td{width:50%;vertical-align:top;text-align:center;padding:0 10px}
+  .semn .rol{font-weight:bold;text-transform:uppercase}
+  .semn .linie{margin-top:46px;border-top:1px solid #333;padding-top:4px;font-size:10pt;color:#555}
+  .bar{position:fixed;right:22px;bottom:22px;display:flex;gap:10px;font-family:Arial,sans-serif}
+  .bar a,.bar button{background:#007070;color:#fff;font-weight:700;font-size:14px;padding:11px 18px;border-radius:8px;border:none;cursor:pointer;text-decoration:none;box-shadow:0 4px 14px rgba(0,112,112,.35)}
+  .bar a.sec{background:#fff;color:#007070;border:1px solid #007070}
+  @media print{.bar{display:none}.page{padding:0;max-width:none}@page{size:A4;margin:2cm 2cm 2cm 2.2cm}}
+  @media(max-width:600px){.page{padding:24px 18px 110px}.bar{left:12px;right:12px;bottom:12px}.bar a,.bar button{flex:1;text-align:center;padding:12px 8px}}`;
+
+  const signatures = `
+  <table class="semn"><tr>
+    <td><div class="rol">Prestator,</div><div>${e(prest.nume)}</div><div>${e(prReprNume.trim())}</div><div class="linie">semnătura și ștampila</div></td>
+    <td><div class="rol">Beneficiar,</div><div>${e(B.name)}</div><div>${e(benefSemn)}</div><div class="linie">${B.tip === 'pf' ? 'semnătura' : 'semnătura și ștampila'}</div></td>
+  </tr></table>`;
+
+  const bar = forWord ? '' : `<div class="bar"><a class="sec" href="?token=${e(opts.token || '')}&format=doc">Descarcă Word</a><button onclick="window.print()">Printează / PDF</button></div>`;
+  const head = forWord
+    ? `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>${e(title)}</title><!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]--><style>@page Section1{size:595.3pt 841.9pt;margin:2cm 2cm 2cm 2.2cm}div.Section1{page:Section1}${css}</style></head><body><div class="Section1">`
+    : `<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>${e(title)}</title><style>${css}</style></head><body><div class="page">`;
+  return `${head}
+  <h1>Contract de prestări servicii informatice</h1>
+  <div class="nr-data">Nr. ${e(c.numar)} din ${d2(c.dataSemnare)}</div>
+  ${body}
+  ${signatures}
+  </div>${bar}</body></html>`;
+}
+
 function cleanClientFields(b) {
   const str = (v, n) => String(v == null ? '' : v).replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, n);
   const out = {
@@ -4503,6 +4790,49 @@ Cerințe titluri:
       } catch { return json([]); }
     }
 
+    // Contract pe modelul C Design (cd2): creare, editare, ștergere
+    if (path === '/api/contracte' && request.method === 'POST' && url.searchParams.get('model') === 'cd2') {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const c = cleanContractCD(await request.json().catch(() => ({})));
+        if (!c.client.name) return json({ error: 'Completează numele beneficiarului' }, 400);
+        if (!c.obiect.site && !c.obiect.mentenanta && !c.obiect.echipamente && !c.obiect.alte) return json({ error: 'Alege cel puțin un serviciu la obiectul contractului' }, 400);
+        const raw = await env.PROGRAMARI.get('__contracte__');
+        const lista = raw ? JSON.parse(raw) : [];
+        if (!c.numar) {
+          const max = lista.filter(x => x.model === 'cd2').reduce((mx, x) => Math.max(mx, parseInt(x.numar) || 0), 0);
+          c.numar = String(max + 1);
+        }
+        const now = new Date().toISOString();
+        const contract = { id: 'cnt_' + Date.now(), ...c, createdAt: now, updatedAt: now };
+        lista.push(contract);
+        await env.PROGRAMARI.put('__contracte__', JSON.stringify(lista));
+        return json(contract);
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+    if (/^\/api\/contracte\/cnt_[A-Za-z0-9_]+$/.test(path) && (request.method === 'PUT' || request.method === 'DELETE')) {
+      if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
+      try {
+        const id = path.split('/').pop();
+        const raw = await env.PROGRAMARI.get('__contracte__');
+        const lista = raw ? JSON.parse(raw) : [];
+        const idx = lista.findIndex(x => x.id === id);
+        if (idx === -1) return json({ error: 'Contract negăsit' }, 404);
+        if (request.method === 'DELETE') {
+          lista.splice(idx, 1);
+          await env.PROGRAMARI.put('__contracte__', JSON.stringify(lista));
+          return json({ ok: true });
+        }
+        if (lista[idx].model !== 'cd2') return json({ error: 'Contractele vechi nu se pot edita' }, 400);
+        const c = cleanContractCD(await request.json().catch(() => ({})), lista[idx]);
+        if (!c.client.name) return json({ error: 'Completează numele beneficiarului' }, 400);
+        if (!c.numar) c.numar = lista[idx].numar;
+        lista[idx] = { ...lista[idx], ...c, updatedAt: new Date().toISOString() };
+        await env.PROGRAMARI.put('__contracte__', JSON.stringify(lista));
+        return json(lista[idx]);
+      } catch { return json({ error: 'Eroare server' }, 500); }
+    }
+
     if (path === '/api/contracte' && request.method === 'POST') {
       if (!isAdmin(url, env)) return json({ error: 'Acces neautorizat' }, 401);
       try {
@@ -4561,6 +4891,22 @@ Cerințe titluri:
         const c = lista.find(x => x.id === id);
         if (!c) return new Response('Contract negăsit', { status: 404 });
         const t = tmplRaw ? JSON.parse(tmplRaw) : {};
+
+        if (c.model === 'cd2') {
+          const prestCD = {
+            nume: t.prestNume || COMPANY_LEGAL_NAME, cui: t.prestCui || COMPANY_DEFAULTS.cui,
+            regcom: t.prestRegcom || COMPANY_DEFAULTS.regcom, adresa: await companySediu(env, t),
+            email: t.prestEmail || 'office@c-design.ro', tel: t.prestTel || '',
+            iban: t.prestIban || '', banca: t.prestBanca || '', repr: t.prestRepr || '',
+          };
+          const word = url.searchParams.get('format') === 'doc';
+          const html = renderContractCD(c, prestCD, { word, token: url.searchParams.get('token') || '' });
+          if (word) {
+            const fname = ('Contract-' + c.numar + '-' + (c.client.name || 'client')).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9._-]+/g, '-').replace(/-+/g, '-').slice(0, 80) + '.doc';
+            return new Response('\ufeff' + html, { headers: { 'Content-Type': 'application/msword;charset=utf-8', 'Content-Disposition': 'attachment; filename="' + fname + '"', 'Cache-Control': 'no-store' } });
+          }
+          return new Response(html, { headers: { 'Content-Type': 'text/html;charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' } });
+        }
 
         // Merge template defaults with per-contract values
         const prest = {
