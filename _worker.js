@@ -1628,11 +1628,19 @@ function renderContractCD(c, prest, opts) {
   table.semn td{width:50%;vertical-align:top;text-align:center;padding:0 10px}
   .semn .rol{font-weight:bold;text-transform:uppercase}
   .semn .linie{margin-top:46px;border-top:1px solid #333;padding-top:4px;font-size:10pt;color:#555}
-  .bar{position:fixed;right:22px;bottom:22px;display:flex;gap:10px;font-family:Arial,sans-serif}
+  @media print{.page{padding:0;max-width:none}}`;
+  // reguli doar pentru ecran (paged.js le ignoră: data-pagedjs-ignore)
+  const screenCss = `
+  .bar{position:fixed;right:22px;bottom:22px;display:flex;gap:10px;font-family:Arial,sans-serif;z-index:10}
   .bar a,.bar button{background:#007070;color:#fff;font-weight:700;font-size:14px;padding:11px 18px;border-radius:8px;border:none;cursor:pointer;text-decoration:none;box-shadow:0 4px 14px rgba(0,112,112,.35)}
   .bar a.sec{background:#fff;color:#007070;border:1px solid #007070}
-  @media print{.bar{display:none}.page{padding:0;max-width:none}@page{size:A4;margin:2cm 2cm 2cm 2.2cm}}
-  @media(max-width:600px){.page{padding:24px 18px 110px}.bar{left:12px;right:12px;bottom:12px}.bar a,.bar button{flex:1;text-align:center;padding:12px 8px}}`;
+  @media screen{
+    body.paged{background:#d9dde1}
+    .pagedjs_pages{display:flex;flex-direction:column;align-items:center;padding:24px 0 96px}
+    .pagedjs_page{background:#fff;box-shadow:0 3px 14px rgba(0,0,0,.22);margin-bottom:22px}
+  }
+  @media(max-width:600px){body:not(.paged) .page{padding:24px 18px 110px}.bar{left:12px;right:12px;bottom:12px}.bar a,.bar button{flex:1;text-align:center;padding:12px 8px}}
+  @media print{.bar{display:none}body{background:#fff}.pagedjs_pages{zoom:1 !important;padding:0}.pagedjs_page{box-shadow:none;margin:0}}`;
 
   const signatures = `
   <table class="semn"><tr>
@@ -1640,10 +1648,39 @@ function renderContractCD(c, prest, opts) {
     <td><div class="rol">Beneficiar,</div><div>${e(B.name)}</div><div>${e(benefSemn)}</div><div class="linie">${B.tip === 'pf' ? 'semnătura' : 'semnătura și ștampila'}</div></td>
   </tr></table>`;
 
-  const bar = forWord ? '' : `<div class="bar"><a class="sec" href="?token=${e(opts.token || '')}&format=doc">Descarcă Word</a><button onclick="window.print()">Printează / PDF</button></div>`;
+  // Pe ecran: foi A4 (paged.js, găzduit la /vendor/pagedjs), cu subsol pe fiecare pagină.
+  const footL = `Contract nr. ${c.numar} din ${d2(c.dataSemnare)}`.replace(/["\\]/g, '');
+  const pagedCss = `
+  @page{size:A4;margin:2cm 2cm 2.4cm 2.2cm;
+    @bottom-left{content:"${footL}";font-family:'Times New Roman',serif;font-size:8.5pt;color:#666}
+    @bottom-center{content:"Prestator ___________   Beneficiar ___________";font-family:'Times New Roman',serif;font-size:8.5pt;color:#666;white-space:nowrap}
+    @bottom-right{content:"Pagina " counter(page) " din " counter(pages);font-family:'Times New Roman',serif;font-size:8.5pt;color:#666}}
+  html.paging .page{padding:0;max-width:none;margin:0}
+  h2{break-after:avoid}
+  table.semn{break-inside:avoid}`;
+  const bar = forWord ? '' : `
+  <script>
+  (function(){
+    var tok=${JSON.stringify(String(opts.token || ''))};
+    function addBar(){
+      if(document.querySelector('.bar'))return;
+      var d=document.createElement('div');d.className='bar';
+      d.innerHTML='<a class="sec" href="?token='+encodeURIComponent(tok)+'&format=doc">Descarcă Word</a><button type="button">Printează / PDF</button>';
+      d.querySelector('button').onclick=function(){window.print()};
+      document.body.appendChild(d);
+    }
+    function fit(){var p=document.querySelector('.pagedjs_pages');if(!p)return;var s=Math.min(1,(window.innerWidth-16)/800);p.style.zoom=s<1?String(s):'';}
+    document.documentElement.classList.add('paging');
+    window.PagedConfig={auto:true,after:function(){document.body.classList.add('paged');fit();addBar();}};
+    window.addEventListener('resize',fit);
+    // dacă împărțirea pe pagini nu pornește, pagina rămâne utilizabilă
+    setTimeout(function(){if(!document.body.classList.contains('paged'))document.documentElement.classList.remove('paging');addBar();},6000);
+  })();
+  </script>
+  <script src="/vendor/pagedjs/paged.polyfill.min.js"></script>`;
   const head = forWord
     ? `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>${e(title)}</title><!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]--><style>@page Section1{size:595.3pt 841.9pt;margin:2cm 2cm 2cm 2.2cm}div.Section1{page:Section1}${css}</style></head><body><div class="Section1">`
-    : `<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>${e(title)}</title><style>${css}</style></head><body><div class="page">`;
+    : `<!DOCTYPE html><html lang="ro"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>${e(title)}</title><style>${css}${pagedCss}</style><style data-pagedjs-ignore>${screenCss}</style></head><body><div class="page">`;
   return `${head}
   <h1>Contract de prestări servicii informatice</h1>
   <div class="nr-data">Nr. ${e(c.numar)} din ${d2(c.dataSemnare)}</div>
